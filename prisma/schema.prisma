@@ -1,0 +1,242 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id                       String               @id @default(cuid())
+  name                     String?
+  email                    String               @unique
+  emailVerified            DateTime?
+  hashedPassword           String?
+  image                    String?
+  role                     String               @default("FREE")
+  onboardingCompleted      Boolean              @default(false)
+  aiTools                  String[]             @default([])
+  primaryConcern           String?
+  stripeCustomerId         String?              @unique
+  stripeSubscriptionId     String?              @unique
+  stripePriceId            String?
+  stripeCurrentPeriodEnd   DateTime?
+  createdAt                DateTime             @default(now())
+  updatedAt                DateTime             @updatedAt
+  accounts                 Account[]
+  sessions                 Session[]
+  conversations            Conversation[]
+  passwordResetTokens      PasswordResetToken[]
+  generatedArtifacts       GeneratedArtifact[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Conversation {
+  id        String    @id @default(cuid())
+  userId    String
+  title     String    @default("New Conversation")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages           Message[]
+  generatedArtifacts GeneratedArtifact[]
+
+  @@index([userId, updatedAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  role           String
+  content        String       @db.Text
+  riskLevel      String?
+  confidence     Float?
+  artifactType   String?      // "intake" | "document" | "playbook" — set when message triggered artifact generation
+  createdAt      DateTime     @default(now())
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+}
+
+model RateLimit {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String
+  createdAt DateTime @default(now())
+
+  @@index([userId, endpoint, createdAt])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model KnowledgeEntry {
+  id         String                      @id @default(cuid())
+  title      String
+  content    String                      @db.Text
+  category   String
+  tags       String[]
+  isActive   Boolean                     @default(true)
+  source     String?
+  sourceType String                      @default("manual") // "manual" | "sector" | "regulation" | "nist" | "static"
+  embedding  Unsupported("vector(1536)")?
+  embeddedAt DateTime?
+  createdAt  DateTime                    @default(now())
+  updatedAt  DateTime                    @updatedAt
+
+  @@index([isActive, category])
+  @@index([sourceType])
+}
+
+model TokenUsage {
+  id              String   @id @default(cuid())
+  userId          String
+  endpoint        String   // "advisor" | "advisor/stream" | "orchestrator"
+  promptTokens    Int
+  completionTokens Int
+  totalTokens     Int
+  model           String   @default("gpt-4o")
+  createdAt       DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([userId, endpoint, createdAt])
+}
+
+model GeneratedArtifact {
+  id              String        @id @default(cuid())
+  userId          String
+  conversationId  String?
+  type            String        // "intake" | "document" | "playbook"
+  subType         String?       // "dpia", "threat-model", "NIST AI RMF", etc.
+  title           String
+  riskTier        String?
+  useCaseName     String?
+  content         String        @db.Text
+  markdownExport  String        @db.Text
+  version         Int           @default(1)
+  parentId        String?       // points to the original artifact in the version chain
+  changeNote      String?       // optional note describing what changed in this version
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation    Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type, createdAt])
+  @@index([conversationId])
+  @@index([parentId])
+}
+
+model Organization {
+  id        String      @id @default(cuid())
+  name      String
+  slug      String      @unique
+  plan      String      @default("TEAM") // "TEAM" | "ENTERPRISE"
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  members   OrgMember[]
+
+  @@index([slug])
+}
+
+model OrgMember {
+  id             String       @id @default(cuid())
+  organizationId String
+  userId         String
+  role           String       @default("MEMBER") // "OWNER" | "ADMIN" | "MEMBER"
+  joinedAt       DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+  @@index([userId])
+}
+
+model WebhookEndpoint {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String   // e.g. "My Slack", "GRC Tool"
+  url       String   // HTTPS endpoint
+  secret    String?  // HMAC signing secret for verification
+  events    String[] // e.g. ["artifact.created", "artifact.versioned"]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, isActive])
+}
+
+model IntentFeedback {
+  id             String   @id @default(cuid())
+  userId         String
+  query          String   @db.Text
+  detectedIntent String   // what the classifier detected
+  correctedIntent String? // what the user corrected to (null = confirmed)
+  documentType   String?
+  framework      String?
+  createdAt      DateTime @default(now())
+
+  @@index([detectedIntent, correctedIntent])
+  @@index([userId, createdAt])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  event     String   // e.g. "query", "artifact_generated", "export", "login", "error"
+  category  String   // e.g. "advisor", "intake", "document", "playbook", "auth", "system"
+  metadata  String?  @db.Text // JSON blob with event-specific data
+  createdAt DateTime @default(now())
+
+  @@index([event, createdAt])
+  @@index([userId, createdAt])
+  @@index([category, createdAt])
+}

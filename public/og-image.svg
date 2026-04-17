@@ -1,0 +1,36 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2a2a2a" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)" opacity="0.5"/>
+  
+  <!-- Logo -->
+  <rect x="80" y="80" width="80" height="80" rx="8" stroke="#00ff88" stroke-width="4" fill="none"/>
+  <text x="120" y="135" font-family="monospace" font-size="32" font-weight="bold" fill="#00ff88" text-anchor="middle">AI</text>
+  
+  <!-- Title -->
+  <text x="80" y="260" font-family="monospace" font-size="64" font-weight="bold" fill="#e0e0e0">Confident AI,</text>
+  <text x="80" y="340" font-family="monospace" font-size="64" font-weight="bold" fill="#00ff88">Controlled Risk.</text>
+  
+  <!-- Subtitle -->
+  <text x="80" y="420" font-family="system-ui, sans-serif" font-size="28" fill="#888888">The leading AI governance platform for</text>
+  <text x="80" y="460" font-family="system-ui, sans-serif" font-size="28" fill="#888888">small and mid-sized businesses.</text>
+  
+  <!-- Tags -->
+  <rect x="80" y="520" width="140" height="36" rx="4" stroke="#00ff88" stroke-width="1" fill="#00ff8810"/>
+  <text x="150" y="545" font-family="monospace" font-size="14" fill="#00ff88" text-anchor="middle">NIST AI RMF</text>
+  
+  <rect x="240" y="520" width="120" height="36" rx="4" stroke="#00ff88" stroke-width="1" fill="#00ff8810"/>
+  <text x="300" y="545" font-family="monospace" font-size="14" fill="#00ff88" text-anchor="middle">ISO 42001</text>
+  
+  <rect x="380" y="520" width="120" height="36" rx="4" stroke="#00ff88" stroke-width="1" fill="#00ff8810"/>
+  <text x="440" y="545" font-family="monospace" font-size="14" fill="#00ff88" text-anchor="middle">EU AI Act</text>
+  
+  <!-- URL -->
+  <text x="1120" y="590" font-family="monospace" font-size="20" fill="#888888" text-anchor="end">ai-governance.dev</text>
+</svg>
