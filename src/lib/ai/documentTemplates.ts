@@ -8,6 +8,15 @@
 //   • ISO/IEC 42001:2023 clauses
 
 import type { DocumentType, RiskTierLabel } from '@/types/documents';
+import {
+  GOVSECURE_DOCUMENT_TEMPLATES,
+  GOVSECURE_DOCUMENT_TITLES,
+} from '@/data/govsecurePolicies';
+import {
+  NIST_RCM_SECTION_TEMPLATES,
+  PHASE3_DOCUMENT_TITLES,
+  TPRM_SECTION_TEMPLATES,
+} from '@/data/govsecurePlaybooks';
 
 // ─── Risk Drivers ─────────────────────────────────────────────────────────────
 // Verbatim from the AI Intake Risk Assessment Checklist template
@@ -274,6 +283,16 @@ export interface SectionTemplate {
   required: boolean;
   /** If true, this section uses checklist items rather than prose */
   isChecklist?: boolean;
+  /**
+   * Phase 2.5 brand-voice anchor. Original GovSecure prose for the source
+   * section, used as a few-shot exemplar by the DocumentOrchestrator. May
+   * be undefined for non-GovSecure templates.
+   */
+  govsecureContext?: string;
+  /** GovSecure document code the template was derived from, e.g. `GS-AIPS-AUP-01`. */
+  sourceDocCode?: string;
+  /** Section id within the source document, e.g. `1.2`. */
+  sourceSection?: string;
 }
 
 export const DOCUMENT_SECTION_TEMPLATES: Record<DocumentType, SectionTemplate[]> = {
@@ -387,6 +406,37 @@ export const DOCUMENT_SECTION_TEMPLATES: Record<DocumentType, SectionTemplate[]>
     { heading: 'Human Oversight & Accountability Evidence', guidance: 'Reviewer roles, escalation path, override process, training, accountability matrix.', required: true, isChecklist: true },
     { heading: 'Audit Readiness & Traceability Checks', guidance: 'All artifacts present, dates current, evidence traceable, approvals signed, next review date.', required: true, isChecklist: true },
   ],
+  // Phase 2: 22 GovSecure-licensed document types loaded from the
+  // extracted JSON corpus. Each entry contains the original heading,
+  // distilled guidance, and the source prose for voice-anchoring (Phase 2.5).
+  ...GOVSECURE_DOCUMENT_TEMPLATES,
+  // Phase 3: GovSecure flagship questionnaires + framework templates.
+  // TPRM: one-shot generation today; Phase 3.5 will route this through the
+  // multi-turn WorkflowOrchestrator. NIST-RCM: row-per-control rollup
+  // derived from the Risk Control Matrix v5 spreadsheet.
+  'govsecure-tprm': TPRM_SECTION_TEMPLATES,
+  'govsecure-nist-rcm': NIST_RCM_SECTION_TEMPLATES,
+};
+
+/**
+ * Display titles per document type — used by the DocumentOrchestrator and
+ * UI. GovSecure types are sourced from the licensed naming in
+ * `govsecurePolicies.ts`; generic types keep the original short labels.
+ */
+export const DOCUMENT_TITLES: Record<DocumentType, string> = {
+  'use-case-summary': 'Use Case Summary',
+  'data-sheet': 'Data Sheet',
+  'vendor-model-facts': 'Vendor / Model Facts Sheet',
+  'threat-model': 'Threat Model',
+  'human-oversight-statement': 'Human Oversight Statement',
+  'dpia': 'Data Protection Impact Assessment (DPIA)',
+  'model-card': 'Model Card',
+  'risk-memo': 'Risk Memo',
+  'operational-readiness-plan': 'Operational Readiness Plan',
+  'monitoring-plan': 'Monitoring Plan',
+  'evidence-pack': 'Evidence Pack',
+  ...GOVSECURE_DOCUMENT_TITLES,
+  ...PHASE3_DOCUMENT_TITLES,
 };
 
 // ─── Evidence Pack Checklist Items ────────────────────────────────────────────

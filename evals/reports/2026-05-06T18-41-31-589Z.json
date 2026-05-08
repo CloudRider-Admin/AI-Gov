@@ -1,0 +1,609 @@
+{
+  "startedAt": "2026-05-06T18:41:31.589Z",
+  "durationSec": 0.04,
+  "rubricVersion": "1.0.0",
+  "totalCases": 30,
+  "passed": 30,
+  "failed": 0,
+  "errored": 0,
+  "passRate": 1,
+  "meanOverall": 1,
+  "byCategory": {
+    "document-generation": {
+      "total": 13,
+      "passed": 13,
+      "passRate": 1,
+      "meanOverall": 1
+    },
+    "advisory-query": {
+      "total": 9,
+      "passed": 9,
+      "passRate": 1,
+      "meanOverall": 1
+    },
+    "intake": {
+      "total": 4,
+      "passed": 4,
+      "passRate": 1,
+      "meanOverall": 1
+    },
+    "playbook": {
+      "total": 4,
+      "passed": 4,
+      "passRate": 1,
+      "meanOverall": 1
+    }
+  },
+  "cases": [
+    {
+      "caseId": "advisory-90-day-blueprint",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 2
+    },
+    {
+      "caseId": "advisory-ai-chef",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-citation-tripwire",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-clarification-vague",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 1
+    },
+    {
+      "caseId": "advisory-eu-ai-act-prohibited",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-nist-vs-iso",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-policy-priority",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-risk-tier",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "advisory-vendor-risk",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "doc-dpia-marketing",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "doc-evidence-pack-saas",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 1
+    },
+    {
+      "caseId": "doc-monitoring-plan-finserv",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "doc-threat-model-llm-app",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "doc-use-case-summary",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "intake-critical-social-scoring",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "intake-high-credit-decision",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "intake-low-internal-tool",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "intake-medium-customer-chat",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "playbook-combined-healthcare",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "playbook-eu-ai-act-edtech",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "playbook-iso-42001-mfg",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "playbook-nist-rmf-saas",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-aup-ecommerce",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-data-privacy-fintech",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-governance-healthcare",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-human-oversight-saas",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-incident-response-edu",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-risk-approval-mfg",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-security-public-sector",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    },
+    {
+      "caseId": "policy-third-party-retail",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 1,
+        "requiredClausesPresent": 1,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "voiceMatch": 1,
+        "rationale": "mock-judge: derived from required-clause coverage",
+        "hallucinations": []
+      },
+      "overall": 1,
+      "passed": true,
+      "durationMs": 0
+    }
+  ]
+}

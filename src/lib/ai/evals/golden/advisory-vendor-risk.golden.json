@@ -1,0 +1,17 @@
+{
+  "id": "advisory-vendor-risk",
+  "category": "advisory-query",
+  "input": {
+    "message": "What should I look for when assessing a SaaS vendor that just embedded GenAI features into their product?"
+  },
+  "requiredClauses": [
+    "vendor",
+    "TPRM",
+    "data"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99"
+  ],
+  "expectedIntent": "advisor"
+}

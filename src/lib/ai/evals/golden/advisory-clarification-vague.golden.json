@@ -1,0 +1,15 @@
+{
+  "id": "advisory-clarification-vague",
+  "category": "advisory-query",
+  "input": {
+    "message": "We're thinking about AI."
+  },
+  "requiredClauses": [
+    "?"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99"
+  ],
+  "expectedIntent": "advisor"
+}

@@ -8,6 +8,9 @@
 import { intakeOrchestrator, documentOrchestrator, playbookOrchestrator } from './multiAgent';
 import { saveArtifact } from '@/lib/artifacts';
 import { classifyIntent, reconcileIntents, type ClassifiedIntent } from './intentClassifier';
+import { captureOrgContext, getOrgContext } from './orgContext';
+import { artifactCache, buildArtifactKey, hashOrgContext } from '@/lib/responseCache';
+import { auditLog } from '@/lib/utils/logger';
 import type { AdvisorResponse } from './schemas';
 import type { RiskLevel } from './multiAgent';
 
@@ -70,6 +73,15 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
 
   const { finalIntent, contested } = reconcileIntents(deterministicIntent, llmIntentTyped);
 
+  // Phase 4.5: extract org context from the user's turn before any
+  // orchestrator runs so newly-stated org details (industry, AI tools,
+  // jurisdictions, lead title) flow into this same generation.
+  // Best-effort: if the conversation row doesn't exist yet (guest path)
+  // captureOrgContext is a no-op via its prisma try/catch.
+  if (ctx.conversationId) {
+    await captureOrgContext(ctx.conversationId, ctx.query);
+  }
+
   // If intent is just advisory, no orchestrator dispatch needed
   if (finalIntent.type === 'advisor') {
     return { intentUsed: finalIntent, contested };
@@ -83,6 +95,24 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
 
   const useCaseDesc = finalIntent.extractedDescription || ctx.llmIntent?.extractedUseCaseDescription || ctx.query;
   const riskTier = toTierLabel(ctx.riskLevel);
+
+  // ── Artifact cache lookup (Phase 7.3) ──
+  // Skip cache when there's no conversationId (guest path can't read orgContext)
+  // since we'd be omitting a key signal that the intent is the same.
+  const orgCtx = ctx.conversationId ? await getOrgContext(ctx.conversationId).catch(() => undefined) : undefined;
+  const cacheKey = buildArtifactKey({
+    intentType: finalIntent.type,
+    documentType: finalIntent.documentType,
+    framework: finalIntent.framework,
+    useCaseDescription: useCaseDesc,
+    orgContextHash: hashOrgContext(orgCtx),
+    role: ctx.role,
+  });
+  const cachedArtifact = artifactCache.get(cacheKey) as AdvisorResponse['generatedArtifact'] | undefined;
+  if (cachedArtifact) {
+    auditLog({ event: 'artifact.cache_hit', data: { cacheKey, intentType: finalIntent.type } });
+    return { artifact: cachedArtifact, intentUsed: finalIntent, contested };
+  }
 
   try {
     let artifact: AdvisorResponse['generatedArtifact'] | undefined;
@@ -141,6 +171,11 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
         markdownExport: result.markdownExport,
       });
       artifact = { type: 'playbook', id: artifactId, data: result };
+    }
+
+    // ── Cache the freshly generated artifact (Phase 7.3) ──
+    if (artifact) {
+      artifactCache.set(cacheKey, artifact);
     }
 
     return { artifact, intentUsed: finalIntent, contested };

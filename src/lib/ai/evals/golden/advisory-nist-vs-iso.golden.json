@@ -1,0 +1,17 @@
+{
+  "id": "advisory-nist-vs-iso",
+  "category": "advisory-query",
+  "input": {
+    "message": "How does NIST AI RMF compare to ISO/IEC 42001? Should we adopt one or both?"
+  },
+  "requiredClauses": [
+    "NIST",
+    "ISO/IEC 42001",
+    "voluntary"
+  ],
+  "forbiddenContent": [
+    "ISO 42001 Clause 99",
+    "GOVERN-99"
+  ],
+  "expectedIntent": "advisor"
+}

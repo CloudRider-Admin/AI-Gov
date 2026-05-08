@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ResponseCache } from '../responseCache';
+import { ResponseCache, buildArtifactKey, hashOrgContext } from '../responseCache';
 
 describe('ResponseCache', () => {
   let cache: ResponseCache<string>;
@@ -121,5 +121,85 @@ describe('ResponseCache.buildKey', () => {
     const k1 = ResponseCache.buildKey('risk assessment');
     const k2 = ResponseCache.buildKey('risk assessment', 'context');
     expect(k1).not.toBe(k2);
+  });
+});
+
+describe('buildArtifactKey (Phase 7.3)', () => {
+  const base = {
+    intentType: 'document',
+    documentType: 'dpia',
+    framework: undefined,
+    useCaseDescription: 'Hiring AI screening resumes',
+    orgContextHash: 'abc123',
+    role: 'PRO',
+  };
+
+  it('produces a stable key for the same inputs', () => {
+    expect(buildArtifactKey(base)).toBe(buildArtifactKey({ ...base }));
+  });
+
+  it('normalizes whitespace and case in the use-case description', () => {
+    const k1 = buildArtifactKey({ ...base, useCaseDescription: '  Hiring AI   screening RESUMES  ' });
+    const k2 = buildArtifactKey({ ...base, useCaseDescription: 'hiring ai screening resumes' });
+    expect(k1).toBe(k2);
+  });
+
+  it('differs when intentType changes', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, intentType: 'intake' }));
+  });
+
+  it('differs when documentType changes', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, documentType: 'threat-model' }));
+  });
+
+  it('differs when role changes', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, role: 'TEAM' }));
+  });
+
+  it('differs when org context hash changes', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, orgContextHash: 'def456' }));
+  });
+
+  it('differs when org context hash is omitted', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, orgContextHash: undefined }));
+  });
+
+  it('differs when framework is added vs omitted', () => {
+    const withFramework = buildArtifactKey({ ...base, framework: 'NIST' });
+    expect(buildArtifactKey(base)).not.toBe(withFramework);
+  });
+
+  it('returns a 16-char hex prefix', () => {
+    const key = buildArtifactKey(base);
+    expect(key).toMatch(/^[0-9a-f]{16}$/);
+  });
+});
+
+describe('hashOrgContext (Phase 7.3)', () => {
+  it('returns undefined for undefined input', () => {
+    expect(hashOrgContext(undefined)).toBeUndefined();
+  });
+
+  it('returns undefined for null input', () => {
+    expect(hashOrgContext(null)).toBeUndefined();
+  });
+
+  it('returns a stable 12-char hex hash', () => {
+    const ctx = { industry: 'healthcare', jurisdictions: ['EU'] };
+    const h = hashOrgContext(ctx);
+    expect(h).toMatch(/^[0-9a-f]{12}$/);
+    expect(hashOrgContext({ ...ctx })).toBe(h);
+  });
+
+  it('produces the same hash regardless of key insertion order', () => {
+    const a = { industry: 'finance', tools: ['gpt-4'] };
+    const b = { tools: ['gpt-4'], industry: 'finance' };
+    expect(hashOrgContext(a)).toBe(hashOrgContext(b));
+  });
+
+  it('produces different hashes for different content', () => {
+    expect(hashOrgContext({ industry: 'healthcare' })).not.toBe(
+      hashOrgContext({ industry: 'finance' }),
+    );
   });
 });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getOptionalSession } from '@/lib/auth-guard';
+import { clearKnowledgeEmbedding, generateAndStoreKnowledgeEmbedding } from '@/lib/knowledge/embeddings';
 
 const updateSchema = z.object({
   title: z.string().min(3).max(200).optional(),
@@ -13,7 +14,7 @@ const updateSchema = z.object({
   sourceType: z.enum(['manual', 'sector', 'regulation', 'nist', 'static']).optional(),
 });
 
-// GET /api/knowledge/[id]
+// GET /api/knowledge/[id] — admin-only full entry content
 export async function GET(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -22,6 +23,9 @@ export async function GET(
   const session = await getOptionalSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  if (session.user.role !== 'ADMIN') {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
   const entry = await prisma.knowledgeEntry.findUnique({ where: { id } });
@@ -61,7 +65,10 @@ export async function PATCH(
   }
 
   // If content, title, or tags changed, clear embedding so it gets re-embedded
-  const contentChanged = parsed.data.content || parsed.data.title || parsed.data.tags;
+  const contentChanged =
+    parsed.data.content !== undefined ||
+    parsed.data.title !== undefined ||
+    parsed.data.tags !== undefined;
   const updateData = {
     ...parsed.data,
     ...(contentChanged ? { embeddedAt: null } : {}),
@@ -71,6 +78,13 @@ export async function PATCH(
     where: { id },
     data: updateData,
   });
+
+  if (contentChanged) {
+    await clearKnowledgeEmbedding(updated.id);
+    generateAndStoreKnowledgeEmbedding(updated.id, updated.title, updated.content, updated.tags).catch((err) =>
+      console.warn('[knowledge/PATCH] Auto-embed failed:', err instanceof Error ? err.message : err),
+    );
+  }
 
   return NextResponse.json(updated);
 }

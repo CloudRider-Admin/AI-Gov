@@ -1,5 +1,121 @@
 import { z } from 'zod';
 
+/**
+ * Single source of truth for every `documentType` enum used by the
+ * advisor / orchestrator schemas. Matches `DocumentType` in
+ * `@/types/documents` — extending one without the other will fail
+ * type-checking inside `documentTemplates.ts`.
+ *
+ * Phase 2 added 22 GovSecure types on top of the original 11.
+ */
+export const DOCUMENT_TYPE_VALUES = [
+  // generic governance documents
+  'use-case-summary',
+  'data-sheet',
+  'vendor-model-facts',
+  'threat-model',
+  'human-oversight-statement',
+  'dpia',
+  'model-card',
+  'risk-memo',
+  'operational-readiness-plan',
+  'monitoring-plan',
+  'evidence-pack',
+  // GovSecure policies
+  'govsecure-aup',
+  'govsecure-governance-policy',
+  'govsecure-data-privacy-policy',
+  'govsecure-risk-approval-policy',
+  'govsecure-security-policy',
+  'govsecure-incident-response-policy',
+  'govsecure-human-oversight-policy',
+  'govsecure-vendor-policy',
+  // GovSecure checklists
+  'govsecure-checklist-intake',
+  'govsecure-checklist-evidence-pack',
+  'govsecure-checklist-incident-response',
+  'govsecure-checklist-vendor-dd',
+  'govsecure-checklist-shadow-ai',
+  'govsecure-checklist-inventory',
+  'govsecure-checklist-model-validation',
+  'govsecure-checklist-monitoring',
+  'govsecure-checklist-security',
+  'govsecure-checklist-dpia',
+  'govsecure-checklist-human-oversight',
+  'govsecure-checklist-change-management',
+  'govsecure-checklist-training',
+  'govsecure-checklist-risk-assessment',
+  // GovSecure flagship questionnaires + framework templates (Phase 3)
+  'govsecure-tprm',
+  'govsecure-nist-rcm',
+] as const;
+
+export const documentTypeEnum = z.enum(DOCUMENT_TYPE_VALUES);
+
+/**
+ * Single source of truth for the playbook framework union — covers the four
+ * regulatory frameworks plus the two GovSecure flagship products added in
+ * Phase 3.
+ */
+export const PLAYBOOK_FRAMEWORK_VALUES = [
+  'NIST AI RMF',
+  'EU AI Act',
+  'ISO/IEC 42001',
+  'Combined',
+  'GovSecure AI Chef',
+  'GovSecure 90-Day Blueprint',
+] as const;
+
+export const playbookFrameworkEnum = z.enum(PLAYBOOK_FRAMEWORK_VALUES);
+
+/**
+ * Shared enum values. Each `*_VALUES` constant is the single source of truth
+ * for both the Zod schema and the TS union in `@/types/documents` /
+ * `@/types/advisor`. The Phase 5 sync guard test
+ * (`__tests__/schemas.test.ts`) asserts the runtime `*_VALUES.length`
+ * matches the union arity so drift fails CI.
+ */
+export const RISK_TIER_VALUES = ['Low', 'Medium', 'High', 'Critical'] as const;
+export const RISK_LEVEL_VALUES = ['low', 'medium', 'high', 'critical'] as const;
+export const MODEL_TYPE_VALUES = ['GenAI', 'Predictive ML', 'Rules + ML', 'Vendor Feature'] as const;
+export const DEPLOYMENT_TYPE_VALUES = ['Internal', 'Customer-facing', 'Public-facing'] as const;
+export const EU_AI_ACT_CLASSIFICATION_VALUES = [
+  'Prohibited',
+  'High-Risk',
+  'Limited-Risk',
+  'Minimal-Risk',
+  'General-Purpose',
+] as const;
+export const REQUIRED_APPROVER_VALUES = ['Compliance', 'Security', 'Legal/Privacy', 'Risk/ERM'] as const;
+export const LAUNCH_DECISION_VALUES = ['Go', 'Conditional Go', 'No-Go'] as const;
+export const TASK_OWNER_VALUES = [
+  'AI Governance Lead',
+  'Business Owner',
+  'Security Team',
+  'Privacy/Legal',
+  'IT/Engineering',
+  'HR/Training',
+  'Risk/Compliance',
+  'Executive Sponsor',
+] as const;
+export const TASK_PRIORITY_VALUES = ['critical', 'high', 'medium', 'low'] as const;
+export const PRIORITY_VALUES = ['high', 'medium', 'low'] as const;
+export const FRAMEWORK_CITATION_VALUES = ['NIST AI RMF', 'EU AI Act', 'ISO/IEC 42001', 'GDPR', 'Other'] as const;
+export const ARTIFACT_STATUS_VALUES = ['generated', 'pending', 'not-required'] as const;
+
+export const riskTierEnum = z.enum(RISK_TIER_VALUES);
+export const riskLevelEnum = z.enum(RISK_LEVEL_VALUES);
+export const modelTypeEnum = z.enum(MODEL_TYPE_VALUES);
+export const deploymentTypeEnum = z.enum(DEPLOYMENT_TYPE_VALUES);
+export const euAIActClassificationEnum = z.enum(EU_AI_ACT_CLASSIFICATION_VALUES);
+export const requiredApproverEnum = z.enum(REQUIRED_APPROVER_VALUES);
+export const launchDecisionEnum = z.enum(LAUNCH_DECISION_VALUES);
+export const taskOwnerEnum = z.enum(TASK_OWNER_VALUES);
+export const taskPriorityEnum = z.enum(TASK_PRIORITY_VALUES);
+export const priorityEnum = z.enum(PRIORITY_VALUES);
+export const frameworkCitationEnum = z.enum(FRAMEWORK_CITATION_VALUES);
+export const artifactStatusEnum = z.enum(ARTIFACT_STATUS_VALUES);
+
 export const advisorRequestSchema = z.object({
   query: z.string().min(1, 'Query is required'),
   context: z.string().optional(),
@@ -9,34 +125,22 @@ export const advisorRequestSchema = z.object({
 export const policyRecommendationSchema = z.object({
   title: z.string(),
   description: z.string(),
-  priority: z.enum(['high', 'medium', 'low']),
+  priority: priorityEnum,
   category: z.string(),
-  documentType: z.enum([
-    'use-case-summary',
-    'data-sheet',
-    'vendor-model-facts',
-    'threat-model',
-    'human-oversight-statement',
-    'dpia',
-    'model-card',
-    'risk-memo',
-    'operational-readiness-plan',
-    'monitoring-plan',
-    'evidence-pack',
-  ]).optional(),
+  documentType: documentTypeEnum.optional(),
 });
 
 export const regulationMatchSchema = z.object({
   regulation: z.string(),
   article: z.string(),
-  relevance: z.enum(['high', 'medium', 'low']),
+  relevance: priorityEnum,
   description: z.string()
 });
 
 export const advisorResponseSchema = z.object({
   mode: z.enum(['assessment', 'clarification']).default('assessment'),
   riskProfile: z.object({
-    level: z.enum(['low', 'medium', 'high', 'critical']),
+    level: riskLevelEnum,
     description: z.string(),
     confidence: z.number().min(0).max(1),
     reasoning: z.array(z.string()).default([])
@@ -45,9 +149,37 @@ export const advisorResponseSchema = z.object({
   regulationCheck: z.array(regulationMatchSchema).default([]),
   followUpQuestions: z.array(z.string()).default([]),
   sources: z.array(z.string()).default([]),
+  /**
+   * Structured provenance — typed counterpart to `sources`. Optional because
+   * legacy stored conversations only carry the flat list. New responses
+   * always populate it.
+   */
+  sourcesStructured: z
+    .array(
+      z.object({
+        label: z.string(),
+        type: z.enum([
+          'govsecure',
+          'nist',
+          'static-kb',
+          'vector-kb',
+          'db-kb',
+          'sector-guidance',
+          'regulation',
+        ]),
+        anchor: z.string().optional(),
+      }),
+    )
+    .optional(),
   conversationId: z.string(),
   timestamp: z.string(),
   gated: z.boolean().optional(),
+  /**
+   * Soft warnings surfaced by post-processing (e.g. citation validator
+   * stripping unverified regulatory references). UI can render these as
+   * a banner. Optional and non-fatal.
+   */
+  warnings: z.array(z.string()).optional(),
   intent: z.object({
     type: z.enum(['advisor', 'intake', 'document', 'playbook']).default('advisor'),
     documentType: z.string().optional(),
@@ -78,8 +210,8 @@ export const intakeRequestSchema = z.object({
   useCaseName: z.string().optional(),
   owner: z.string().optional(),
   businessUnit: z.string().optional(),
-  modelType: z.enum(['GenAI', 'Predictive ML', 'Rules + ML', 'Vendor Feature']).optional(),
-  deployment: z.enum(['Internal', 'Customer-facing', 'Public-facing']).optional(),
+  modelType: modelTypeEnum.optional(),
+  deployment: deploymentTypeEnum.optional(),
   jurisdictions: z.array(z.string()).optional(),
   goLiveTarget: z.string().optional(),
   conversationId: z.string().optional(),
@@ -105,16 +237,16 @@ const autoHighTriggerSchema = z.object({
 const requiredArtifactSchema = z.object({
   name: z.string(),
   description: z.string(),
-  tier: z.enum(['Low', 'Medium', 'High', 'Critical']),
-  status: z.enum(['generated', 'pending', 'not-required']).default('pending'),
+  tier: riskTierEnum,
+  status: artifactStatusEnum.default('pending'),
 });
 
 export const intakeAssessmentSchema = z.object({
   useCaseName: z.string(),
   owner: z.string().default(''),
   businessUnit: z.string().default(''),
-  modelType: z.enum(['GenAI', 'Predictive ML', 'Rules + ML', 'Vendor Feature']).default('GenAI'),
-  deployment: z.enum(['Internal', 'Customer-facing', 'Public-facing']).default('Internal'),
+  modelType: modelTypeEnum.default('GenAI'),
+  deployment: deploymentTypeEnum.default('Internal'),
   jurisdictions: z.array(z.string()).default([]),
   goLiveTarget: z.string().nullable().optional(),
   assessmentDate: z.string(),
@@ -122,15 +254,15 @@ export const intakeAssessmentSchema = z.object({
   totalScore: z.number().min(0).max(30),
   autoHighTriggers: z.array(autoHighTriggerSchema),
   autoHighFired: z.boolean(),
-  riskTier: z.enum(['Low', 'Medium', 'High', 'Critical']),
+  riskTier: riskTierEnum,
   tierRationale: z.string(),
-  requiredApprovers: z.array(z.enum(['Compliance', 'Security', 'Legal/Privacy', 'Risk/ERM'])).default([]),
+  requiredApprovers: z.array(requiredApproverEnum).default([]),
   requiredArtifacts: z.array(requiredArtifactSchema).default([]),
-  launchDecision: z.enum(['Go', 'Conditional Go', 'No-Go']),
+  launchDecision: launchDecisionEnum,
   conditions: z.string().optional(),
   nextReviewDate: z.string(),
   reassessmentTriggers: z.array(z.string()).default([]),
-  euAIActClassification: z.enum(['Prohibited', 'High-Risk', 'Limited-Risk', 'Minimal-Risk', 'General-Purpose']),
+  euAIActClassification: euAIActClassificationEnum,
   euAIActRationale: z.string(),
   nistKeySubcategories: z.array(z.string()).default([]),
   markdownExport: z.string().default(''),
@@ -142,20 +274,8 @@ export type IntakeAssessmentOutput = z.infer<typeof intakeAssessmentSchema>;
 // ─── Governance Document Schemas ──────────────────────────────────────────────
 
 export const documentRequestSchema = z.object({
-  documentType: z.enum([
-    'use-case-summary',
-    'data-sheet',
-    'vendor-model-facts',
-    'threat-model',
-    'human-oversight-statement',
-    'dpia',
-    'model-card',
-    'risk-memo',
-    'operational-readiness-plan',
-    'monitoring-plan',
-    'evidence-pack',
-  ]),
-  riskTier: z.enum(['Low', 'Medium', 'High', 'Critical']),
+  documentType: documentTypeEnum,
+  riskTier: riskTierEnum,
   useCaseDescription: z.string().min(10),
   useCaseName: z.string().optional(),
   context: z.string().optional(),
@@ -163,7 +283,7 @@ export const documentRequestSchema = z.object({
 });
 
 const frameworkCitationSchema = z.object({
-  framework: z.enum(['NIST AI RMF', 'EU AI Act', 'ISO/IEC 42001', 'GDPR', 'Other']),
+  framework: frameworkCitationEnum,
   reference: z.string(),
   description: z.string(),
 });
@@ -182,21 +302,9 @@ const documentSectionSchema = z.object({
 });
 
 export const governanceDocumentSchema = z.object({
-  documentType: z.enum([
-    'use-case-summary',
-    'data-sheet',
-    'vendor-model-facts',
-    'threat-model',
-    'human-oversight-statement',
-    'dpia',
-    'model-card',
-    'risk-memo',
-    'operational-readiness-plan',
-    'monitoring-plan',
-    'evidence-pack',
-  ]),
+  documentType: documentTypeEnum,
   title: z.string(),
-  riskTier: z.enum(['Low', 'Medium', 'High', 'Critical']),
+  riskTier: riskTierEnum,
   useCaseName: z.string(),
   sections: z.array(documentSectionSchema),
   frameworkCitations: z.array(frameworkCitationSchema).default([]),
@@ -211,8 +319,8 @@ export type GovernanceDocumentOutput = z.infer<typeof governanceDocumentSchema>;
 // ─── Playbook Schemas ─────────────────────────────────────────────────────────
 
 export const playbookRequestSchema = z.object({
-  framework: z.enum(['NIST AI RMF', 'EU AI Act', 'ISO/IEC 42001', 'Combined']),
-  riskTier: z.enum(['Low', 'Medium', 'High', 'Critical']),
+  framework: playbookFrameworkEnum,
+  riskTier: riskTierEnum,
   useCaseDescription: z.string().min(10),
   useCaseName: z.string().optional(),
   focusAreas: z.array(z.string()).optional(),
@@ -223,17 +331,8 @@ const playbookTaskSchema = z.object({
   taskId: z.string(),
   name: z.string(),
   description: z.string(),
-  owner: z.enum([
-    'AI Governance Lead',
-    'Business Owner',
-    'Security Team',
-    'Privacy/Legal',
-    'IT/Engineering',
-    'HR/Training',
-    'Risk/Compliance',
-    'Executive Sponsor',
-  ]),
-  priority: z.enum(['critical', 'high', 'medium', 'low']),
+  owner: taskOwnerEnum,
+  priority: taskPriorityEnum,
   effort: z.string(),
   dependsOn: z.array(z.string()).optional(),
   nistActions: z.array(z.string()).default([]),
@@ -260,8 +359,8 @@ const playbookKPISchema = z.object({
 
 export const playbookSchema = z.object({
   title: z.string(),
-  framework: z.enum(['NIST AI RMF', 'EU AI Act', 'ISO/IEC 42001', 'Combined']),
-  riskTier: z.enum(['Low', 'Medium', 'High', 'Critical']),
+  framework: playbookFrameworkEnum,
+  riskTier: riskTierEnum,
   useCaseName: z.string(),
   summary: z.string(),
   phases: z.array(playbookPhaseSchema),

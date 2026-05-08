@@ -1,0 +1,520 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:7fc303f584f46e9f68234811300969bc787bb43bd108c28eef96974a738e8686",
+  "documentCode": "GS-CHKL-AUPGENER-01",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GOVSECURE  |  GOVERNANCE WORKFLOW AND ADD-ON TOOL",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Structured generator and policy assembly workbook for producing a right-sized, client-ready AI acceptable use policy for SMB environments.",
+        "Use this as a controlled working document. Complete the decision sections first, then issue the policy section as the official employee-facing standard."
+      ],
+      "tables": [
+        [
+          [
+            "Prepared For",
+            "{{COMPANY_NAME}}"
+          ],
+          [
+            "Version / Effective Date",
+            "v1.0  |  {{EFFECTIVE_DATE}}"
+          ]
+        ],
+        [
+          [
+            "Purpose  This generator helps the organization produce a clean, enforceable AI acceptable use policy by capturing company-specific decisions, selecting the right policy clauses, and assembling them into a final client-facing policy."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "1. Generator Overview",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "This tool is built for small and mid-sized businesses that need a serious policy without writing one from scratch every time. It works like a controlled assembly line: you capture business facts, choose governance decisions, select optional clauses, and issue a clean AI acceptable use policy."
+      ],
+      "tables": [
+        [
+          [
+            "What it does",
+            "Primary user",
+            "Output produced",
+            "Best use case"
+          ],
+          [
+            "Converts policy choices into a usable AI acceptable use policy.",
+            "AI Governance Lead, Security, HR, Legal, or IT owner.",
+            "A client-ready policy plus a record of policy decisions.",
+            "SMB rollout, policy refresh, audit prep, or managed service packaging."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "2. How to Use This Generator",
+      "id": "3",
+      "level": 2,
+      "paragraphs": [
+        "• Complete the organization profile and policy input pages before editing the policy language.",
+        "• Use the policy decision worksheet to define approved tools, prohibited data, human review rules, reporting expectations, and exception handling.",
+        "• Select optional clauses only where they match the organization's actual operating model. Do not bolt on rules just to look sophisticated.",
+        "• Issue the final policy section as the employee-facing document and retain the generator workbook as internal evidence."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3. Core Policy Modules Included",
+      "id": "4",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Module",
+            "Why it matters",
+            "What the generator helps decide"
+          ],
+          [
+            "Scope and approved use",
+            "Stops ambiguity about who and what the policy covers.",
+            "Covered population, in-scope tools, permitted activities."
+          ],
+          [
+            "Data handling",
+            "Prevents confidential or regulated data from leaking into unsafe tools.",
+            "Prohibited data classes, uploads, retention, public tool restrictions."
+          ],
+          [
+            "Human accountability",
+            "Prevents blind reliance on AI outputs.",
+            "Review checkpoints, approval needs, high-impact decisions."
+          ],
+          [
+            "Reporting and violations",
+            "Creates consequence and escalation paths.",
+            "Incident reporting, misuse handling, exception approval, disciplinary path."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "4. Organization Profile and Policy Inputs",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "Complete this page before finalizing policy text. These inputs drive the level of restriction, scope, and escalation language in the policy."
+      ],
+      "tables": [
+        [
+          [
+            "Organization name",
+            "{{COMPANY_NAME}}"
+          ],
+          [
+            "Business context",
+            "{{INDUSTRY_OR_BUSINESS_MODEL}}"
+          ],
+          [
+            "Document owner",
+            "{{DOCUMENT_OWNER}}"
+          ],
+          [
+            "Executive sponsor",
+            "{{EXECUTIVE_SPONSOR}}"
+          ],
+          [
+            "Covered worker groups",
+            "{{EMPLOYEES_CONTRACTORS_TEMPS_ETC}}"
+          ],
+          [
+            "Approved AI platforms",
+            "{{APPROVED_AI_TOOLS}}"
+          ],
+          [
+            "Known prohibited tools or categories",
+            "{{PROHIBITED_TOOLS_OR_USE_CASES}}"
+          ],
+          [
+            "Sensitive data categories in business",
+            "{{SENSITIVE_DATA_TYPES}}"
+          ],
+          [
+            "Primary exception / approval contact",
+            "{{APPROVAL_CONTACT}}"
+          ],
+          [
+            "Planned effective date",
+            "{{EFFECTIVE_DATE}}"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "5. Policy Decision Worksheet",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [
+        "Choose the stance that matches the organization. This worksheet becomes the decision record behind the issued policy."
+      ],
+      "tables": [
+        [
+          [
+            "Policy topic",
+            "GovSecure standard",
+            "Selection",
+            "Company notes"
+          ],
+          [
+            "Approved AI tools",
+            "Use only named enterprise or approved tools for business work.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Public AI tool use",
+            "Block sensitive data from public or free-tier tools.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Prompt / upload rules",
+            "Prohibit confidential, regulated, trade secret, source code, customer, or employee data in unapproved tools.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Human review",
+            "Require human review before relying on AI output for material decisions, external communications, or regulated work.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Customer-facing AI",
+            "Escalate chatbots, recommendations, pricing, eligibility, or decision-support that affect customers.",
+            "[ ] Include  [ ] Exclude",
+            "{{NOTES}}"
+          ],
+          [
+            "Software development use",
+            "Allow AI-assisted coding only on approved platforms and with secure review and repository controls.",
+            "[ ] Include  [ ] Exclude",
+            "{{NOTES}}"
+          ],
+          [
+            "Vendor AI features",
+            "Review new AI features inside existing SaaS platforms before enablement.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Incident reporting",
+            "Report misuse, leakage, suspicious outputs, and vendor issues immediately to the named channel.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Exceptions",
+            "Allow exceptions only with written approval from the governance owner and supporting functions.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ],
+          [
+            "Disciplinary language",
+            "State that misuse can result in access restriction, remediation, or disciplinary action.",
+            "[ ] Adopt  [ ] Modify",
+            "{{NOTES}}"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "6. Optional Clause Library",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "Select only the modules the client actually needs. Optional clauses should make the policy sharper, not heavier."
+      ],
+      "tables": [
+        [
+          [
+            "Optional clause",
+            "When to use it",
+            "Select",
+            "Drafting note"
+          ],
+          [
+            "Customer support / chatbot clause",
+            "Use when customer-facing generative AI or response drafting is allowed.",
+            "[ ]",
+            "Add supervision, disclosure, and escalation requirements."
+          ],
+          [
+            "Marketing content clause",
+            "Use when teams generate copy, images, or campaign drafts with AI.",
+            "[ ]",
+            "Emphasize brand review, rights checks, and accuracy review."
+          ],
+          [
+            "Software development clause",
+            "Use when developers use AI coding assistants or code-generation tools.",
+            "[ ]",
+            "Require secure review, secrets protection, and repository controls."
+          ],
+          [
+            "HR and recruiting clause",
+            "Use when AI supports candidate screening, role descriptions, or people decisions.",
+            "[ ]",
+            "Keep strong human review; escalate for high-impact decisions."
+          ],
+          [
+            "Regulated data clause",
+            "Use when the business touches health, financial, export-controlled, or other regulated data.",
+            "[ ]",
+            "Keep the restriction language crisp and non-negotiable."
+          ],
+          [
+            "Meeting assistant clause",
+            "Use when transcription, note generation, or meeting intelligence tools are allowed.",
+            "[ ]",
+            "Require participant notice and controlled storage."
+          ],
+          [
+            "Vendor feature enablement clause",
+            "Use when existing SaaS tools frequently roll out AI features by default.",
+            "[ ]",
+            "State that new AI features require review before activation."
+          ]
+        ],
+        [
+          [
+            "Drafting note  Delete instructions and unchecked references before issuing the final policy. The employee-facing version should read like one coherent standard."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "7. Generated AI Acceptable Use Policy Template",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "This section is intended to be copied, finalized, and issued as the formal employee-facing policy once the decision worksheets are complete."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "{{COMPANY_NAME}} AI Acceptable Use Policy",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [
+        "Effective Date: {{EFFECTIVE_DATE}}   |   Policy Owner: {{DOCUMENT_OWNER}}"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1. Purpose",
+      "id": "10",
+      "level": 3,
+      "paragraphs": [
+        "This policy establishes the rules for acceptable business use of artificial intelligence tools, including generative AI systems, AI-enabled software features, assistants, and automations. Its purpose is to enable responsible use while protecting company, customer, employee, and third-party information from misuse, leakage, inaccuracy, legal exposure, or unmanaged operational risk."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2. Scope",
+      "id": "11",
+      "level": 3,
+      "paragraphs": [
+        "This policy applies to {{COVERED_POPULATION}} when using AI in connection with company work, company data, company systems, customer interactions, or business decision-making. It covers both standalone AI tools and AI features embedded inside software already used by the organization."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3. Approved Use",
+      "id": "12",
+      "level": 3,
+      "paragraphs": [
+        "Personnel may use only {{APPROVED_AI_TOOLS}} for business purposes unless a written exception is approved. Acceptable use includes low-risk drafting, summarization, brainstorming, translation, approved automation support, and other uses documented in the company's AI governance process."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4. Prohibited Use",
+      "id": "13",
+      "level": 3,
+      "paragraphs": [
+        "Personnel must not enter, upload, connect, or expose {{PROHIBITED_DATA_TYPES}} to unapproved AI tools or services. Personnel must not use AI to make final decisions on behalf of the company in high-impact areas without required human review, and must not use AI in ways that violate law, contract, confidentiality obligations, intellectual property rules, employment obligations, or company policy."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5. Data Handling and Prompt Rules",
+      "id": "14",
+      "level": 3,
+      "paragraphs": [
+        "Before using AI, users must consider what data is being submitted, where the tool processes that data, whether the tool is approved for that data type, and whether retention or model-training settings are acceptable. Sensitive, regulated, confidential, customer, employee, source code, financial, legal, or trade secret information may only be used where expressly approved by the organization and supported by technical and contractual controls."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6. Output Review and Human Accountability",
+      "id": "15",
+      "level": 3,
+      "paragraphs": [
+        "Users remain responsible for the accuracy, appropriateness, legality, and business impact of work produced with AI assistance. AI output must be reviewed before it is acted upon, shared externally, relied upon for material business decisions, or incorporated into customer, employee, legal, financial, security, or compliance-sensitive activity. AI does not replace human judgment, approval, or accountability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7. Customer-Facing or External Use",
+      "id": "16",
+      "level": 3,
+      "paragraphs": [
+        "Any chatbot, automated response, recommendation, decision-support, public content generation, or customer-facing AI workflow must follow {{CUSTOMER_FACING_RULE}} and any additional review requirements set by the company. Where required, human escalation paths, disclosures, or quality controls must be implemented before launch."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8. AI Features in Third-Party Software",
+      "id": "17",
+      "level": 3,
+      "paragraphs": [
+        "New AI features inside existing SaaS or business applications must not be enabled or used for company work until the organization confirms their data handling, security posture, contractual terms, and approved use conditions. Vendor claims are not enough; review comes first."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9. Incident Reporting and Exceptions",
+      "id": "18",
+      "level": 3,
+      "paragraphs": [
+        "Users must promptly report suspected misuse, data leakage, hallucinations with material impact, unsafe outputs, unauthorized AI tool usage, or vendor AI concerns to {{REPORTING_CHANNEL}}. Exceptions to this policy may be granted only through written approval by {{APPROVAL_CONTACT}} and must be documented."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10. Violations",
+      "id": "19",
+      "level": 3,
+      "paragraphs": [
+        "Violations of this policy may result in access restriction, corrective coaching, remediation requirements, disciplinary action, vendor disablement, or other response measures based on the nature and severity of the issue."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "11. Review and Maintenance",
+      "id": "20",
+      "level": 3,
+      "paragraphs": [
+        "This policy will be reviewed periodically and updated when the company's AI tooling, risk exposure, legal environment, or governance program materially changes."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8. Approval Record",
+      "id": "21",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Prepared by",
+            "{{DOCUMENT_OWNER}}"
+          ],
+          [
+            "Reviewed by",
+            "{{REVIEWERS}}"
+          ],
+          [
+            "Approved by",
+            "{{APPROVER}}"
+          ],
+          [
+            "Issue date / next review",
+            "{{ISSUE_DATE_AND_NEXT_REVIEW}}"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "9. Quick Implementation Checklist",
+      "id": "22",
+      "level": 1,
+      "paragraphs": [
+        "• Confirm the list of approved AI platforms before issuing the policy.",
+        "• Validate prohibited data language against real business data classes and contractual obligations.",
+        "• Make sure reporting channels, approvers, and exception contacts are real people and active workflows.",
+        "• Pair the policy with awareness training, a use case intake process, and a registry so the policy has somewhere to live beyond a PDF graveyard.",
+        "• Review the policy whenever a major AI platform, customer-facing use case, or regulated data workflow changes."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10. Recommended Companion Documents",
+      "id": "23",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Document",
+            "Why it should exist",
+            "GovSecure companion item"
+          ],
+          [
+            "AI Use Case Registry",
+            "Tracks approved, pending, and reviewed AI activity.",
+            "Governance Workflows and Add-On Tool #1"
+          ],
+          [
+            "Shadow AI Discovery Workflow",
+            "Finds unapproved AI before it turns into a headline or an HR problem.",
+            "Governance Workflows and Add-On Tool #2"
+          ],
+          [
+            "3rd-Party AI Vendor Risk Review",
+            "Evaluates bought AI tools and AI features in existing vendors.",
+            "Governance Workflows and Add-On Tool #4"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Acceptable_Use_Policy_Generator (1).docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 28,
+    "section_count": 23,
+    "table_count": 10
+  },
+  "subType": "aup-generator",
+  "title": "AI Acceptable Use Policy Generator"
+}

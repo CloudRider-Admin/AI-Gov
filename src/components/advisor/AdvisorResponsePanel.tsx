@@ -139,6 +139,29 @@ export function AdvisorResponsePanel({
         </button>
       </div>
 
+      {/* ── Post-processing warning banner (citation validator, etc.) ── */}
+      {response.warnings && response.warnings.length > 0 && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="rounded-xl border border-terminal-amber/30 bg-terminal-amber/5 p-4"
+        >
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-4 h-4 text-terminal-amber shrink-0 mt-0.5" aria-hidden="true" />
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-mono font-semibold text-terminal-amber">
+                {response.warnings.length === 1 ? 'Notice' : `${response.warnings.length} notices`}
+              </p>
+              <ul className="mt-1 space-y-1 text-xs font-sans text-terminal-text">
+                {response.warnings.map((w, i) => (
+                  <li key={i} className="leading-relaxed">{w}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Clarification mode: questionnaire form ── */}
       {response.mode === 'clarification' ? (
         <>
@@ -251,7 +274,11 @@ export function AdvisorResponsePanel({
               </Link>
             </div>
           ) : (
-            <RegulationsPanel regulations={response.regulationCheck} />
+            <RegulationsPanel
+              regulations={response.regulationCheck}
+              sourcesStructured={response.sourcesStructured}
+              sources={response.sources}
+            />
           )}
 
           {/* Generated artifact inline viewer */}

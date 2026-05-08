@@ -1,0 +1,16 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:17e3b1ca60d218b8776e67813b49461e97cb42ce02acaf29d1bf329a31a8a440",
+  "documentCode": "GS-PLBK-AICHEFIN-07",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [],
+  "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Infographic.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 0,
+    "section_count": 0
+  },
+  "subType": "ai-chef-infographic-noncustom",
+  "title": "GovSecure AI Chef Infographic"
+}

@@ -1,0 +1,251 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:35796362794519233e9657027a82f50879350cd6e372df2b461ea485fa77f9b8",
+  "documentCode": "GS-CHKL-INCIDENT-07",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Incident Response Checklist (AI-Specific)",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Detection & Classification",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Incident type classified (data leak, prompt injection, harmful output, model abuse, vendor outage, drift)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Severity assigned (impact + scope + obligations) and stakeholders notified",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Containment",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Disable access or restrict features (tool allowlist lockdown where applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Rotate keys/tokens if exposure suspected",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Preserve logs/evidence and begin timeline",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Eradication & Recovery",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Root cause identified and fixed (guardrails, permissions, retrieval filters, vendor changes)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Re-test safety/security and restore service with conditions as needed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Comms & Compliance",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Legal/Privacy notification obligations assessed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Customer/employee communications plan executed if required",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Post‑Incident",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Postmortem completed; corrective actions tracked to closure",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Registry/risk register/evidence pack updated",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Incident_Response_Checklist_AI_Specific.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 9,
+    "table_count": 6
+  },
+  "subType": "incident-response",
+  "title": "AI Incident Response Checklist (AI-Specific)"
+}

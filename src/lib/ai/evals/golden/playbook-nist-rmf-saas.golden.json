@@ -1,0 +1,23 @@
+{
+  "id": "playbook-nist-rmf-saas",
+  "category": "playbook",
+  "input": {
+    "framework": "NIST AI RMF",
+    "riskTier": "Medium",
+    "useCaseName": "Sales Insights Co-Pilot",
+    "useCaseDescription": "B2B SaaS embedding an LLM co-pilot that summarises CRM activity for AEs."
+  },
+  "expectedPhases": ["Govern", "Map", "Measure", "Manage"],
+  "requiredClauses": [
+    "GOVERN",
+    "MAP",
+    "MEASURE",
+    "MANAGE"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "MAP-99",
+    "MEASURE-99",
+    "MANAGE-99"
+  ]
+}

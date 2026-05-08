@@ -1,0 +1,16 @@
+{
+  "id": "advisory-ai-chef",
+  "category": "advisory-query",
+  "input": {
+    "message": "Walk me through the AI Chef Operating Model — what are the stations and how do they fit together?"
+  },
+  "requiredClauses": [
+    "AI Chef",
+    "station"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "12 stations"
+  ],
+  "expectedIntent": "advisor"
+}

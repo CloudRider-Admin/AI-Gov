@@ -1,0 +1,97 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:1efe0c339e8f6d24c6cc442c361b592c71338f8174fdeb8b8ea7dbc43cc00f8b",
+  "documentCode": "GS-CHKL-USECASEI-25",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GOVSECURE\nAI Use Case Intake Checklist\nA practical step-by-step checklist for capturing the right information before an AI use case is submitted, triaged, approved, or sent back for\ncleanup.\nPurpose\nUse this checklist to make sure the intake process covers the business objective, AI tool profile, data exposure, decision impact, risks, required controls, and\napproval readiness. It is designed for SMB governance teams that want discipline without red tape.\nDocument Type Operational Checklist Template Version 1.0\nPrepared For {{COMPANY_NAME}} Owner {{AI_GOVERNANCE_LEAD}}\nAt least annually or upon process\nReview Cycle Related Artifact AI Use Case Registry\nchange\nBusiness owners, AI requestors, IT,\nPrimary Users Status Draft / Approved / In Use\nsecurity, privacy, legal\nHow to use this checklist\n Complete the checklist during the intake process - not after the use case is already live.\n If an item cannot be completed, document the gap and identify who must close it before review.\n Use the Notes / Evidence column for links, supporting documents, screenshots, or contract references.\n Any answered risk trigger should be routed into the AI risk triage workflow and the AI Use Case Registry.\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "1. Initiate the request\nConfirm that the use case has a real sponsor, business purpose, and enough context to justify intake.\nCheck Required step or confirmation What should be covered Notes / evidence\nRecord the owner, department, and who\nConfirm a named business owner is\n[ ] is accountable for outcomes, not just for\nsponsoring the use case.\nsubmitting the request.\nState the business problem or Capture what the team is trying to\n[ ]\nopportunity clearly. improve, reduce, automate, or accelerate.\nDefine the requested timeline and Note expected go-live, pilot, or\n[ ]\nurgency. evaluation dates and why timing matters.\nIdentify if the request is a first-time use\nConfirm whether this is new, existing, or\n[ ] case, an expansion, or a change to\nmaterially changed AI activity.\nsomething already in use.\n2. Define the use case\nMake the use case understandable enough that reviewers know what the AI is supposed to do and what it should never do.\nCheck Required step or confirmation What should be covered Notes / evidence\nSummarize the exact activity, such as\nDescribe the AI-enabled task or drafting, summarizing, classification,\n[ ]\nworkflow. chatbot assistance, decision support, or\nautomation.\nIdentify who will use the AI, who\nClarify the intended users and affected\n[ ] depends on the output, and which\nteams.\nfunction owns the process.\nNote whether the output is text,\nrecommendations, analysis, code,\n[ ] Define the expected outputs.\ncustomer responses, scoring, or\nautomation triggers.\nCapture how value will be judged: time\nsaved, cycle-time reduction, quality\n[ ] Define success measures. improvement, revenue lift, error\nreduction, or user experience\nimprovement.\n3. Profile the tool, model, or vendor\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "Reviewers should know what technology is involved before they decide whether the request is routine or risky.\nCheck Required step or confirmation What should be covered Notes / evidence\nList the product, vendor, model family,\nIdentify the AI tool, model, or vendor by\n[ ] embedded feature, API, or internal\nname.\nsolution involved.\nIndicate whether the use case relies on a\npublic consumer tool, enterprise tenant,\n[ ] Confirm the deployment model.\nembedded SaaS feature, direct API, or\ncustom build.\nCheck whether the tool is already Record current approval status and\n[ ]\napproved. whether an exception is being requested.\nConfirm whether security papers, privacy\nCapture third-party documentation terms, DPAs, or product documentation\n[ ]\navailability. are available if the tool is externally\nprovided.\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 4",
+      "id": "page-4",
+      "level": 1,
+      "paragraphs": [
+        "4. Understand the data profile\nMost intake failures happen here. If the team cannot explain the data, the review should not pretend otherwise.\nCheck Required step or confirmation What should be covered Notes / evidence\nIdentify prompt content, file uploads,\n[ ] List the data inputs the AI will receive. datasets, records, or integrations used by\nthe system.\nClassify whether the use case touches\nIdentify the highest data sensitivity public, internal, confidential, regulated,\n[ ]\ninvolved. customer, employee, financial, or other\nsensitive information.\nCall out any data types that require an\nConfirm whether prohibited or restricted\n[ ] approved platform, extra controls, or\ndata is involved.\noutright prohibition.\nCapture known vendor terms for\nCheck how data is stored, retained, or\n[ ] retention, reuse, training, logging, and\nused for model training.\ndeletion.\nCommon failure point\nIf the requestor cannot explain what data goes in, what outputs come out, and whether the vendor trains on that data, the intake is not complete. That is not a minor detail.\nThat is the review.\n5. Assess impact and decision use\nThe big question is not whether AI is involved. It is whether AI can influence decisions that matter.\nCheck Required step or confirmation What should be covered Notes / evidence\nClarify whether people only reference\nDetermine whether the output informs\n[ ] the output, act on it directly, or allow it\nor automates a decision.\nto trigger business steps automatically.\nNote whether customers, employees,\nIdentify who may be affected by the\n[ ] applicants, vendors, patients, or\noutput.\nmembers of the public are impacted.\nCustomer- or public-facing use cases\nConfirm whether the use case is internal-\n[ ] typically require tighter review and\nfacing or external-facing.\nstronger controls.\nIdentify any regulated or high- Flag HR, finance, healthcare, legal, safety,\n[ ]\nconsequence context. eligibility, credit, or other areas where\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "Check Required step or confirmation What should be covered Notes / evidence\nbad output can travel fast and hurt\nharder.\n6. Run the initial risk screen\nThis is the fast filter that tells the governance team whether the request is simple, sensitive, or likely to need escalation.\nCheck Required step or confirmation What should be covered Notes / evidence\nCheck for sensitive or regulated data If yes, route the request for deeper\n[ ]\nexposure. privacy, security, and control review.\nCheck for customer-facing or employee- If yes, document how outputs will be\n[ ]\nimpacting usage. reviewed and what safeguards exist.\nCheck for automated action or significant If yes, require clearer oversight,\n[ ]\ndecision support. validation, and escalation criteria.\nCheck for integration with core systems If yes, confirm architecture, access\n[ ]\nor large-scale deployment. controls, logging, and rollback readiness.\nEscalation note\nAny yes-answer tied to sensitive data, customer or employee impact, automated decisions, or regulated use should trigger deeper review. The checklist is a front door, not a\nloophole.\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "7. Confirm required controls and safeguards\nA use case should not move forward just because it sounds useful. Useful can still be reckless if guardrails are missing.\nCheck Required step or confirmation What should be covered Notes / evidence\nIdentify the human oversight point,\nDefine who reviews outputs before\n[ ] exception thresholds, and escalation\naction is taken.\npath for suspect outputs.\nDocument who can use the tool, who\nConfirm access and least-privilege\n[ ] can configure it, and who can approve\ncontrols.\nchanges.\nList any spot checks, sample reviews,\nConfirm output validation or quality\n[ ] testing, or accuracy thresholds used\nchecks.\nbefore trust is granted.\nState whether employees need policy\nConfirm user awareness or training reminders, do-not-enter guidance, or\n[ ]\nneeds. prompt/output review training before\nrollout.\n8. Assemble the supporting evidence\nA clean intake package saves time, prevents endless follow-up, and makes the registry look like a governance system instead of a junk drawer.\nCheck Required step or confirmation What should be covered Notes / evidence\nExamples include screenshots, process\nnotes, architecture diagrams, contract\n[ ] Attach or link supporting documentation.\ndocuments, DPAs, vendor whitepapers,\nor pilot results.\nDo not hide sharp edges. Capture them\nSummarize known risks, concerns, or\n[ ] early so the review can address them\nrequested exceptions.\nhonestly.\nDocument dependencies and affected List connected applications, data sources,\n[ ]\nsystems. business processes, and support teams.\nProvide a quick synopsis of what the use\n[ ] Prepare a short reviewer summary. case does, why it matters, and what\nneeds a decision.\n9. Prepare the triage handoff\nBy this point the request should be reviewable, categorizable, and ready for the next governance step.\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "Check Required step or confirmation What should be covered Notes / evidence\nEstimate whether the request appears\n[ ] Propose an initial risk rating. low, medium, or high risk based on data,\nimpact, and control complexity.\nMark whether security, privacy, legal,\nIdentify which review teams are\n[ ] procurement, compliance, or IT\nrequired.\noperations should be included.\nThe title, owner, tool, status, and next\nConfirm the record is ready for the AI\n[ ] step should be clear enough to log\nUse Case Registry.\nimmediately.\nExamples: ready for standard review,\nfast-track review, remediation required,\n[ ] Identify the next workflow state.\nvendor review pending, or escalation\nneeded.\n10. Submission readiness and handoff\nUse this final checkpoint before the use case is logged as complete and sent for review, approval, or escalation.\nCheck Required step or confirmation What should be covered Notes / evidence\nA complete intake package has been All required sections above are complete\n[ ] assembled and obvious gaps have been or the missing items have a named owner\nclosed. and due date.\nThe business owner has reviewed the There is a named owner for the use case,\n[ ] described use case and accepts not just a curious employee with a\naccountability for its intended use. browser tab and optimism.\nSecurity, privacy, legal, procurement, or\nThe request has been routed to the right\n[ ] IT reviewers have been engaged where\nreviewers.\ntriggers require them.\nThe use case is ready to be entered or Registry ID, title, owner, tool/vendor, risk\n[ ]\nupdated in the AI Use Case Registry. rating, and status are ready for recording.\nMark whether the use case is ready for\nfast-track approval, standard review,\n[ ] A next decision has been defined.\ndeeper assessment, or\nrejection/remediation.\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "Prepared by {{REQUESTOR_NAME}} Date {{DATE}}\n{{APPROVED / NEEDS MORE INFO /\nReviewed by {{REVIEWER_NAME}} Decision\nESCALATE}}\nRegistry ID {{REGISTRY_ID}} Next Review Date {{DATE}}\nGovSecure | Checklist Library | AI Use Case Intake"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Use_Case_Intake_Checklist.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 10951,
+    "section_count": 8
+  },
+  "subType": "use-case-intake",
+  "title": "GovSecure AI Use Case Intake Checklist"
+}

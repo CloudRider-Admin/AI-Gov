@@ -1,0 +1,233 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:ae7d247c6c9e48d5bb4028ca2e24f12ae9c814dc283520273163e50ed2ab58ec",
+  "documentCode": "GS-CHKL-REGULATO-17",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Regulatory Change Impact Assessment Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Change Intake",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Regulatory update captured (jurisdiction, effective date, summary)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Applicability assessed (who/what it applies to)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Impact Mapping",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Impacted policies identified",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Impacted controls identified",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Impacted procedures identified",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Evidence requirements updated",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Execution Plan",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Owners assigned (Legal/Compliance/Security/IT) and tasks created with deadlines",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Communications/training updates planned (if needed)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Risk register / GRC records updated",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Proof & Closure",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Proof of completion stored (audit-ready)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Follow-up review date set",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Regulatory_Change_Impact_Assessment_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 8,
+    "table_count": 5
+  },
+  "subType": "regulatory-change",
+  "title": "AI Regulatory Change Impact Assessment Checklist"
+}

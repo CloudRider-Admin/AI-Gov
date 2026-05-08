@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 import { ChevronDown, ChevronRight, Download, FileText, ClipboardCheck, BookOpen, FileDown } from 'lucide-react';
+import {
+  getDocumentTypeMeta,
+  getCategoryBadgeClass,
+  getCategoryLabel,
+  isGovSecureType,
+} from './documentTypeMeta';
 
 interface ArtifactViewerProps {
   artifact: {
@@ -74,14 +80,20 @@ function DocumentSummary({ data }: { data: Record<string, unknown> }) {
   const riskTier = data.riskTier as string;
   const documentType = data.documentType as string;
   const sections = (data.sections as Array<{ heading: string }>) ?? [];
+  const meta = getDocumentTypeMeta(documentType);
 
   return (
     <div className="space-y-2">
       <p className="text-sm font-mono text-terminal-text">{title}</p>
-      <div className="flex gap-2">
-        <span className="text-xs font-mono px-2 py-0.5 border border-terminal-border rounded">
-          {documentType}
+      <div className="flex flex-wrap gap-2 items-center">
+        <span className={`text-xs font-mono px-2 py-0.5 rounded ${getCategoryBadgeClass(meta.category)}`}>
+          {meta.label}
         </span>
+        {isGovSecureType(documentType) && (
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-terminal-green/10 text-terminal-green border border-terminal-green/30">
+            {getCategoryLabel(meta.category)}
+          </span>
+        )}
         <span className="text-xs font-mono px-2 py-0.5 border border-terminal-border rounded">
           {riskTier}
         </span>

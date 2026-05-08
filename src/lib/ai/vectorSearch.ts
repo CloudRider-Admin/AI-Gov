@@ -18,7 +18,36 @@ export interface SemanticSearchOptions {
   threshold?: number;
   /** Filter by sourceType(s) */
   sourceTypes?: string[];
+  /**
+   * Phase 4: when truthy, GovSecure-tagged results get their similarity score
+   * multiplied by `boostFactor` (default 1.25). Re-sorts after boosting.
+   * Auto-detected from the query when not explicitly set — see
+   * `shouldBoostGovSecure()`.
+   */
+  govsecureBoost?: boolean;
+  /** Multiplier applied to GovSecure rows when `govsecureBoost` is on. Default 1.25. */
+  boostFactor?: number;
 }
+
+/**
+ * Returns true when the query mentions GovSecure-flagship terminology, in
+ * which case GovSecure-tagged DB rows should outrank generic NIST/EU entries
+ * even if those have slightly higher raw similarity. Exported for tests +
+ * for callers that want to make the decision explicit.
+ */
+export function shouldBoostGovSecure(query: string): boolean {
+  const q = query.toLowerCase();
+  return (
+    /\bgovsecure\b/.test(q) ||
+    /\bai\s+chef\b/.test(q) ||
+    /\b90.?day\b/.test(q) ||
+    /\bpolicy\s+suite\b/.test(q) ||
+    /\bblueprint\b/.test(q) ||
+    /\btprm\b/.test(q)
+  );
+}
+
+const DEFAULT_BOOST_FACTOR = 1.25;
 
 interface VectorSearchRow {
   id: string;
@@ -39,7 +68,14 @@ export async function semanticSearch(
   query: string,
   options: SemanticSearchOptions = {},
 ): Promise<KnowledgeDocument[]> {
-  const { limit = 5, category, threshold = 0.3, sourceTypes } = options;
+  const {
+    limit = 5,
+    category,
+    threshold = 0.3,
+    sourceTypes,
+    govsecureBoost = shouldBoostGovSecure(query),
+    boostFactor = DEFAULT_BOOST_FACTOR,
+  } = options;
 
   try {
     // Generate query embedding
@@ -73,10 +109,22 @@ export async function semanticSearch(
       limit,
     );
 
-    // Filter by threshold and map to KnowledgeDocument
-    return rows
-      .filter((row: VectorSearchRow) => row.similarity >= threshold)
-      .map((row: VectorSearchRow) => ({
+    // Phase 4: optionally boost GovSecure-tagged rows for queries that
+    // mention GovSecure-flagship terminology, then re-sort and apply the
+    // threshold against the boosted score.
+    const boosted = rows.map((row: VectorSearchRow) => {
+      const adjusted = govsecureBoost && row.sourceType === 'govsecure'
+        ? Math.min(1, row.similarity * boostFactor)
+        : row.similarity;
+      return { row, adjusted };
+    });
+
+    boosted.sort((a, b) => b.adjusted - a.adjusted);
+
+    return boosted
+      .filter(({ adjusted }) => adjusted >= threshold)
+      .slice(0, limit)
+      .map(({ row, adjusted }) => ({
         id: row.id,
         title: row.title,
         content: row.content,
@@ -84,7 +132,7 @@ export async function semanticSearch(
         tags: row.tags ?? [],
         source: row.source ?? `Knowledge Base — ${row.title}`,
         lastUpdated: new Date().toISOString().split('T')[0],
-        relevanceScore: row.similarity,
+        relevanceScore: adjusted,
       }));
   } catch (error) {
     // Fallback to keyword search on any failure

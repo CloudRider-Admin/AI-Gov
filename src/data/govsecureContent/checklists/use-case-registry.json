@@ -1,0 +1,511 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:aab709caff4268e9aa11fc6f3a0b9c76a47f41edbe25bbfd9d20d800b28725d2",
+  "documentCode": "GS-CHKL-USECASER-27",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GOVSECURE  |  PRODUCTIZED GOVERNANCE WORKFLOW",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "AI Use Case Registry",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "Standard operating template for documenting, reviewing, approving, and monitoring organizational AI use cases.",
+        "Use this template as a controlled document and update it whenever a new AI use case is proposed, materially changed, approved, retired, or escalated."
+      ],
+      "tables": [
+        [
+          [
+            "Prepared For",
+            "{{COMPANY_NAME}}"
+          ],
+          [
+            "Version / Effective Date",
+            "v1.0  |  {{EFFECTIVE_DATE}}"
+          ]
+        ],
+        [
+          [
+            "Purpose  This registry is the system of record for all material AI use cases in the organization. It helps leadership see what AI is being used, by whom, for what purpose, at what risk level, and under what approval status."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "1. Registry Overview",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "The AI Use Case Registry is the organization’s central control record for AI usage. It supports visibility, review, accountability, and evidence of governance decisions. Every approved, pending, escalated, prohibited, or retired AI use case should be captured here.",
+        "Recommended operating rule:",
+        "No material AI use case should go live without being logged in the registry and assigned an owner, a risk rating, and an approval status."
+      ],
+      "tables": [
+        [
+          [
+            "What it captures",
+            "Why it matters",
+            "Minimum owner",
+            "Update trigger"
+          ],
+          [
+            "Use case name, business purpose, owner, tool/vendor, data involved, affected users, risk level, review outcome, and monitoring date.",
+            "Creates one source of truth. Prevents “we thought someone else was tracking it” syndrome.",
+            "Business owner with AI Governance Lead oversight.",
+            "New use case, material change, re-review, incident, vendor change, or retirement."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "2. Completion Instructions",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "• Create one row for each distinct AI use case, not one row per employee or per prompt.",
+        "• Log both proposed and active use cases so the organization can see its AI pipeline as well as current exposure.",
+        "• Where one tool supports multiple materially different use cases, record them separately.",
+        "• Update the registry when data types, business purpose, vendor, risk level, or approval status materially change.",
+        "• Use the Review Notes and Required Controls fields to document conditions of approval, limitations, or remediation actions.",
+        "Status definitions"
+      ],
+      "tables": [
+        [
+          [
+            "Status",
+            "Meaning",
+            "Typical action"
+          ],
+          [
+            "Proposed",
+            "Submitted and awaiting triage or review.",
+            "Complete intake and assign initial risk rating."
+          ],
+          [
+            "Approved",
+            "Approved for use under stated conditions.",
+            "Operate, monitor, and revalidate as scheduled."
+          ],
+          [
+            "Approved with Conditions",
+            "Approved only if listed controls or restrictions are followed.",
+            "Track remediation, guardrails, and owner actions."
+          ],
+          [
+            "Escalated",
+            "Requires deeper review due to higher risk or uncertainty.",
+            "Route to security, privacy, legal, or leadership review."
+          ],
+          [
+            "Rejected / Prohibited",
+            "Not approved for organizational use.",
+            "Stop or prevent deployment and document rationale."
+          ],
+          [
+            "Retired",
+            "No longer in active use.",
+            "Keep record for history and audit trail."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "3. Required Registry Fields",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "Use the following field set as the baseline standard. Add columns only when they serve a specific business or regulatory need."
+      ],
+      "tables": [
+        [
+          [
+            "Field",
+            "Req.",
+            "Description",
+            "Example"
+          ],
+          [
+            "Use Case ID",
+            "Y",
+            "Unique identifier for tracking and cross-reference.",
+            "AI-UC-001"
+          ],
+          [
+            "Use Case Title",
+            "Y",
+            "Short business-facing name of the AI use case.",
+            "Customer email drafting assistant"
+          ],
+          [
+            "Business Owner",
+            "Y",
+            "Named person accountable for the use case outcome.",
+            "{{OWNER_NAME}}"
+          ],
+          [
+            "Department / Function",
+            "Y",
+            "Primary function using or sponsoring the use case.",
+            "Marketing"
+          ],
+          [
+            "Tool / Vendor",
+            "Y",
+            "AI platform, model, or vendor used.",
+            "Microsoft Copilot"
+          ],
+          [
+            "Use Case Purpose",
+            "Y",
+            "What the use case does and why the business wants it.",
+            "Draft campaign emails faster"
+          ],
+          [
+            "User Population",
+            "Y",
+            "Who uses it or is affected by it.",
+            "Marketing team of 8"
+          ],
+          [
+            "Data Types Involved",
+            "Y",
+            "Main data categories used as inputs or context.",
+            "Internal non-public marketing plans"
+          ],
+          [
+            "Sensitive / Regulated Data?",
+            "Y",
+            "Whether personal, confidential, regulated, or restricted data is involved.",
+            "No"
+          ],
+          [
+            "Customer / Employee Impact",
+            "Y",
+            "Whether outputs affect customers, employees, or third parties.",
+            "Indirect customer impact"
+          ],
+          [
+            "Risk Rating",
+            "Y",
+            "Low, Medium, High, or Critical based on triage criteria.",
+            "Medium"
+          ],
+          [
+            "Approval Status",
+            "Y",
+            "Current decision state of the use case.",
+            "Approved with Conditions"
+          ],
+          [
+            "Required Controls",
+            "N",
+            "Controls, restrictions, or guardrails attached to approval.",
+            "No personal data; human review required"
+          ],
+          [
+            "Review Date",
+            "Y",
+            "Date of latest review or decision.",
+            "{{DATE}}"
+          ],
+          [
+            "Next Review / Revalidation",
+            "Y",
+            "Next planned re-review date.",
+            "{{DATE}}"
+          ],
+          [
+            "Review Notes",
+            "N",
+            "Concise rationale, issues, escalation notes, or remediation actions.",
+            "Permitted only in enterprise tenant"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "4. Risk Rating Guidance",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "Use a simple risk-based approach. Small businesses do not need a PhD thesis to decide whether a use case is risky. They need clear triggers and defensible judgment."
+      ],
+      "tables": [
+        [
+          [
+            "Level",
+            "Color Cue",
+            "Typical indicators",
+            "Expected treatment"
+          ],
+          [
+            "Low",
+            "Green",
+            "Internal drafting, summarization, or brainstorming with non-sensitive content.",
+            "Fast-track review and registry entry."
+          ],
+          [
+            "Medium",
+            "Amber",
+            "Internal automation, internal confidential data in approved systems, or non-material decisions.",
+            "Security/business review and defined controls."
+          ],
+          [
+            "High",
+            "Red",
+            "Sensitive data, customer-facing outputs, HR/finance/legal impacts, or significant operational dependence.",
+            "Escalated review with privacy, legal, and security input."
+          ],
+          [
+            "Critical",
+            "Deep Red",
+            "Automated decisions with major impact, regulated use, safety impact, or unresolved vendor/data concerns.",
+            "Executive review, enhanced controls, or prohibition."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "5. Master Registry Template",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "Use this page as the formal template. For active operations, the same structure can also be maintained in a spreadsheet or system of record."
+      ],
+      "tables": [
+        [
+          [
+            "Use Case ID",
+            "Use Case Title",
+            "Owner",
+            "Dept.",
+            "Tool / Vendor",
+            "Purpose",
+            "Data Types",
+            "Risk",
+            "Status",
+            "Review Date",
+            "Next Review",
+            "Required Controls / Notes"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ],
+          [
+            "{{AI-UC-00X}}",
+            "{{Use case title}}",
+            "{{Owner}}",
+            "{{Dept.}}",
+            "{{Vendor}}",
+            "{{Business purpose}}",
+            "{{Data types}}",
+            "{{Risk}}",
+            "{{Status}}",
+            "{{Date}}",
+            "{{Date}}",
+            "{{Controls / notes}}"
+          ]
+        ],
+        [
+          [
+            "Practical tip: If the registry grows beyond a handful of entries, move the live version into a spreadsheet or governance platform. Keep this document as the standard and control reference."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "6. Example Entries",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "These examples show what “good enough” documentation looks like for common SMB use cases."
+      ],
+      "tables": [
+        [
+          [
+            "Use Case ID",
+            "Title",
+            "Tool",
+            "Risk",
+            "Status",
+            "Notes"
+          ],
+          [
+            "AI-UC-001",
+            "Internal meeting summary assistant",
+            "Microsoft Copilot",
+            "Low",
+            "Approved",
+            "No sensitive personal data. Human review required before external sharing."
+          ],
+          [
+            "AI-UC-002",
+            "Customer support response drafting",
+            "ChatGPT Enterprise",
+            "Medium",
+            "Approved with Conditions",
+            "Only approved tenant. No payment card or health data. Responses reviewed by agent."
+          ],
+          [
+            "AI-UC-003",
+            "Resume screening automation",
+            "Third-party HR AI tool",
+            "High",
+            "Escalated",
+            "Potential employment impact. Requires legal/privacy review before rollout."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "7. Approval and Control Record",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "Use this block to evidence ownership of the registry standard itself. Operational approval of individual use cases should be captured in the registry rows and supporting workflow.",
+        "Template note: Replace bracketed placeholders and adapt terminology to your internal governance model. Keep field names stable over time to support trend analysis and auditability."
+      ],
+      "tables": [
+        [
+          [
+            "Document Owner",
+            "{{NAME / TITLE}}"
+          ],
+          [
+            "Approved By",
+            "{{NAME / TITLE}}"
+          ],
+          [
+            "Effective Date",
+            "{{DATE}}"
+          ],
+          [
+            "Review Cycle",
+            "At least quarterly during rollout, then annually or upon material change"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Use_Case_Registry_Template.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 17,
+    "section_count": 9,
+    "table_count": 10
+  },
+  "subType": "use-case-registry",
+  "title": "GOVSECURE  |  PRODUCTIZED GOVERNANCE WORKFLOW"
+}

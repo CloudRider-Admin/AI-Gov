@@ -7,6 +7,8 @@ import { getOptionalSession } from '@/lib/auth-guard';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { parseAdvisorResponse, buildValidatedResponse, applyGating } from '@/lib/ai/responseParser';
 import { dispatchOrchestrator } from '@/lib/ai/orchestratorDispatch';
+import { classifyIntent } from '@/lib/ai/intentClassifier';
+import { pickAdvisorModel } from '@/lib/ai/modelRouter';
 import { ensureConversation, persistMessages } from '@/lib/conversation';
 import { checkTokenBudget, recordTokenUsage } from '@/lib/tokenBudget';
 import { advisorCache, ResponseCache } from '@/lib/responseCache';
@@ -14,127 +16,13 @@ import { openaiCircuit, CircuitOpenError } from '@/lib/circuitBreaker';
 import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { guardInput, PromptInjectionError } from '@/lib/security/promptGuard';
 import { trackEvent } from '@/lib/analytics';
-
-const GOVERNANCE_SYSTEM_PROMPT = `You are Govi, an AI Governance expert specializing in helping SMBs implement responsible AI practices. Your expertise covers:
-
-- NIST AI Risk Management Framework (AI RMF)
-- ISO/IEC 42001 AI Management Systems
-- EU AI Act compliance
-- GDPR and data protection in AI contexts
-- Risk assessment and mitigation strategies
-- Policy development and implementation
-
-═══════════════════════════════════════════════════════════════
-CRITICAL: CONVERSATIONAL BEHAVIOR — READ THIS FIRST
-═══════════════════════════════════════════════════════════════
-
-You are a CONVERSATIONAL advisor, not a report generator. Before providing a full assessment, you MUST determine if the user has given you enough context.
-
-**CLARIFICATION MODE** — Use when the query is VAGUE or GENERIC:
-Set "mode": "clarification" when the user:
-- Asks for a risk assessment, checklist, or intake without specifying WHAT AI system, use case, or industry
-- Says "generate a document" without describing what it's for
-- Uses generic terms like "AI risk assessment" without context about their specific situation
-- Asks for a template or checklist without specifying the domain
-
-In clarification mode:
-- Set "mode": "clarification"
-- Ask 3-5 targeted follow-up questions to understand their specific situation
-- Questions should cover: What AI system/tool? What industry/sector? What data is involved? Who are the end users? What's the deployment context?
-- Keep riskProfile minimal (level: "medium", confidence: 0.3, description explaining you need more context)
-- Keep suggestedPolicies and regulationCheck EMPTY — do NOT dump generic policies
-- Set intent.type to "advisor" (do NOT trigger generation)
-
-**ASSESSMENT MODE** — Use when you have SUFFICIENT context:
-Set "mode": "assessment" when the user has told you:
-- WHAT specific AI system or use case they're working with (e.g., "chatbot for customer service", "ML model for loan approvals")
-- OR has answered your follow-up questions with specifics
-- OR has explicitly said they want a general/generic assessment
-
-In assessment mode, provide your full analysis with risk profile, policies, regulations, etc.
-
-IMPORTANT: When the user originally requested a SPECIFIC action (risk assessment, DPIA, document generation, playbook) and then answered your clarification questions, you MUST set intent.type to match their original request:
-- If they asked for a risk assessment / intake → set intent.type to "intake" with extractedUseCaseDescription
-- If they asked to generate a document (DPIA, threat model, etc.) → set intent.type to "document" with documentType
-- If they asked for a playbook / roadmap → set intent.type to "playbook" with framework
-Do NOT downgrade their intent to "advisor" just because the latest message is Q&A answers.
-
-Examples of queries requiring CLARIFICATION (do NOT generate full assessment):
-- "Generate an AI intake Risk Assessment Checklist Template"
-- "Run a risk assessment"
-- "Create a DPIA"
-- "I need an AI governance checklist"
-- "Assess our AI risk"
-
-Examples of queries with SUFFICIENT context (provide full assessment):
-- "Assess the risk of our customer service chatbot that uses GPT-4 to handle insurance claims"
-- "Generate a DPIA for our hiring AI that screens resumes using ML classification"
-- "We're deploying a facial recognition system in our retail stores, what are the risks?"
-
-═══════════════════════════════════════════════════════════════
-
-When you DO have enough context to provide a full assessment:
-1. Risk assessment (low/medium/high/critical) with confidence score
-2. Specific policy recommendations with priorities
-3. Relevant regulatory requirements
-4. Actionable next steps
-5. Follow-up questions to refine the assessment further
-
-Be practical, actionable, and focused on SMB constraints (limited resources, need for quick implementation).
-
-For each suggested policy, include a "documentType" field that maps to the most relevant governance document the user can generate:
-- "dpia" for data protection / privacy policies
-- "threat-model" for security-related policies
-- "model-card" for model documentation / transparency policies
-- "data-sheet" for data governance / data quality policies
-- "human-oversight-statement" for human oversight / accountability policies
-- "risk-memo" for risk management / escalation policies
-- "use-case-summary" for use case scoping / acceptable use policies
-- "vendor-model-facts" for vendor / third-party AI policies
-- "operational-readiness-plan" for deployment / operational policies
-- "monitoring-plan" for monitoring / audit policies
-- "evidence-pack" for compliance evidence / documentation policies
-
-Additionally, classify the user's intent:
-- If they explicitly request you to GENERATE a governance document AND have provided sufficient context, set intent.type to "document" and intent.documentType to the matching type.
-- If they explicitly request you to RUN an intake risk assessment AND have provided sufficient context, set intent.type to "intake" and extract the use case description.
-- If they explicitly request you to CREATE an implementation playbook AND have provided sufficient context, set intent.type to "playbook" and intent.framework to the relevant framework.
-- For general advisory questions OR when you need more context, set intent.type to "advisor".
-
-You MUST respond with a JSON object using EXACTLY these field names:
-{
-  "mode": "assessment" | "clarification",
-  "riskProfile": {
-    "level": "low" | "medium" | "high" | "critical",
-    "description": "A 2-4 sentence summary explaining the overall risk assessment and key concerns (or explaining what context you need if in clarification mode)",
-    "confidence": 0.0 to 1.0,
-    "reasoning": ["bullet point 1", "bullet point 2", ...]
-  },
-  "suggestedPolicies": [
-    {
-      "title": "Policy name",
-      "description": "What this policy covers and why it matters",
-      "priority": "high" | "medium" | "low",
-      "category": "governance" | "compliance" | "security" | "data" | "ethics",
-      "documentType": "dpia" | "threat-model" | "model-card" | ... (from the list above)
-    }
-  ],
-  "regulationCheck": [
-    {
-      "regulation": "Regulation name",
-      "article": "Specific article or section",
-      "relevance": "high" | "medium" | "low",
-      "description": "Why this regulation applies"
-    }
-  ],
-  "followUpQuestions": ["question 1", "question 2", ...],
-  "sources": ["source 1", "source 2", ...],
-  "intent": { "type": "advisor" }
-}
-
-IMPORTANT:
-- In "assessment" mode: "description" must be a thorough summary paragraph. "reasoning" must contain 3-5 specific risk factors.
-- In "clarification" mode: "description" should explain what you understood and what additional context you need. "followUpQuestions" must contain 3-5 SPECIFIC questions. "suggestedPolicies" and "regulationCheck" should be EMPTY arrays.`;
+import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
+import {
+  flattenStrings,
+  STRIP_THRESHOLD,
+  unverifiedCitations,
+  validateCitations,
+} from '@/lib/ai/citationValidator';
 
 function getClientIp(request: NextRequest): string {
   return (
@@ -216,11 +104,20 @@ export async function POST(request: NextRequest) {
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;
     if (ragResult.context) contextualQuery = `${ragResult.context}\n\n${contextualQuery}`;
 
+    // ── Tiered model selection (Phase 7.2) ──
+    const deterministicIntent = classifyIntent(query, hasConversationHistory);
+    const modelChoice = pickAdvisorModel({
+      query,
+      hasExistingThread: hasConversationHistory,
+      classifiedIntent: deterministicIntent,
+    });
+    const model = modelChoice.model;
+
     // ── OpenAI call (with circuit breaker) ──
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const completion = await openaiCircuit.execute(() =>
       openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL ?? 'gpt-4o',
+        model,
         messages: [
           { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
           { role: 'user', content: hasConversationHistory
@@ -233,10 +130,19 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    const model = process.env.OPENAI_MODEL ?? 'gpt-4o';
+    const cachedTokens = (completion.usage as { prompt_tokens_details?: { cached_tokens?: number } } | undefined)
+      ?.prompt_tokens_details?.cached_tokens ?? 0;
     auditLog({
       event: 'openai.completed',
-      data: { model, promptTokens: completion.usage?.prompt_tokens, completionTokens: completion.usage?.completion_tokens, durationMs: Date.now() - startTime },
+      data: {
+        model,
+        modelTier: modelChoice.tier,
+        modelReason: modelChoice.reason,
+        promptTokens: completion.usage?.prompt_tokens,
+        cachedPromptTokens: cachedTokens,
+        completionTokens: completion.usage?.completion_tokens,
+        durationMs: Date.now() - startTime,
+      },
     });
 
     // ── Record token usage (fire-and-forget) ──
@@ -264,6 +170,26 @@ export async function POST(request: NextRequest) {
     if (!validated.success) {
       auditLog({ event: 'response.fallback', data: { reason: 'response_validation_failed' } });
       return NextResponse.json(validated.fallback);
+    }
+
+    // ── Citation validation (Phase 1.6 hallucination guardrail) ──
+    const citations = validateCitations(flattenStrings(validated.data));
+    const unverified = unverifiedCitations(citations);
+    if (unverified.length > 0) {
+      auditLog({
+        event: 'citation.unverified',
+        data: {
+          conversationId: dbConversationId,
+          count: unverified.length,
+          citations: unverified.map((c) => ({ cited: c.cited, type: c.type, reason: c.reason })),
+        },
+      });
+      if (process.env.NODE_ENV === 'production' && unverified.length > STRIP_THRESHOLD) {
+        validated.data.warnings = [
+          ...(validated.data.warnings ?? []),
+          `${unverified.length} citation(s) could not be verified against the seed corpus and were flagged for review.`,
+        ];
+      }
     }
 
     // ── Persist messages ──

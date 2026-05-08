@@ -1,0 +1,31 @@
+{
+  "id": "policy-incident-response-edu",
+  "category": "document-generation",
+  "documentType": "govsecure-incident-response-policy",
+  "input": {
+    "useCaseName": "Student Essay Grading Assistant",
+    "useCaseDescription": "Higher-ed institution piloting an AI essay grading assistant that suggests scores to instructors. Instructor approval required before grades post.",
+    "industry": "education",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Incident Classification",
+    "Detection",
+    "Response Procedures",
+    "Notification",
+    "Post-Incident Review"
+  ],
+  "requiredClauses": [
+    "incident",
+    "severity",
+    "notification",
+    "post-incident"
+  ],
+  "forbiddenContent": [
+    "MANAGE-99",
+    "Article 47 of EU AI Act"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/incident-response.json"
+}

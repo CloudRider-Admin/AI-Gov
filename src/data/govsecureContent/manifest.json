@@ -1,0 +1,896 @@
+{
+  "generatedAt": "2026-05-05T11:11:58+00:00",
+  "sourceRoot": "GovSecure Project-20260505T105940Z-3-001/GovSecure Project",
+  "documentCount": 57,
+  "byCategory": {
+    "checklists": 28,
+    "frameworks": 1,
+    "playbooks": 15,
+    "policies": 11,
+    "questionnaires": 2
+  },
+  "documents": [
+    {
+      "documentCode": "GS-CHKL-AUPGENER-01",
+      "category": "checklists",
+      "subType": "aup-generator",
+      "title": "AI Acceptable Use Policy Generator",
+      "sourcePath": "Checklists/GovSecure_AI_Acceptable_Use_Policy_Generator (1).docx",
+      "outputPath": "checklists/aup-generator.json",
+      "format": "docx",
+      "checksum": "sha256:7fc303f584f46e9f68234811300969bc787bb43bd108c28eef96974a738e8686",
+      "stats": {
+        "section_count": 23,
+        "paragraph_count": 28,
+        "bullet_count": 0,
+        "table_count": 10
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-CHANGEMA-02",
+      "category": "checklists",
+      "subType": "change-management",
+      "title": "AI Change Management Checklist",
+      "sourcePath": "Checklists/AI_Change_Management_Checklist.docx",
+      "outputPath": "checklists/change-management.json",
+      "format": "docx",
+      "checksum": "sha256:2a74cb72c1b272aaeb1733a361c1e0c02080c13406dbf9d8bca2fe2e09bc74d2",
+      "stats": {
+        "section_count": 8,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 5
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-DPIASCRE-03",
+      "category": "checklists",
+      "subType": "dpia-screening",
+      "title": "AI Privacy & DPIA Screening Checklist",
+      "sourcePath": "Checklists/AI_Privacy_DPIA_Screening_Checklist.docx",
+      "outputPath": "checklists/dpia-screening.json",
+      "format": "docx",
+      "checksum": "sha256:9f40884497765b4400a3af0f703c0d81a35537aace314b15f794009b8270474a",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-EVIDENCE-04",
+      "category": "checklists",
+      "subType": "evidence-pack",
+      "title": "AI Evidence Pack Checklist",
+      "sourcePath": "Checklists/AI Evidence Pack Checklist.docx",
+      "outputPath": "checklists/evidence-pack.json",
+      "format": "docx",
+      "checksum": "sha256:c2230118764b6728c224e5c7b1ae5b9591f20ef13aa9678c6f905f1940477e4f",
+      "stats": {
+        "section_count": 1,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 16
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-GOVERNAN-05",
+      "category": "checklists",
+      "subType": "governance-templates",
+      "title": "AI Governance Checklist Templates:",
+      "sourcePath": "Checklists/AI Governance Checklist Templates.docx",
+      "outputPath": "checklists/governance-templates.json",
+      "format": "docx",
+      "checksum": "sha256:ecd8681a52bee08f749734d836921af616f41c3995633d71a7e0d9917a5c2030",
+      "stats": {
+        "section_count": 40,
+        "paragraph_count": 86,
+        "bullet_count": 2,
+        "table_count": 1
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-HUMANOVE-06",
+      "category": "checklists",
+      "subType": "human-oversight-escalation",
+      "title": "AI Human Oversight & Escalation Checklist",
+      "sourcePath": "Checklists/AI_Human_Oversight_Escalation_Checklist.docx",
+      "outputPath": "checklists/human-oversight-escalation.json",
+      "format": "docx",
+      "checksum": "sha256:cca841b2edb2b98971c9ad950bac5d1ee15989dd3fd18a692889d9061fc8dc8c",
+      "stats": {
+        "section_count": 8,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 5
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-INCIDENT-07",
+      "category": "checklists",
+      "subType": "incident-response",
+      "title": "AI Incident Response Checklist (AI-Specific)",
+      "sourcePath": "Checklists/AI_Incident_Response_Checklist_AI_Specific.docx",
+      "outputPath": "checklists/incident-response.json",
+      "format": "docx",
+      "checksum": "sha256:35796362794519233e9657027a82f50879350cd6e372df2b461ea485fa77f9b8",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-INCIDENT-08",
+      "category": "checklists",
+      "subType": "incident-response",
+      "title": "GOVSECURE",
+      "sourcePath": "Checklists/GovSecure_AI_Incident_Response_Checklist.docx",
+      "outputPath": "checklists/incident-response-2.json",
+      "format": "docx",
+      "checksum": "sha256:17d10408231d7ad657db37009edc6144ad4c76e822bdbb12a574043977ff2095",
+      "stats": {
+        "section_count": 13,
+        "paragraph_count": 11,
+        "bullet_count": 4,
+        "table_count": 15
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-INTAKEFO-09",
+      "category": "checklists",
+      "subType": "intake-form",
+      "title": "AI Use Case Intake Form Checklist (Template)",
+      "sourcePath": "Checklists/AI Use Case Intake Form Checklist.docx",
+      "outputPath": "checklists/intake-form.json",
+      "format": "docx",
+      "checksum": "sha256:06310f1e977098f2dfa229caddb8e2fb578103fc06582cc45b2bb112a392d315",
+      "stats": {
+        "section_count": 14,
+        "paragraph_count": 28,
+        "bullet_count": 0,
+        "table_count": 0
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-INTAKETR-10",
+      "category": "checklists",
+      "subType": "intake-triage",
+      "title": "AI Intake Triage Checklist",
+      "sourcePath": "Checklists/AI Intake Triage Checklist.docx",
+      "outputPath": "checklists/intake-triage.json",
+      "format": "docx",
+      "checksum": "sha256:77f541155a985bdc329a619838b62694acc9d2ceca2f12e6ea10e9afa84dff44",
+      "stats": {
+        "section_count": 1,
+        "paragraph_count": 2,
+        "bullet_count": 0,
+        "table_count": 25
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-INVENTOR-11",
+      "category": "checklists",
+      "subType": "inventory-registry",
+      "title": "AI Inventory & System Registry Checklist",
+      "sourcePath": "Checklists/AI_Inventory_System_Registry_Checklist.docx",
+      "outputPath": "checklists/inventory-registry.json",
+      "format": "docx",
+      "checksum": "sha256:778d9cb73b266e27f183ad9e2295b5e9f4826aec3b6940f6fda47248cb1a7f53",
+      "stats": {
+        "section_count": 10,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 7
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-MODELVAL-12",
+      "category": "checklists",
+      "subType": "model-validation",
+      "title": "AI Model Validation & Testing Checklist",
+      "sourcePath": "Checklists/AI_Model_Validation_Testing_Checklist.docx",
+      "outputPath": "checklists/model-validation.json",
+      "format": "docx",
+      "checksum": "sha256:60dc38a0cb74a2de3d99ddd6955dd5b10a446db925484e7ed3d281433161179f",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-MONITORI-13",
+      "category": "checklists",
+      "subType": "monitoring-revalidation",
+      "title": "AI Monitoring & Revalidation Checklist",
+      "sourcePath": "Checklists/AI_Monitoring_Revalidation_Checklist.docx",
+      "outputPath": "checklists/monitoring-revalidation.json",
+      "format": "docx",
+      "checksum": "sha256:e6ce70dd26aaf685b9f2f3642e8b62befc802ad7a58bcc11ecc83c6f0106866f",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-OTHERTEM-14",
+      "category": "checklists",
+      "subType": "other-templates",
+      "title": "Other Vital AI Governance Checklist Templates:",
+      "sourcePath": "Checklists/Other Vital AI Governance Checklist Templates.docx",
+      "outputPath": "checklists/other-templates.json",
+      "format": "docx",
+      "checksum": "sha256:13e1406b52d9aed9f429cd7b208d575153d7e0bf5b62d48980160f2bca391369",
+      "stats": {
+        "section_count": 1,
+        "paragraph_count": 12,
+        "bullet_count": 0,
+        "table_count": 0
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-POLICYTO-15",
+      "category": "checklists",
+      "subType": "policy-to-control",
+      "title": "AI Policy-to-Control Mapping Checklist",
+      "sourcePath": "Checklists/AI_Policy_to_Control_Mapping_Checklist.docx",
+      "outputPath": "checklists/policy-to-control.json",
+      "format": "docx",
+      "checksum": "sha256:29d7b6faf45a3a7dc450d6b564250f13bf723915a9a1b696a4f29fe7fec8affc",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-PROCUREM-16",
+      "category": "checklists",
+      "subType": "procurement-review",
+      "title": "GovSecure AI Procurement Review Checklist",
+      "sourcePath": "Checklists/GovSecure_AI_Procurement_Review_Checklist.docx",
+      "outputPath": "checklists/procurement-review.json",
+      "format": "docx",
+      "checksum": "sha256:4ad11956c9c0fa0aca73183ed81198f17f8686e2243de8ccd739cfc28738d04d",
+      "stats": {
+        "section_count": 13,
+        "paragraph_count": 12,
+        "bullet_count": 4,
+        "table_count": 15
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-REGULATO-17",
+      "category": "checklists",
+      "subType": "regulatory-change",
+      "title": "AI Regulatory Change Impact Assessment Checklist",
+      "sourcePath": "Checklists/AI_Regulatory_Change_Impact_Assessment_Checklist.docx",
+      "outputPath": "checklists/regulatory-change.json",
+      "format": "docx",
+      "checksum": "sha256:ae7d247c6c9e48d5bb4028ca2e24f12ae9c814dc283520273163e50ed2ab58ec",
+      "stats": {
+        "section_count": 8,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 5
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-RISKASSE-18",
+      "category": "checklists",
+      "subType": "risk-assessment-template",
+      "title": "AI Risk Assessment TEMPLATE Checklist",
+      "sourcePath": "Checklists/AI_Risk_Assessment_TEMPLATE Checklist.pdf",
+      "outputPath": "checklists/risk-assessment-template.json",
+      "format": "pdf",
+      "checksum": "sha256:84d4df010bfe6e565f89ef5e647afa5773cd47f2d0e9ae92f794a9b0a20d06d0",
+      "stats": {
+        "section_count": 3,
+        "char_count": 4827
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-SECURITY-19",
+      "category": "checklists",
+      "subType": "security-review",
+      "title": "AI Security Review Checklist",
+      "sourcePath": "Checklists/AI_Security_Review_Checklist.docx",
+      "outputPath": "checklists/security-review.json",
+      "format": "docx",
+      "checksum": "sha256:61d44e97fff6b4b5835b093ce8e690e7772e59d5522b22898bda2e803193820b",
+      "stats": {
+        "section_count": 10,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 7
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-SHADOWAI-20",
+      "category": "checklists",
+      "subType": "shadow-ai-discovery",
+      "title": "GOVSECURE  |  GOVERNANCE WORKFLOW AND ADD-ON TOOL",
+      "sourcePath": "Checklists/GovSecure_Shadow_AI_Discovery_Workflow.docx",
+      "outputPath": "checklists/shadow-ai-discovery.json",
+      "format": "docx",
+      "checksum": "sha256:17ceb270a5c220f25333be501fc11b1d3f9ee8ca358be843ac43a3e7613369cb",
+      "stats": {
+        "section_count": 10,
+        "paragraph_count": 19,
+        "bullet_count": 0,
+        "table_count": 12
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-TEMPLATE-21",
+      "category": "checklists",
+      "subType": "template-pack-preview",
+      "title": "GovSecure AI Governance Template Pack Preview",
+      "sourcePath": "Checklists/GovSecure_AI_Governance_Template_Pack_Preview.pdf",
+      "outputPath": "checklists/template-pack-preview.json",
+      "format": "pdf",
+      "checksum": "sha256:4b91cef222dd0b732e0e166d36855a0c6a0f85a434574476042efe1297eb079f",
+      "stats": {
+        "section_count": 11,
+        "char_count": 17141
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-THIRDPAR-22",
+      "category": "checklists",
+      "subType": "third-party-dd",
+      "title": "AI Third-Party / Vendor Due Diligence Checklist",
+      "sourcePath": "Checklists/AI_Third_Party_Vendor_Due_Diligence_Checklist.docx",
+      "outputPath": "checklists/third-party-dd.json",
+      "format": "docx",
+      "checksum": "sha256:a01ec9287b7ea0849266450f238ad95a4d74dd9ee5af48c0d61bdacb2d7ec258",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 6
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-TOOLINVE-23",
+      "category": "checklists",
+      "subType": "tool-inventory",
+      "title": "GOVSECURE",
+      "sourcePath": "Checklists/GovSecure_AI_Tool_Inventory_Checklist (1).docx",
+      "outputPath": "checklists/tool-inventory.json",
+      "format": "docx",
+      "checksum": "sha256:e7f3c6dbacc71e698c159a72acf145345740af4d37382586093b103e49877057",
+      "stats": {
+        "section_count": 13,
+        "paragraph_count": 11,
+        "bullet_count": 4,
+        "table_count": 16
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-TRAINING-24",
+      "category": "checklists",
+      "subType": "training-awareness",
+      "title": "AI Training & Role-Based Awareness Checklist",
+      "sourcePath": "Checklists/AI_Training_Role_Based_Awareness_Checklist.docx",
+      "outputPath": "checklists/training-awareness.json",
+      "format": "docx",
+      "checksum": "sha256:04da93c1715b310b1f0b64b32553a7e802888f467cd05bc26407ad5a0a75a058",
+      "stats": {
+        "section_count": 8,
+        "paragraph_count": 3,
+        "bullet_count": 0,
+        "table_count": 5
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-USECASEI-25",
+      "category": "checklists",
+      "subType": "use-case-intake",
+      "title": "GovSecure AI Use Case Intake Checklist",
+      "sourcePath": "Checklists/GovSecure_AI_Use_Case_Intake_Checklist.pdf",
+      "outputPath": "checklists/use-case-intake.json",
+      "format": "pdf",
+      "checksum": "sha256:1efe0c339e8f6d24c6cc442c361b592c71338f8174fdeb8b8ea7dbc43cc00f8b",
+      "stats": {
+        "section_count": 8,
+        "char_count": 10951
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-USECASEI-26",
+      "category": "checklists",
+      "subType": "use-case-intake-form",
+      "title": "GovSecure AI Use Case Intake Form",
+      "sourcePath": "Checklists/GovSecure_AI_Use_Case_Intake_Form.pdf",
+      "outputPath": "checklists/use-case-intake-form.json",
+      "format": "pdf",
+      "checksum": "sha256:99a3753a8eb708b90e363dca89822a49607a8a59a6a9792270d97b446fcae4fc",
+      "stats": {
+        "section_count": 8,
+        "char_count": 8644
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-USECASER-27",
+      "category": "checklists",
+      "subType": "use-case-registry",
+      "title": "GOVSECURE  |  PRODUCTIZED GOVERNANCE WORKFLOW",
+      "sourcePath": "Checklists/GovSecure_AI_Use_Case_Registry_Template.docx",
+      "outputPath": "checklists/use-case-registry.json",
+      "format": "docx",
+      "checksum": "sha256:aab709caff4268e9aa11fc6f3a0b9c76a47f41edbe25bbfd9d20d800b28725d2",
+      "stats": {
+        "section_count": 9,
+        "paragraph_count": 17,
+        "bullet_count": 0,
+        "table_count": 10
+      }
+    },
+    {
+      "documentCode": "GS-CHKL-VENDORDU-28",
+      "category": "checklists",
+      "subType": "vendor-due-diligence",
+      "title": "GOVSECURE",
+      "sourcePath": "Checklists/GovSecure_Vendor_AI_Due_Diligence_Checklist.docx",
+      "outputPath": "checklists/vendor-due-diligence.json",
+      "format": "docx",
+      "checksum": "sha256:496f175f95dca0b44c5adb3b74a462c11adb867884583a743df85ae2d507cab1",
+      "stats": {
+        "section_count": 13,
+        "paragraph_count": 9,
+        "bullet_count": 4,
+        "table_count": 14
+      }
+    },
+    {
+      "documentCode": "GS-FRAM-NISTRCM-01",
+      "category": "frameworks",
+      "subType": "nist-rcm",
+      "title": "AI RCM - NIST Framework-v5",
+      "sourcePath": "AI Frameworks/AI RCM - NIST Framework-v5.xlsx",
+      "outputPath": "frameworks/nist-rcm.json",
+      "format": "xlsx",
+      "checksum": "sha256:efd29df3b48d132a6c48d7f85060f5010fdd83b9f19aa06f0f369b296ee8702a",
+      "stats": {
+        "sheet_count": 13,
+        "total_rows": 350
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-90DAYBLU-01",
+      "category": "playbooks",
+      "subType": "90-day-blueprint",
+      "title": "90-Day AI Governance Implementation Blueprint",
+      "sourcePath": "AI Adoption and Implementation BluePrint Template/90-Day AI Governance Implementation Blueprint.docx",
+      "outputPath": "playbooks/90-day-blueprint.json",
+      "format": "docx",
+      "checksum": "sha256:41d86ece935fe3edc84cce2e71ad94cdca451353b4d1cf5ad34c9126feeb2195",
+      "stats": {
+        "section_count": 17,
+        "paragraph_count": 11,
+        "bullet_count": 20,
+        "table_count": 28
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-90DAYBLU-02",
+      "category": "playbooks",
+      "subType": "90-day-blueprint-updated",
+      "title": "90-Day Blueprint (Updated)",
+      "sourcePath": "AI Adoption and Implementation BluePrint Template/90-Day Blueprint (Updated).docx",
+      "outputPath": "playbooks/90-day-blueprint-updated.json",
+      "format": "docx",
+      "checksum": "sha256:517274dc50276da9c420c0389df87f160d99ddace2d0f5c940fc3b4cb9fb6ead",
+      "stats": {
+        "section_count": 17,
+        "paragraph_count": 11,
+        "bullet_count": 20,
+        "table_count": 28
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFEX-03",
+      "category": "playbooks",
+      "subType": "ai-chef-executive",
+      "title": "GovSecure AI Chef Client Ready Executive Toolkit",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Executive_Toolkit.pdf",
+      "outputPath": "playbooks/ai-chef-executive.json",
+      "format": "pdf",
+      "checksum": "sha256:fea8741cdb78619cc82161d610672b66a008f255dc0558f4c6a941e5db37a6db",
+      "stats": {
+        "section_count": 14,
+        "char_count": 11890
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFEX-04",
+      "category": "playbooks",
+      "subType": "ai-chef-executive",
+      "title": "GovSecure AI Chef Client Ready Executive Toolkit",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Executive_Toolkit.pdf",
+      "outputPath": "playbooks/ai-chef-executive-2.json",
+      "format": "pdf",
+      "checksum": "sha256:fea8741cdb78619cc82161d610672b66a008f255dc0558f4c6a941e5db37a6db",
+      "stats": {
+        "section_count": 14,
+        "char_count": 11890
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFEX-05",
+      "category": "playbooks",
+      "subType": "ai-chef-executive-noncustom",
+      "title": "GovSecure AI Chef Executive Toolkit",
+      "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Executive_Toolkit.pdf",
+      "outputPath": "playbooks/ai-chef-executive-noncustom.json",
+      "format": "pdf",
+      "checksum": "sha256:99472ee94e34d79c7a3a213af6a46b5ceee2cd23c269a62ee050f020bbb94ed1",
+      "stats": {
+        "section_count": 10,
+        "char_count": 10149
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFIN-06",
+      "category": "playbooks",
+      "subType": "ai-chef-infographic",
+      "title": "GovSecure AI Chef Client Ready Infographic",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Infographic.pdf",
+      "outputPath": "playbooks/ai-chef-infographic.json",
+      "format": "pdf",
+      "checksum": "sha256:b9c81ed11464d7b6c2f2eee31f85b0db4646969493be4bc6aeadede80b15b505",
+      "stats": {
+        "section_count": 0,
+        "char_count": 0
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFIN-07",
+      "category": "playbooks",
+      "subType": "ai-chef-infographic-noncustom",
+      "title": "GovSecure AI Chef Infographic",
+      "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Infographic.pdf",
+      "outputPath": "playbooks/ai-chef-infographic-noncustom.json",
+      "format": "pdf",
+      "checksum": "sha256:17e3b1ca60d218b8776e67813b49461e97cb42ce02acaf29d1bf329a31a8a440",
+      "stats": {
+        "section_count": 0,
+        "char_count": 0
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFOP-08",
+      "category": "playbooks",
+      "subType": "ai-chef-operational",
+      "title": "GovSecure AI Chef Client Ready Operational Templates",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Operational_Templates.xlsx",
+      "outputPath": "playbooks/ai-chef-operational.json",
+      "format": "xlsx",
+      "checksum": "sha256:5e03c22ae33af0b06c09aa7727802e2ae86403f34f3c64f61728e35d192706f2",
+      "stats": {
+        "sheet_count": 6,
+        "total_rows": 71
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFOP-09",
+      "category": "playbooks",
+      "subType": "ai-chef-operational",
+      "title": "GovSecure AI Chef Client Ready Operational Templates",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Operational_Templates.xlsx",
+      "outputPath": "playbooks/ai-chef-operational-2.json",
+      "format": "xlsx",
+      "checksum": "sha256:5e03c22ae33af0b06c09aa7727802e2ae86403f34f3c64f61728e35d192706f2",
+      "stats": {
+        "sheet_count": 6,
+        "total_rows": 71
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFOP-10",
+      "category": "playbooks",
+      "subType": "ai-chef-operational-noncustom",
+      "title": "GovSecure AI Chef Operational Templates",
+      "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Operational_Templates.xlsx",
+      "outputPath": "playbooks/ai-chef-operational-noncustom.json",
+      "format": "xlsx",
+      "checksum": "sha256:b8fb8b361e56b2bd357b082364b740d1e5dc8415dc516da5c38c006df482cdd5",
+      "stats": {
+        "sheet_count": 4,
+        "total_rows": 31
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFTO-11",
+      "category": "playbooks",
+      "subType": "ai-chef-toolkit",
+      "title": "GovSecure AI Chef™",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Toolkit.docx",
+      "outputPath": "playbooks/ai-chef-toolkit.json",
+      "format": "docx",
+      "checksum": "sha256:ff9962d9897bb118200757b481ae1207e97db2b85d46bf013322d15dd79e0045",
+      "stats": {
+        "section_count": 28,
+        "paragraph_count": 15,
+        "bullet_count": 20,
+        "table_count": 13
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFTO-12",
+      "category": "playbooks",
+      "subType": "ai-chef-toolkit",
+      "title": "GovSecure AI Chef™",
+      "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Toolkit.docx",
+      "outputPath": "playbooks/ai-chef-toolkit-2.json",
+      "format": "docx",
+      "checksum": "sha256:b13a34c3f1761be92a2ccf0c744a5a268b20159f2133940d9a7da2b4801c658f",
+      "stats": {
+        "section_count": 30,
+        "paragraph_count": 16,
+        "bullet_count": 22,
+        "table_count": 13
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-AICHEFTO-13",
+      "category": "playbooks",
+      "subType": "ai-chef-toolkit-noncustom",
+      "title": "GovSecure AI Chef™ — Enterprise AI Governance Recipe Matrix Toolkit — v1.0 - 24 Core Recipes — Built from the approved GovSecure AI Chef toolkit outline and template structure.",
+      "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Toolkit_Word.docx",
+      "outputPath": "playbooks/ai-chef-toolkit-noncustom.json",
+      "format": "docx",
+      "checksum": "sha256:a3682502a0b3b96cf6576401bccb3fcaa7c8958f48a8aca23c008a9e2f122e21",
+      "stats": {
+        "section_count": 17,
+        "paragraph_count": 17,
+        "bullet_count": 48,
+        "table_count": 5
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-THIRDPAR-14",
+      "category": "playbooks",
+      "subType": "third-party-privacy-questionnaire",
+      "title": "GovSecure Third-Party AI Privacy Risk Assessment",
+      "sourcePath": "Playbook/GovSecure_Third_Party_AI_Privacy_Risk_Assessment_Package/GovSecure_Third_Party_AI_Privacy_Risk_Assessment.docx",
+      "outputPath": "playbooks/third-party-privacy-questionnaire.json",
+      "format": "docx",
+      "checksum": "sha256:e86522ed30894759084fc583140524e4dc2146f1604157aa8a7b100ac078ad17",
+      "stats": {
+        "section_count": 23,
+        "paragraph_count": 22,
+        "bullet_count": 18,
+        "table_count": 33
+      }
+    },
+    {
+      "documentCode": "GS-PLBK-THIRDPAR-15",
+      "category": "playbooks",
+      "subType": "third-party-privacy-workbook",
+      "title": "GovSecure Third Party AI Privacy Risk Assessment Workbook",
+      "sourcePath": "Playbook/GovSecure_Third_Party_AI_Privacy_Risk_Assessment_Package/GovSecure_Third_Party_AI_Privacy_Risk_Assessment_Workbook.xlsx",
+      "outputPath": "playbooks/third-party-privacy-workbook.json",
+      "format": "xlsx",
+      "checksum": "sha256:a7e3aa879457dd265e6496414b893272aa8c42c66a06c82e701cdaab299abb64",
+      "stats": {
+        "sheet_count": 5,
+        "total_rows": 185
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-ACCEPTAB-01",
+      "category": "policies",
+      "subType": "acceptable-use",
+      "title": "GovSecure — Enterprise AI Acceptable Use Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/Enterprise_AI_Acceptable_Use_Policy_Licensed.docx",
+      "outputPath": "policies/acceptable-use.json",
+      "format": "docx",
+      "checksum": "sha256:f040d9e0158656838aef63e7d88a2a5c621e1a7c23a170ecaef637e74161f8d1",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 23,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-DATAPRIV-02",
+      "category": "policies",
+      "subType": "data-privacy",
+      "title": "GovSecure — AI Data Handling and Privacy Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Data_Handling_and_Privacy_Policy_Licensed.docx",
+      "outputPath": "policies/data-privacy.json",
+      "format": "docx",
+      "checksum": "sha256:cc6576575bb1f0f88365d49b655c66bc10181f9066be657cd845eeb75d1b537a",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 22,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-GOVERNAN-03",
+      "category": "policies",
+      "subType": "governance",
+      "title": "GovSecure — AI Governance Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Governance_Policy_Licensed.docx",
+      "outputPath": "policies/governance.json",
+      "format": "docx",
+      "checksum": "sha256:a5afd33f3dec794479fb038c7dfdc70d250efdfdcd6fff52a2331d7f22ca8032",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 22,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-HUMANOVE-04",
+      "category": "policies",
+      "subType": "human-oversight",
+      "title": "GovSecure — Human Oversight and Decision-Making Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/Human_Oversight_and_Decision-Making_Policy_Licensed.docx",
+      "outputPath": "policies/human-oversight.json",
+      "format": "docx",
+      "checksum": "sha256:0f63203fc474db5f903c358912f1bbdde64520616074909a2228aedd4bbbbc74",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 20,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-INCIDENT-05",
+      "category": "policies",
+      "subType": "incident-response",
+      "title": "GovSecure — AI Incident Response and Monitoring Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Incident_Response_and_Monitoring_Policy_Licensed.docx",
+      "outputPath": "policies/incident-response.json",
+      "format": "docx",
+      "checksum": "sha256:3477277d41268c0e35e922dfeb683376adf93838ce1b51df0fea36a1749bf32b",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 21,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-RISKAPPR-06",
+      "category": "policies",
+      "subType": "risk-approval",
+      "title": "GovSecure — AI Risk Assessment and Use-Case Approval Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Risk_Assessment_and_Use-Case_Approval_Policy_Licensed.docx",
+      "outputPath": "policies/risk-approval.json",
+      "format": "docx",
+      "checksum": "sha256:c8046c4e8b27b3805e7366d52fd8f8141ecb62f3db83ab5eac96fcf8bd07751e",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 21,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-SECURITY-07",
+      "category": "policies",
+      "subType": "security",
+      "title": "GovSecure — AI Security Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Security_Policy_Licensed.docx",
+      "outputPath": "policies/security.json",
+      "format": "docx",
+      "checksum": "sha256:0f6b2accc0b5f554a8368be2d4d062972ddb63464c93184d619924905123b52d",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 21,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-SUITEMAP-08",
+      "category": "policies",
+      "subType": "suite-map",
+      "title": "GovSecure AI Policy Suite Map",
+      "sourcePath": "Policies/GovSecure_AI_Policy_Suite_Map_Client_Ready.docx",
+      "outputPath": "policies/suite-map.json",
+      "format": "docx",
+      "checksum": "sha256:38b5c1e03f216200e86b1f0bb0420adec63f6b6892858a209e3543a95e553311",
+      "stats": {
+        "section_count": 40,
+        "paragraph_count": 24,
+        "bullet_count": 90,
+        "table_count": 18
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-SUITEOFF-09",
+      "category": "policies",
+      "subType": "suite-offering",
+      "title": "GovSecure AI Policy Suite",
+      "sourcePath": "Policies/Govsecure_AI Policy_Suite/00_Overview/GovSecure_AI_Policy_Suite_Offering_Guide.docx",
+      "outputPath": "policies/suite-offering.json",
+      "format": "docx",
+      "checksum": "sha256:3fa046c368c47ecf5866460053477b2d74a8c8ee6435c8d4d985d1a631563a33",
+      "stats": {
+        "section_count": 7,
+        "paragraph_count": 20,
+        "bullet_count": 0,
+        "table_count": 3
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-SUITEOFF-10",
+      "category": "policies",
+      "subType": "suite-offering",
+      "title": "GovSecure AI Policy Suite",
+      "sourcePath": "Policies/Govsecure_AI Policy_Suite/GovSecure_AI_Policy_Suite_Offering_Guide.docx",
+      "outputPath": "policies/suite-offering-2.json",
+      "format": "docx",
+      "checksum": "sha256:3fa046c368c47ecf5866460053477b2d74a8c8ee6435c8d4d985d1a631563a33",
+      "stats": {
+        "section_count": 7,
+        "paragraph_count": 20,
+        "bullet_count": 0,
+        "table_count": 3
+      }
+    },
+    {
+      "documentCode": "GS-AIPS-THIRDPAR-11",
+      "category": "policies",
+      "subType": "third-party",
+      "title": "GovSecure — Third-Party / Vendor AI Due Diligence Policy — Standalone Branded Policy Document",
+      "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/Third-Party_-_Vendor_AI_Due_Diligence_Policy_Licensed.docx",
+      "outputPath": "policies/third-party.json",
+      "format": "docx",
+      "checksum": "sha256:6067a2aeee1054356f4dbc11f2fc00225a0d56ee5eb70fb3b065c1a036aaaa7e",
+      "stats": {
+        "section_count": 16,
+        "paragraph_count": 11,
+        "bullet_count": 20,
+        "table_count": 2
+      }
+    },
+    {
+      "documentCode": "GS-QSTN-TPRM-01",
+      "category": "questionnaires",
+      "subType": "tprm",
+      "title": "Third-Party Risk Management (TPRM) AI Questionnaire",
+      "sourcePath": "Questionnaires/TPRM/3P RISK MANAGEMENT (TPRM) AI Questionnaire.docx",
+      "outputPath": "questionnaires/tprm.json",
+      "format": "docx",
+      "checksum": "sha256:645e8d355d394e850bbc955c8da96221e99d82ce41be0602d24e1b25db8dd2a2",
+      "stats": {
+        "section_count": 10,
+        "paragraph_count": 72,
+        "bullet_count": 0,
+        "table_count": 0
+      }
+    },
+    {
+      "documentCode": "GS-QSTN-TPRMREVI-02",
+      "category": "questionnaires",
+      "subType": "tprm-review",
+      "title": "GovSecure 3rd Party AI Vendor Risk Review",
+      "sourcePath": "Questionnaires/TPRM/GovSecure_3rd_Party_AI_Vendor_Risk_Review.pdf",
+      "outputPath": "questionnaires/tprm-review.json",
+      "format": "pdf",
+      "checksum": "sha256:504f7efe77087bbda4a85f1fe5b63c7bf8f772b708def9c820e79e60affa384b",
+      "stats": {
+        "section_count": 9,
+        "char_count": 11675
+      }
+    }
+  ]
+}

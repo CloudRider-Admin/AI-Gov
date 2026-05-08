@@ -18,6 +18,11 @@ export interface SearchResult {
 // AI Governance Knowledge Base
 import { SECTOR_GUIDANCE } from '@/data/sectorGuidance';
 import { EMERGING_REGULATIONS } from '@/data/emergingRegulations';
+import {
+  AI_CHEF_STATIONS,
+  GOVSECURE_90_DAY_PHASES,
+  GOVSECURE_POLICY_SUITE,
+} from '@/data/govsecureKnowledge';
 
 // Generate KnowledgeDocuments from sector guidance
 const SECTOR_DOCUMENTS: KnowledgeDocument[] = SECTOR_GUIDANCE.map(sector => ({
@@ -279,12 +284,80 @@ DOCUMENTATION REQUIREMENTS:
   }
 ];
 
-/** All knowledge documents: static governance + sector guidance + emerging regulations */
+/**
+ * Phase 4 — static GovSecure fallback entries.
+ *
+ * These are tiny but always-loaded summaries of the three GovSecure flagship
+ * structures (AI Chef, Policy Suite, 90-Day Blueprint). They guarantee
+ * GovSecure content is findable from the keyword `KnowledgeBaseSearch` even
+ * when pgvector is cold or the seed DB hasn't been populated yet. Long-form
+ * versions live in `govsecureKnowledge.ts`; these duplicate just enough text
+ * for the keyword index to surface them on canonical queries.
+ */
+const GOVSECURE_FALLBACK_DOCUMENTS: KnowledgeDocument[] = [
+  {
+    id: 'govsecure-ai-chef-overview',
+    title: 'GovSecure AI Chef™ Operating Model — Overview',
+    content:
+      `The GovSecure AI Chef™ Operating Model organizes governance work into ${AI_CHEF_STATIONS.length} stations, ` +
+      'each owning a coherent slice of AI lifecycle responsibility:\n\n' +
+      AI_CHEF_STATIONS.map((s) => `- Station ${s.id} — ${s.name}: ${s.purpose}`).join('\n') +
+      '\n\nUse the AI Chef stations as the default org structure when designing AI governance ' +
+      'roles and as the default phase structure when generating GovSecure-flavored playbooks.',
+    category: 'framework',
+    tags: ['GovSecure', 'AI Chef', 'operating model', 'governance structure', 'stations'],
+    source: 'GovSecure AI Chef™ Operating Model v1.0',
+    lastUpdated: '2026-05-06',
+  },
+  {
+    id: 'govsecure-policy-suite-overview',
+    title: 'GovSecure 15-Policy Suite Map — Overview',
+    content:
+      `The GovSecure Policy Suite Map organizes governance policies into ${GOVSECURE_POLICY_SUITE.tiers.length} tiers ` +
+      `(${GOVSECURE_POLICY_SUITE.tiers.map((t) => t.tier).join(' / ')}), reflecting client maturity:\n\n` +
+      GOVSECURE_POLICY_SUITE.tiers
+        .map(
+          (t) =>
+            `- ${t.tier} (${t.policies.length} policies): ${t.description}\n` +
+            t.policies.map((p) => `    • ${p.name}`).join('\n'),
+        )
+        .join('\n\n') +
+      '\n\nWhen a user asks "where do we start with policies?", recommend the Starter set; ' +
+      'when asked for a complete program, walk all three tiers.',
+    category: 'framework',
+    tags: ['GovSecure', 'policy suite', 'starter', 'operational', 'maturity', 'AUP'],
+    source: 'GovSecure AI Policy Suite Map (Client Ready)',
+    lastUpdated: '2026-05-06',
+  },
+  {
+    id: 'govsecure-90-day-blueprint-overview',
+    title: 'GovSecure 90-Day Implementation Blueprint — Overview',
+    content:
+      `The GovSecure 90-Day Implementation Blueprint sequences a complete AI governance rollout ` +
+      `into ${GOVSECURE_90_DAY_PHASES.length} phases × 30 days each:\n\n` +
+      GOVSECURE_90_DAY_PHASES.map(
+        (p) =>
+          `- ${p.name} (${p.weekRange}, NIST: ${p.nistFunctionAlignment.join('/')})\n  ` +
+          `Top objectives: ${p.objectives.slice(0, 3).join('; ')}`,
+      ).join('\n\n') +
+      '\n\nDefault to these phase weeks when timing a GovSecure rollout; treat the AI Chef stations ' +
+      'as the owning roles for tasks within each phase.',
+    category: 'best-practice',
+    tags: ['GovSecure', '90-day', 'blueprint', 'implementation', 'roadmap', 'foundation', 'operationalize'],
+    source: 'GovSecure 90-Day Implementation Blueprint v1.0',
+    lastUpdated: '2026-05-06',
+  },
+];
+
+/** All knowledge documents: static governance + sector guidance + emerging regulations + GovSecure fallbacks */
 export const ALL_KNOWLEDGE_DOCUMENTS: KnowledgeDocument[] = [
   ...GOVERNANCE_KNOWLEDGE_BASE,
   ...SECTOR_DOCUMENTS,
   ...REGULATION_DOCUMENTS,
+  ...GOVSECURE_FALLBACK_DOCUMENTS,
 ];
+
+export { GOVSECURE_FALLBACK_DOCUMENTS };
 
 export class KnowledgeBaseSearch {
   private documents: KnowledgeDocument[];

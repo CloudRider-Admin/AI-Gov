@@ -1,0 +1,318 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:61d44e97fff6b4b5835b093ce8e690e7772e59d5522b22898bda2e803193820b",
+  "documentCode": "GS-CHKL-SECURITY-19",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Security Review Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Architecture & Boundaries",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "System diagram reviewed (data flows + trust boundaries)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Network exposure controlled (Private Link/VNet/private endpoints where applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Environment separation enforced (dev/test/prod) and secure defaults established",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Identity & Access",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "SSO enforced and MFA for admins",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "RBAC/ABAC least privilege validated (including service identities)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Access reviews scheduled and ownership defined",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Secrets and token flows governed (rotation, short-lived creds where possible)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Data Protection",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Sensitive data handling rules defined (prompts/outputs; prohibited data types)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "DLP controls applied where applicable (prompts, outputs, connectors)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Retention/deletion settings verified and documented",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Logging, Monitoring & Detection",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Audit logging enabled and retained",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Alerts for abuse/anomalous usage configured (rate limits, spikes, exfil indicators)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "RAG protections applied where relevant (scoped indexes, retrieval filtering, permission checks)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI-Specific Threat Controls",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Prompt injection controls (input validation, tool allowlists, output constraints)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Tool poisoning controls (trusted tool registry, signed/approved tools)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data exfiltration controls for agentic workflows (connector scoping, egress checks)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Approval",
+      "id": "10",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Security decision recorded (Approve / Approve with Conditions / Reject)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Remediation actions assigned with owners and due dates",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Security_Review_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 10,
+    "table_count": 7
+  },
+  "subType": "security-review",
+  "title": "AI Security Review Checklist"
+}

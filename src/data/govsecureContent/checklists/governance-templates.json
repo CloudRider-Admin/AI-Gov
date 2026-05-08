@@ -1,0 +1,499 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:ecd8681a52bee08f749734d836921af616f41c3995633d71a7e0d9917a5c2030",
+  "documentCode": "GS-CHKL-GOVERNAN-05",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [
+        "AI Inventory and System Registry Checklist"
+      ],
+      "heading": "AI Governance Checklist Templates:",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Purpose: Use this checklist to create and maintain a complete, current registry of all AI systems, use cases, tools, models, and AI-enabled vendor features in the organization.",
+        "Registry Owner: ____________________________\nProgram Owner (AI Governance): ____________________________\nReporting Period: ____________________________\nLast Full Reconciliation Date: ____________________________",
+        "Registry Scope: ☐ Enterprise-wide ☐ Business Unit ☐ Pilot Program ☐ Other: ___________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1) Registry Governance Setup",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "☐ Registry owner assigned\n☐ Registry backup owner assigned\n☐ Standard registry fields defined and approved\n☐ Update cadence defined (monthly/quarterly)\n☐ Submission process defined for new AI use cases\n☐ Change/update process defined for existing entries\n☐ Decommissioning/removal process defined\n☐ Source systems identified for reconciliation (procurement, app catalog, SSO, cloud, vendor list)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2) Required Record Identity Fields",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "For each AI entry, confirm the record includes:",
+        "☐ Unique AI Use Case ID / Registry ID\n☐ Use Case Name\n☐ Business Unit / Department\n☐ Business Owner\n☐ Technical Owner / Platform Owner\n☐ Vendor / Tool Name (if third-party)\n☐ Model Name / Version (if known)\n☐ Environment (Pilot / Test / Production / Retired)\n☐ Current Status (Proposed / In Review / Approved / Active / Suspended / Retired)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3) Business Context Fields",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "☐ Business purpose documented\n☐ Problem statement documented\n☐ Intended users identified (employees/customers/vendors)\n☐ Internal-only vs customer-facing identified\n☐ Decision impact level identified (informational / advisory / decision support / automated)\n☐ Criticality to operations identified (low/med/high)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4) Technical and Architecture Fields",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "☐ AI type identified (GenAI / Predictive / Classification / Agentic / Other)\n☐ Deployment model identified (SaaS / API / On-prem / Cloud-hosted)\n☐ Hosting region / data residency captured (if applicable)\n☐ Integrations listed (apps, APIs, databases, connectors)\n☐ Read/write capability identified\n☐ Authentication method captured (SSO/MFA/local accounts)\n☐ Logging capability identified\n☐ Known dependencies documented",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5) Data and Privacy Fields",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "☐ Data types processed documented (public/internal/confidential)\n☐ Personal data involvement identified (PII)\n☐ Sensitive/regulated data involvement identified (PHI/PCI/financial/minors)\n☐ Data source(s) identified\n☐ Cross-border data transfer flag captured\n☐ Data retention/storage behavior captured\n☐ Vendor training/retention terms captured (if third-party AI)\n☐ Privacy review required flag captured\n☐ DPIA/PIA required flag captured",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6) Risk and Compliance Fields",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "☐ Risk tier assigned (Low / Moderate / High / Critical)\n☐ Risk assessment reference ID linked\n☐ Compliance risk register reference linked (if applicable)\n☐ Applicable regulations/policies listed\n☐ Security review status captured\n☐ Legal review status captured\n☐ Vendor risk review status captured\n☐ Exceptions logged (if any) with expiry date\n☐ Approval status and approval date captured",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7) Evidence and Traceability Fields",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "☐ Intake form link stored\n☐ Risk assessment link stored\n☐ Approval record link stored\n☐ Evidence pack link stored (if required)\n☐ Monitoring plan link stored\n☐ Owner contact details current\n☐ Source of truth location identified (SharePoint/GRC/Jira/etc.)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8) Lifecycle and Monitoring Fields",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "☐ Go-live date recorded\n☐ Next review / revalidation date recorded\n☐ Monitoring owner assigned\n☐ Revalidation frequency recorded\n☐ Last monitoring review date recorded\n☐ Last material change date recorded\n☐ Retirement/decommission date recorded (if retired)\n☐ Reason for retirement documented (if applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9) Registry Reconciliation and Completeness Checks",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "☐ Registry reconciled against procurement/vendor list\n☐ Registry reconciled against SSO/IdP app catalog\n☐ Registry reconciled against cloud/API inventory (if applicable)\n☐ Registry reconciled against business-submitted use cases\n☐ Unapproved AI tools discovered and flagged\n☐ Duplicate entries removed/merged\n☐ Retired tools archived from active list\n☐ Missing owners remediated\n☐ Missing risk tiers remediated",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10) Registry Quality Checks",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "☐ No blank critical fields (owner, purpose, status, risk tier)\n☐ Dates are current and valid\n☐ Entries have clear lifecycle status\n☐ High-risk entries include linked assessments and approvals\n☐ Exceptions have active expiry dates and owners\n☐ Evidence links are accessible and not broken",
+        "Registry Quality Status: ☐ Complete ☐ Partial ☐ Needs Cleanup"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "11) Governance Sign-Off",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "Registry Reviewed By (AI Governance): __________________ Date: ________\nRegistry Reviewed By (Security/GRC): __________________ Date: ________\nRegistry Approved for Reporting: ______________________ Date: ________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI Third-Party and Vendor Due Diligence Checklist"
+      ],
+      "heading": "Quick Tips",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "Treat the registry like a system of record, not a one-time spreadsheet.",
+        "If a tool has AI features enabled, it belongs in the registry—even if “we’re just testing.”",
+        "Reconcile against SSO and procurement regularly; shadow AI will not volunteer itself.",
+        "Purpose: Use this checklist to assess AI vendors, AI-enabled SaaS features, model/API providers, and third-party AI services before approval and during renewals.",
+        "Vendor Name: ____________________________________\nProduct / Service: ________________________________\nBusiness Sponsor: _________________________________\nVendor Owner (Internal): __________________________\nAssessment Date: __________________________________\nAssessment Type: ☐ New Vendor ☐ New AI Feature ☐ Renewal ☐ Material Change Review"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1) Vendor and Service Overview",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "☐ Vendor legal entity name confirmed\n☐ Product/service name and scope documented\n☐ AI capability described clearly (what it does)\n☐ Intended internal use documented\n☐ Customer-facing use documented (if applicable)\n☐ Business criticality assigned (low/med/high)\n☐ Deployment model identified (SaaS / API / hosted / embedded feature)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2) AI-Specific Product and Model Details",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "☐ AI type identified (GenAI / predictive / classification / agentic)\n☐ Model source identified (vendor-built / third-party model / OSS / multiple)\n☐ Model versioning approach documented\n☐ Vendor discloses material model changes/updates process\n☐ Human oversight features available (review/approval controls)\n☐ Output controls available (filters, moderation, guardrails)\n☐ Logging and audit features available\n☐ Explainability/transparency information available (as applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3) Data Handling and Privacy Review",
+      "id": "16",
+      "level": 1,
+      "paragraphs": [
+        "☐ Data types to be processed documented\n☐ Personal data involved identified\n☐ Sensitive/regulated data use identified\n☐ Data flow documented (input, processing, storage, output)\n☐ Data residency / hosting region confirmed\n☐ Cross-border transfer implications reviewed\n☐ Data retention periods documented\n☐ Vendor confirms whether customer data is used for model training\n☐ Opt-out / no-training options available and configured (if needed)\n☐ Telemetry/logging data usage documented\n☐ Data deletion process and timelines documented\n☐ DPA/privacy addendum reviewed",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4) Security and Technical Controls",
+      "id": "17",
+      "level": 1,
+      "paragraphs": [
+        "☐ SSO supported\n☐ MFA supported/enforced for admin access\n☐ Role-based access control available\n☐ Least-privilege roles configurable\n☐ Encryption in transit and at rest documented\n☐ API authentication and key management controls documented\n☐ Audit logging available and exportable\n☐ Security incident notification commitments documented\n☐ Vulnerability management process described\n☐ Penetration testing / independent assessments available\n☐ Secure SDLC practices described\n☐ Secrets handling and tenant isolation documented (if relevant)",
+        "Evidence Collected: ☐ SOC 2 ☐ ISO 27001 ☐ Pen Test Summary ☐ Security Whitepaper ☐ Other: _______"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5) Compliance and Regulatory Alignment",
+      "id": "18",
+      "level": 1,
+      "paragraphs": [
+        "☐ Applicable regulations identified (privacy, sector, AI-related, cyber)\n☐ Vendor supports customer compliance obligations (logging, export, deletion, access control)\n☐ Contract includes required security/privacy terms\n☐ Audit/assessment rights addressed\n☐ Subprocessor list provided and reviewed\n☐ Change notification obligations included\n☐ Record retention / eDiscovery support assessed (if applicable)\n☐ Contractual limitations/risk accepted by Legal/Compliance (if any)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6) AI Safety and Misuse Controls",
+      "id": "19",
+      "level": 1,
+      "paragraphs": [
+        "☐ Prompt injection / malicious input protections documented (if applicable)\n☐ Output filtering / content safety controls documented\n☐ Abuse monitoring and rate-limiting controls documented\n☐ High-risk use restrictions or prohibited uses documented\n☐ User/admin controls to disable risky features available\n☐ Fallback behavior documented for system failure / degraded output",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7) Operational Resilience and Support",
+      "id": "20",
+      "level": 1,
+      "paragraphs": [
+        "☐ SLA / uptime commitments reviewed\n☐ Support model and escalation contacts documented\n☐ Business continuity / disaster recovery posture reviewed\n☐ Incident response integration points identified\n☐ Change management / release cadence documented\n☐ Vendor roadmap dependencies identified (if business-critical)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8) Commercial and Contractual Review",
+      "id": "21",
+      "level": 1,
+      "paragraphs": [
+        "☐ Pricing model understood (users, tokens, calls, tiers)\n☐ Renewal and termination terms reviewed\n☐ Data export and exit support documented\n☐ Liability / indemnity terms reviewed (including IP issues, if applicable)\n☐ Usage restrictions and acceptable use terms reviewed\n☐ Procurement approval complete",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9) Internal Risk Decision and Conditions",
+      "id": "22",
+      "level": 1,
+      "paragraphs": [
+        "☐ Vendor risk rating assigned (Low / Moderate / High / Critical)\n☐ AI-specific risk concerns documented\n☐ Required compensating controls documented\n☐ Approval conditions documented (e.g., no sensitive data, pilot only, logging required)\n☐ Monitoring cadence assigned\n☐ Reassessment trigger criteria documented (new features, model changes, incidents, contract renewal)",
+        "Decision: ☐ Approve ☐ Approve with Conditions ☐ Defer ☐ Reject"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10) Evidence Pack for Vendor Review",
+      "id": "23",
+      "level": 1,
+      "paragraphs": [
+        "☐ Security documentation collected\n☐ Privacy/DPA documentation collected\n☐ Subprocessor documentation collected\n☐ Contract redlines/approvals stored\n☐ Internal review notes stored\n☐ Final decision record stored\n☐ Owner and next review date recorded",
+        "Evidence Location: ____________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "11) Approvals",
+      "id": "24",
+      "level": 1,
+      "paragraphs": [
+        "Business Sponsor: ______________________ Date: ________\nSecurity / GRC: ________________________ Date: ________\nPrivacy: _______________________________ Date: ________\nLegal / Compliance: ____________________ Date: ________\nProcurement: ___________________________ Date: ________\nAI Governance Lead: ____________________ Date: ________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Quick Tips",
+      "id": "25",
+      "level": 1,
+      "paragraphs": [
+        "The most important AI vendor question is often simple: “Will you use our data to train your models?”",
+        "Treat “embedded AI features” in existing tools as new risk, not “already approved because we bought the platform.”",
+        "Approval conditions are powerful—use them (pilot-only, no PII, restricted users, logging mandatory)."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3. AI Monitoring and Revalidation Checklist",
+      "id": "26",
+      "level": 1,
+      "paragraphs": [
+        "Purpose: Use this checklist to monitor AI use cases after launch, detect control drift or risk changes, and perform periodic revalidation for continued approval.",
+        "Use Case Name: ____________________________________\nRegistry ID: _______________________________________\nBusiness Owner: ____________________________________\nMonitoring Owner: __________________________________\nRisk Tier: ☐ Low ☐ Moderate ☐ High ☐ Critical\nEnvironment: ☐ Pilot ☐ Production\nReview Type: ☐ Scheduled Review ☐ Triggered Revalidation ☐ Post-Incident Review\nReview Date: _______________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1) Review Scope and Trigger",
+      "id": "27",
+      "level": 1,
+      "paragraphs": [
+        "☐ Review period defined\n☐ Review type identified (scheduled vs triggered)\n☐ Trigger reason documented (if triggered)\n☐ Current risk tier confirmed\n☐ Current version/model/vendor version confirmed\n☐ Monitoring and revalidation owners confirmed",
+        "Triggered Revalidation Reasons (check if applicable):\n☐ Material model/version change\n☐ Vendor feature change\n☐ New data source added\n☐ New integration / write access added\n☐ Change in business purpose\n☐ Incident / near miss / harmful output\n☐ Regulatory change\n☐ Audit finding / exception expiry\n☐ Performance degradation / drift signal",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2) Business and Use Case Continuity Review",
+      "id": "28",
+      "level": 1,
+      "paragraphs": [
+        "☐ Use case purpose still valid and approved\n☐ Actual use remains within approved scope\n☐ User population unchanged (or changes documented)\n☐ Customer-facing status unchanged (or changes reviewed)\n☐ Business owner confirms continued need\n☐ Any unauthorized use expansion identified and documented",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3) Performance and Quality Monitoring",
+      "id": "29",
+      "level": 1,
+      "paragraphs": [
+        "☐ Monitoring metrics defined and available\n☐ Performance against thresholds reviewed\n☐ Accuracy/relevance/quality metrics reviewed (as applicable)\n☐ Error rates reviewed\n☐ Hallucination or invalid output trends reviewed (GenAI)\n☐ Failure modes and edge-case incidents reviewed\n☐ User complaints/feedback trends reviewed\n☐ Performance degradation/drift assessed (if applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4) Security Monitoring Review",
+      "id": "30",
+      "level": 1,
+      "paragraphs": [
+        "☐ Access rights reviewed (least privilege maintained)\n☐ Admin accounts reviewed\n☐ SSO/MFA controls still enforced\n☐ Audit logs available and retained\n☐ Suspicious activity/events reviewed\n☐ API key/secret rotation status reviewed\n☐ DLP alerts or sensitive prompt/output events reviewed\n☐ Prompt injection / abuse attempts reviewed (if applicable)\n☐ Security incidents or near misses reviewed",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5) Privacy and Data Protection Monitoring",
+      "id": "31",
+      "level": 1,
+      "paragraphs": [
+        "☐ Data types processed remain within approved scope\n☐ New personal/sensitive data usage identified (if any)\n☐ Data retention settings reviewed\n☐ Data deletion / purge obligations functioning\n☐ Cross-border processing remains approved\n☐ Vendor training/retention settings unchanged and verified\n☐ Privacy incidents/concerns reviewed\n☐ DPIA/PIA assumptions still valid (if applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6) Compliance and Control Monitoring",
+      "id": "32",
+      "level": 1,
+      "paragraphs": [
+        "☐ Control requirements for current risk tier still implemented\n☐ Approval conditions still being followed\n☐ Exceptions reviewed (active/expired/overdue)\n☐ Evidence links current and accessible\n☐ Policy/standard changes assessed for impact\n☐ Compliance risk register entry updated (if needed)\n☐ Audit findings/remediation actions reviewed\n☐ Regulatory change impact assessed (if applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7) Vendor and Third-Party Change Monitoring",
+      "id": "33",
+      "level": 1,
+      "paragraphs": [
+        "☐ Vendor release notes reviewed (material changes identified)\n☐ Contract/SLA changes reviewed (if any)\n☐ Subprocessor changes reviewed\n☐ Vendor incidents/outages reviewed\n☐ Security/compliance attestations refreshed (if due)\n☐ Vendor risk rating remains valid\n☐ New vendor restrictions or terms changes assessed",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8) Human Oversight and Operations Review",
+      "id": "34",
+      "level": 1,
+      "paragraphs": [
+        "☐ Human reviewer roles still assigned and active\n☐ Escalation path remains functional\n☐ Override/fallback process tested or validated\n☐ User training refresh completed (if due)\n☐ Operational runbook/contact list current\n☐ Staffing or ownership gaps identified and addressed",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9) Revalidation Decision Checklist",
+      "id": "35",
+      "level": 1,
+      "paragraphs": [
+        "☐ Risk tier remains appropriate\n☐ Existing approvals remain valid\n☐ Additional review required (Security / Privacy / Legal / Vendor Risk)\n☐ New/updated artifacts required (threat model, DPIA, evaluation plan, etc.)\n☐ Conditions need to be added/updated\n☐ Use case should be restricted, paused, or retired",
+        "Revalidation Outcome:\n☐ Continue as Approved\n☐ Continue with Conditions\n☐ Reassess Before Continued Use\n☐ Suspend / Pause\n☐ Retire Use Case",
+        "Rationale: ___________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10) Actions and Follow-Up",
+      "id": "36",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Priority",
+            "Action",
+            "Owner",
+            "Due Date",
+            "Related Risk / Ticket"
+          ],
+          [
+            "P1",
+            "[ ]",
+            "[ ]",
+            "[ ]",
+            "[ ]"
+          ],
+          [
+            "P1",
+            "[ ]",
+            "[ ]",
+            "[ ]",
+            "[ ]"
+          ],
+          [
+            "P2",
+            "[ ]",
+            "[ ]",
+            "[ ]",
+            "[ ]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "11) Evidence and Audit Trail",
+      "id": "37",
+      "level": 1,
+      "paragraphs": [
+        "☐ Monitoring report attached or linked\n☐ KPI/KRI snapshots linked\n☐ Incident summaries linked (if any)\n☐ Updated risk assessment/risk register link provided (if changed)\n☐ Revalidation decision record stored\n☐ Next review date set in registry and tracking system",
+        "Evidence Location: ____________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "12) Sign-Off",
+      "id": "38",
+      "level": 1,
+      "paragraphs": [
+        "Monitoring Owner: ______________________ Date: ________\nBusiness Owner: ________________________ Date: ________\nSecurity / GRC: _________________________ Date: ________\nPrivacy (if applicable): _________________ Date: ________\nAI Governance Lead: _____________________ Date: ________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Recommended Review Frequency by Tier",
+      "id": "39",
+      "level": 1,
+      "paragraphs": [
+        "Low: Annual",
+        "Moderate: Semi-Annual",
+        "High: Quarterly",
+        "Critical: Continuous monitoring + Quarterly formal revalidation"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Quick Tips",
+      "id": "40",
+      "level": 1,
+      "paragraphs": [
+        "Monitoring is where governance becomes real. Intake gets applause; monitoring prevents headlines.",
+        "Trigger-based revalidation is just as important as calendar-based reviews.",
+        "If the vendor changed the model and nobody reviewed the impact, your “approval” is stale."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/AI Governance Checklist Templates.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 2,
+    "paragraph_count": 86,
+    "section_count": 40,
+    "table_count": 1
+  },
+  "subType": "governance-templates",
+  "title": "AI Governance Checklist Templates:"
+}

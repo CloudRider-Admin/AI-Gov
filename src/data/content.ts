@@ -79,7 +79,7 @@ export const advisorContent: AdvisorContent = {
 export const heroContent: HeroContent = {
   headline: 'Confident AI, Controlled Risk',
   subheadline:
-    'The leading AI governance platform for small and mid-sized businesses — helping you adopt and scale AI responsibly, compliantly, and profitably.',
+    'GovSecure helps small businesses assess AI use cases, create practical policies, and reduce compliance risk — without enterprise complexity or outside consultants.',
   primaryCta: 'Get Started',
   secondaryCta: 'Browse Playbooks',
   supportText:

@@ -1,0 +1,226 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:cca841b2edb2b98971c9ad950bac5d1ee15989dd3fd18a692889d9061fc8dc8c",
+  "documentCode": "GS-CHKL-HUMANOVE-06",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Human Oversight & Escalation Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Oversight Design",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Human-in-the-loop requirement defined (required vs optional)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Reviewer roles identified; training requirements defined",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Decision boundaries documented (what AI can/can’t do)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Escalation & SLAs",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Escalation triggers defined (harm, sensitive leak, repeated errors, policy breach)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Escalation path defined (who to contact; response SLAs)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Override process defined (who can override; when)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Fallback & Continuity",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Fallback/manual process defined (if AI unavailable or incorrect)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Kill-switch / disablement procedure defined (if applicable)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Accountability & Audit Trail",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "RACI documented (Business/IT/Security/Privacy/Legal)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Audit trail retained for decisions and escalations",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Human_Oversight_Escalation_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 8,
+    "table_count": 5
+  },
+  "subType": "human-oversight-escalation",
+  "title": "AI Human Oversight & Escalation Checklist"
+}

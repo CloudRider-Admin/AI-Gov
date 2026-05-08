@@ -1,0 +1,912 @@
+{
+  "category": "policies",
+  "checksum": "sha256:38b5c1e03f216200e86b1f0bb0420adec63f6b6892858a209e3543a95e553311",
+  "documentCode": "GS-AIPS-SUITEMAP-08",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GovSecure AI Policy Suite Map",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "15 Core Enterprise AI Policies with Purpose, Ownership, Audience, and Companion Templates",
+        "Version 1.0"
+      ],
+      "tables": [
+        [
+          [
+            "Client-Ready Working Document"
+          ],
+          [
+            "Designed to help organizations structure enterprise AI governance, privacy, security, risk review, and operational accountability."
+          ],
+          [
+            "Recommended use: policy architecture, client delivery, governance planning, product packaging, and implementation workshops."
+          ],
+          [
+            "Prepared for GovSecure"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Overview",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "Purpose. This document defines the primary enterprise AI policies recommended for a formal AI governance program and maps each policy to its purpose, primary owner, intended audience, and companion templates required for operational use.",
+        "How to use this document. Use this suite map as a policy architecture guide, a client-facing planning document, or the backbone for a GovSecure policy product. It is designed to move organizations from loose AI guidance to a structured, accountable, and implementation-ready policy set.",
+        "Recommended packaging tiers. Tier 1 covers the starter set for organizations beginning formal AI governance. Tier 2 adds operational control depth. Tier 3 adds maturity, assurance, and audit readiness."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Policy Suite Summary Matrix",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Policy",
+            "Purpose Snapshot",
+            "Primary Owner",
+            "Audience",
+            "Key Templates"
+          ],
+          [
+            "Enterprise AI Acceptable Use Policy",
+            "Rules for day-to-day employee use of AI tools and outputs.",
+            "AI Governance Lead with Security and Legal support",
+            "Enterprise workforce and approved users",
+            "Approved AI Tools Register; Employee AI Usage Acknowledgment Form; Prohibited Use Exception Request Form..."
+          ],
+          [
+            "AI Governance Policy",
+            "Defines ownership, oversight, escalation, and decision rights.",
+            "Executive Sponsor / AI Governance Lead",
+            "Leaders and control functions",
+            "AI Governance Charter; AI Governance RACI Matrix; AI Steering Committee Terms of Reference..."
+          ],
+          [
+            "AI Data Handling and Privacy Policy",
+            "Defines how AI-related data is classified, used, retained, and protected.",
+            "Privacy Lead / Data Protection Lead with Security and Data Governance support",
+            "AI users and data/control owners",
+            "AI Data Classification Guide; Sensitive Data Submission Restriction Notice; AI Privacy Impact Assessment Form..."
+          ],
+          [
+            "AI Risk Assessment and Use-Case Approval Policy",
+            "Requires AI use cases to be reviewed before adoption or material change.",
+            "AI Governance Lead with Risk, Legal, Privacy, and Security review support",
+            "Sponsors, requestors, and reviewers",
+            "AI Use Case Intake Form; AI Risk Tiering Worksheet; AI Approval Decision Record..."
+          ],
+          [
+            "Third-Party / Vendor AI Due Diligence Policy",
+            "Sets requirements for evaluating AI vendors and service providers.",
+            "Procurement / Vendor Risk Lead with Security, Privacy, and Legal support",
+            "Procurement and review teams",
+            "Third-Party AI Privacy Risk Assessment; AI Vendor Security Questionnaire; AI Vendor Contract Review Checklist..."
+          ],
+          [
+            "AI Security Policy",
+            "Defines technical and operational security requirements for AI systems.",
+            "Information Security Lead",
+            "Security, IT, engineering",
+            "AI Security Control Baseline; AI Access Control Review Form; AI API and Integration Security Checklist..."
+          ],
+          [
+            "Human Oversight and Decision-Making Policy",
+            "Defines where humans must review or override AI-assisted actions.",
+            "AI Governance Lead with Legal and business owner support",
+            "Decision-makers and reviewers",
+            "Human-in-the-Loop Review Checklist; High-Impact Decision Approval Form; AI Output Validation Record..."
+          ],
+          [
+            "AI Transparency and Disclosure Policy",
+            "Explains when AI use and AI-generated content must be disclosed.",
+            "Legal / Compliance with Communications and AI Governance support",
+            "Legal, communications, product",
+            "AI Disclosure Language Library; Customer AI Notice Template; Internal AI Use Disclosure Template..."
+          ],
+          [
+            "AI Incident Response Policy",
+            "Defines how the organization handles AI-related incidents and harms.",
+            "Information Security Lead with Privacy, Legal, IT, and business owner support",
+            "Incident responders and leaders",
+            "AI Incident Response Playbook; AI Incident Intake Form; AI Harm and Impact Assessment Sheet..."
+          ],
+          [
+            "AI Monitoring, Logging, and Change Management Policy",
+            "Requires monitoring, drift review, and approval of material AI changes.",
+            "IT / Platform Owner with Security and AI Governance oversight",
+            "IT, platform, governance",
+            "AI Monitoring Standard; AI Logging Requirements Matrix; AI Drift Review Record..."
+          ],
+          [
+            "AI Inventory and Registry Policy",
+            "Requires all enterprise AI systems and use cases to be inventoried.",
+            "AI Governance Lead with IT support",
+            "Business, IT, audit, control teams",
+            "AI System Registry; AI Owner Assignment Record; AI System Classification Sheet..."
+          ],
+          [
+            "AI Model Lifecycle / Development Policy",
+            "Applies when the enterprise builds, fine-tunes, or materially customizes models.",
+            "Engineering / Product Owner with Security and Governance oversight",
+            "Engineering and model owners",
+            "Model Development Checklist; Model Validation and Testing Record; Model Release Approval Form..."
+          ],
+          [
+            "Responsible AI / Ethics Policy",
+            "Defines fairness, accountability, transparency, and non-discrimination principles.",
+            "Executive Sponsor / AI Governance Lead with Legal and HR support",
+            "Executives and sensitive-use stakeholders",
+            "Responsible AI Principles Statement; Fairness and Bias Review Checklist; Ethical Escalation Review Form..."
+          ],
+          [
+            "AI Training and Awareness Policy",
+            "Requires role-based training and awareness for AI users and overseers.",
+            "AI Governance Lead with HR and Security Awareness support",
+            "Entire workforce by role",
+            "AI Training Curriculum Matrix; Role-Based Training Assignment Sheet; AI Policy Acknowledgment Form..."
+          ],
+          [
+            "AI Records Retention and Evidence Policy",
+            "Defines what governance and control evidence must be retained.",
+            "Records Management / Compliance Lead with Privacy, Legal, and Governance support",
+            "Compliance, audit, governance",
+            "AI Evidence Register; AI Governance Document Index; Retention Schedule Matrix..."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Recommended Policy Suite Tiers",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Enterprise AI Acceptable Use Policy",
+        "AI Governance Policy",
+        "AI Data Handling and Privacy Policy",
+        "AI Risk Assessment and Use-Case Approval Policy",
+        "Third-Party / Vendor AI Due Diligence Policy",
+        "AI Incident Response Policy"
+      ],
+      "heading": "Tier 1 - Core Starter Set",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI Security Policy",
+        "Human Oversight and Decision-Making Policy",
+        "AI Monitoring, Logging, and Change Management Policy",
+        "AI Inventory and Registry Policy"
+      ],
+      "heading": "Tier 2 - Operational Control Set",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI Transparency and Disclosure Policy",
+        "AI Model Lifecycle / Development Policy",
+        "Responsible AI / Ethics Policy",
+        "AI Training and Awareness Policy",
+        "AI Records Retention and Evidence Policy"
+      ],
+      "heading": "Tier 3 - Maturity / Assurance Set",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1. Enterprise AI Acceptable Use Policy",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Sets the rules for everyday employee use of AI tools and AI-generated outputs. It defines approved use, prohibited use, data-entry restrictions, output review expectations, and baseline conduct requirements."
+          ],
+          [
+            "Primary Owner",
+            "AI Governance Lead with Security and Legal support"
+          ],
+          [
+            "Audience",
+            "All employees, contractors, temporary workers, and approved third parties using enterprise AI tools."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Approved AI Tools Register",
+        "Employee AI Usage Acknowledgment Form",
+        "Prohibited Use Exception Request Form",
+        "AI Output Human Review Checklist",
+        "AI Training Attendance Log"
+      ],
+      "heading": "Required companion templates",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This is usually the first AI policy to launch because it governs frontline behavior immediately."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2. AI Governance Policy",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines the governance structure for AI across the enterprise, including ownership, oversight, approval authority, escalation, risk accountability, and review responsibilities."
+          ],
+          [
+            "Primary Owner",
+            "Executive Sponsor / AI Governance Lead"
+          ],
+          [
+            "Audience",
+            "Executive leadership, business owners, Security, Privacy, Legal, IT, Procurement, Risk, and Compliance functions."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Governance Charter",
+        "AI Governance RACI Matrix",
+        "AI Steering Committee Terms of Reference",
+        "AI Escalation Path Matrix",
+        "Quarterly AI Governance Review Deck"
+      ],
+      "heading": "Required companion templates",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. Without this policy, the rest of the AI policy stack can become disconnected and weakly owned."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3. AI Data Handling and Privacy Policy",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines what data may be used in AI systems, what data is restricted or prohibited, how AI-related data should be classified, retained, deleted, transferred, and protected."
+          ],
+          [
+            "Primary Owner",
+            "Privacy Lead / Data Protection Lead with Security and Data Governance support"
+          ],
+          [
+            "Audience",
+            "All employees using AI, data owners, system owners, Privacy, Security, Legal, and procurement teams."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Data Classification Guide",
+        "Sensitive Data Submission Restriction Notice",
+        "AI Privacy Impact Assessment Form",
+        "AI Data Retention and Deletion Schedule",
+        "Cross-Border AI Data Transfer Review Form"
+      ],
+      "heading": "Required companion templates",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy becomes essential the moment employees may enter business, customer, or personal data into AI tools."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4. AI Risk Assessment and Use-Case Approval Policy",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Requires AI use cases to be reviewed before adoption, procurement, deployment, or material change. Establishes risk tiers, approval triggers, prohibited use cases, and enhanced review criteria."
+          ],
+          [
+            "Primary Owner",
+            "AI Governance Lead with Risk, Legal, Privacy, and Security review support"
+          ],
+          [
+            "Audience",
+            "Business owners, project sponsors, AI requestors, procurement teams, IT, Security, Privacy, and Legal."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Use Case Intake Form",
+        "AI Risk Tiering Worksheet",
+        "AI Approval Decision Record",
+        "High-Risk AI Review Checklist",
+        "AI Exception Request Form"
+      ],
+      "heading": "Required companion templates",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This is the gatekeeping policy that stops shadow AI from maturing into unmanaged enterprise risk."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5. Third-Party / Vendor AI Due Diligence Policy",
+      "id": "16",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Establishes requirements for assessing third-party AI vendors, platforms, models, and service providers before onboarding, renewal, or major scope change."
+          ],
+          [
+            "Primary Owner",
+            "Procurement / Vendor Risk Lead with Security, Privacy, and Legal support"
+          ],
+          [
+            "Audience",
+            "Procurement, Vendor Management, Security, Privacy, Legal, business sponsors, and AI governance reviewers."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Third-Party AI Privacy Risk Assessment",
+        "AI Vendor Security Questionnaire",
+        "AI Vendor Contract Review Checklist",
+        "AI Vendor Risk Summary Sheet",
+        "AI Vendor Evidence Request List"
+      ],
+      "heading": "Required companion templates",
+      "id": "17",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy is especially important because many AI risks are inherited from providers, not internally created."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6. AI Security Policy",
+      "id": "18",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines security requirements for enterprise AI tools, models, APIs, agents, integrations, credentials, logging, and access. It also addresses misuse, abuse, prompt injection, data leakage, and security hardening."
+          ],
+          [
+            "Primary Owner",
+            "Information Security Lead"
+          ],
+          [
+            "Audience",
+            "Security teams, IT administrators, developers, engineers, platform owners, and business owners using privileged AI capabilities."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Security Control Baseline",
+        "AI Access Control Review Form",
+        "AI API and Integration Security Checklist",
+        "Prompt Injection and Abuse Testing Checklist",
+        "AI Security Incident Intake Form"
+      ],
+      "heading": "Required companion templates",
+      "id": "19",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy should connect tightly to existing enterprise security standards rather than float as a standalone technical memo."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7. Human Oversight and Decision-Making Policy",
+      "id": "20",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines when human review is required before AI outputs are acted upon, especially for legal, financial, employment, safety, health, and customer-impacting decisions."
+          ],
+          [
+            "Primary Owner",
+            "AI Governance Lead with Legal and business owner support"
+          ],
+          [
+            "Audience",
+            "Business decision-makers, managers, operations teams, HR, Legal, compliance reviewers, and customer-facing teams."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Human-in-the-Loop Review Checklist",
+        "High-Impact Decision Approval Form",
+        "AI Output Validation Record",
+        "Escalation and Override Log",
+        "AI-Assisted Decision Review Guide"
+      ],
+      "heading": "Required companion templates",
+      "id": "21",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy is one of the clearest ways to make AI governance real instead of theoretical."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8. AI Transparency and Disclosure Policy",
+      "id": "22",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines when the enterprise must disclose AI use to employees, customers, partners, applicants, or other stakeholders, and when AI-generated content must be labeled or explained."
+          ],
+          [
+            "Primary Owner",
+            "Legal / Compliance with Communications and AI Governance support"
+          ],
+          [
+            "Audience",
+            "Legal, Compliance, Marketing, HR, Customer Support, Product teams, and business owners."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Disclosure Language Library",
+        "Customer AI Notice Template",
+        "Internal AI Use Disclosure Template",
+        "AI-Generated Content Labeling Guide",
+        "Transparency Review Checklist"
+      ],
+      "heading": "Required companion templates",
+      "id": "23",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy becomes highly visible externally, so it should be plain-language and consistent with customer-facing commitments."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9. AI Incident Response Policy",
+      "id": "24",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines what qualifies as an AI incident and how the organization detects, escalates, investigates, contains, remediates, and learns from AI-related failures or harms."
+          ],
+          [
+            "Primary Owner",
+            "Information Security Lead with Privacy, Legal, IT, and business owner support"
+          ],
+          [
+            "Audience",
+            "Security operations, Privacy, Legal, IT, risk teams, executives, incident responders, and system owners."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Incident Response Playbook",
+        "AI Incident Intake Form",
+        "AI Harm and Impact Assessment Sheet",
+        "Root Cause Analysis Template",
+        "Post-Incident Corrective Action Tracker"
+      ],
+      "heading": "Required companion templates",
+      "id": "25",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. AI incidents are not just security incidents; they can include privacy harm, fairness failures, and damaging automated behavior."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10. AI Monitoring, Logging, and Change Management Policy",
+      "id": "26",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Requires ongoing monitoring of AI performance, drift, misuse, configuration changes, prompt changes, model/provider changes, and operational review cycles."
+          ],
+          [
+            "Primary Owner",
+            "IT / Platform Owner with Security and AI Governance oversight"
+          ],
+          [
+            "Audience",
+            "IT, Security, platform teams, engineering, business owners, and governance reviewers."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Monitoring Standard",
+        "AI Logging Requirements Matrix",
+        "AI Drift Review Record",
+        "AI Change Approval Form",
+        "AI Periodic Review Tracker"
+      ],
+      "heading": "Required companion templates",
+      "id": "27",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy turns AI governance from a one-time approval event into a living control process."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "11. AI Inventory and Registry Policy",
+      "id": "28",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Requires all enterprise AI tools, use cases, agents, and relevant systems to be inventoried with clear ownership, purpose, data types, risk tier, and status."
+          ],
+          [
+            "Primary Owner",
+            "AI Governance Lead with IT support"
+          ],
+          [
+            "Audience",
+            "Business owners, IT, Security, Procurement, Privacy, Legal, internal audit, and risk teams."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI System Registry",
+        "AI Owner Assignment Record",
+        "AI System Classification Sheet",
+        "AI Review Status Tracker",
+        "Decommissioning Record"
+      ],
+      "heading": "Required companion templates",
+      "id": "29",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. If the organization cannot inventory AI, it cannot govern AI. Simple and painful."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "12. AI Model Lifecycle / Development Policy",
+      "id": "30",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Applies where the enterprise builds, fine-tunes, configures materially, or customizes models. Covers model design, validation, release, rollback, documentation, and retirement."
+          ],
+          [
+            "Primary Owner",
+            "Engineering / Product Owner with Security and Governance oversight"
+          ],
+          [
+            "Audience",
+            "Engineering, data science, product teams, model owners, security teams, and governance reviewers."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Model Development Checklist",
+        "Model Validation and Testing Record",
+        "Model Release Approval Form",
+        "Model Card / System Card Template",
+        "Model Retirement Checklist"
+      ],
+      "heading": "Required companion templates",
+      "id": "31",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. Not every SMB needs this on day one, but any company building or heavily customizing AI will need it quickly."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "13. Responsible AI / Ethics Policy",
+      "id": "32",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines the enterprise's principles for fairness, accountability, transparency, explainability, contestability, inclusion, and non-discrimination in AI use."
+          ],
+          [
+            "Primary Owner",
+            "Executive Sponsor / AI Governance Lead with Legal and HR support"
+          ],
+          [
+            "Audience",
+            "Executives, product teams, HR, Legal, Compliance, customer-facing teams, and innovation teams."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Responsible AI Principles Statement",
+        "Fairness and Bias Review Checklist",
+        "Ethical Escalation Review Form",
+        "Sensitive Use Case Review Memo",
+        "Stakeholder Impact Assessment Template"
+      ],
+      "heading": "Required companion templates",
+      "id": "33",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy gives the program a principles layer above operational controls and is useful for leadership communication and external trust."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "14. AI Training and Awareness Policy",
+      "id": "34",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Requires role-based training and awareness for enterprise AI usage, approvals, administration, development, and oversight responsibilities."
+          ],
+          [
+            "Primary Owner",
+            "AI Governance Lead with HR and Security Awareness support"
+          ],
+          [
+            "Audience",
+            "All employees, managers, administrators, approvers, developers, and executives."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Training Curriculum Matrix",
+        "Role-Based Training Assignment Sheet",
+        "AI Policy Acknowledgment Form",
+        "AI Awareness Campaign Tracker",
+        "Training Completion Report"
+      ],
+      "heading": "Required companion templates",
+      "id": "35",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. Governance without training is paperwork with optimism attached."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "15. AI Records Retention and Evidence Policy",
+      "id": "36",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines what governance, approval, monitoring, vendor, and incident records must be retained to support compliance, audit, review, and accountability."
+          ],
+          [
+            "Primary Owner",
+            "Records Management / Compliance Lead with Privacy, Legal, and Governance support"
+          ],
+          [
+            "Audience",
+            "Compliance, audit, Legal, AI governance, Security, IT, and business owners."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI Evidence Register",
+        "AI Governance Document Index",
+        "Retention Schedule Matrix",
+        "Audit Request Response Tracker",
+        "Evidence Completeness Checklist"
+      ],
+      "heading": "Required companion templates",
+      "id": "37",
+      "level": 1,
+      "paragraphs": [
+        "Implementation note. This policy is where operational discipline becomes provable during audits, reviews, and client diligence exercises."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Best Owner Map at a Glance",
+      "id": "38",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Policy",
+            "Primary Owner"
+          ],
+          [
+            "Enterprise AI Acceptable Use Policy",
+            "AI Governance Lead with Security and Legal support"
+          ],
+          [
+            "AI Governance Policy",
+            "Executive Sponsor / AI Governance Lead"
+          ],
+          [
+            "AI Data Handling and Privacy Policy",
+            "Privacy Lead / Data Protection Lead with Security and Data Governance support"
+          ],
+          [
+            "AI Risk Assessment and Use-Case Approval Policy",
+            "AI Governance Lead with Risk, Legal, Privacy, and Security review support"
+          ],
+          [
+            "Third-Party / Vendor AI Due Diligence Policy",
+            "Procurement / Vendor Risk Lead with Security, Privacy, and Legal support"
+          ],
+          [
+            "AI Security Policy",
+            "Information Security Lead"
+          ],
+          [
+            "Human Oversight and Decision-Making Policy",
+            "AI Governance Lead with Legal and business owner support"
+          ],
+          [
+            "AI Transparency and Disclosure Policy",
+            "Legal / Compliance with Communications and AI Governance support"
+          ],
+          [
+            "AI Incident Response Policy",
+            "Information Security Lead with Privacy, Legal, IT, and business owner support"
+          ],
+          [
+            "AI Monitoring, Logging, and Change Management Policy",
+            "IT / Platform Owner with Security and AI Governance oversight"
+          ],
+          [
+            "AI Inventory and Registry Policy",
+            "AI Governance Lead with IT support"
+          ],
+          [
+            "AI Model Lifecycle / Development Policy",
+            "Engineering / Product Owner with Security and Governance oversight"
+          ],
+          [
+            "Responsible AI / Ethics Policy",
+            "Executive Sponsor / AI Governance Lead with Legal and HR support"
+          ],
+          [
+            "AI Training and Awareness Policy",
+            "AI Governance Lead with HR and Security Awareness support"
+          ],
+          [
+            "AI Records Retention and Evidence Policy",
+            "Records Management / Compliance Lead with Privacy, Legal, and Governance support"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "GovSecure Productization Recommendation",
+      "id": "39",
+      "level": 1,
+      "paragraphs": [
+        "Recommended product name. GovSecure AI Policy Suite Map - 15 Core Enterprise AI Policies with Operational Templates",
+        "Commercial packaging approach. Offer the suite in layers: Lite (policy map + core templates), Standard (8 drafted policies + template pack), and Pro (full 15-policy suite + questionnaires + registry + evidence pack).",
+        "Positioning note. The value is not only in the policy documents themselves but in the operational templates that make the policies usable, reviewable, and auditable."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Closing Note",
+      "id": "40",
+      "level": 1,
+      "paragraphs": [
+        "This suite map is designed to help organizations stand up an AI governance program that is practical, role-aware, and scalable. It can serve as a planning document, a client-ready advisory deliverable, or the backbone of a GovSecure product offering."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Policies/GovSecure_AI_Policy_Suite_Map_Client_Ready.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 90,
+    "paragraph_count": 24,
+    "section_count": 40,
+    "table_count": 18
+  },
+  "subType": "suite-map",
+  "title": "GovSecure AI Policy Suite Map"
+}

@@ -1,0 +1,172 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:06310f1e977098f2dfa229caddb8e2fb578103fc06582cc45b2bb112a392d315",
+  "documentCode": "GS-CHKL-INTAKEFO-09",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Use Case Intake Form Checklist (Template)",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Purpose: Use this checklist to ensure all required information is collected before AI use-case review, risk triage, and approval.",
+        "Use Case Name: ____________________________________\nBusiness Unit / Department: ___________________________\nRequestor Name / Role: _______________________________\nBusiness Owner: _____________________________________\nDate Submitted: _____________________________________\nPlanned Go-Live Date: ________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1) Business Purpose & Scope",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "☐ Clear use case title provided\n☐ Business problem/opportunity described\n☐ Intended outcome / success criteria defined\n☐ Scope defined (pilot / limited / enterprise-wide)\n☐ In-scope users identified (employees/customers/vendors)\n☐ Out-of-scope use explicitly stated\n☐ Whether use case is internal-only or customer-facing identified",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2) AI System Description",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "☐ AI type identified (Generative / Predictive / Classification / Agent / Other)\n☐ Tool/vendor/platform name provided\n☐ Model source identified (internal model / vendor API / SaaS feature / open-source model)\n☐ Deployment model identified (SaaS / API / on-prem / cloud-hosted)\n☐ System architecture summary provided (high level)\n☐ Integrations listed (apps, APIs, databases, connectors)\n☐ Whether AI can take actions (write/update/send/delete) identified",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3) Data & Privacy Information",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "☐ Data types listed (public / internal / confidential / regulated)\n☐ Personal data involved? (PII) — Yes / No\n☐ Sensitive data involved? (PHI/PCI/financial/minors/etc.) — Yes / No\n☐ Data sources identified (systems, files, third parties)\n☐ Cross-border data transfer expected? — Yes / No\n☐ Data retention/storage behavior documented\n☐ Vendor data usage terms reviewed (training/retention/telemetry)\n☐ Data minimization considered\n☐ Privacy notice / consent implications identified (if applicable)",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4) Decision Impact & Human Oversight",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "☐ AI output purpose identified (advisory / assistive / automated decision support / full automation)\n☐ Whether outputs influence decisions about people identified\n☐ Human review required before action? — Yes / No\n☐ Human reviewer role identified\n☐ Escalation path for bad outputs defined\n☐ Fallback process documented if AI is unavailable or incorrect",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5) Risk & Compliance Screening",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "☐ Potential regulatory impact identified (privacy, sector-specific, AI, cybersecurity, consumer protection, etc.)\n☐ Internal policy impact identified (AI policy, acceptable use, security policy, data handling policy)\n☐ Third-party risk review required? — Yes / No\n☐ Contract/DPA review required? — Yes / No\n☐ Records retention / audit logging requirement identified\n☐ Need for DPIA/PIA identified (if personal/sensitive data)\n☐ Need for legal review identified\n☐ Need for security architecture review identified",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6) Security Controls (Initial Intake Check)",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "☐ Authentication method identified (SSO/MFA/local account)\n☐ Access roles/users defined\n☐ Least privilege considered\n☐ Logging/audit trail availability confirmed\n☐ Data encryption in transit/at rest confirmed (if known)\n☐ API keys/secrets handling method identified\n☐ Prompt/input restrictions considered (sensitive data rules)\n☐ Output handling/storage location identified\n☐ Incident reporting contact identified",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7) Vendor / Third-Party AI Questions (if applicable)",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "☐ Vendor name and product identified\n☐ Hosting region / data residency stated\n☐ Subprocessors disclosed\n☐ Vendor states whether customer data is used for model training\n☐ Security/compliance documentation available (SOC 2, ISO 27001, etc.)\n☐ Incident notification commitments reviewed\n☐ Right-to-audit / assessment rights identified (if enterprise contract)\n☐ SLA / uptime dependency understood",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8) Testing, Monitoring & Operations",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "☐ Success metrics defined (accuracy, cycle time, cost, quality, user satisfaction, etc.)\n☐ Test plan defined before production use\n☐ Known limitations / failure modes documented\n☐ Monitoring owner assigned\n☐ Review frequency proposed (monthly/quarterly/etc.)\n☐ Drift/hallucination/error monitoring considered (if relevant)\n☐ Change management process for model/vendor updates identified",
+        "Notes: ______________________________________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9) Classification & Triage Outcome (to be completed by governance team)",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "☐ Intake complete\n☐ Additional information required\n☐ Low Risk\n☐ Moderate Risk\n☐ High Risk\n☐ Critical Risk",
+        "Required Next Steps (check all that apply):\n☐ Basic Risk Assessment\n☐ Security Review\n☐ Privacy Review / DPIA\n☐ Legal Review\n☐ Vendor Risk Assessment\n☐ Threat Model\n☐ Model Card / Documentation\n☐ Evaluation Plan\n☐ Monitoring Plan\n☐ Human Oversight Plan\n☐ Executive Approval",
+        "Triage Owner: ____________________\nDate: ____________________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "10) Approvals (as applicable)",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "Business Owner: ____________________ Date: __________\nIT / Security: ______________________ Date: __________\nPrivacy: ____________________________ Date: __________\nLegal / Compliance: _________________ Date: __________\nAI Governance Lead: _________________ Date: __________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Quick Tips (so this form doesn’t become “checkbox theater”)",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "Require evidence links where possible (architecture diagram, vendor docs, DPA, test plan).",
+        "Reject “TBD” for data types, integrations, and human oversight.",
+        "If the AI can write/update/delete/send, escalate automatically.",
+        "If regulated data is involved, route to privacy/security/legal before pilot.",
+        "If you want, I can also turn this into a fillable version in:"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Excel / spreadsheet format",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Word form format",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "ServiceNow/Jira intake workflow fields (with conditional logic)"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/AI Use Case Intake Form Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 28,
+    "section_count": 14,
+    "table_count": 0
+  },
+  "subType": "intake-form",
+  "title": "AI Use Case Intake Form Checklist (Template)"
+}

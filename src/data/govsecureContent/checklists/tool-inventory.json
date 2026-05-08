@@ -1,0 +1,553 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:e7f3c6dbacc71e698c159a72acf145345740af4d37382586093b103e49877057",
+  "documentCode": "GS-CHKL-TOOLINVE-23",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GOVSECURE",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "AI Tool Inventory Checklist",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "A practical checklist for identifying, validating, documenting, and maintaining visibility over AI tools used or proposed across the organization."
+      ],
+      "tables": [
+        [
+          [
+            "Purpose\nUse this checklist to make sure the organization has a disciplined process for discovering AI tools, recording ownership, assessing data exposure, flagging shadow AI, and keeping an inventory that leaders can actually trust. It is designed for SMB environments that need real visibility without building a bureaucracy worthy of a small empire."
+          ]
+        ],
+        [
+          [
+            "Document Type",
+            "Operational Checklist Template",
+            "Version",
+            "1.0"
+          ],
+          [
+            "Prepared For",
+            "{{COMPANY_NAME}}",
+            "Owner",
+            "{{AI_GOVERNANCE_LEAD}}"
+          ],
+          [
+            "Review Cycle",
+            "Quarterly or upon major tool change",
+            "Related Artifact",
+            "AI Use Case Registry"
+          ],
+          [
+            "Primary Users",
+            "IT, security, procurement, privacy, business leads",
+            "Status",
+            "Draft / Approved / In Use"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Use it during discovery, onboarding, periodic review, or cleanup exercises for AI tools already in circulation.",
+        "Record gaps rather than guessing. An inventory with honest blanks is still better than a fake masterpiece built on assumptions.",
+        "Any tool that is unapproved, handling sensitive data, or linked to external-facing decisions should trigger deeper review.",
+        "Completed items should feed the AI Use Case Registry, procurement review, or shadow AI workflow as appropriate."
+      ],
+      "heading": "How to use this checklist",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1. Set inventory scope and ownership",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Before collecting tool names, decide who owns the exercise, what counts as an AI tool, and what business areas are in scope."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Confirm the inventory owner and supporting reviewers.",
+            "Identify the lead function and any supporting roles from IT, security, procurement, privacy, legal, or operations.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Define what qualifies as an AI tool for this inventory.",
+            "Include generative AI apps, AI-enabled SaaS features, copilots, embedded assistants, APIs, model services, workflow automations, and browser extensions if relevant.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Define the business units, geographies, or environments in scope.",
+            "Clarify whether the exercise covers the whole company, a pilot group, a region, or only production environments.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Set the inventory objective.",
+            "Examples: baseline discovery, annual recertification, procurement support, policy enforcement, or cleanup of shadow AI.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "2. Identify sources of truth and discovery inputs",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "An inventory is only as good as the places you look. If discovery is lazy, the inventory will be fiction with a table border."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "List the main data sources for discovery.",
+            "Examples: procurement records, SaaS catalogs, expense data, browser extension reports, SSO apps, IT asset lists, business surveys, vendor lists, or contract records.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check whether employee self-reporting is needed.",
+            "Determine where a survey, attestation, or manager confirmation is required to find tools outside formal procurement.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Review current approved tool lists or policies.",
+            "Use existing approved platform lists, banned tool lists, and exception records as comparison points.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Plan how shadow AI findings will be captured.",
+            "Decide whether they will be logged directly in the inventory, routed to a shadow AI workflow, or both.",
+            ""
+          ]
+        ],
+        [
+          [
+            "Discovery tip\nDo not rely only on procurement records. AI tools sneak in through browser plugins, trial accounts, built-in SaaS features, reimbursed expenses, and the ancient human tradition of “I thought it was fine.”"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "3. Identify AI tools currently used or proposed",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "The goal here is visibility, not perfection. Capture the tools people are actually touching, not just the ones procurement remembers."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Record each AI tool or AI-enabled feature by name.",
+            "Capture the commercial name, embedded feature name, or internal nickname used by employees.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Identify whether the tool is active, piloting, proposed, or retired.",
+            "Status helps separate experimentation from operational reliance.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Note the primary business purpose for each tool.",
+            "Examples: drafting, summarization, research, code assistance, image generation, analytics, chatbot support, workflow automation, or decision support.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check whether the same vendor or feature appears in multiple teams.",
+            "Consolidate duplicates and distinguish enterprise deployments from scattered self-serve use.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "4. Record the tool profile and ownership",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "Every tool entry should have a real owner. “Everyone uses it” is not ownership. That is chaos with Wi-Fi."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Identify the business owner for each tool.",
+            "Capture the accountable owner, not just the first person who answered an email.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Identify the technical or administrative owner if different.",
+            "Note the platform owner, admin team, or IT contact responsible for setup, access, and support.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Capture vendor and deployment details.",
+            "Record vendor name, plan type, contract vehicle, enterprise tenant status, API usage, or local-only deployment if applicable.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Confirm the main user populations.",
+            "Identify which departments, roles, or external parties can access or rely on the tool.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "5. Capture data exposure and integration risk",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "This section separates harmless curiosity from the kind of tool usage that makes security, privacy, and leadership suddenly very interested."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Document the types of data entered into or exposed to the tool.",
+            "Examples: public information, internal business data, customer data, employee data, financial data, code, regulated data, or uploaded files.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Identify the highest sensitivity level involved.",
+            "Capture the most sensitive data reasonably expected to touch the tool.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check whether the tool integrates with internal systems or repositories.",
+            "Examples: email, file shares, CRM, ERP, HRIS, ticketing systems, or knowledge bases.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Capture retention, reuse, and training assumptions.",
+            "Document whether data may be stored, logged, reused for training, or deleted on request based on available vendor information.",
+            ""
+          ]
+        ],
+        [
+          [
+            "Watch this closely\nIf users cannot say what data goes into the tool, how the output is used, or whether the vendor reuses prompts or files for model training, the entry is not mature enough to trust."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "6. Confirm approval status and policy alignment",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "A useful inventory tells you not only what exists, but whether it is allowed, tolerated, unknown, or already drifting into trouble."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Mark whether the tool is approved, conditionally approved, unapproved, or unknown.",
+            "Tie each status to the current policy or review record where possible.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check whether an exception or waiver exists.",
+            "Record any temporary approvals, pilot exceptions, or risk acceptances tied to the tool.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Confirm whether the tool aligns with the AI acceptable use policy.",
+            "Flag any mismatch involving prohibited data, prohibited use, unsupported features, or missing guardrails.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Identify whether procurement and legal review have occurred.",
+            "Note whether a contract, DPA, security review, or vendor risk review exists.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "7. Assign risk indicators and escalation triggers",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "Not every tool needs a drama soundtrack. But some absolutely need a deeper look before the company gets surprised in public."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Check for high-risk conditions.",
+            "Examples: customer-facing interactions, employee-impacting outputs, significant decision support, automated actions, or sensitive-data exposure.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check for shadow AI indicators.",
+            "Examples: self-procured use, unsanctioned browser extensions, consumer tools used for work, or usage discovered outside normal channels.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Determine whether deeper review is required.",
+            "Identify if the tool should go to procurement review, vendor risk review, privacy assessment, or incident follow-up.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Assign an initial risk rating or priority level.",
+            "Low, medium, and high is enough for a baseline inventory unless your organization enjoys unnecessary complexity as a hobby.",
+            ""
+          ]
+        ],
+        [
+          [
+            "Escalation note\nAny tool that touches sensitive data, influences real-world decisions, or was discovered outside normal approval channels should be routed for deeper governance review."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "8. Confirm operational controls and maintenance",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "Inventories age fast. A good entry should say who maintains it, how access is controlled, and when the record must be reviewed again."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Confirm who grants and removes access.",
+            "Document the admin path, SSO controls, licensing owner, or local approval process.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Check whether monitoring, logging, or usage reporting exists.",
+            "Identify what visibility the organization has into adoption, misuse, or unusual behavior.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Confirm required training or user guidance exists.",
+            "State whether users have policy guidance, do-not-enter rules, or output review instructions.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Set a review trigger or recertification date.",
+            "Use dates or events such as contract renewal, feature expansion, data-type changes, wider rollout, or incident findings.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "9. Prepare the inventory entry for action",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "By the end of the checklist, each tool should be ready to remain in service, go through review, be monitored more closely, or be shut down with dignity."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "Define the next action for the tool entry.",
+            "Examples: retain as approved, route for review, remediate controls, consolidate duplicates, restrict usage, or retire.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Confirm the inventory record is complete enough for leadership or governance reporting.",
+            "The record should support real decisions, not just a tally count.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Link the tool to related governance artifacts.",
+            "Reference the AI Use Case Registry, procurement review, incident record, acceptable use exception, or shadow AI case if applicable.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Capture the final notes or unresolved gaps.",
+            "Document what still needs to be solved, by whom, and by when.",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "10. Final inventory readiness and handoff",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "Use this closing section before the tool record is marked complete, entered into the registry, or routed for escalation."
+      ],
+      "tables": [
+        [
+          [
+            "Check",
+            "Required step or confirmation",
+            "What should be captured",
+            "Notes / evidence"
+          ],
+          [
+            "[ ]",
+            "The tool record is complete enough to support governance decisions.",
+            "Tool name, owner, purpose, users, vendor details, data exposure, approval status, and next action are documented.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Duplicate entries and conflicting names have been resolved.",
+            "The same tool is not hiding under five names like it is running from taxes.",
+            ""
+          ],
+          [
+            "[ ]",
+            "Required escalations have been identified.",
+            "Shadow AI, sensitive-data handling, public-facing uses, or procurement gaps have been routed correctly.",
+            ""
+          ],
+          [
+            "[ ]",
+            "The inventory entry is ready for the AI Use Case Registry or related control records.",
+            "Registry ID, review date, risk rating, and decision status are ready to be logged.",
+            ""
+          ],
+          [
+            "[ ]",
+            "A next review date or monitoring trigger has been assigned.",
+            "Set the trigger for periodic recertification, vendor change, new data use, broader rollout, or issue-driven review.",
+            ""
+          ]
+        ],
+        [
+          [
+            "Prepared by",
+            "{{REVIEWER_NAME}}",
+            "Date",
+            "{{DATE}}"
+          ],
+          [
+            "Reviewed by",
+            "{{APPROVER_NAME}}",
+            "Decision",
+            "{{COMPLETE / ESCALATE / FOLLOW-UP}}"
+          ],
+          [
+            "Registry ID",
+            "{{REGISTRY_ID}}",
+            "Next Review Date",
+            "{{DATE}}"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Tool_Inventory_Checklist (1).docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 4,
+    "paragraph_count": 11,
+    "section_count": 13,
+    "table_count": 16
+  },
+  "subType": "tool-inventory",
+  "title": "GOVSECURE"
+}

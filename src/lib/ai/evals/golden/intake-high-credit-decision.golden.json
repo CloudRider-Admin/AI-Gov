@@ -1,0 +1,19 @@
+{
+  "id": "intake-high-credit-decision",
+  "category": "intake",
+  "input": {
+    "useCaseName": "Auto Loan Pre-Approval",
+    "useCaseDescription": "ML model that pre-approves consumer auto loans up to $40,000 based on credit bureau data and bank transaction history. Decision posted to applicant portal.",
+    "industry": "fintech"
+  },
+  "expectedRiskTier": "High",
+  "expectedTriggers": ["consumer-credit-decisioning"],
+  "requiredClauses": [
+    "High",
+    "credit"
+  ],
+  "forbiddenContent": [
+    "Low",
+    "Minimal-Risk"
+  ]
+}

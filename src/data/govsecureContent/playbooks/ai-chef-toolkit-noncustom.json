@@ -1,0 +1,580 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:a3682502a0b3b96cf6576401bccb3fcaa7c8958f48a8aca23c008a9e2f122e21",
+  "documentCode": "GS-PLBK-AICHEFTO-13",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "A practical operational toolkit for governing AI risks, controls, ownership, and assurance across the enterprise."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Executive Overview",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure AI Chef turns AI governance from scattered policies into an operating model with named ownership, risk-tiered intake, mapped controls, evidence expectations, and leadership reporting.",
+        "The toolkit is designed for SMB owners, CIO/CISO leaders, compliance teams, and AI governance practitioners who need one framework that can support awareness, implementation, and audit readiness without becoming theoretical sludge."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "A 24-recipe governance matrix across six stations",
+        "An ownership and RACI model",
+        "AI use-case intake and risk tiering workflow",
+        "AI system registry structure",
+        "Policy-to-control mapping baseline",
+        "Operational guidance for data, model, vendor, agent, monitoring, and incident controls",
+        "A maturity roadmap from 24 to 36 recipes"
+      ],
+      "heading": "What is included",
+      "id": "2",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "1. Identify AI systems and use cases",
+        "2. Assess the use case and assign a risk tier",
+        "3. Assign owners and supporting functions",
+        "4. Implement required controls and record evidence",
+        "5. Review quarterly and improve by maturity stage"
+      ],
+      "heading": "How to Use the Framework",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use the toolkit in five steps:"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "24 Core Recipes Matrix",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Station",
+            "Code",
+            "Recipe",
+            "Core Control",
+            "Owner"
+          ],
+          [
+            "Foundation & Ownership",
+            "Ow",
+            "Head Chef Assignment\nRisk: Ownership Vacuum",
+            "Assign named AI governance owner, charter, RACI, escalation authority",
+            "EX / AG"
+          ],
+          [
+            "",
+            "Pg",
+            "Kitchen Rules\nRisk: Policy Gaps",
+            "Set AI policy, acceptable use, prohibited use, and exception handling",
+            "LE / SE / AG"
+          ],
+          [
+            "",
+            "Rc",
+            "Role Recipe Card\nRisk: Role Confusion",
+            "Define responsibilities across IT, Security, Legal, Privacy, Data, Procurement, HR, and business",
+            "AG"
+          ],
+          [
+            "",
+            "Sa",
+            "Approved Menu Only\nRisk: Shadow AI",
+            "Maintain approved tools register and sanctioned use pathways",
+            "IT / SE"
+          ],
+          [
+            "Data & Knowledge Controls",
+            "Di",
+            "Clean Ingredients\nRisk: Sensitive Data Exposure",
+            "Apply data classification and prompt handling restrictions",
+            "DA / PR / SE"
+          ],
+          [
+            "",
+            "Pv",
+            "Source Provenance Check\nRisk: Untrusted or Poor-Quality Data",
+            "Track provenance, metadata, and approved knowledge sources",
+            "DA"
+          ],
+          [
+            "",
+            "Rd",
+            "Retention & Disposal Recipe\nRisk: Over-Retention",
+            "Define AI-specific retention and deletion rules",
+            "PR / IT"
+          ],
+          [
+            "",
+            "Kb",
+            "Knowledge Base Boundaries\nRisk: Unauthorized Retrieval",
+            "Enforce permission-aware retrieval and connector controls",
+            "IT / SE / DA"
+          ],
+          [
+            "Model & Tool Safety",
+            "Ev",
+            "Pre-Serve Evaluation\nRisk: Unsafe Deployment",
+            "Test performance, robustness, misuse, and bias before production",
+            "BU / SE / AG"
+          ],
+          [
+            "",
+            "Ss",
+            "Secret Sauce Lockdown\nRisk: Embedded Secrets Exposure",
+            "Use vaulting, secret scanning, and protected authentication",
+            "EN / SE"
+          ],
+          [
+            "",
+            "Dt",
+            "Drift Tasting\nRisk: Behavioral Drift",
+            "Revalidate against benchmarks and review thresholds",
+            "BU / EN"
+          ],
+          [
+            "",
+            "Vr",
+            "Vendor Pantry Review\nRisk: Third-Party AI Exposure",
+            "Perform AI-specific vendor, legal, and security due diligence",
+            "PC / SE / LE"
+          ],
+          [
+            "Agent & Automation Controls",
+            "Tp",
+            "Tool Permission Gate\nRisk: Agent Overreach",
+            "Apply least privilege, scoped tool access, and action thresholds",
+            "IT / SE"
+          ],
+          [
+            "",
+            "Hi",
+            "Human Before High Impact\nRisk: Unchecked Automation",
+            "Require human approval for high-impact actions",
+            "BU / AG"
+          ],
+          [
+            "",
+            "Sb",
+            "Sandbox Before Service\nRisk: Unsafe Rollout",
+            "Use staging, pilots, rollback design, and controlled releases",
+            "EN / IT"
+          ],
+          [
+            "",
+            "Ks",
+            "Kill Switch on the Counter\nRisk: Runaway Behavior",
+            "Enable emergency disablement and connector revocation",
+            "SE / IT"
+          ],
+          [
+            "Decision & Human Oversight",
+            "Ex",
+            "Explain the Dish\nRisk: Opaque Outputs",
+            "Require rationale, notices, and traceability where appropriate",
+            "BU / LE"
+          ],
+          [
+            "",
+            "Ea",
+            "Escalate Ambiguous Orders\nRisk: Harmful Outcomes",
+            "Define exception triggers and human escalation rules",
+            "BU"
+          ],
+          [
+            "",
+            "Bt",
+            "Bias & Fairness Taste Test\nRisk: Unfair Outcomes",
+            "Conduct fairness review and remediation for high-impact uses",
+            "LE / BU / AG"
+          ],
+          [
+            "",
+            "Hr",
+            "High-Risk Use Case Flag\nRisk: Sensitive Use Cases",
+            "Apply intake triage, risk tiering, and enhanced approval",
+            "AG"
+          ],
+          [
+            "Assurance, Monitoring & Response",
+            "In",
+            "Full Kitchen Inventory\nRisk: Unknown AI Systems",
+            "Maintain AI system registry with owners, vendors, data, and status",
+            "AG / IT"
+          ],
+          [
+            "",
+            "Lg",
+            "Kitchen Camera Logs\nRisk: Weak Auditability",
+            "Log prompts, tool calls, approvals, changes, exceptions, and incidents",
+            "SE / IT"
+          ],
+          [
+            "",
+            "Ir",
+            "Burn Response Plan\nRisk: No AI Incident Handling",
+            "Create AI incident response playbook",
+            "SE / PR / LE / IT"
+          ],
+          [
+            "",
+            "Qr",
+            "Quarterly Recipe Review\nRisk: Control Decay",
+            "Review metrics, open risks, exceptions, and maturity quarterly",
+            "AG / EX"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Executive Sponsor (EX): accountably backs the program and clears roadblocks.",
+        "AI Governance Lead (AG): operates the framework, intake, reviews, and reporting.",
+        "IT / Platform Owner (IT): manages enablement, access, integration, and platform controls.",
+        "Security (SE): enforces security controls, monitoring, and incident coordination.",
+        "Privacy (PR): covers personal-data handling, retention, and privacy reviews.",
+        "Legal / Compliance (LE): addresses regulatory, contractual, and policy interpretations.",
+        "Data Owner / Governance (DA): owns data quality, provenance, and approved access.",
+        "Business Owner (BU): owns the use case, benefits, and outcome accountability.",
+        "Procurement / Vendor Risk (PC): performs third-party diligence and contract coordination.",
+        "Engineering / Product (EN): implements technical safeguards and rollout design."
+      ],
+      "heading": "Ownership Model and RACI",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "Primary roles"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Sample RACI snapshot",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [
+        "Escalation path: Business Owner -> AI Governance Lead -> Security/Privacy/Legal as needed -> Executive Sponsor for Tier 4 or exception approvals."
+      ],
+      "tables": [
+        [
+          [
+            "Recipe",
+            "EX",
+            "AG",
+            "IT",
+            "SE",
+            "BU"
+          ],
+          [
+            "Head Chef Assignment",
+            "A",
+            "R",
+            "C",
+            "C",
+            "I"
+          ],
+          [
+            "Approved Menu Only",
+            "I",
+            "C",
+            "R",
+            "A",
+            "C"
+          ],
+          [
+            "High-Risk Use Case Flag",
+            "C",
+            "A",
+            "I",
+            "C",
+            "R"
+          ],
+          [
+            "Burn Response Plan",
+            "C",
+            "C",
+            "R",
+            "A",
+            "I"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI Use Case Intake and Risk Tiering",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Business purpose and intended outcome",
+        "AI capability type and provider",
+        "Internal-only or external/customer-facing use",
+        "Data sensitivity and regulated-data exposure",
+        "Decision impact and human oversight requirement",
+        "Automated actions or tool permissions",
+        "Third-party/vendor dependence",
+        "Applicable regulations or contractual obligations"
+      ],
+      "heading": "Required intake questions",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Risk tier logic",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Tier",
+            "Label",
+            "Use",
+            "Default expectation"
+          ],
+          [
+            "1",
+            "Low",
+            "Internal productivity with low sensitivity",
+            "Standard controls and owner assignment"
+          ],
+          [
+            "2",
+            "Moderate",
+            "Business workflow support with moderate data sensitivity",
+            "Documented review and evidence requirements"
+          ],
+          [
+            "3",
+            "High",
+            "Sensitive data, consequential outputs, or customer impact",
+            "Enhanced controls and multi-function approval"
+          ],
+          [
+            "4",
+            "Prohibited / Executive Review",
+            "Unsafe, disallowed, or materially high-risk use",
+            "Block or route to Executive Sponsor"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Policy-to-Control Mapping Baseline",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "Use this baseline to turn policy language into minimum and enhanced operational controls."
+      ],
+      "tables": [
+        [
+          [
+            "Policy Theme",
+            "Required statement",
+            "Minimum control",
+            "Enhanced control",
+            "Evidence"
+          ],
+          [
+            "Acceptable Use",
+            "Use approved tools only for approved purposes",
+            "Approved tools register and owner assignment",
+            "Periodic usage review and exception workflow",
+            "Tool list, approvals"
+          ],
+          [
+            "Data Handling",
+            "Do not expose sensitive data without authorization",
+            "Classification and input restrictions",
+            "DLP, redaction, connector segmentation",
+            "Classification guidance, logs"
+          ],
+          [
+            "Human Oversight",
+            "High-impact outputs require human review",
+            "Defined approval threshold",
+            "Dual approval or specialist sign-off",
+            "Review records"
+          ],
+          [
+            "Vendor Review",
+            "Third-party AI providers require diligence",
+            "Security/legal review",
+            "Ongoing reassessment and contract safeguards",
+            "Vendor review pack"
+          ],
+          [
+            "Logging & Monitoring",
+            "Material AI activity must be auditable",
+            "Prompt/tool/approval logging",
+            "Alerting, anomaly checks, and periodic review",
+            "Logs, review summaries"
+          ],
+          [
+            "Incident Response",
+            "AI incidents must be escalated rapidly",
+            "AI incident categories and owner list",
+            "Playbooks, tabletop tests, lessons learned",
+            "Incident tickets, PIRs"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI Incident Response Playbook",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Harmful or misleading output",
+        "Privacy breach or unauthorized data exposure",
+        "Security exposure or embedded secret disclosure",
+        "Model or agent drift causing unsafe behavior",
+        "Unauthorized automation or unapproved integration",
+        "Third-party vendor or service failure"
+      ],
+      "heading": "Incident categories",
+      "id": "12",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Detect and triage",
+        "Assess severity and impacted systems",
+        "Contain or disable affected AI activity",
+        "Escalate to Security, Privacy, Legal, and Executive Sponsor as required",
+        "Remediate and restore safe operation",
+        "Review root cause, evidence, and control improvements"
+      ],
+      "heading": "Workflow",
+      "id": "13",
+      "level": 2,
+      "paragraphs": [
+        "Minimum evidence: incident summary, owner, timeline, impacted data/systems, containment action, recovery decision, lessons learned."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Governance Glossary",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "AI system: Any model, tool, agent, workflow, or embedded capability used to generate, classify, retrieve, recommend, or automate decisions.",
+        "Agent: An AI-enabled system that can invoke tools, call external systems, or take actions toward a task.",
+        "High-impact use case: A use case whose output can materially affect people, finances, legal posture, privacy, or safety.",
+        "Human oversight: A defined review or approval action by a responsible human before or after AI output is used.",
+        "Model drift: A measurable change in behavior, performance, or output quality over time that can affect reliability or safety.",
+        "Shadow AI: Use of AI tools or capabilities outside approved governance, visibility, or control.",
+        "Knowledge base: A collection of internal or external documents and data sources used to ground or enrich AI outputs.",
+        "Prohibited use: A use case that the organization forbids because the risk cannot be reduced to an acceptable level."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Standards Alignment Crosswalk",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "Reference only - not a legal certification claim."
+      ],
+      "tables": [
+        [
+          [
+            "Framework area",
+            "NIST AI RMF",
+            "ISO/IEC 42001",
+            "EU AI Act themes",
+            "SOC-style logic"
+          ],
+          [
+            "Foundation & Ownership",
+            "Govern",
+            "Leadership, policy",
+            "Governance, QMS",
+            "Control environment"
+          ],
+          [
+            "Data & Knowledge",
+            "Map / Manage",
+            "Data governance",
+            "Data governance",
+            "Confidentiality / Privacy"
+          ],
+          [
+            "Model & Tool Safety",
+            "Measure / Manage",
+            "Lifecycle controls",
+            "Accuracy, robustness, cybersecurity",
+            "Processing integrity / Security"
+          ],
+          [
+            "Monitoring & Response",
+            "Manage",
+            "Monitoring, improvement",
+            "Logging, oversight",
+            "Monitoring / Change management"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "AI policy and approved tools list",
+        "Use-case intake records and risk assessments",
+        "AI system inventory",
+        "Vendor review records",
+        "Monitoring logs and exception records",
+        "Incident reports and quarterly review decks"
+      ],
+      "heading": "AI Governance Evidence Register",
+      "id": "16",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Toolkit_Word.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 48,
+    "paragraph_count": 17,
+    "section_count": 17,
+    "table_count": 5
+  },
+  "subType": "ai-chef-toolkit-noncustom",
+  "title": "GovSecure AI Chef™ — Enterprise AI Governance Recipe Matrix Toolkit — v1.0 - 24 Core Recipes — Built from the approved GovSecure AI Chef toolkit outline and template structure."
+}

@@ -5,6 +5,7 @@ import { GOVERNANCE_KNOWLEDGE_BASE } from '@/lib/ai/knowledgeBase';
 import { SECTOR_GUIDANCE } from '@/data/sectorGuidance';
 import { EMERGING_REGULATIONS } from '@/data/emergingRegulations';
 import { getAllSeedEntries } from '@/lib/knowledge/seedData';
+import { clearKnowledgeEmbedding } from '@/lib/knowledge/embeddings';
 
 /**
  * POST /api/knowledge/seed
@@ -44,7 +45,7 @@ export async function POST() {
       });
 
       if (existing) {
-        await prisma.knowledgeEntry.update({
+        const updatedEntry = await prisma.knowledgeEntry.update({
           where: { id: existing.id },
           data: {
             content: doc.content,
@@ -55,6 +56,7 @@ export async function POST() {
             embeddedAt: null,
           },
         });
+        await clearKnowledgeEmbedding(updatedEntry.id);
         updated++;
       } else {
         await prisma.knowledgeEntry.create({
@@ -88,10 +90,11 @@ export async function POST() {
       });
 
       if (existing) {
-        await prisma.knowledgeEntry.update({
+        const updatedEntry = await prisma.knowledgeEntry.update({
           where: { id: existing.id },
           data: { content, category: 'best-practice', tags, source: `GovSecure Sector Guidance — ${sector.displayName}`, embeddedAt: null },
         });
+        await clearKnowledgeEmbedding(updatedEntry.id);
         updated++;
       } else {
         await prisma.knowledgeEntry.create({
@@ -118,10 +121,11 @@ export async function POST() {
       });
 
       if (existing) {
-        await prisma.knowledgeEntry.update({
+        const updatedEntry = await prisma.knowledgeEntry.update({
           where: { id: existing.id },
           data: { content, category: 'regulation', tags, source: reg.name, embeddedAt: null },
         });
+        await clearKnowledgeEmbedding(updatedEntry.id);
         updated++;
       } else {
         await prisma.knowledgeEntry.create({
@@ -143,7 +147,7 @@ export async function POST() {
       });
 
       if (existing) {
-        await prisma.knowledgeEntry.update({
+        const updatedEntry = await prisma.knowledgeEntry.update({
           where: { id: existing.id },
           data: {
             content: entry.content,
@@ -154,6 +158,7 @@ export async function POST() {
             embeddedAt: null,
           },
         });
+        await clearKnowledgeEmbedding(updatedEntry.id);
         updated++;
       } else {
         await prisma.knowledgeEntry.create({

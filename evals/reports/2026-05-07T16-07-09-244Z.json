@@ -1,0 +1,637 @@
+{
+  "startedAt": "2026-05-07T16:07:09.244Z",
+  "durationSec": 49.53,
+  "rubricVersion": "1.1.0",
+  "totalCases": 30,
+  "passed": 0,
+  "failed": 0,
+  "errored": 30,
+  "passRate": 0,
+  "meanOverall": 0,
+  "byCategory": {
+    "document-generation": {
+      "total": 13,
+      "passed": 0,
+      "passRate": 0,
+      "meanOverall": 0
+    },
+    "advisory-query": {
+      "total": 9,
+      "passed": 0,
+      "passRate": 0,
+      "meanOverall": 0
+    },
+    "intake": {
+      "total": 4,
+      "passed": 0,
+      "passRate": 0,
+      "meanOverall": 0
+    },
+    "playbook": {
+      "total": 4,
+      "passed": 0,
+      "passRate": 0,
+      "meanOverall": 0
+    }
+  },
+  "cases": [
+    {
+      "caseId": "advisory-90-day-blueprint",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 3698
+    },
+    {
+      "caseId": "advisory-ai-chef",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 3728
+    },
+    {
+      "caseId": "advisory-citation-tripwire",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1376
+    },
+    {
+      "caseId": "advisory-clarification-vague",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1409
+    },
+    {
+      "caseId": "advisory-eu-ai-act-prohibited",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1834
+    },
+    {
+      "caseId": "advisory-nist-vs-iso",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1847
+    },
+    {
+      "caseId": "advisory-policy-priority",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1428
+    },
+    {
+      "caseId": "advisory-risk-tier",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1367
+    },
+    {
+      "caseId": "advisory-vendor-risk",
+      "category": "advisory-query",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 2017
+    },
+    {
+      "caseId": "doc-dpia-marketing",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 2030
+    },
+    {
+      "caseId": "doc-evidence-pack-saas",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1482
+    },
+    {
+      "caseId": "doc-monitoring-plan-finserv",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1510
+    },
+    {
+      "caseId": "doc-threat-model-llm-app",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1569
+    },
+    {
+      "caseId": "doc-use-case-summary",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1591
+    },
+    {
+      "caseId": "intake-critical-social-scoring",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1586
+    },
+    {
+      "caseId": "intake-high-credit-decision",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1520
+    },
+    {
+      "caseId": "intake-low-internal-tool",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1556
+    },
+    {
+      "caseId": "intake-medium-customer-chat",
+      "category": "intake",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1333
+    },
+    {
+      "caseId": "playbook-combined-healthcare",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1610
+    },
+    {
+      "caseId": "playbook-eu-ai-act-edtech",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1383
+    },
+    {
+      "caseId": "playbook-iso-42001-mfg",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1564
+    },
+    {
+      "caseId": "playbook-nist-rmf-saas",
+      "category": "playbook",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1522
+    },
+    {
+      "caseId": "policy-aup-ecommerce",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1518
+    },
+    {
+      "caseId": "policy-data-privacy-fintech",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1502
+    },
+    {
+      "caseId": "policy-governance-healthcare",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1399
+    },
+    {
+      "caseId": "policy-human-oversight-saas",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1569
+    },
+    {
+      "caseId": "policy-incident-response-edu",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1501
+    },
+    {
+      "caseId": "policy-risk-approval-mfg",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1466
+    },
+    {
+      "caseId": "policy-security-public-sector",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "fail",
+        "missingClauses": [],
+        "forbiddenHits": [
+          "orchestrator-error:429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+        ]
+      },
+      "judged": {
+        "rationale": "error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors."
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.",
+      "durationMs": 1599
+    },
+    {
+      "caseId": "policy-third-party-retail",
+      "category": "document-generation",
+      "deterministic": {
+        "structureMatch": 0,
+        "requiredClausesPresent": 0,
+        "hallucinationCheck": "pass",
+        "missingClauses": [],
+        "forbiddenHits": []
+      },
+      "judged": {
+        "rationale": "skipped: documentType \"govsecure-third-party-policy\" not yet implemented (Phase 2)"
+      },
+      "overall": 0,
+      "passed": false,
+      "error": "skipped: documentType \"govsecure-third-party-policy\" not yet implemented (Phase 2)",
+      "durationMs": 0
+    }
+  ]
+}

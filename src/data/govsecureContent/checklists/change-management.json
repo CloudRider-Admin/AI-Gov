@@ -1,0 +1,240 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:2a74cb72c1b272aaeb1733a361c1e0c02080c13406dbf9d8bca2fe2e09bc74d2",
+  "documentCode": "GS-CHKL-CHANGEMA-02",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Change Management Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Change Request",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Change description captured (model, prompt, data, tools, integrations, permissions)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Business justification and expected impact documented",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Risk & Reviews",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Risk tier re-evaluated based on change",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Security review completed (if required)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Privacy/DPIA update completed (if required)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Legal/vendor review completed (if required)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Testing",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Regression tests executed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Safety/bias checks repeated where relevant",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Monitoring thresholds updated where needed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Deployment & Traceability",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Rollback plan confirmed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Change approved and deployed through controlled process",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Registry and evidence pack updated; stakeholders notified",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Change_Management_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 8,
+    "table_count": 5
+  },
+  "subType": "change-management",
+  "title": "AI Change Management Checklist"
+}

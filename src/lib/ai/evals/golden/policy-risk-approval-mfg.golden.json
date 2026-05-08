@@ -1,0 +1,30 @@
+{
+  "id": "policy-risk-approval-mfg",
+  "category": "document-generation",
+  "documentType": "govsecure-risk-approval-policy",
+  "input": {
+    "useCaseName": "Predictive Maintenance Vision",
+    "useCaseDescription": "Industrial manufacturer deploying a computer-vision model on the shop floor for predictive maintenance of CNC machines. Operators alerted via tablet.",
+    "industry": "manufacturing",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Risk Tier Definitions",
+    "Approval Authority",
+    "Conditional Approvals",
+    "Reassessment Triggers"
+  ],
+  "requiredClauses": [
+    "risk tier",
+    "approver",
+    "conditional",
+    "reassessment"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/risk-approval.json"
+}

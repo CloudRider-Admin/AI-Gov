@@ -1,0 +1,16 @@
+{
+  "id": "advisory-eu-ai-act-prohibited",
+  "category": "advisory-query",
+  "input": {
+    "message": "Which AI use cases are outright prohibited under the EU AI Act?"
+  },
+  "requiredClauses": [
+    "social scoring",
+    "biometric"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "Recital 500"
+  ],
+  "expectedIntent": "advisor"
+}

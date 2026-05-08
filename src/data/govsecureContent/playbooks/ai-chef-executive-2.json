@@ -1,0 +1,157 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:fea8741cdb78619cc82161d610672b66a008f255dc0558f4c6a941e5db37a6db",
+  "documentCode": "GS-PLBK-AICHEFEX-04",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure AI Chef™\nEnterprise AI Governance Recipe Matrix\nToolkit\nPaid SMB Edition | Client-ready operational toolkit\nWho it is for What it gives you\nSmall and mid-sized businesses adopting AI A practical operating model, templates, sample\nwithout a large governance team. data, and a maturity path from 24 core recipes to\n36.\nDesign style How to use it\nCreative-enterprise: polished enough to sell, Start with intake and ownership. Then register\npractical enough to run. systems, tier risk, map controls, monitor, and\nreview quarterly.\nPositioning statement\nTurn scattered AI policies into a working system with assigned owners, risk tiers, control\nexpectations, and evidence that leadership can actually review.\nVersion Recipes Roadmap\nv1.1 24 core 36 in v2.0\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "1. Executive Overview\nWhat AI Chef is\nGovSecure AI Chef™ is a branded operating model for SMB AI governance. It converts AI risk, control,\nownership, and assurance into a recipe system that busy operators can actually use.\nWhy SMBs need this\n SMBs are adopting AI faster than they are defining ownership, review paths, and acceptable uses.\n Most governance materials are either too abstract for operations or too enterprise-heavy for lean\nteams.\n Paid buyers want something they can drop into a live program without needing a six-week translation\nexercise.\nPrimary buyer profile\nSMB owners, operators, and lean technology or compliance leaders who need AI guardrails without\nbuilding a giant bureaucracy.\nWhat the paid edition adds\n Realistic sample data so teams understand what good looks like.\n Template pages with clear required fields, review cycles, and evidence expectations.\n Appendices that make the toolkit feel implementation-ready rather than decorative.\n2. Five-step adoption flow\n1 2 3 4 5\nIdentify Assess Assign Control Review\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "3. 24 Core Recipe Matrix\nSix stations. Four live recipes per station. Two reserved upgrade slots per station for the v2.0 expansion\npath.\nStation Active recipes Upgrade path\nFoundation & Ownership • Head Chef Assignment 2 reserved\nadvanced slots\n• Kitchen Rules\n• Role Recipe Card\n• Approved Menu Only\nData & Knowledge Controls • Clean Ingredients 2 reserved\nadvanced slots\n• Source Provenance Check\n• Retention & Disposal Recipe\n• Knowledge Base Boundaries\nModel & Tool Safety • Pre-Serve Evaluation 2 reserved\nadvanced slots\n• Secret Sauce Lockdown\n• Drift Tasting\n• Vendor Pantry Review\nAgent & Automation Controls • Tool Permission Gate 2 reserved\nadvanced slots\n• Human Before High Impact\n• Sandbox Before Service\n• Kill Switch on the Counter\nDecision & Human Oversight • Explain the Dish 2 reserved\nadvanced slots\n• Escalate Ambiguous Orders\n• Bias & Fairness Taste Test\n• High-Risk Use Case Flag\nAssurance, Monitoring & • Full Kitchen Inventory 2 reserved\nResponse advanced slots\n• Kitchen Camera Logs\n• Burn Response Plan\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 4",
+      "id": "page-4",
+      "level": 1,
+      "paragraphs": [
+        "• Quarterly Recipe Review\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "4. Ownership Model and RACI\nSample SMB scenario: HarborCraft Home Goods\nA 280-person ecommerce and operations business using Microsoft Copilot, ChatGPT Enterprise,\nZendesk AI, and two workflow automations connected to customer support and internal knowledge.\nAccountability model\nRole Sample owner What they own\nExecutive Sponsor COO Approves policy direction, high-\nrisk exceptions, and quarterly\nreview decisions.\nAI Governance Lead Head of Risk & Security Runs intake, control mapping,\nregistry reviews, and evidence\ncollection.\nBusiness Owner Support Director / Ops Lead Owns use-case outcomes, human\noversight, and process\nperformance.\nIT / Platform Owner IT Manager Handles provisioning, connector\ncontrols, logging, and technical\noperations.\nLegal / Privacy External counsel + privacy lead Reviews data use, notices, and\nhigh-impact legal/privacy\ntriggers.\nProcurement / Vendor Risk Finance & Ops Manager Tracks vendor diligence, contract\nterms, and dependency issues.\nRACI sample across five core tasks\nActivity EX AG IT BU Notes\nApprove high- A R C C Legal/Privacy\nrisk use case join as needed\nMaintain AI I A R C Reviewed\nregistry monthly\nEnable logging I C A/R C Security\nand connector evidence\ncontrols retained\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "Quarterly A R C C Top risks +\ngovernance exceptions\nreview\nPause harmful I C A/R C Emergency\nautomation switch with\npost-review\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "5. AI Use Case Intake and Risk Tiering\nRealistic sample intake\nUse case: Customer support co-pilot that drafts responses, summarizes tickets, and suggests refund\noptions to human agents.\nField Example entry\nBusiness purpose Reduce average ticket handling time by 20% while\nkeeping a human agent in the loop.\nUsers Support agents and team leads.\nData used Customer emails, order history, product knowledge\nbase, refund policy snippets.\nExternal impact Customer-facing outputs may be sent after agent\napproval.\nDecision type Recommendations only; no autonomous refunds.\nRegulatory relevance Privacy review required because customer data\nand retention are involved.\nHuman oversight Mandatory agent approval before send or action.\nProposed risk tier Tier 2 - Moderate, with Tier 3 controls if refund\nautomation is later enabled.\nRisk tier logic\n Tier 1 - Low: internal productivity, low sensitivity, no external decision effect.\n Tier 2 - Moderate: business process support, limited customer or employee impact, strong human\nreview.\n Tier 3 - High: meaningful operational, legal, HR, financial, or customer impact; enhanced review\nrequired.\n Tier 4 - Prohibited / Executive review: disallowed use or activity requiring executive decision and\ndocumented exception.\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "6. AI System Registry - realistic examples\nSystem Biz owner Tech owner Vendor Use case Tier Status Review\nChatGPT Marketing IT Manager OpenAI Draft Tier 2 Approved Monthly\nEnterprise Director campaigns\nand\nsummarize\nresearch\nMicrosoft COO IT Manager Microsoft Internal Tier 1 Approved Quarterly\nCopilot productivity\nand meeting\nsummaries\nZendesk AI Support Support Zendesk Ticket Tier 2 Approved Monthly\nAssist Director Systems drafting and\nLead response\nsuggestions\nRefund Risk Support Automation Custom + Suggest Tier 3 Pilot only Bi-weekly\nAgent (pilot) Director Engineer Azure refund risk\nOpenAI labels before\nhuman\napproval\nVendor Finance & Security Anthropic Draft clause Tier 2 Approved Quarterly\nContract Ops Manager Manager via platform summaries with\nReview GPT for restrictions\nprocurement\nRegistry rule of thumb\nIf a team can name the AI tool but cannot name the owner, review cycle, or permitted use, the registry\nentry is not complete. That gap is usually where risk starts breeding.\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 9",
+      "id": "page-9",
+      "level": 1,
+      "paragraphs": [
+        "7. Policy-to-Control Mapping\nPolicy area Statement Required control Evidence\nAcceptable use Teams may use approved AI Approved tools list + intake Screenshots, approvals,\ntools for low and moderate- form training record\nrisk tasks only.\nProhibited use No autonomous legal, HR, or Tier 4 gate + exception log Exception register\nfinancial commitments\nwithout explicit approval.\nHuman oversight Human review is required HITL checkpoints Workflow screenshot / SOP\nbefore customer-facing send\nor high-impact action.\nVendor review No new AI vendor enters Vendor review checklist Security + legal review pack\nproduction without\ndiligence.\nData handling Sensitive data must follow Connector boundaries + Config export / policy\nclassification and approved retention config\nretention rules.\nLogging Prompt, action, and decision Log sources and quarterly Sample log + review deck\nevidence must be logged review\nwhere feasible.\nIncident escalation AI incidents follow the same AI incident playbook Incident ticket + RCA\ncontainment and review\ndiscipline as security\nincidents.\nChange management Material changes to models, Change request workflow Change ticket\nconnectors, or permissions\nmust be reviewed.\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 10",
+      "id": "page-10",
+      "level": 1,
+      "paragraphs": [
+        "8. Monitoring, Logging, and AI Incident Response\n Monitor drift, misuse, access changes, exceptions, and failed or unusual automated actions.\n Review logs on a defined cadence rather than waiting for the fancy disaster to announce itself.\n Treat harmful outputs, privacy leaks, and connector misuse as operational incidents with owners and\nevidence.\nRecommended incident categories\n Harmful output\n Privacy breach\n Security exposure\n Model or prompt drift\n Unauthorized automation\n Third-party service failure\nReusable page structure preview\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 11",
+      "id": "page-11",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 12",
+      "id": "page-12",
+      "level": 1,
+      "paragraphs": [
+        "9. Executive Dashboard and Maturity Roadmap\nRegistered systems % with owners Quarterly incidents Maturity score\n5 100% 1 2.6 / 5\n1 pilot all named contained managed\n The next jump should focus on logging coverage, formal review notes, and tighter change control.\nLevel Label What it looks like\n1 Foundational Policy exists but ownership and\nintake are inconsistent.\n2 Managed Owners, intake, registry, and\nbaseline controls are in place.\n3 Operationalized Review cadence, monitoring, and\nevidence are routine.\n4 Assured Controls are tested, exceptions\nare documented, and leadership\nreceives clear reports.\n5 Optimized Program is measured, improved,\nand scaled with confidence across\nbusiness use cases.\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 13",
+      "id": "page-13",
+      "level": 1,
+      "paragraphs": [
+        "Appendix A. Governance Glossary\nAI system: Any tool, model, workflow, or agent used to generate outputs, recommendations, or actions.\nAgent: An AI-enabled workflow that can take or suggest actions using tools, connectors, or instructions.\nHigh-impact use case: A use case with meaningful financial, legal, HR, customer, or safety impact.\nHuman oversight: A defined review or approval step performed by an accountable human.\nModel drift: A change in model behavior or performance over time that affects output quality or\nsafety.\nShadow AI: AI usage outside approved tools, workflows, or review paths.\nKnowledge base: The source material or repository used to ground AI responses.\nProhibited use: A disallowed use case or activity that requires an exception to proceed.\nAppendix B. Standards alignment crosswalk\nToolkit area NIST AI RMF ISO 42001 EU AI Act themes\nOwnership and governance NIST Govern ISO 42001 leadership and EU governance and QMS\nplanning themes\nRisk tiering and use-case NIST Map / Manage ISO risk assessment and EU high-risk logic themes\nreview controls\nData handling and NIST Map / Measure ISO data governance EU data governance themes\nprovenance\nHuman oversight and NIST Govern / Manage ISO operational controls EU human oversight\ndecisions\nLogging and incident NIST Manage ISO monitoring and EU logging, robustness,\nresponse improvement cybersecurity\nAppendix C. Evidence register\nArtifact Refresh cycle Owner Done when\nAI policy Annual or when materially AI Governance Lead Current version approved\nchanged\nApproved tools list Monthly IT / Governance Current list published\nUse-case intake records Per use case AI Governance Lead All active use cases logged\nRisk tiering worksheets Per use case Business Owner + Tier rationale documented\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 14",
+      "id": "page-14",
+      "level": 1,
+      "paragraphs": [
+        "Governance\nSystem registry Monthly IT / Governance Review date current\nVendor review records Before production + annual Procurement / Security Renewals tracked\nMonitoring review notes Monthly / quarterly IT / Security Review notes retained\nIncident reports and RCA As needed Security / Ops Closed with lessons learned\nGovSecure AI Chef™ | Paid SMB Edition | v1.1 client-ready draft"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Executive_Toolkit.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 11890,
+    "section_count": 14
+  },
+  "subType": "ai-chef-executive",
+  "title": "GovSecure AI Chef Client Ready Executive Toolkit"
+}

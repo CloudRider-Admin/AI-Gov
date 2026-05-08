@@ -1,0 +1,17 @@
+{
+  "id": "intake-medium-customer-chat",
+  "category": "intake",
+  "input": {
+    "useCaseName": "Tier-1 Support Chatbot",
+    "useCaseDescription": "Customer-facing support chatbot answering account FAQs for a B2C SaaS product. Escalates billing and security issues to humans.",
+    "industry": "saas"
+  },
+  "expectedRiskTier": "Medium",
+  "requiredClauses": [
+    "customer",
+    "human"
+  ],
+  "forbiddenContent": [
+    "Prohibited"
+  ]
+}

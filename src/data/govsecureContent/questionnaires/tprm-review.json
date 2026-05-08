@@ -1,0 +1,107 @@
+{
+  "category": "questionnaires",
+  "checksum": "sha256:504f7efe77087bbda4a85f1fe5b63c7bf8f772b708def9c820e79e60affa384b",
+  "documentCode": "GS-QSTN-TPRMREVI-02",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\nGOVSECURE | GOVERNANCE WORKFLOW AND ADD-ON TOOL\n3rd-Party AI Vendor Risk Review\nStructured due diligence and decision workbook for reviewing AI vendors, copilots,\nembedded AI features, and AI-enabled SaaS before approval.\nPrepared For {{COMPANY_NAME}}\nVersion / Effective Date v1.0 | {{EFFECTIVE_DATE}}\nPre-procurement, renewal, major feature\nPrimary Use\nenablement, or control revalidation\nPurpose Use this workbook to evaluate third-party AI products and AI-enabled vendor\nfeatures with a standard, defensible review method. It is built for SMBs that buy AI more\noften than they build it, and need practical evidence before saying yes.\nThis workbook should be retained as the internal review record. The decision summary page can be\nshared with procurement, leadership, security, legal, or business owners as needed.\n1. Review Overview\nThis review is designed to answer a simple question: can this vendor be trusted to support the\nintended AI use case at an acceptable level of risk? It gives the organization a repeatable\nstructure for assessing security, privacy, legal, operational, and AI-specific concerns before\napproval.\nWhat it does Primary user Output produced Best use case\nNew AI procurement,\nCaptures vendor facts, AI governance lead, A documented risk\ncontract renewal,\nrisks, evidence, and a security, privacy, review, remediation\nembedded AI feature\nfinal decision in one legal, procurement, or list, and approval\nactivation, or control\nreview record. business owner. decision.\nrefresh.\n2. Standard Decision Outcomes\n• Approve - vendor is acceptable for the reviewed use case under normal operating controls.\nGovSecure • Confidential • Page 1"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\n• Approve with conditions - vendor may be used only after defined remediation items, contract\nterms, configuration changes, or internal controls are completed.\n• Defer - review cannot close because critical evidence is missing or the scope is still changing.\n• Reject - vendor risk is too high, controls are insufficient, or the use case is not acceptable.\nPractical rule Do not approve a vendor just because a business team already likes the\ndemo. Demos are theater. Due diligence is rent.\n3. Vendor Profile and Engagement Context\nComplete this profile before scoring the review. It defines what is being bought, who will use it,\nand why the vendor matters.\nVendor name {{VENDOR_NAME}}\nProduct / service name {{PRODUCT_NAME}}\nBusiness owner {{BUSINESS_OWNER}}\nReviewer / document owner {{DOCUMENT_OWNER}}\nIntended use case {{USE_CASE_DESCRIPTION}}\nUser population {{USER_POPULATION}}\nCustomer-facing or internal {{INTERNAL_OR_EXTERNAL_USE}}\nData categories involved {{DATA_CATEGORIES}}\n{{DEPLOYMENT_MODEL_AND_INTEGRATIONS\nDeployment / connection model\n}}\nContract stage {{NEW_PURCHASE_OR_RENEWAL}}\nRenewal or go-live target date {{TARGET_DATE}}\n{{LINKS_TO_MSA_DPA_SOC2_SECURITY_DOCS}\nSupporting documents / links\n}\n4. Inherent Risk Screening\nRate the inherent exposure before considering controls. This determines whether the vendor can\nfollow a lightweight review or requires escalation.\nGovSecure • Confidential • Page 2"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\nRisk factor What to look for Rating Reviewer notes\nWill the vendor process\nconfidential, customer,\nSensitive data exposure employee, regulated, [L/M/H] {{NOTES}}\nsource code, or high-\nvalue data?\nWill outputs influence\ncustomer, employee,\nDecision impact financial, safety, legal, [L/M/H] {{NOTES}}\nor operational\ndecisions?\nIs the tool customer-\nfacing, public-facing, or\nExternal exposure [L/M/H] {{NOTES}}\ndirectly visible outside\nthe company?\nDoes the vendor\nautomate actions,\nAutonomy level trigger workflows, or [L/M/H] {{NOTES}}\nmake decisions without\nstrong human review?\nWill it connect to core\nsystems, file stores,\nIntegration depth email, identity, CRM, [L/M/H] {{NOTES}}\nERP, or code\nrepositories?\nDoes the use case touch\nRegulatory or contract privacy, industry\n[L/M/H] {{NOTES}}\nsensitivity regulations, customer\nobligations, or IP risk?\n5. Required Evidence Request\n• Security or trust documentation (for example SOC 2, ISO 27001, penetration summary, or\nequivalent assurance).\n• Privacy or data processing terms, including DPA, subprocessors, retention terms, and geographic\nprocessing information.\n• Product architecture or security overview showing where data is stored, processed, and\nconnected.\nGovSecure • Confidential • Page 3"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 4",
+      "id": "page-4",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\n• AI-specific documentation covering model use, training on customer data, controls,\nexplainability, and limitations.\n• Standard contract, MSA, order form, and any AI-specific terms or feature annexes.\n• Incident response, business continuity, and support commitments where relevant.\nEscalation trigger If the vendor refuses to answer basic data handling questions, will not\nexplain training use of customer data, or provides security language that sounds like a\nhoroscope, escalate before anything gets signed.\n6. Detailed Review Domains\nUse the following worksheets to record the vendor response, evidence received, and reviewer\nposition for each control area. Suggested ratings: Acceptable, Needs Follow-up, or Material\nConcern.\n6.1 Security and Access Controls\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nDoes the product support\nSSO, MFA, role-based\nIdentity and access access, and admin [A/F/C] {{REVIEWER_NOTE}}\nsegregation?\n{{VENDOR_RESPONSE}}\nIs data encrypted in\ntransit and at rest, and is\nEncryption and\nkey management [A/F/C] {{REVIEWER_NOTE}}\ntransport\ndescribed?\n{{VENDOR_RESPONSE}}\nHow does the vendor\nseparate customer\nTenant isolation environments, data, and [A/F/C] {{REVIEWER_NOTE}}\nadmin access?\n{{VENDOR_RESPONSE}}\nAre admin actions, user\nactivity, exports, and\nLogging and monitoring security events logged [A/F/C] {{REVIEWER_NOTE}}\nand reviewable?\n{{VENDOR_RESPONSE}}\nGovSecure • Confidential • Page 4"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nDoes the vendor patch,\ntest, and monitor the\nVulnerability\nproduct with a defined [A/F/C] {{REVIEWER_NOTE}}\nmanagement\nsecurity program?\n{{VENDOR_RESPONSE}}\n6.2 Data Governance and Privacy\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nWhat customer data is\ncollected, how long is it\nData use and retention retained, and can [A/F/C] {{REVIEWER_NOTE}}\nretention be controlled?\n{{VENDOR_RESPONSE}}\nDoes the vendor use\nprompts, uploads,\nTraining on customer outputs, or telemetry to\n[A/F/C] {{REVIEWER_NOTE}}\ndata train models; can this be\ndisabled?\n{{VENDOR_RESPONSE}}\nAre subprocessors\ndisclosed and are cross-\nSubprocessors and border processing and\n[A/F/C] {{REVIEWER_NOTE}}\ntransfers transfer protections\nclear?\n{{VENDOR_RESPONSE}}\nCan data be deleted on\nrequest and exported at\nDeletion and portability termination in a usable [A/F/C] {{REVIEWER_NOTE}}\nformat?\n{{VENDOR_RESPONSE}}\nWhat restrictions or\nprotections exist for\nregulated, confidential,\nSensitive data controls [A/F/C] {{REVIEWER_NOTE}}\nor customer-sensitive\ninformation?\n{{VENDOR_RESPONSE}}\nGovSecure • Confidential • Page 5"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\n6.3 AI-Specific Governance and Model Controls\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nWhat model or models\nare used, and is the\nvendor clear about\nModel transparency [A/F/C] {{REVIEWER_NOTE}}\nlimitations and\ndependencies?\n{{VENDOR_RESPONSE}}\nWhat safeguards exist\nfor hallucination, unsafe\nOutput quality and output, poor\n[A/F/C] {{REVIEWER_NOTE}}\noversight recommendations, or\nincorrect automation?\n{{VENDOR_RESPONSE}}\nCan workflows require\nhuman approval or\nverification before\nHuman review support [A/F/C] {{REVIEWER_NOTE}}\nmaterial actions are\ntaken?\n{{VENDOR_RESPONSE}}\nHow are new AI features\nintroduced,\nFeature change communicated, and\n[A/F/C] {{REVIEWER_NOTE}}\nmanagement made controllable by the\ncustomer?\n{{VENDOR_RESPONSE}}\nDoes the vendor test\nmodel behavior, monitor\ndrift or abuse, and\nTesting and validation [A/F/C] {{REVIEWER_NOTE}}\ndocument major known\nfailure modes?\n{{VENDOR_RESPONSE}}\n6.4 Legal, Contract, and Compliance Position\nGovSecure • Confidential • Page 6"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nDo the contract and\nterms clearly address\ndata use, IP,\nContract clarity [A/F/C] {{REVIEWER_NOTE}}\nconfidentiality, and\nsecurity obligations?\n{{VENDOR_RESPONSE}}\nCan the vendor support\nrelevant privacy, sector,\nRegulatory support or customer compliance [A/F/C] {{REVIEWER_NOTE}}\nobligations?\n{{VENDOR_RESPONSE}}\nAre ownership and reuse\nrights for prompts,\noutputs, and customer\nIP and output rights [A/F/C] {{REVIEWER_NOTE}}\ncontent clearly\naddressed?\n{{VENDOR_RESPONSE}}\nAre incident notification,\naudit support, and\nAudit and notification cooperation terms [A/F/C] {{REVIEWER_NOTE}}\ncommercially usable?\n{{VENDOR_RESPONSE}}\nAre caps, exclusions, and\nrisk allocation tolerable\nLiability and commercial\nfor the intended use [A/F/C] {{REVIEWER_NOTE}}\nfriction\ncase?\n{{VENDOR_RESPONSE}}\n6.5 Operational Resilience and Exit Readiness\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nAre uptime expectations,\nsupport channels,\nresponse times, and\nAvailability and support [A/F/C] {{REVIEWER_NOTE}}\nescalation paths\ncredible?\n{{VENDOR_RESPONSE}}\nGovSecure • Confidential • Page 7"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\nVendor response or Reviewer notes /\nControl area Rating\nevidence action\nDoes the vendor have a\nmature process for\ninvestigation,\nIncident response [A/F/C] {{REVIEWER_NOTE}}\ncontainment, and\nnotification?\n{{VENDOR_RESPONSE}}\nAre resilience, backup,\nrecovery, and continuity\nBusiness continuity practices described well [A/F/C] {{REVIEWER_NOTE}}\nenough for the risk level?\n{{VENDOR_RESPONSE}}\nIs the use case overly\ndependent on features\nRoadmap dependency still in beta, roadmap\n[A/F/C] {{REVIEWER_NOTE}}\nrisk promises, or unstable\nservice terms?\n{{VENDOR_RESPONSE}}\nCan the company turn\noff, replace, or exit the\nvendor without getting\nExit strategy [A/F/C] {{REVIEWER_NOTE}}\nhandcuffed to its data or\nworkflow?\n{{VENDOR_RESPONSE}}\n7. Risk Findings and Remediation Plan\nSummarize only the findings that matter. Nobody wants a museum of observations. Focus on the\nconditions that drive the decision.\nFinding / gap Severity Required action Owner Due date\n{{GAP}} {{L/M/H}} {{ACTION}} {{OWNER}} {{DATE}}\n{{GAP}} {{L/M/H}} {{ACTION}} {{OWNER}} {{DATE}}\n{{GAP}} {{L/M/H}} {{ACTION}} {{OWNER}} {{DATE}}\n{{GAP}} {{L/M/H}} {{ACTION}} {{OWNER}} {{DATE}}\nGovSecure • Confidential • Page 8"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 9",
+      "id": "page-9",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | 3rd-Party AI Vendor Risk Review\n8. Final Decision Summary\nFinal recommendation {{RECOMMENDATION}}\nApproved use conditions {{CONDITIONS}}\nResidual risk statement {{RESIDUAL_RISK}}\nReview next date {{NEXT_REVIEW}}\n9. Approval Record\nPrepared by {{DOCUMENT_OWNER}}\nBusiness owner sign-off {{OWNER_SIGNOFF}}\nSecurity / privacy / legal review {{REVIEWERS}}\nApprover {{APPROVER}}\nIssue date / next review {{ISSUE_NEXT_REVIEW}}\n10. Quick Implementation Checklist\n• Match the review depth to the real use case. A note-taking bot is not a decision engine; do not\ntreat them the same.\n• Make sure procurement, legal, security, and the business owner see the same final\nrecommendation, not four contradictory folk tales.\n• Tie approved vendors back to the AI use case registry so vendor review and use case approval\nstay connected.\n• Re-run the review when the vendor adds major AI features, changes data use terms, or expands\ninto higher-risk use cases.\nGovSecure • Confidential • Page 9"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Questionnaires/TPRM/GovSecure_3rd_Party_AI_Vendor_Risk_Review.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 11675,
+    "section_count": 9
+  },
+  "subType": "tprm-review",
+  "title": "GovSecure 3rd Party AI Vendor Risk Review"
+}

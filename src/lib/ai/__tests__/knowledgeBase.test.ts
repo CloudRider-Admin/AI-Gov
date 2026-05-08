@@ -23,10 +23,15 @@ describe('ALL_KNOWLEDGE_DOCUMENTS', () => {
     expect(regDocs.length).toBeGreaterThanOrEqual(5);
   });
 
-  it('total documents should be original + sectors + regulations', () => {
+  it('total documents should be original + sectors + regulations + GovSecure fallbacks', () => {
     const regDocs = ALL_KNOWLEDGE_DOCUMENTS.filter(d => d.id.startsWith('regulation-'));
+    const govsecureDocs = ALL_KNOWLEDGE_DOCUMENTS.filter(d => d.id.startsWith('govsecure-'));
+    // Phase 4 added 3 GovSecure fallback documents (AI Chef, Policy Suite,
+    // 90-Day Blueprint) so the canonical content remains keyword-searchable
+    // even when pgvector is cold.
+    expect(govsecureDocs.length).toBeGreaterThanOrEqual(3);
     expect(ALL_KNOWLEDGE_DOCUMENTS.length).toBe(
-      GOVERNANCE_KNOWLEDGE_BASE.length + 3 + regDocs.length
+      GOVERNANCE_KNOWLEDGE_BASE.length + 3 + regDocs.length + govsecureDocs.length
     );
   });
 });

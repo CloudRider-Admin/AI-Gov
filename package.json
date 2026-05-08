@@ -10,6 +10,10 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "ingest:govsecure": "python3 scripts/ingestGovSecureLibrary.py",
+    "ingest:govsecure:validate": "python3 scripts/ingestGovSecureLibrary.py --validate-only",
+    "eval:govi": "tsx scripts/runEvalSuite.ts",
+    "eval:govi:mock": "EVAL_MOCK=1 tsx scripts/runEvalSuite.ts",
     "postinstall": "prisma generate && node scripts/fix-prisma-types.js"
   },
   "dependencies": {
@@ -63,6 +67,7 @@
     "postcss": "^8.4.35",
     "prisma": "^6.19.2",
     "tailwindcss": "^3.4.1",
+    "tsx": "^4.21.0",
     "typescript": "^5.3.3",
     "vitest": "^3.2.4"
   }

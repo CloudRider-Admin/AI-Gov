@@ -1,0 +1,279 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:60dc38a0cb74a2de3d99ddd6955dd5b10a446db925484e7ed3d281433161179f",
+  "documentCode": "GS-CHKL-MODELVAL-12",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Model Validation & Testing Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Planning",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Acceptance criteria defined (quality, safety, latency, availability)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Evaluation metrics defined (accuracy/precision-recall; hallucination rate for GenAI where applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Test datasets documented (source, representativeness, limitations)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Quality & Robustness",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Functional tests executed and passed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Edge cases tested and documented",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Stress/load testing performed (capacity and rate limits)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Safety & Fairness",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Harmful output testing performed (toxicity, policy violations, unsafe instructions where applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Bias/fairness assessment performed (if people-impacting)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Explainability/traceability documented (when required)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Security Testing",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Prompt injection/jailbreak testing performed (GenAI)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data leakage tests performed (prompts, retrieval, outputs)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Tool abuse tests performed (agentic workflows)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Go‑Live Readiness",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Monitoring plan ready and linked",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Rollback/kill-switch plan defined",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Go-live approval decision recorded",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Model_Validation_Testing_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 9,
+    "table_count": 6
+  },
+  "subType": "model-validation",
+  "title": "AI Model Validation & Testing Checklist"
+}

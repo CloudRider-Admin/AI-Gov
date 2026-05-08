@@ -68,7 +68,7 @@ interface DashboardStats {
   };
 }
 
-const POLL_MS = 30_000;
+const POLL_MS = 60_000;
 const DONUT_COLORS = ['#00cc66', '#22c55e', '#f97316', '#06b6d4', '#a855f7', '#eab308'];
 
 function formatNumber(n: number): string {

@@ -1,0 +1,222 @@
+{
+  "category": "policies",
+  "checksum": "sha256:6067a2aeee1054356f4dbc11f2fc00225a0d56ee5eb70fb3b065c1a036aaaa7e",
+  "documentCode": "GS-AIPS-THIRDPAR-11",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "Practical governance beats vague good intentions.",
+        "Use this document as a client-ready policy baseline. Customize named roles, escalation paths, and references to internal standards, classifications, and regulatory obligations before approval."
+      ],
+      "tables": [
+        [
+          [
+            "Primary owner",
+            "Procurement / Vendor Risk Lead"
+          ],
+          [
+            "Version",
+            "v1.0 | Paid SMB Edition"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Policy Overview",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Establishes the requirements for assessing third-party AI vendors, platforms, models, and service providers before onboarding, renewal, or major scope change."
+          ],
+          [
+            "Scope",
+            "Applies to third-party AI vendors, model providers, copilots, SaaS features with embedded AI, implementation partners, and material vendor changes."
+          ],
+          [
+            "Primary owner",
+            "Procurement / Vendor Risk Lead"
+          ],
+          [
+            "Audience",
+            "Procurement, Vendor Management, Security, Privacy, Legal, business sponsors, and AI governance reviewers"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Third-party AI vendors shall be assessed before onboarding, renewal, or material change using privacy, security, legal, operational, and governance criteria appropriate to the proposed use case.",
+        "No vendor may be approved without clarity on training use of customer data, retention, deletion, subprocessors, regional processing, incident obligations, and human review access where applicable.",
+        "Vendors supporting sensitive, regulated, or high-impact use cases shall provide enhanced evidence and may require contractual commitments, technical controls, or usage restrictions before approval.",
+        "Vendor owners shall monitor material vendor changes, new features, model/provider changes, and incidents that alter the approved risk posture.",
+        "The enterprise shall reserve the right to suspend or terminate use of vendor AI services that no longer meet privacy, security, contractual, or governance requirements."
+      ],
+      "heading": "Policy Statements",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Procurement or Vendor Risk coordinates vendor intake, evidence collection, and renewal review.",
+        "Business sponsors define intended use and remain accountable for approved vendor deployment.",
+        "Security, Privacy, and Legal review vendor commitments, gaps, incidents, and contractual protections.",
+        "Vendor owners monitor material service changes, new features, and risk posture over the relationship lifecycle."
+      ],
+      "heading": "Roles and Responsibilities",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Vendor privacy questionnaire",
+        "Security questionnaire",
+        "Contract review checklist",
+        "Evidence register",
+        "Vendor risk summary"
+      ],
+      "heading": "Required Records and Evidence",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Third-Party AI Privacy Risk Assessment",
+        "AI Vendor Security Questionnaire",
+        "AI Vendor Contract Review Checklist",
+        "AI Vendor Risk Summary Sheet",
+        "AI Vendor Evidence Request List",
+        "Implementation note: This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "heading": "Required Companion Templates",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Implementation Note",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "GovSecure Licensing and Usage",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "License Scope",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "This GovSecure policy template is licensed for use by a single purchasing organization for its internal governance, risk, compliance, privacy, security, and operational activities."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Permitted Use",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may edit, tailor, and deploy this document for internal business use, including policy adoption, training, audit preparation, and enterprise AI governance program development."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Restricted Use",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may not resell, sublicense, redistribute, publish, bundle, or offer this document, whether modified or unmodified, as a standalone product, template pack, or commercial deliverable to third parties without written permission from GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Customization Responsibility",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "This template is intended as a practical governance baseline. The purchaser is responsible for reviewing and customizing roles, approval paths, legal references, technical controls, records requirements, and jurisdiction-specific obligations before adoption."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "No Legal Advice",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "This document is not legal advice and does not create an attorney-client relationship. Organizations should obtain legal, privacy, regulatory, or sector-specific review where required."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Warranty and Liability",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "This material is provided as-is for professional use. GovSecure makes no guarantee that this document alone will satisfy every legal, regulatory, contractual, or audit requirement in every jurisdiction or use case."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Copyright",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "Copyright GovSecure. All rights reserved. Use is subject to the applicable purchase terms, license terms, statement of work, or written authorization issued by GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Contact",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "For enterprise licensing, customization, or commercial reuse inquiries, contact GovSecure through its authorized business channel."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/Third-Party_-_Vendor_AI_Due_Diligence_Policy_Licensed.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 20,
+    "paragraph_count": 11,
+    "section_count": 16,
+    "table_count": 2
+  },
+  "subType": "third-party",
+  "title": "GovSecure — Third-Party / Vendor AI Due Diligence Policy — Standalone Branded Policy Document"
+}

@@ -12,10 +12,46 @@ export interface KnowledgeContextResult {
   documents: KnowledgeDocument[];
 }
 
+/**
+ * Provenance bucket for each source. Drives UI grouping / badges and the
+ * citation-validator's manifest path so consumers don't have to string-match
+ * against the human label.
+ */
+export type SourceProvenanceType =
+  | 'govsecure'
+  | 'nist'
+  | 'static-kb'
+  | 'vector-kb'
+  | 'db-kb'
+  | 'sector-guidance'
+  | 'regulation';
+
+export interface SourceProvenance {
+  /** Display label — same human string the legacy flat `sources[]` carries. */
+  label: string;
+  /** Provenance bucket. */
+  type: SourceProvenanceType;
+  /** Free-form sub-label (tag chain, control id, etc.). Optional. */
+  anchor?: string;
+}
+
 export interface EnhancedRAGResult {
   context: string | null;
   documents: KnowledgeDocument[];
+  /**
+   * Flat label list. Kept for back-compat with consumers (and for the legacy
+   * AdvisorResponse.sources field). Always equal to
+   * `sourcesStructured.map(s => s.label)`.
+   */
   sources: string[];
+  /**
+   * Structured provenance. Always emitted by `buildEnhancedRAGContext`;
+   * marked optional only because legacy callers pass stub `EnhancedRAGResult`
+   * objects (e.g. clarification fallback, response-parser tests) that
+   * pre-date the structured field. Consumers should treat `undefined` as
+   * "no structured info; fall back to the flat `sources` list".
+   */
+  sourcesStructured?: SourceProvenance[];
 }
 
 // ── Unified scored candidate for dynamic allocation ──
@@ -33,7 +69,32 @@ interface ScoredCandidate {
   raw: KnowledgeDocument | NistEntry | DbEntry;
 }
 
-interface DbEntry { title: string; content: string; category: string; tags: string[] }
+interface DbEntry {
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  /** Optional sourceType column from KnowledgeEntry; missing on DBs that haven't been re-seeded. */
+  sourceType?: string | null;
+}
+
+const GOVSECURE_SOURCE_TYPE = 'govsecure';
+const GOVSECURE_LIBRARY_LABEL = 'GovSecure Governance Library';
+
+function isGovSecureEntry(e: DbEntry): boolean {
+  return e.sourceType === GOVSECURE_SOURCE_TYPE;
+}
+
+/**
+ * Build a structured anchor from the entry tags so citations carry more than
+ * just the title. Tags like ["AI Chef", "Station 2"] surface as
+ * "GovSecure Governance Library — Title (AI Chef · Station 2)".
+ */
+function buildGovSecureAnchor(e: DbEntry): string {
+  const tagBits = (e.tags ?? []).slice(0, 3).filter(Boolean);
+  const anchor = tagBits.length ? ` (${tagBits.join(' · ')})` : '';
+  return `${GOVSECURE_LIBRARY_LABEL} — ${e.title}${anchor}`;
+}
 
 function createSnippet(content: string, length = 400): string {
   return content.replace(/\s+/g, ' ').trim().slice(0, length) + (content.length > length ? '…' : '');
@@ -128,10 +189,10 @@ export async function buildEnhancedRAGContext(
     try {
       const allEntries = await prisma.knowledgeEntry.findMany({
         where: { isActive: true },
-        select: { title: true, content: true, category: true, tags: true },
+        select: { title: true, content: true, category: true, tags: true, sourceType: true },
       });
       const scored = allEntries
-        .map((entry: { title: string; content: string; category: string; tags: string[] }) => {
+        .map((entry: DbEntry) => {
           const text = `${entry.title} ${entry.content} ${entry.tags.join(' ')}`.toLowerCase();
           const score = queryTerms.reduce((acc, term) => acc + (text.includes(term) ? 1 : 0), 0);
           return { entry, score };
@@ -142,13 +203,16 @@ export async function buildEnhancedRAGContext(
 
       const maxDbScore = Math.max(...scored.map((s: { score: number }) => s.score), 1);
       for (const { entry, score } of scored) {
+        const govsecure = isGovSecureEntry(entry);
         candidates.push({
           kind: 'db',
           key: entry.title.toLowerCase(),
           score: score / maxDbScore,
           title: entry.title,
           snippet: createSnippet(entry.content),
-          sourceLabel: `Knowledge Base — ${entry.title}`,
+          sourceLabel: govsecure
+            ? buildGovSecureAnchor(entry)
+            : `Knowledge Base — ${entry.title}`,
           raw: entry,
         });
       }
@@ -176,12 +240,42 @@ export async function buildEnhancedRAGContext(
   const sectorMatches = matchSectors(query);
   const regulationMatches = matchRegulations(query, 2);
 
-  // ── Build sources list ──
-  const sources: string[] = [
-    ...selected.map(c => c.sourceLabel),
-    ...sectorMatches.map(s => `Sector Guidance — ${s.displayName}`),
-    ...regulationMatches.map(r => r.name),
+  // ── Build structured sources list (flat list derives from it) ──
+  const provenanceTypeForCandidate = (c: ScoredCandidate): SourceProvenanceType => {
+    if (c.kind === 'db' && isGovSecureEntry(c.raw as DbEntry)) return 'govsecure';
+    if (c.kind === 'db') return 'db-kb';
+    if (c.kind === 'nist') return 'nist';
+    if (c.kind === 'vector') return 'vector-kb';
+    if (c.kind === 'static') return 'static-kb';
+    return 'db-kb';
+  };
+
+  const anchorForCandidate = (c: ScoredCandidate): string | undefined => {
+    if (c.kind === 'db' && isGovSecureEntry(c.raw as DbEntry)) {
+      const tags = ((c.raw as DbEntry).tags ?? []).slice(0, 3).filter(Boolean);
+      return tags.length ? tags.join(' · ') : undefined;
+    }
+    if (c.kind === 'nist') return (c.raw as NistEntry).category ?? undefined;
+    return undefined;
+  };
+
+  const sourcesStructured: SourceProvenance[] = [
+    ...selected.map((c) => ({
+      label: c.sourceLabel,
+      type: provenanceTypeForCandidate(c),
+      ...(anchorForCandidate(c) ? { anchor: anchorForCandidate(c)! } : {}),
+    })),
+    ...sectorMatches.map((s) => ({
+      label: `Sector Guidance — ${s.displayName}`,
+      type: 'sector-guidance' as const,
+    })),
+    ...regulationMatches.map((r) => ({
+      label: r.name,
+      type: 'regulation' as const,
+    })),
   ];
+
+  const sources: string[] = sourcesStructured.map((s) => s.label);
 
   // ── Format context ──
   const parts: string[] = [];
@@ -228,11 +322,32 @@ export async function buildEnhancedRAGContext(
     );
   }
 
+  // Phase 4: split GovSecure-tagged DB entries into their own labeled
+  // section so the LLM (and the response.sources[] consumer) can attribute
+  // them under the GovSecure Governance Library brand rather than the
+  // generic "knowledge base entry" bucket.
   const dbSelected = byKind('db');
-  if (dbSelected.length) {
+  const govsecureDbSelected = dbSelected.filter((c) => isGovSecureEntry(c.raw as DbEntry));
+  const otherDbSelected = dbSelected.filter((c) => !isGovSecureEntry(c.raw as DbEntry));
+
+  if (govsecureDbSelected.length) {
+    parts.push(
+      `${GOVSECURE_LIBRARY_LABEL} entries:\n` +
+      govsecureDbSelected
+        .map((c, i) => {
+          const e = c.raw as DbEntry;
+          const anchor = (e.tags ?? []).slice(0, 3).filter(Boolean).join(' · ');
+          const provenance = anchor ? ` — ${anchor}` : '';
+          return `${i + 1}. ${e.title}${provenance} [${e.category}]\n${c.snippet}`;
+        })
+        .join('\n\n'),
+    );
+  }
+
+  if (otherDbSelected.length) {
     parts.push(
       'Additional knowledge base entries:\n' +
-      dbSelected
+      otherDbSelected
         .map((c, i) => {
           const e = c.raw as DbEntry;
           return `${i + 1}. ${e.title} [${e.category}]\n${c.snippet}`;
@@ -272,6 +387,7 @@ export async function buildEnhancedRAGContext(
     context: parts.length ? parts.join('\n\n') + '\n\nUse these details to ground your response and cite sources.' : null,
     documents: staticResult.documents,
     sources,
+    sourcesStructured,
   };
 }
 

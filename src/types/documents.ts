@@ -118,7 +118,17 @@ export interface IntakeRiskAssessment {
 
 // ─── Governance Documents ─────────────────────────────────────────────────────
 
+/**
+ * Document types Govi can generate. Phase 2 added 22 GovSecure-licensed
+ * variants on top of the 11 generic governance documents.
+ *
+ * The ordering mirrors the runtime `DOCUMENT_TYPE_VALUES` array exported
+ * from `@/lib/ai/schemas`; if you add a new type here, add it there too
+ * (the eslint config does NOT enforce this — it's caught at type-check time
+ * because the Zod enum's element type is the same union).
+ */
 export type DocumentType =
+  // ── Generic governance documents (predate GovSecure integration) ──────────
   | 'use-case-summary'
   | 'data-sheet'
   | 'vendor-model-facts'
@@ -129,7 +139,34 @@ export type DocumentType =
   | 'risk-memo'
   | 'operational-readiness-plan'
   | 'monitoring-plan'
-  | 'evidence-pack';
+  | 'evidence-pack'
+  // ── GovSecure policies (Phase 2.1) ────────────────────────────────────────
+  | 'govsecure-aup'
+  | 'govsecure-governance-policy'
+  | 'govsecure-data-privacy-policy'
+  | 'govsecure-risk-approval-policy'
+  | 'govsecure-security-policy'
+  | 'govsecure-incident-response-policy'
+  | 'govsecure-human-oversight-policy'
+  | 'govsecure-vendor-policy'
+  // ── GovSecure checklists (Phase 2.1) ──────────────────────────────────────
+  | 'govsecure-checklist-intake'
+  | 'govsecure-checklist-evidence-pack'
+  | 'govsecure-checklist-incident-response'
+  | 'govsecure-checklist-vendor-dd'
+  | 'govsecure-checklist-shadow-ai'
+  | 'govsecure-checklist-inventory'
+  | 'govsecure-checklist-model-validation'
+  | 'govsecure-checklist-monitoring'
+  | 'govsecure-checklist-security'
+  | 'govsecure-checklist-dpia'
+  | 'govsecure-checklist-human-oversight'
+  | 'govsecure-checklist-change-management'
+  | 'govsecure-checklist-training'
+  | 'govsecure-checklist-risk-assessment'
+  // ── Phase 3: GovSecure flagship questionnaires + framework templates ──
+  | 'govsecure-tprm'
+  | 'govsecure-nist-rcm';
 
 export interface FrameworkCitation {
   framework: 'NIST AI RMF' | 'EU AI Act' | 'ISO/IEC 42001' | 'GDPR' | 'Other';
@@ -174,7 +211,13 @@ export interface GovernanceDocument {
 
 // ─── Playbooks ────────────────────────────────────────────────────────────────
 
-export type PlaybookFramework = 'NIST AI RMF' | 'EU AI Act' | 'ISO/IEC 42001' | 'Combined';
+export type PlaybookFramework =
+  | 'NIST AI RMF'
+  | 'EU AI Act'
+  | 'ISO/IEC 42001'
+  | 'Combined'
+  | 'GovSecure AI Chef'
+  | 'GovSecure 90-Day Blueprint';
 
 export type TaskPriority = 'critical' | 'high' | 'medium' | 'low';
 

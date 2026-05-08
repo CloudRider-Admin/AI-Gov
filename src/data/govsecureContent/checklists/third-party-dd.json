@@ -1,0 +1,300 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:a01ec9287b7ea0849266450f238ad95a4d74dd9ee5af48c0d61bdacb2d7ec258",
+  "documentCode": "GS-CHKL-THIRDPAR-22",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Third-Party / Vendor Due Diligence Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Vendor Basics",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Vendor legal entity and product/service scope confirmed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Deployment model and hosting region(s)/data residency documented",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Subprocessors list reviewed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI-Specific Questions",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Is customer data used for training? confirmed (and opt-out/no-training configuration documented)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Model/version change notification process documented (release notes; material changes)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Guardrails/moderation options available and configurable",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Audit logging and export capability confirmed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Security Controls",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "SSO/MFA/RBAC supported and configured",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Encryption in transit and at rest confirmed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Security documentation collected (SOC 2/ISO/pen test summary/security whitepaper)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Incident notification commitments and timelines confirmed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Privacy & Compliance",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "DPA reviewed; retention and deletion terms confirmed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data minimization supported; data export/exit supported",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Audit/assessment rights addressed (contract language)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Decision & Conditions",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Vendor risk rating assigned (Low/Moderate/High/Critical)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Approval decision recorded (Approve / Approve with Conditions / Defer / Reject)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Approval conditions documented (e.g., pilot-only, no PII, logging required)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Re-review cadence and triggers defined (renewal, new features, incidents, model changes)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Third_Party_Vendor_Due_Diligence_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 9,
+    "table_count": 6
+  },
+  "subType": "third-party-dd",
+  "title": "AI Third-Party / Vendor Due Diligence Checklist"
+}

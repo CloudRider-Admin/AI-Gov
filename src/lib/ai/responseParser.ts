@@ -234,6 +234,10 @@ export function buildValidatedResponse(
       ...((normalized.sources as string[]) || ['AI Governance Analysis']),
       ...ragResult.sources,
     ],
+    // Mirror RAG-supplied structured provenance through to the response.
+    // LLM-supplied sources only land in the flat list; they don't carry a
+    // typed bucket so they're intentionally excluded here.
+    sourcesStructured: ragResult.sourcesStructured,
     conversationId,
     timestamp: new Date().toISOString(),
     ...(normalized.intent && typeof normalized.intent === 'object' ? { intent: normalized.intent } : {}),

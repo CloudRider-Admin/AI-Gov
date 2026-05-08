@@ -1,0 +1,40 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:13e1406b52d9aed9f429cd7b208d575153d7e0bf5b62d48980160f2bca391369",
+  "documentCode": "GS-CHKL-OTHERTEM-14",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Other Vital AI Governance Checklist Templates:",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "AI Inventory & System Registry Checklist\nTracks every AI use case/model/vendor, owner, purpose, risk tier, environment, and status.\n(If it’s not in the inventory, it shouldn’t be in production.)",
+        "AI Policy-to-Control Mapping Checklist\nEnsures each AI policy requirement is mapped to actual controls, owners, and evidence.\nGreat for avoiding “policy theater.”",
+        "AI Third-Party / Vendor Due Diligence Checklist\nFor vendor AI tools, SaaS features, APIs, LLM providers, subprocessors, data retention/training terms, incident commitments, audit docs.",
+        "AI Security Review Checklist\nFocused on technical security controls: access, MFA/SSO, API scopes, logging, secrets, DLP, network exposure, prompt injection protections.",
+        "AI Privacy & DPIA Screening Checklist\nFast triage to decide when a DPIA/PIA is required and what privacy reviews are triggered (PII, sensitive data, transfers, consent, notices).",
+        "AI Model Validation / Testing Checklist\nCovers test plan, quality metrics, edge cases, hallucination checks, failure scenarios, bias/fairness checks, and go-live readiness.",
+        "AI Monitoring & Revalidation Checklist\nEnsures post-launch controls exist: drift/performance checks, logging review, incident review, retraining/update review, periodic reapproval.",
+        "AI Change Management Checklist\nUsed when model versions, prompts, vendors, integrations, or data sources change.\nPrevents “silent changes” from bypassing governance.",
+        "AI Human Oversight & Escalation Checklist\nDefines reviewer roles, decision boundaries, escalation path, override rules, fallback process, and accountability for bad outputs.",
+        "AI Incident Response Checklist (AI-Specific)\nFor hallucinations, harmful outputs, data leakage, prompt injection, model abuse, unauthorized use, vendor outages, or model behavior drift.",
+        "AI Training & Role-Based Awareness Checklist\nEnsures business users, developers, reviewers, and executives get the right training (not the same generic slide deck for everyone).",
+        "AI Regulatory Change Impact Assessment Checklist\nFor reviewing new laws/regulations and translating them into impacted policies, controls, procedures, evidence requirements, and deadlines."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/Other Vital AI Governance Checklist Templates.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 12,
+    "section_count": 1,
+    "table_count": 0
+  },
+  "subType": "other-templates",
+  "title": "Other Vital AI Governance Checklist Templates:"
+}

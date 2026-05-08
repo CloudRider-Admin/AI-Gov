@@ -19,7 +19,42 @@ export interface ClassifiedIntent {
   needsClarification?: boolean;
 }
 
+/**
+ * Document-type detection patterns. Order matters — Object.entries() preserves
+ * insertion order, and `detectDocumentType` returns the first match. The
+ * GovSecure-prefixed types come first so prompts that explicitly say
+ * "GovSecure AUP" or "AI Acceptable Use Policy" don't fall through to the
+ * generic `dpia`/`threat-model` patterns.
+ */
 const DOCUMENT_TYPE_PATTERNS: Record<string, RegExp> = {
+  // ── GovSecure policies (Phase 2.5) ──
+  'govsecure-aup': /\b(?:acceptable\s+use\s+policy|\baup\b|govsecure\s+aup)\b/i,
+  'govsecure-governance-policy': /\b(?:ai\s+governance\s+policy|govsecure\s+governance)\b/i,
+  'govsecure-data-privacy-policy': /\b(?:ai\s+data\s+privacy\s+policy|govsecure\s+(?:data\s+)?privacy\s+policy)\b/i,
+  'govsecure-risk-approval-policy': /\b(?:ai\s+risk\s+(?:and|&)\s+approval\s+policy|risk\s+approval\s+policy)\b/i,
+  'govsecure-security-policy': /\b(?:ai\s+security\s+policy|govsecure\s+security\s+policy)\b/i,
+  'govsecure-incident-response-policy': /\b(?:ai\s+incident\s+response\s+policy)\b/i,
+  'govsecure-human-oversight-policy': /\b(?:ai\s+human\s+oversight\s+policy)\b/i,
+  'govsecure-vendor-policy': /\b(?:ai\s+(?:vendor|third[-\s]?party)\s+policy|vendor\s+(?:management|governance)\s+policy)\b/i,
+  // ── GovSecure checklists (Phase 2.5) ──
+  'govsecure-checklist-intake': /\b(?:ai\s+(?:use\s+case\s+)?intake\s+(?:form\s+)?checklist|intake\s+checklist)\b/i,
+  'govsecure-checklist-evidence-pack': /\b(?:evidence\s+pack\s+checklist)\b/i,
+  'govsecure-checklist-incident-response': /\b(?:ai\s+incident\s+response\s+checklist|incident\s+response\s+checklist)\b/i,
+  'govsecure-checklist-vendor-dd': /\b(?:vendor\s+due\s+diligence\s+checklist|third[-\s]?party\s+(?:dd|due\s+diligence)\s+checklist)\b/i,
+  'govsecure-checklist-shadow-ai': /\b(?:shadow\s+ai\s+(?:discovery\s+)?checklist|shadow\s+ai)\b/i,
+  'govsecure-checklist-inventory': /\b(?:ai\s+(?:inventory|registry)\s+checklist|system\s+registry\s+checklist)\b/i,
+  'govsecure-checklist-model-validation': /\b(?:model\s+validation\s+(?:and|&)?\s*testing\s+checklist|model\s+validation\s+checklist)\b/i,
+  'govsecure-checklist-monitoring': /\b(?:monitoring\s+(?:and|&)?\s*revalidation\s+checklist|ai\s+monitoring\s+checklist)\b/i,
+  'govsecure-checklist-security': /\b(?:ai\s+security\s+review\s+checklist|security\s+review\s+checklist)\b/i,
+  'govsecure-checklist-dpia': /\b(?:dpia\s+screening\s+checklist|privacy\s+screening\s+checklist)\b/i,
+  'govsecure-checklist-human-oversight': /\b(?:human\s+oversight\s+(?:and|&)?\s*escalation\s+checklist|oversight\s+escalation\s+checklist)\b/i,
+  'govsecure-checklist-change-management': /\b(?:ai\s+change\s+management\s+checklist|change\s+management\s+checklist)\b/i,
+  'govsecure-checklist-training': /\b(?:training\s+(?:and|&)?\s*(?:role[-\s]?based\s+)?awareness\s+checklist)\b/i,
+  'govsecure-checklist-risk-assessment': /\b(?:ai\s+risk\s+assessment\s+(?:template\s+)?checklist|risk\s+assessment\s+checklist)\b/i,
+  // ── GovSecure flagship questionnaires + framework templates (Phase 3) ──
+  'govsecure-tprm': /\b(?:tprm(?:\s+questionnaire)?|third[-\s]?party\s+risk\s+management\s+(?:questionnaire|assessment)|vendor\s+risk\s+questionnaire)\b/i,
+  'govsecure-nist-rcm': /\b(?:nist\s+rcm|risk\s+control\s+matrix|nist\s+ai\s+rmf\s+matrix)\b/i,
+  // ── Generic governance documents (predate GovSecure integration) ──
   'dpia': /\b(?:dpia|data\s+protection\s+impact|privacy\s+impact)\b/i,
   'threat-model': /\b(?:threat\s+model|security\s+assessment|attack\s+surface)\b/i,
   'model-card': /\b(?:model\s+card|model\s+documentation|model\s+spec)\b/i,
@@ -33,7 +68,16 @@ const DOCUMENT_TYPE_PATTERNS: Record<string, RegExp> = {
   'evidence-pack': /\b(?:evidence\s+pack|compliance\s+evidence|audit\s+pack)\b/i,
 };
 
+/**
+ * Framework detection patterns. Order matters — `Object.entries` preserves
+ * insertion order and the first match wins. GovSecure-flagship patterns come
+ * before the generic regulatory ones so prompts that mention "AI Chef" or
+ * "90-day blueprint" route to the right framework even if NIST is also
+ * mentioned.
+ */
 const FRAMEWORK_PATTERNS: Record<string, RegExp> = {
+  'GovSecure AI Chef': /\b(?:ai\s+chef|chef\s+(?:playbook|operating\s+model|toolkit|stations?))\b/i,
+  'GovSecure 90-Day Blueprint': /\b(?:90.?day\s+(?:blueprint|plan|roadmap|implementation))\b/i,
   'NIST AI RMF': /\b(?:nist|ai\s+rmf|risk\s+management\s+framework)\b/i,
   'EU AI Act': /\b(?:eu\s+ai\s+act|european\s+ai|ai\s+act)\b/i,
   'ISO/IEC 42001': /\b(?:iso\s*(?:\/iec)?\s*42001|aims|ai\s+management\s+system)\b/i,
@@ -41,13 +85,13 @@ const FRAMEWORK_PATTERNS: Record<string, RegExp> = {
 };
 
 /** Patterns that strongly indicate document generation intent */
-const GENERATE_DOCUMENT_PATTERN = /\b(?:generate|create|write|produce|draft|build)\b.*\b(?:dpia|threat\s+model|model\s+card|data\s+sheet|human\s+oversight|risk\s+memo|use\s+case\s+summary|vendor|operational\s+readiness|monitoring\s+plan|evidence\s+pack|document|report)\b/i;
+const GENERATE_DOCUMENT_PATTERN = /\b(?:generate|create|write|produce|draft|build)\b.*\b(?:dpia|threat\s+model|model\s+card|data\s+sheet|human\s+oversight|risk\s+memo|use\s+case\s+summary|vendor|operational\s+readiness|monitoring\s+plan|evidence\s+pack|document|report|policy|checklist|aup|shadow\s+ai)\b/i;
 
 /** Patterns that strongly indicate intake/risk assessment intent */
 const INTAKE_PATTERN = /\b(?:assess|evaluate|intake|risk\s+assessment|analyze\s+(?:the\s+)?risk|score\s+(?:the\s+)?risk|run\s+(?:an?\s+)?(?:intake|assessment))\b/i;
 
 /** Patterns that strongly indicate playbook/implementation plan intent */
-const PLAYBOOK_PATTERN = /\b(?:playbook|roadmap|implementation\s+plan|compliance\s+plan|governance\s+plan|action\s+plan|step-by-step\s+plan)\b/i;
+const PLAYBOOK_PATTERN = /\b(?:playbook|roadmap|implementation\s+plan|compliance\s+plan|governance\s+plan|action\s+plan|step-by-step\s+plan|ai\s+chef|90.?day\s+(?:blueprint|plan))\b/i;
 
 /** Patterns that indicate generation — used to distinguish "generate X" from "what is X" */
 const GENERATION_VERBS = /\b(?:generate|create|write|produce|draft|build|make|prepare|need)\b/i;

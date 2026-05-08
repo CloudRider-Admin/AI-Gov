@@ -1,0 +1,18 @@
+{
+  "id": "intake-low-internal-tool",
+  "category": "intake",
+  "input": {
+    "useCaseName": "Engineering Wiki Search",
+    "useCaseDescription": "Internal-only RAG search over our engineering wiki. No PII. Used by ~40 engineers to find runbooks faster.",
+    "industry": "technology"
+  },
+  "expectedRiskTier": "Low",
+  "requiredClauses": [
+    "Low",
+    "internal"
+  ],
+  "forbiddenContent": [
+    "Critical",
+    "Prohibited"
+  ]
+}

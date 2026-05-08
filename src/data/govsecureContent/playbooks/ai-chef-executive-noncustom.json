@@ -1,0 +1,117 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:99472ee94e34d79c7a3a213af6a46b5ceee2cd23c269a62ee050f020bbb94ed1",
+  "documentCode": "GS-PLBK-AICHEFEX-05",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure AI Chef™\nEnterprise AI Governance Recipe Matrix Toolkit\nv1.0 - 24 Core Recipes\nA practical operational toolkit for governing AI risks, controls, ownership, and assurance across the enterprise."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "Built from the approved GovSecure AI Chef toolkit outline and template structure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "Executive Overview\nGovSecure AI Chef turns AI governance from scattered policies into an operating model with named ownership,\nrisk-tiered intake, mapped controls, evidence expectations, and leadership reporting.\nThe toolkit is designed for SMB owners, CIO/CISO leaders, compliance teams, and AI governance practitioners\nwho need one framework that can support awareness, implementation, and audit readiness without becoming\ntheoretical sludge.\nWhat is included\n A 24-recipe governance matrix across six stations\n An ownership and RACI model\n AI use-case intake and risk tiering workflow\n AI system registry structure\n Policy-to-control mapping baseline\n Operational guidance for data, model, vendor, agent, monitoring, and incident controls\n A maturity roadmap from 24 to 36 recipes\nHow to Use the Framework\nUse the toolkit in five steps:\n1. 1. Identify AI systems and use cases\n2. 2. Assess the use case and assign a risk tier\n3. 3. Assign owners and supporting functions\n4. 4. Implement required controls and record evidence\n5. 5. Review quarterly and improve by maturity stage"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "24 Core Recipes Matrix\nStation Code Recipe Core Control Owner\nFoundation & Ow Head Chef Assign named AI EX / AG\nOwnership Assignment governance owner,\nRisk: Ownership charter, RACI,\nVacuum escalation authority\nPg Kitchen Rules Set AI policy, LE / SE / AG\nRisk: Policy Gaps acceptable use,\nprohibited use, and\nexception handling\nRc Role Recipe Card Define AG\nRisk: Role responsibilities\nConfusion across IT, Security,\nLegal, Privacy, Data,\nProcurement, HR,\nand business\nSa Approved Menu Maintain approved IT / SE\nOnly tools register and\nRisk: Shadow AI sanctioned use\npathways\nData & Knowledge Di Clean Ingredients Apply data DA / PR / SE\nControls Risk: Sensitive Data classification and\nExposure prompt handling\nrestrictions\nPv Source Provenance Track provenance, DA\nCheck metadata, and\nRisk: Untrusted or approved\nPoor-Quality Data knowledge sources\nRd Retention & Define AI-specific PR / IT\nDisposal Recipe retention and\nRisk: Over- deletion rules\nRetention\nKb Knowledge Base Enforce permission- IT / SE / DA\nBoundaries aware retrieval and\nRisk: Unauthorized connector controls\nRetrieval\nModel & Tool Safety Ev Pre-Serve Test performance, BU / SE / AG\nEvaluation robustness, misuse,\nRisk: Unsafe and bias before\nDeployment production\nSs Secret Sauce Use vaulting, secret EN / SE\nLockdown scanning, and\nRisk: Embedded protected\nSecrets Exposure authentication\nDt Drift Tasting Revalidate against BU / EN\nRisk: Behavioral benchmarks and\nDrift review thresholds\nVr Vendor Pantry Perform AI-specific PC / SE / LE\nReview vendor, legal, and\nRisk: Third-Party AI security due\nExposure diligence\nAgent & Tp Tool Permission Apply least IT / SE\nAutomation Gate privilege, scoped"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "Controls Risk: Agent tool access, and\nOverreach action thresholds\nHi Human Before High Require human BU / AG\nImpact approval for high-\nRisk: Unchecked impact actions\nAutomation\nSb Sandbox Before Use staging, pilots, EN / IT\nService rollback design, and\nRisk: Unsafe controlled releases\nRollout\nKs Kill Switch on the Enable emergency SE / IT\nCounter disablement and\nRisk: Runaway connector\nBehavior revocation\nDecision & Human Ex Explain the Dish Require rationale, BU / LE\nOversight Risk: Opaque notices, and\nOutputs traceability where\nappropriate\nEa Escalate Ambiguous Define exception BU\nOrders triggers and human\nRisk: Harmful escalation rules\nOutcomes\nBt Bias & Fairness Conduct fairness LE / BU / AG\nTaste Test review and\nRisk: Unfair remediation for\nOutcomes high-impact uses\nHr High-Risk Use Case Apply intake triage, AG\nFlag risk tiering, and\nRisk: Sensitive Use enhanced approval\nCases\nAssurance, In Full Kitchen Maintain AI system AG / IT\nMonitoring & Inventory registry with\nResponse Risk: Unknown AI owners, vendors,\nSystems data, and status\nLg Kitchen Camera Log prompts, tool SE / IT\nLogs calls, approvals,\nRisk: Weak changes, exceptions,\nAuditability and incidents\nIr Burn Response Plan Create AI incident SE / PR / LE / IT\nRisk: No AI Incident response playbook\nHandling\nQr Quarterly Recipe Review metrics, AG / EX\nReview open risks,\nRisk: Control Decay exceptions, and\nmaturity quarterly"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "Ownership Model and RACI\nPrimary roles\n Executive Sponsor (EX): accountably backs the program and clears roadblocks.\n AI Governance Lead (AG): operates the framework, intake, reviews, and reporting.\n IT / Platform Owner (IT): manages enablement, access, integration, and platform controls.\n Security (SE): enforces security controls, monitoring, and incident coordination.\n Privacy (PR): covers personal-data handling, retention, and privacy reviews.\n Legal / Compliance (LE): addresses regulatory, contractual, and policy interpretations.\n Data Owner / Governance (DA): owns data quality, provenance, and approved access.\n Business Owner (BU): owns the use case, benefits, and outcome accountability.\n Procurement / Vendor Risk (PC): performs third-party diligence and contract coordination.\n Engineering / Product (EN): implements technical safeguards and rollout design.\nSample RACI snapshot\nRecipe EX AG IT SE BU\nHead Chef A R C C I\nAssignment\nApproved Menu I C R A C\nOnly\nHigh-Risk Use C A I C R\nCase Flag\nBurn Response C C R A I\nPlan\nEscalation path: Business Owner -> AI Governance Lead -> Security/Privacy/Legal as needed -> Executive\nSponsor for Tier 4 or exception approvals."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "AI Use Case Intake and Risk Tiering\nRequired intake questions\n Business purpose and intended outcome\n AI capability type and provider\n Internal-only or external/customer-facing use\n Data sensitivity and regulated-data exposure\n Decision impact and human oversight requirement\n Automated actions or tool permissions\n Third-party/vendor dependence\n Applicable regulations or contractual obligations\nRisk tier logic\nTier Label Use Default expectation\n1 Low Internal productivity Standard controls and\nwith low sensitivity owner assignment\n2 Moderate Business workflow Documented review and\nsupport with moderate evidence requirements\ndata sensitivity\n3 High Sensitive data, Enhanced controls and\nconsequential outputs, or multi-function approval\ncustomer impact\n4 Prohibited / Executive Unsafe, disallowed, or Block or route to\nReview materially high-risk use Executive Sponsor"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 9",
+      "id": "page-9",
+      "level": 1,
+      "paragraphs": [
+        "Policy-to-Control Mapping Baseline\nUse this baseline to turn policy language into minimum and enhanced operational controls.\nPolicy Theme Required statement Minimum control Enhanced control Evidence\nAcceptable Use Use approved tools Approved tools Periodic usage Tool list, approvals\nonly for approved register and owner review and\npurposes assignment exception workflow\nData Handling Do not expose Classification and DLP, redaction, Classification\nsensitive data input restrictions connector guidance, logs\nwithout segmentation\nauthorization\nHuman Oversight High-impact Defined approval Dual approval or Review records\noutputs require threshold specialist sign-off\nhuman review\nVendor Review Third-party AI Security/legal Ongoing Vendor review pack\nproviders require review reassessment and\ndiligence contract safeguards\nLogging & Material AI activity Prompt/tool/ Alerting, anomaly Logs, review\nMonitoring must be auditable approval logging checks, and periodic summaries\nreview\nIncident Response AI incidents must AI incident Playbooks, tabletop Incident tickets,\nbe escalated rapidly categories and tests, lessons PIRs\nowner list learned"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 10",
+      "id": "page-10",
+      "level": 1,
+      "paragraphs": [
+        "AI Incident Response Playbook\nIncident categories\n Harmful or misleading output\n Privacy breach or unauthorized data exposure\n Security exposure or embedded secret disclosure\n Model or agent drift causing unsafe behavior\n Unauthorized automation or unapproved integration\n Third-party vendor or service failure\nWorkflow\n6. Detect and triage\n7. Assess severity and impacted systems\n8. Contain or disable affected AI activity\n9. Escalate to Security, Privacy, Legal, and Executive Sponsor as required\n10. Remediate and restore safe operation\n11. Review root cause, evidence, and control improvements\nMinimum evidence: incident summary, owner, timeline, impacted data/systems, containment action, recovery\ndecision, lessons learned."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 11",
+      "id": "page-11",
+      "level": 1,
+      "paragraphs": [
+        "Governance Glossary\nAI system: Any model, tool, agent, workflow, or embedded capability used to generate, classify, retrieve,\nrecommend, or automate decisions.\nAgent: An AI-enabled system that can invoke tools, call external systems, or take actions toward a task.\nHigh-impact use case: A use case whose output can materially affect people, finances, legal posture, privacy, or\nsafety.\nHuman oversight: A defined review or approval action by a responsible human before or after AI output is used.\nModel drift: A measurable change in behavior, performance, or output quality over time that can affect\nreliability or safety.\nShadow AI: Use of AI tools or capabilities outside approved governance, visibility, or control.\nKnowledge base: A collection of internal or external documents and data sources used to ground or enrich AI\noutputs.\nProhibited use: A use case that the organization forbids because the risk cannot be reduced to an acceptable\nlevel.\nStandards Alignment Crosswalk\nReference only - not a legal certification claim.\nFramework area NIST AI RMF ISO/IEC 42001 EU AI Act themes SOC-style logic\nFoundation & Govern Leadership, policy Governance, QMS Control\nOwnership environment\nData & Knowledge Map / Manage Data governance Data governance Confidentiality /\nPrivacy\nModel & Tool Safety Measure / Manage Lifecycle controls Accuracy, Processing integrity\nrobustness, / Security\ncybersecurity\nMonitoring & Manage Monitoring, Logging, oversight Monitoring /\nResponse improvement Change\nmanagement\nAI Governance Evidence Register\n AI policy and approved tools list\n Use-case intake records and risk assessments\n AI system inventory\n Vendor review records\n Monitoring logs and exception records\n Incident reports and quarterly review decks"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Executive_Toolkit.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 10149,
+    "section_count": 10
+  },
+  "subType": "ai-chef-executive-noncustom",
+  "title": "GovSecure AI Chef Executive Toolkit"
+}

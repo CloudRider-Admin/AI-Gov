@@ -1,0 +1,1842 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:e86522ed30894759084fc583140524e4dc2146f1604157aa8a7b100ac078ad17",
+  "documentCode": "GS-PLBK-THIRDPAR-14",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GovSecure Third-Party AI Privacy Risk Assessment",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Vendor Questionnaire and Evidence Review Pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "Assess privacy, data protection, governance, and AI data-use risk in third-party AI vendors, deployers, and adopters — with a primary emphasis on vendor accountability.",
+        "Designed for use during onboarding, procurement review, renewal review, major product changes, and post-incident reassessment.",
+        "Version 1.0",
+        "This document includes section numbering, answer fields, evidence-request columns, reviewer risk scoring, red-flag triggers, and an executive summary page for internal reviewers."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Executive Summary for Reviewers",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Complete after receiving the vendor response and evidence pack."
+      ],
+      "tables": [
+        [
+          [
+            "Vendor name",
+            "",
+            "Assessment date",
+            ""
+          ],
+          [
+            "Product / service",
+            "",
+            "Review owner",
+            ""
+          ],
+          [
+            "Business sponsor",
+            "",
+            "Assessment status",
+            "Not Started / In Review / Complete"
+          ],
+          [
+            "Use case summary",
+            "",
+            "Overall risk rating",
+            "Low / Moderate / High / Critical"
+          ],
+          [
+            "Data sensitivity",
+            "Public / Internal / Confidential / Sensitive / Regulated",
+            "High-impact use case?",
+            "Yes / No"
+          ],
+          [
+            "Training use of customer data?",
+            "Yes / No / Partial",
+            "Cross-border transfers?",
+            "Yes / No / Partial"
+          ],
+          [
+            "Top red flags",
+            "",
+            "Decision recommendation",
+            "Approve / Conditionally Approve / Reject / Escalate"
+          ],
+          [
+            "Required follow-ups",
+            "",
+            "Target close date",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "1 = Informational / low concern",
+        "2 = Minor concern / limited relevance",
+        "3 = Moderate concern / follow-up needed",
+        "4 = High concern / mitigation or leadership review needed",
+        "5 = Critical concern / automatic escalation if unresolved"
+      ],
+      "heading": "Risk Scoring Guidance",
+      "id": "4",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Customer data is used for training, tuning, or product improvement by default.",
+        "Vendor cannot explain retention, deletion scope, or storage locations.",
+        "No privacy lead, no privacy program, or no DPA support.",
+        "Cross-tenant exposure is possible or not clearly ruled out.",
+        "Sensitive or regulated data is permitted without explicit safeguards.",
+        "Broad human review occurs without strict controls.",
+        "Subprocessors or transfer mechanisms are not disclosed.",
+        "Recent privacy or security incident lacks clear remediation."
+      ],
+      "heading": "Automatic Red-Flag Triggers",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Vendor response: complete the 'Answer Field' area for each question or provide a linked workbook response.",
+        "Evidence requested: attach or reference the supporting artifact where available.",
+        "Reviewer notes / risk lens: reserved for GovSecure or internal reviewers after submission.",
+        "Score: reviewer enters 1–5 after evaluating the response and evidence.",
+        "Red-flag trigger: indicates conditions that should automatically trigger escalation or conditional approval."
+      ],
+      "heading": "How to Complete This Questionnaire",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "Suggested response types: Yes / No; Yes / No / Partial; Select all that apply; Short answer; Long answer; Attachment required; Date."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Section 1 — Vendor / Provider Profile",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "12 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "1",
+            "Legal company name",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Company registration or legal entity record",
+            "Reviewer note:\n________________________",
+            "1",
+            "No legal entity or ambiguous provider identity"
+          ],
+          [
+            "2",
+            "Product / service name",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Product overview or service description",
+            "Reviewer note:\n________________________",
+            "1",
+            "Product being assessed is not clearly identified"
+          ],
+          [
+            "3",
+            "Primary website",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Public product page or documentation link",
+            "Reviewer note:\n________________________",
+            "1",
+            "No public product information available"
+          ],
+          [
+            "4",
+            "Headquarters country",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Company profile or corporate registration",
+            "Reviewer note:\n________________________",
+            "2",
+            "Headquarters or legal jurisdiction cannot be confirmed"
+          ],
+          [
+            "5",
+            "Countries where service is delivered or supported",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Service region list or support matrix",
+            "Reviewer note:\n________________________",
+            "2",
+            "Material operations occur in high-risk or unknown jurisdictions"
+          ],
+          [
+            "6",
+            "Primary business contact name and title",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Business contact details",
+            "Reviewer note:\n________________________",
+            "1",
+            "No accountable commercial contact"
+          ],
+          [
+            "7",
+            "Privacy contact name and email",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Privacy office or DPO contact details",
+            "Reviewer note:\n________________________",
+            "4",
+            "No privacy contact or escalation channel"
+          ],
+          [
+            "8",
+            "Security contact name and email",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Security contact details",
+            "Reviewer note:\n________________________",
+            "3",
+            "No security contact or escalation channel"
+          ],
+          [
+            "9",
+            "Organization role",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Role statement (provider, deployer, integrator, processor, controller, etc.)",
+            "Reviewer note:\n________________________",
+            "3",
+            "Vendor cannot clearly define its legal or operational role"
+          ],
+          [
+            "10",
+            "Briefly describe the AI product or service being assessed",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Product overview, architecture summary, or model card",
+            "Reviewer note:\n________________________",
+            "2",
+            "Product scope, intended purpose, or AI functionality is unclear"
+          ],
+          [
+            "11",
+            "Describe intended business use case(s) for the customer",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Use case summary or implementation scope",
+            "Reviewer note:\n________________________",
+            "3",
+            "Use case is open-ended, high impact, or not bounded"
+          ],
+          [
+            "12",
+            "AI capabilities involved",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Capability description (GenAI, ML, recommendation, agentic, biometric, profiling, etc.)",
+            "Reviewer note:\n________________________",
+            "3",
+            "High-risk capability is used without supporting controls"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 2 — AI System Overview",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "8 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "13",
+            "What type of AI model(s) or services are used?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Model architecture summary or model list",
+            "Reviewer note:\n________________________",
+            "3",
+            "Model stack or provider dependencies are not disclosed"
+          ],
+          [
+            "14",
+            "Identify all third-party model providers, cloud providers, subprocessors, or data partners involved",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Architecture diagram and third-party dependency list",
+            "Reviewer note:\n________________________",
+            "4",
+            "Critical dependencies are withheld or materially incomplete"
+          ],
+          [
+            "15",
+            "Does the solution process customer inputs in real time, store them, or both?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Data flow diagram or processing description",
+            "Reviewer note:\n________________________",
+            "3",
+            "Storage or processing behavior is unclear"
+          ],
+          [
+            "16",
+            "Does the solution use customer data for inference only, product improvement, model fine-tuning, training, analytics, or human review?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Data use statement and contract terms",
+            "Reviewer note:\n________________________",
+            "5",
+            "Customer data is used for training or improvement by default"
+          ],
+          [
+            "17",
+            "Does the AI system make decisions, recommendations, or outputs that could materially affect individuals?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Use case impact statement",
+            "Reviewer note:\n________________________",
+            "4",
+            "High-impact decision support exists without extra safeguards"
+          ],
+          [
+            "18",
+            "If yes, describe the types of impact",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Impact assessment or use case classification",
+            "Reviewer note:\n________________________",
+            "4",
+            "Potential effect on employment, access, finance, health, or rights is not evaluated"
+          ],
+          [
+            "19",
+            "Is human review required before high-impact outputs or actions are used?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Workflow, approval logic, or SOP",
+            "Reviewer note:\n________________________",
+            "5",
+            "No human review for high-impact outputs or actions"
+          ],
+          [
+            "20",
+            "Can the system take actions automatically on behalf of a user or organization?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Automation scope and permission design",
+            "Reviewer note:\n________________________",
+            "4",
+            "Autonomous actions exist without scoping or approval thresholds"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 3 — Personal Data and Privacy Scope",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "10 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "21",
+            "What categories of personal data may be processed by the service?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Data inventory or processing category list",
+            "Reviewer note:\n________________________",
+            "4",
+            "Extensive personal data categories are processed without minimization"
+          ],
+          [
+            "22",
+            "What categories of sensitive or regulated data may be processed?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Sensitive data inventory or control statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "Sensitive or regulated data is permitted without explicit safeguards"
+          ],
+          [
+            "23",
+            "Is the customer permitted to submit sensitive personal data into the service?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Usage policy or contract term",
+            "Reviewer note:\n________________________",
+            "5",
+            "Sensitive data submission is allowed by default"
+          ],
+          [
+            "24",
+            "If yes, what controls exist to restrict, mask, filter, classify, or protect that data?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "DLP, filtering, classification, masking, or policy evidence",
+            "Reviewer note:\n________________________",
+            "5",
+            "No preventive or detective controls for sensitive data"
+          ],
+          [
+            "25",
+            "Does the system collect personal data directly from users, indirectly from customers, or from third-party sources?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Collection method description",
+            "Reviewer note:\n________________________",
+            "3",
+            "Data source paths are not documented"
+          ],
+          [
+            "26",
+            "Does the service infer new personal data, traits, profiles, or behavioral insights from submitted data?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Profiling or inference documentation",
+            "Reviewer note:\n________________________",
+            "5",
+            "Vendor creates inferred profiles without transparency or controls"
+          ],
+          [
+            "27",
+            "Does the solution generate content that may contain personal data from training data, retrieval data, or prior prompts?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Leakage testing or system card",
+            "Reviewer note:\n________________________",
+            "5",
+            "Potential regeneration of personal data is not tested or addressed"
+          ],
+          [
+            "28",
+            "Can the solution return data belonging to another customer, tenant, or user?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Tenant isolation design and testing evidence",
+            "Reviewer note:\n________________________",
+            "5",
+            "Cross-tenant leakage is possible or not ruled out"
+          ],
+          [
+            "29",
+            "Describe all data elements required to use the service safely and effectively",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Minimum data requirement statement",
+            "Reviewer note:\n________________________",
+            "3",
+            "Required data scope appears excessive"
+          ],
+          [
+            "30",
+            "Describe any data elements that are optional but commonly submitted by customers",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Usage guidance or best-practice documentation",
+            "Reviewer note:\n________________________",
+            "3",
+            "Optional data includes unnecessary or sensitive content"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 4 — Purpose Limitation and Data Use",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "8 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "31",
+            "Describe the specific purposes for which customer data is processed",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Purpose specification statement",
+            "Reviewer note:\n________________________",
+            "4",
+            "Purposes are broad, vague, or not limited"
+          ],
+          [
+            "32",
+            "Is customer data used only to deliver the contracted service?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Contract language or privacy notice",
+            "Reviewer note:\n________________________",
+            "5",
+            "Customer data is used beyond contracted service delivery"
+          ],
+          [
+            "33",
+            "Is customer data ever used for training, model improvement, benchmarking, analytics, advertising, profiling, research, or sharing with third parties?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Privacy terms and data use statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "Secondary data use exists without explicit opt-in"
+          ],
+          [
+            "34",
+            "Can customers opt out of model training, product improvement, or analytics use of their data?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Admin settings, DPA clause, or product controls",
+            "Reviewer note:\n________________________",
+            "5",
+            "No opt-out for non-essential secondary uses"
+          ],
+          [
+            "35",
+            "Are opt-out settings enabled by default or only upon request?",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Configuration guide or contract language",
+            "Reviewer note:\n________________________",
+            "4",
+            "Privacy-protective settings are not default"
+          ],
+          [
+            "36",
+            "If data is de-identified or anonymized, describe the method and whether re-identification risk is assessed",
+            "Long answer\n\nVendor Response:\n________________________",
+            "De-identification standard or assessment summary",
+            "Reviewer note:\n________________________",
+            "4",
+            "Claims of anonymization are unsupported"
+          ],
+          [
+            "37",
+            "Are prompts, uploads, outputs, embeddings, logs, or telemetry reused for any secondary purpose?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Data lifecycle description",
+            "Reviewer note:\n________________________",
+            "5",
+            "Prompts or outputs are reused without customer awareness"
+          ],
+          [
+            "38",
+            "If yes, describe each secondary purpose clearly",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Detailed secondary use disclosure",
+            "Reviewer note:\n________________________",
+            "5",
+            "Secondary purpose is ambiguous or materially broad"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 5 — Data Retention, Deletion, and Disposal",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "7 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "39",
+            "What is the default retention period for prompts, uploads, outputs, histories, embeddings, logs, metadata, and human review content?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Retention schedule",
+            "Reviewer note:\n________________________",
+            "5",
+            "Retention periods are not defined or are excessive"
+          ],
+          [
+            "40",
+            "Can customers configure retention periods?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Admin guide or product settings evidence",
+            "Reviewer note:\n________________________",
+            "4",
+            "No configurable retention for customer-controlled data"
+          ],
+          [
+            "41",
+            "Can customers delete submitted data, prompts, outputs, and logs on demand?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Deletion process documentation",
+            "Reviewer note:\n________________________",
+            "5",
+            "Customer deletion rights are not supported"
+          ],
+          [
+            "42",
+            "When data is deleted, is it removed from production, backups, indexes, vector stores, training datasets, fine-tunes, and logs?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Deletion scope statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "Deletion excludes major storage layers"
+          ],
+          [
+            "43",
+            "Describe deletion timelines and any exceptions",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Deletion SLA or retention exceptions",
+            "Reviewer note:\n________________________",
+            "4",
+            "Deletion timing is unclear or materially delayed"
+          ],
+          [
+            "44",
+            "If customer data is used in training or fine-tuning, can that data later be removed or unlearned?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Unlearning or retraining process statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "No removal path for trained-on customer data"
+          ],
+          [
+            "45",
+            "Describe secure disposal procedures at end of contract",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Offboarding and destruction procedure",
+            "Reviewer note:\n________________________",
+            "4",
+            "End-of-contract disposal is undefined"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 6 — Data Sharing, Subprocessors, and Cross-Border Transfers",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "9 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "46",
+            "List all subprocessors involved in hosting, inference, storage, support, analytics, review, or model operations",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Current subprocessor list",
+            "Reviewer note:\n________________________",
+            "5",
+            "Subprocessors are not disclosed"
+          ],
+          [
+            "47",
+            "Do subprocessors receive personal data, prompts, outputs, or metadata?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Data flow diagram or subprocessor data map",
+            "Reviewer note:\n________________________",
+            "4",
+            "Vendor cannot specify what subprocessors receive"
+          ],
+          [
+            "48",
+            "Are subprocessors contractually restricted from using customer data for their own purposes?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Subprocessor contract terms or summary",
+            "Reviewer note:\n________________________",
+            "5",
+            "Subprocessors may reuse customer data"
+          ],
+          [
+            "49",
+            "In which countries is customer data stored, processed, accessed, or supported?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Data residency and support location statement",
+            "Reviewer note:\n________________________",
+            "4",
+            "Storage or access locations are unknown"
+          ],
+          [
+            "50",
+            "Are cross-border data transfers performed?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Transfer map or regional processing statement",
+            "Reviewer note:\n________________________",
+            "4",
+            "Cross-border transfers occur without transparency"
+          ],
+          [
+            "51",
+            "If yes, what transfer mechanism is used?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "SCCs, adequacy, UK IDTA, DPF, or equivalent evidence",
+            "Reviewer note:\n________________________",
+            "5",
+            "No lawful transfer mechanism for restricted transfers"
+          ],
+          [
+            "52",
+            "Can customers choose data residency or processing region?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Regional hosting options or contract term",
+            "Reviewer note:\n________________________",
+            "3",
+            "No regional choice for sensitive workloads"
+          ],
+          [
+            "53",
+            "Can vendor support personnel access customer data from outside the chosen region?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Support access control description",
+            "Reviewer note:\n________________________",
+            "4",
+            "Remote support access bypasses region commitments"
+          ],
+          [
+            "54",
+            "Describe controls for international transfers and remote support access",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Remote access control standard",
+            "Reviewer note:\n________________________",
+            "4",
+            "Support access is broad, uncontrolled, or unlogged"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 7 — Privacy Governance and Accountability",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "8 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "55",
+            "Do you maintain a documented privacy program?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Privacy program summary or policy",
+            "Reviewer note:\n________________________",
+            "4",
+            "No formal privacy program"
+          ],
+          [
+            "56",
+            "Do you have a designated privacy officer, DPO, or equivalent accountable leader?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Org chart or privacy governance statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "No named privacy accountability"
+          ],
+          [
+            "57",
+            "Do you conduct privacy impact assessments, DPIAs, or AI-specific risk assessments for the product?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Assessment methodology or sample summary",
+            "Reviewer note:\n________________________",
+            "4",
+            "No privacy impact assessment for material AI processing"
+          ],
+          [
+            "58",
+            "Is privacy-by-design formally incorporated into product development?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "SDLC control or design review evidence",
+            "Reviewer note:\n________________________",
+            "4",
+            "No privacy-by-design review gates"
+          ],
+          [
+            "59",
+            "Are AI product changes subject to privacy review before release?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Change management and review workflow",
+            "Reviewer note:\n________________________",
+            "4",
+            "Material AI changes bypass privacy review"
+          ],
+          [
+            "60",
+            "Do you maintain records of processing activities relevant to this service?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "ROPA or data processing record",
+            "Reviewer note:\n________________________",
+            "3",
+            "Processing activities are not documented"
+          ],
+          [
+            "61",
+            "Do you have documented policies for privacy, retention, access control, AI governance, training data governance, data subject rights, and incident response?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Policy set or policy index",
+            "Reviewer note:\n________________________",
+            "4",
+            "Core governance policies are missing or immature"
+          ],
+          [
+            "62",
+            "Are employees trained on privacy and responsible AI requirements?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Training completion summary or program description",
+            "Reviewer note:\n________________________",
+            "3",
+            "No workforce training on privacy and responsible AI"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 8 — Data Subject Rights and User Transparency",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "7 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "63",
+            "Can customers fulfill data subject rights requests using your service?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "DSAR support procedure",
+            "Reviewer note:\n________________________",
+            "4",
+            "Customers cannot operationalize rights requests"
+          ],
+          [
+            "64",
+            "Can personal data be located, exported, corrected, deleted, or restricted upon request?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Rights fulfillment workflow",
+            "Reviewer note:\n________________________",
+            "5",
+            "Core rights operations are unsupported"
+          ],
+          [
+            "65",
+            "Does your service support lawful response to access, deletion, correction, portability, objection, or restriction requests?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Rights matrix or process map",
+            "Reviewer note:\n________________________",
+            "5",
+            "Rights support is partial with no clear limitations"
+          ],
+          [
+            "66",
+            "Are end users informed when they are interacting with AI?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Notice language or UI evidence",
+            "Reviewer note:\n________________________",
+            "3",
+            "No notice when users interact with AI"
+          ],
+          [
+            "67",
+            "Are customers provided with privacy disclosures, notices, or model usage explanations they can reuse?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Customer-facing notices or guidance",
+            "Reviewer note:\n________________________",
+            "3",
+            "Customers receive no transparency support materials"
+          ],
+          [
+            "68",
+            "Does the system support output traceability or explainability for privacy-relevant outputs?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Audit trail or explainability feature evidence",
+            "Reviewer note:\n________________________",
+            "4",
+            "Privacy-relevant outputs are not traceable"
+          ],
+          [
+            "69",
+            "If the service profiles individuals or supports decisions affecting them, what transparency controls exist?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Transparency control summary",
+            "Reviewer note:\n________________________",
+            "5",
+            "Profiling or decision support exists without disclosure or challenge path"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 9 — AI Training, Fine-Tuning, and Model Governance",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "10 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "70",
+            "What sources were used to train the model(s)?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Training data source summary or model card",
+            "Reviewer note:\n________________________",
+            "4",
+            "Training data provenance is unclear"
+          ],
+          [
+            "71",
+            "Were personal data or public internet sources included in training?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Training data composition statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "Personal data use in training is not disclosed"
+          ],
+          [
+            "72",
+            "How was training data screened for privacy, consent, licensing, and appropriateness?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Training data governance standard",
+            "Reviewer note:\n________________________",
+            "5",
+            "No screening for privacy, consent, or licensing"
+          ],
+          [
+            "73",
+            "Are customer prompts, files, outputs, or telemetry used to fine-tune models?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Fine-tuning policy or data use setting",
+            "Reviewer note:\n________________________",
+            "5",
+            "Customer content is used for fine-tuning without explicit authorization"
+          ],
+          [
+            "74",
+            "Can customer-specific models or isolated fine-tunes be created?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Deployment model options",
+            "Reviewer note:\n________________________",
+            "3",
+            "Customer-specific isolation is unavailable for sensitive use cases"
+          ],
+          [
+            "75",
+            "If yes, are those isolated from other customers?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Isolation design evidence",
+            "Reviewer note:\n________________________",
+            "5",
+            "Fine-tunes or models are not isolated"
+          ],
+          [
+            "76",
+            "Are training, fine-tuning, or retrieval datasets reviewed for sensitive, inaccurate, or excessive personal data?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Dataset review evidence",
+            "Reviewer note:\n________________________",
+            "4",
+            "No review of privacy risk in datasets"
+          ],
+          [
+            "77",
+            "Do you test for memorization, leakage, or regeneration of personal data?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Privacy leakage test results or summary",
+            "Reviewer note:\n________________________",
+            "5",
+            "No testing for memorization or leakage"
+          ],
+          [
+            "78",
+            "Do you monitor for model drift or changes that affect privacy risk?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Monitoring procedure or model governance docs",
+            "Reviewer note:\n________________________",
+            "4",
+            "No monitoring for privacy-impacting changes"
+          ],
+          [
+            "79",
+            "Are model updates communicated to customers before or after deployment?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Release communication policy",
+            "Reviewer note:\n________________________",
+            "3",
+            "Material updates are silent or non-transparent"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 10 — Human Review, Annotation, and Access to Content",
+      "id": "16",
+      "level": 1,
+      "paragraphs": [
+        "7 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "80",
+            "Do employees, contractors, reviewers, or annotators access customer prompts, files, or outputs?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Access model or review workflow",
+            "Reviewer note:\n________________________",
+            "5",
+            "Human access exists without transparency or strict controls"
+          ],
+          [
+            "81",
+            "If yes, for what purposes are human reviewers used?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Human review purpose statement",
+            "Reviewer note:\n________________________",
+            "4",
+            "Human access extends beyond necessary purposes"
+          ],
+          [
+            "82",
+            "Is access role-based and logged?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Access control and logging standard",
+            "Reviewer note:\n________________________",
+            "5",
+            "Human access is not role-based or logged"
+          ],
+          [
+            "83",
+            "Is access restricted to approved personnel with confidentiality obligations?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Confidentiality terms or onboarding standard",
+            "Reviewer note:\n________________________",
+            "4",
+            "Reviewers are not subject to confidentiality and screening"
+          ],
+          [
+            "84",
+            "Are human reviewers located in specific countries or regions?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Reviewer location disclosure",
+            "Reviewer note:\n________________________",
+            "3",
+            "Reviewer locations are not disclosed"
+          ],
+          [
+            "85",
+            "Can customers opt out of human review where not legally or operationally required?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Opt-out configuration or contract term",
+            "Reviewer note:\n________________________",
+            "4",
+            "No opt-out for discretionary human review"
+          ],
+          [
+            "86",
+            "Describe monitoring and controls around human access to content",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Monitoring evidence or admin oversight procedure",
+            "Reviewer note:\n________________________",
+            "4",
+            "Human access monitoring is weak or undocumented"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 11 — Security Controls Supporting Privacy",
+      "id": "17",
+      "level": 1,
+      "paragraphs": [
+        "12 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "87",
+            "Is customer data encrypted in transit and at rest?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Encryption standard or architecture summary",
+            "Reviewer note:\n________________________",
+            "4",
+            "No encryption at rest or in transit"
+          ],
+          [
+            "88",
+            "Are tenant environments logically or physically segregated?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Tenant isolation architecture",
+            "Reviewer note:\n________________________",
+            "5",
+            "Tenant segregation is weak or unclear"
+          ],
+          [
+            "89",
+            "Are access controls role-based and least-privilege?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Access control standard",
+            "Reviewer note:\n________________________",
+            "4",
+            "Privileged access is broad or uncontrolled"
+          ],
+          [
+            "90",
+            "Is MFA required for privileged access?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Identity and access standard",
+            "Reviewer note:\n________________________",
+            "4",
+            "No MFA for privileged access"
+          ],
+          [
+            "91",
+            "Are logs maintained for administrator access and sensitive actions?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Audit logging policy",
+            "Reviewer note:\n________________________",
+            "4",
+            "Admin access or sensitive actions are not logged"
+          ],
+          [
+            "92",
+            "Are vulnerability management and penetration testing performed?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Recent pen test summary or vuln management standard",
+            "Reviewer note:\n________________________",
+            "3",
+            "No security assurance testing"
+          ],
+          [
+            "93",
+            "Are secrets, credentials, and API keys securely managed?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Secrets management standard",
+            "Reviewer note:\n________________________",
+            "4",
+            "Credentials or keys are not securely managed"
+          ],
+          [
+            "94",
+            "Are embeddings, vector stores, and retrieval layers protected with access control?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "RAG security design or access control evidence",
+            "Reviewer note:\n________________________",
+            "4",
+            "Retrieval layers are not protected"
+          ],
+          [
+            "95",
+            "Are prompts and outputs included in security logging?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Logging scope statement",
+            "Reviewer note:\n________________________",
+            "3",
+            "No logging coverage for prompts/outputs where needed"
+          ],
+          [
+            "96",
+            "Does the service support customer-managed keys, SSO, or regional isolation?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Security feature matrix",
+            "Reviewer note:\n________________________",
+            "2",
+            "No enterprise security features for sensitive deployments"
+          ],
+          [
+            "97",
+            "Has the product experienced any privacy or security incident involving customer data in the last 24 months?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Incident disclosure or assurance statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "Recent material incident without clear remediation"
+          ],
+          [
+            "98",
+            "If yes, describe the incident, impact, and remediation",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Incident summary or RCA",
+            "Reviewer note:\n________________________",
+            "5",
+            "Incident disclosure lacks scope, cause, or remediation detail"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 12 — High-Risk and Regulated Use Cases",
+      "id": "18",
+      "level": 1,
+      "paragraphs": [
+        "5 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "99",
+            "Is the service intended for or commonly used in hiring, lending, insurance, education, healthcare, law enforcement, public sector, biometrics, children, critical infrastructure, legal advice, trading, or eligibility decisions?",
+            "Select all that apply\n\nVendor Response:\n________________________",
+            "Use case statement or marketing materials",
+            "Reviewer note:\n________________________",
+            "5",
+            "High-risk use case supported without sector-specific controls"
+          ],
+          [
+            "100",
+            "Are there prohibited use cases defined by the vendor?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Acceptable use policy or prohibited use list",
+            "Reviewer note:\n________________________",
+            "4",
+            "No prohibited use framework"
+          ],
+          [
+            "101",
+            "Are customers prevented technically or contractually from using the system in prohibited contexts?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Terms, abuse controls, or configuration evidence",
+            "Reviewer note:\n________________________",
+            "5",
+            "Prohibited uses are not enforced"
+          ],
+          [
+            "102",
+            "Are additional safeguards required for high-risk or regulated deployments?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "High-risk deployment control pack",
+            "Reviewer note:\n________________________",
+            "4",
+            "No enhanced safeguards for regulated use"
+          ],
+          [
+            "103",
+            "Does the vendor provide documentation to support compliance reviews in regulated sectors?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Compliance pack, whitepaper, or evidence kit",
+            "Reviewer note:\n________________________",
+            "3",
+            "No documentation for regulated buyers"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 13 — Incident Response and Breach Notification",
+      "id": "19",
+      "level": 1,
+      "paragraphs": [
+        "6 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "104",
+            "Do you maintain a documented incident response plan covering privacy and AI-specific incidents?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "IR plan or playbook summary",
+            "Reviewer note:\n________________________",
+            "4",
+            "No documented incident response for AI/privacy events"
+          ],
+          [
+            "105",
+            "Does the plan address data leakage, model leakage, cross-tenant exposure, harmful output, prompt injection, unauthorized retention, and human review misuse?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "IR scenario matrix or playbook details",
+            "Reviewer note:\n________________________",
+            "5",
+            "AI-specific incidents are not addressed"
+          ],
+          [
+            "106",
+            "What is your breach or incident notification timeline?",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Contract term or IR commitment",
+            "Reviewer note:\n________________________",
+            "4",
+            "Notification timeline is absent or too slow"
+          ],
+          [
+            "107",
+            "What is your process for customer communication during an incident?",
+            "Long answer\n\nVendor Response:\n________________________",
+            "Communication plan or SOP",
+            "Reviewer note:\n________________________",
+            "3",
+            "Customer communication process is vague"
+          ],
+          [
+            "108",
+            "Are affected customers provided with root cause analysis and remediation details?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Post-incident communication template",
+            "Reviewer note:\n________________________",
+            "3",
+            "No RCA or remediation transparency"
+          ],
+          [
+            "109",
+            "Are incidents tracked and used to improve privacy controls?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Lessons learned process",
+            "Reviewer note:\n________________________",
+            "3",
+            "No corrective action or control improvement loop"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 14 — Contractual and Legal Commitments",
+      "id": "20",
+      "level": 1,
+      "paragraphs": [
+        "7 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "110",
+            "Will you sign a DPA or equivalent privacy agreement?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "DPA template",
+            "Reviewer note:\n________________________",
+            "5",
+            "Vendor will not sign a DPA"
+          ],
+          [
+            "111",
+            "Do you define your role as controller, processor, service provider, or another legally relevant role?",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Role definition in contract or privacy terms",
+            "Reviewer note:\n________________________",
+            "4",
+            "Legal role is undefined or inconsistent"
+          ],
+          [
+            "112",
+            "Will you contractually commit not to use customer data for model training without explicit authorization?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Contract clause or DPA statement",
+            "Reviewer note:\n________________________",
+            "5",
+            "No contractual restriction on training use"
+          ],
+          [
+            "113",
+            "Will you disclose subprocessors and notify customers of changes?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Subprocessor notice commitment",
+            "Reviewer note:\n________________________",
+            "4",
+            "No change notice for subprocessors"
+          ],
+          [
+            "114",
+            "Will you support audits, security reviews, or evidence requests?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Audit/right-to-assess language",
+            "Reviewer note:\n________________________",
+            "3",
+            "No support for reasonable assurance requests"
+          ],
+          [
+            "115",
+            "Do you offer contractual commitments for deletion, retention, region, and incident notification?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Contract terms summary",
+            "Reviewer note:\n________________________",
+            "4",
+            "Core commitments are not contractually available"
+          ],
+          [
+            "116",
+            "Are limitations, exclusions, or exceptions to privacy commitments documented clearly?",
+            "Yes / No / Partial\n\nVendor Response:\n________________________",
+            "Contract exception list",
+            "Reviewer note:\n________________________",
+            "3",
+            "Material exceptions are hidden or ambiguous"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Section 15 — Attestations and Evidence",
+      "id": "21",
+      "level": 1,
+      "paragraphs": [
+        "4 questions"
+      ],
+      "tables": [
+        [
+          [
+            "Q#",
+            "Question",
+            "Answer Field",
+            "Evidence Requested",
+            "Reviewer Notes / Risk Lens",
+            "Score",
+            "Red-Flag Trigger"
+          ],
+          [
+            "117",
+            "Please provide available privacy, AI, security, and compliance artifacts (privacy policy, whitepaper, DPA, subprocessors list, retention schedule, data flow diagram, AI governance policy, model card, SOC/ISO certificates, pen test summary, IR summary, PIA summary, residency documentation)",
+            "Attachment required\n\nVendor Response:\n________________________",
+            "Evidence package",
+            "Reviewer note:\n________________________",
+            "5",
+            "Vendor declines to provide basic supporting evidence"
+          ],
+          [
+            "118",
+            "Has all information provided in this questionnaire been reviewed for accuracy?",
+            "Yes / No\n\nVendor Response:\n________________________",
+            "Signed attestation",
+            "Reviewer note:\n________________________",
+            "4",
+            "No formal attestation of accuracy"
+          ],
+          [
+            "119",
+            "Name, title, and signature of authorized respondent",
+            "Short answer\n\nVendor Response:\n________________________",
+            "Signed response cover page or e-signature",
+            "Reviewer note:\n________________________",
+            "3",
+            "No authorized respondent"
+          ],
+          [
+            "120",
+            "Date completed",
+            "Date\n\nVendor Response:\n________________________",
+            "Completed questionnaire date",
+            "Reviewer note:\n________________________",
+            "1",
+            "Questionnaire is undated"
+          ]
+        ],
+        [
+          [
+            "Section risk summary",
+            "",
+            "Section owner / reviewer",
+            ""
+          ],
+          [
+            "Open actions",
+            "",
+            "Escalation required?",
+            "Yes / No"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Appendix A — Risk Rating Legend",
+      "id": "22",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Score",
+            "Rating",
+            "Interpretation"
+          ],
+          [
+            "1",
+            "Informational",
+            "No meaningful privacy risk identified. Evidence still should support the response."
+          ],
+          [
+            "2",
+            "Minor",
+            "Limited issue or low-relevance gap. Track if repeated across related controls."
+          ],
+          [
+            "3",
+            "Moderate",
+            "Notable concern. Clarification, mitigation, or follow-up evidence needed."
+          ],
+          [
+            "4",
+            "High",
+            "Material concern. Escalate to business owner, privacy, legal, or security leadership."
+          ],
+          [
+            "5",
+            "Critical",
+            "Automatic escalation if unresolved. Usually blocks approval or requires executive exception."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Appendix B — Reviewer Disposition",
+      "id": "23",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Recommended decision",
+            "Approve / Conditionally Approve / Reject / Escalate"
+          ],
+          [
+            "Key conditions",
+            ""
+          ],
+          [
+            "Residual privacy risk",
+            ""
+          ],
+          [
+            "Approving authority",
+            ""
+          ],
+          [
+            "Date",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Playbook/GovSecure_Third_Party_AI_Privacy_Risk_Assessment_Package/GovSecure_Third_Party_AI_Privacy_Risk_Assessment.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 18,
+    "paragraph_count": 22,
+    "section_count": 23,
+    "table_count": 33
+  },
+  "subType": "third-party-privacy-questionnaire",
+  "title": "GovSecure Third-Party AI Privacy Risk Assessment"
+}

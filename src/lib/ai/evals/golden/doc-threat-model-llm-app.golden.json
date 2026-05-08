@@ -1,0 +1,26 @@
+{
+  "id": "doc-threat-model-llm-app",
+  "category": "document-generation",
+  "documentType": "threat-model",
+  "input": {
+    "useCaseName": "Internal Knowledge Q&A Bot",
+    "useCaseDescription": "Mid-size law firm deploying an internal RAG bot over their case knowledge base. Lawyers query in natural language; the bot retrieves and summarises.",
+    "industry": "legal",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Asset",
+    "Threat",
+    "Mitigation",
+    "Residual Risk"
+  ],
+  "requiredClauses": [
+    "prompt injection",
+    "data leakage",
+    "mitigation"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "Article 99"
+  ]
+}

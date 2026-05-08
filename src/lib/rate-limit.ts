@@ -84,7 +84,6 @@ export async function checkRateLimit(
   const config = RATE_LIMIT_CONFIG[role] ?? DEFAULT_CONFIG;
   const windowMs = config.windowMinutes * 60 * 1000;
   const windowStart = new Date(Date.now() - windowMs);
-  const resetAt = Math.ceil((windowStart.getTime() + windowMs) / 1000);
 
   // Atomic count-then-insert inside a serializable transaction to prevent race conditions
   const result = await prisma.$transaction(async (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => {
@@ -96,12 +95,13 @@ export async function checkRateLimit(
       },
     });
 
-    if (count >= config.maxRequests) {
-      const oldest = await tx.rateLimit.findFirst({
-        where: { userId, endpoint, createdAt: { gte: windowStart } },
-        orderBy: { createdAt: 'asc' },
-      });
+    const oldest = await tx.rateLimit.findFirst({
+      where: { userId, endpoint, createdAt: { gte: windowStart } },
+      orderBy: { createdAt: 'asc' },
+    });
+    const resetAt = Math.ceil(((oldest?.createdAt.getTime() ?? Date.now()) + windowMs) / 1000);
 
+    if (count >= config.maxRequests) {
       const retryAfter = oldest
         ? Math.ceil((oldest.createdAt.getTime() + windowMs - Date.now()) / 1000)
         : config.windowMinutes * 60;

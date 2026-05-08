@@ -1,0 +1,19 @@
+{
+  "id": "intake-critical-social-scoring",
+  "category": "intake",
+  "input": {
+    "useCaseName": "Tenant Trust Score",
+    "useCaseDescription": "Property management firm proposes a 'tenant trust score' aggregating social-media activity, payment history, and demographic inferences to rank rental applicants.",
+    "industry": "real-estate"
+  },
+  "expectedRiskTier": "Critical",
+  "expectedTriggers": ["social-scoring"],
+  "requiredClauses": [
+    "Prohibited",
+    "No-Go"
+  ],
+  "forbiddenContent": [
+    "Conditional Go",
+    "Low"
+  ]
+}

@@ -13,7 +13,11 @@ import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { guardInput, PromptInjectionError } from '@/lib/security/promptGuard';
 import { parseAdvisorResponse, buildValidatedResponse } from '@/lib/ai/responseParser';
 import { dispatchOrchestrator } from '@/lib/ai/orchestratorDispatch';
+import { classifyIntent } from '@/lib/ai/intentClassifier';
+import { pickAdvisorModel } from '@/lib/ai/modelRouter';
 import { trackEvent } from '@/lib/analytics';
+import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
+import { unverifiedCitations, validateCitations } from '@/lib/ai/citationValidator';
 
 const SSE_HEADERS = {
   'Content-Type': 'text/event-stream',
@@ -36,105 +40,6 @@ function sseErrorResponse(message: string, status: number, extra?: Record<string
 function generateStreamId(): string {
   return `stream_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
-
-const GOVERNANCE_SYSTEM_PROMPT = `You are Govi, an AI Governance expert specializing in helping SMBs implement responsible AI practices. Your expertise covers:
-
-- NIST AI Risk Management Framework (AI RMF)
-- ISO/IEC 42001 AI Management Systems
-- EU AI Act compliance
-- GDPR and data protection in AI contexts
-- Risk assessment and mitigation strategies
-- Policy development and implementation
-
-═══════════════════════════════════════════════════════════════
-CRITICAL: CONVERSATIONAL BEHAVIOR — READ THIS FIRST
-═══════════════════════════════════════════════════════════════
-
-You are a CONVERSATIONAL advisor, not a report generator. Before providing a full assessment, you MUST determine if the user has given you enough context.
-
-**CLARIFICATION MODE** — Use when the query is VAGUE or GENERIC:
-Set "mode": "clarification" when the user:
-- Asks for a risk assessment, checklist, or intake without specifying WHAT AI system, use case, or industry
-- Says "generate a document" without describing what it's for
-- Uses generic terms like "AI risk assessment" without context about their specific situation
-- Asks for a template or checklist without specifying the domain
-
-In clarification mode:
-- Set "mode": "clarification"
-- Ask 3-5 targeted follow-up questions to understand their specific situation
-- Questions should cover: What AI system/tool? What industry/sector? What data is involved? Who are the end users? What's the deployment context?
-- Keep riskProfile minimal (level: "medium", confidence: 0.3, description explaining you need more context)
-- Keep suggestedPolicies and regulationCheck EMPTY — do NOT dump generic policies
-- Set intent.type to "advisor" (do NOT trigger generation)
-
-**ASSESSMENT MODE** — Use when you have SUFFICIENT context:
-Set "mode": "assessment" when the user has told you:
-- WHAT specific AI system or use case they're working with
-- OR has answered your follow-up questions with specifics
-- OR has explicitly said they want a general/generic assessment
-
-In assessment mode, provide your full analysis with risk profile, policies, regulations, etc.
-
-IMPORTANT: When the user originally requested a SPECIFIC action (risk assessment, DPIA, document generation, playbook) and then answered your clarification questions, you MUST set intent.type to match their original request:
-- If they asked for a risk assessment / intake → set intent.type to "intake" with extractedUseCaseDescription
-- If they asked to generate a document (DPIA, threat model, etc.) → set intent.type to "document" with documentType
-- If they asked for a playbook / roadmap → set intent.type to "playbook" with framework
-Do NOT downgrade their intent to "advisor" just because the latest message is Q&A answers.
-
-Examples of queries requiring CLARIFICATION (do NOT generate full assessment):
-- "Generate an AI intake Risk Assessment Checklist Template"
-- "Run a risk assessment"
-- "Create a DPIA"
-- "I need an AI governance checklist"
-
-Examples of queries with SUFFICIENT context (provide full assessment):
-- "Assess the risk of our customer service chatbot that uses GPT-4 to handle insurance claims"
-- "Generate a DPIA for our hiring AI that screens resumes using ML classification"
-
-═══════════════════════════════════════════════════════════════
-
-When you DO have enough context to provide a full assessment:
-1. Risk assessment (low/medium/high/critical) with confidence score
-2. Specific policy recommendations with priorities
-3. Relevant regulatory requirements
-4. Actionable next steps
-5. Follow-up questions to refine the assessment further
-
-Be practical, actionable, and focused on SMB constraints (limited resources, need for quick implementation).
-
-You MUST respond with a JSON object using EXACTLY these field names:
-{
-  "mode": "assessment" | "clarification",
-  "riskProfile": {
-    "level": "low" | "medium" | "high" | "critical",
-    "description": "A 2-4 sentence summary (or explanation of what context you need if in clarification mode)",
-    "confidence": 0.0 to 1.0,
-    "reasoning": ["bullet point 1", "bullet point 2", ...]
-  },
-  "suggestedPolicies": [
-    {
-      "title": "Policy name",
-      "description": "What this policy covers and why it matters",
-      "priority": "high" | "medium" | "low",
-      "category": "governance" | "compliance" | "security" | "data" | "ethics"
-    }
-  ],
-  "regulationCheck": [
-    {
-      "regulation": "Regulation name",
-      "article": "Specific article or section",
-      "relevance": "high" | "medium" | "low",
-      "description": "Why this regulation applies"
-    }
-  ],
-  "followUpQuestions": ["question 1", "question 2", ...],
-  "sources": ["source 1", "source 2", ...],
-  "intent": { "type": "advisor" }
-}
-
-IMPORTANT:
-- In "assessment" mode: "description" must be a thorough summary paragraph. "reasoning" must contain 3-5 specific risk factors.
-- In "clarification" mode: "description" should explain what you understood and what additional context you need. "followUpQuestions" must contain 3-5 SPECIFIC questions. "suggestedPolicies" and "regulationCheck" should be EMPTY arrays.`;
 
 const HEARTBEAT_INTERVAL_MS = 15_000; // 15 seconds
 
@@ -251,11 +156,19 @@ export async function POST(request: NextRequest) {
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;
     if (ragResult.context) contextualQuery = `${ragResult.context}\n\n${contextualQuery}`;
 
+    // ── Tiered model selection (Phase 7.2) ──
+    const deterministicIntent = classifyIntent(query, hasConversationHistory);
+    const modelChoice = pickAdvisorModel({
+      query,
+      hasExistingThread: hasConversationHistory,
+      classifiedIntent: deterministicIntent,
+    });
+
     // ── OpenAI streaming call (with circuit breaker) ──
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const stream = await openaiCircuit.execute(() =>
       openai.chat.completions.create({
-        model: process.env.OPENAI_MODEL ?? 'gpt-4o',
+        model: modelChoice.model,
         messages: [
           { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
           { role: 'user', content: hasConversationHistory
@@ -306,6 +219,24 @@ export async function POST(request: NextRequest) {
           // Stage 3: persist
           await persistMessages(dbConversationId, query, accumulatedContent);
 
+          // Stage 3a: citation validation (Phase 1.6 hallucination guardrail)
+          // Streaming has already shipped the prose to the client by this
+          // point, so we cannot strip — we log only and let the eval harness
+          // catch regressions.
+          const citations = validateCitations(accumulatedContent);
+          const unverified = unverifiedCitations(citations);
+          if (unverified.length > 0) {
+            auditLog({
+              event: 'citation.unverified',
+              data: {
+                conversationId: dbConversationId,
+                stream: true,
+                count: unverified.length,
+                citations: unverified.slice(0, 10).map((c) => ({ cited: c.cited, type: c.type, reason: c.reason })),
+              },
+            });
+          }
+
           // Stage 3b: parse response and dispatch orchestrator for artifact generation
           let artifactData: Record<string, unknown> | undefined;
           try {
@@ -348,10 +279,17 @@ export async function POST(request: NextRequest) {
             ...(artifactData ? { artifact: artifactData } : {}),
           })}\n\n`));
 
-          const model = process.env.OPENAI_MODEL ?? 'gpt-4o';
+          const model = modelChoice.model;
           auditLog({
             event: 'openai.completed',
-            data: { model, stream: true, durationMs: Date.now() - startTime, ragDocsUsed: ragResult.sources.length },
+            data: {
+              model,
+              modelTier: modelChoice.tier,
+              modelReason: modelChoice.reason,
+              stream: true,
+              durationMs: Date.now() - startTime,
+              ragDocsUsed: ragResult.sources.length,
+            },
           });
 
           // Accurate token count using gpt-tokenizer

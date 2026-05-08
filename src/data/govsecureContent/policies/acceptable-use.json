@@ -1,0 +1,225 @@
+{
+  "category": "policies",
+  "checksum": "sha256:f040d9e0158656838aef63e7d88a2a5c621e1a7c23a170ecaef637e74161f8d1",
+  "documentCode": "GS-AIPS-ACCEPTAB-01",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "Practical governance beats vague good intentions.",
+        "Use this document as a client-ready policy baseline. Customize named roles, escalation paths, and references to internal standards, classifications, and regulatory obligations before approval."
+      ],
+      "tables": [
+        [
+          [
+            "Primary owner",
+            "AI Governance Lead"
+          ],
+          [
+            "Version",
+            "v1.0 | Paid SMB Edition"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Policy Overview",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Sets the rules for day-to-day employee use of AI tools and AI-generated outputs, including approved use, prohibited use, data-entry restrictions, output review expectations, and accountability."
+          ],
+          [
+            "Scope",
+            "Applies to all personnel using enterprise-approved AI tools or AI-assisted outputs for company business, including pilots and embedded SaaS AI capabilities."
+          ],
+          [
+            "Primary owner",
+            "AI Governance Lead"
+          ],
+          [
+            "Audience",
+            "All employees, contractors, temporary workers, and approved third parties using enterprise AI tools"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Only approved AI tools and approved use cases may be used for business purposes. Employees shall not use consumer or unapproved AI tools for company work unless an exception is formally approved.",
+        "Users shall not input restricted or prohibited data into AI tools unless the specific tool, use case, and handling method have been reviewed and approved for that data category.",
+        "AI-generated outputs must be reviewed by a human before being relied upon for business decisions, customer communications, code deployment, contractual language, financial analysis, or regulated activities.",
+        "AI may be used to assist work, but accountability for final content, actions, and outcomes remains with the employee and the business owner.",
+        "AI shall not be used to create deceptive, discriminatory, harassing, unlawful, or manipulative content, or to impersonate individuals without authorization.",
+        "Users must follow enterprise copyright, privacy, records retention, security, and communications requirements when using AI-generated content.",
+        "AI outputs that materially affect customers, employees, applicants, or business commitments must include human verification and, where appropriate, documented approval.",
+        "Prompt histories, uploads, generated files, and AI-assisted work products shall be handled as business records when they support decisions, approvals, or regulated activities."
+      ],
+      "heading": "Policy Statements",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI Governance Lead maintains the approved AI tools list, usage rules, and exception process.",
+        "Managers ensure personnel understand approved use boundaries and complete required training.",
+        "Users remain accountable for the accuracy, legality, and appropriateness of AI-assisted work products.",
+        "Security, Privacy, and Legal provide review support for restricted data, sensitive outputs, and exceptions."
+      ],
+      "heading": "Roles and Responsibilities",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Approved AI tools register",
+        "Employee acknowledgement record",
+        "Training completion evidence",
+        "Exception request log",
+        "Output review evidence for high-impact use cases"
+      ],
+      "heading": "Required Records and Evidence",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Approved AI Tools Register",
+        "Employee AI Usage Acknowledgment Form",
+        "Prohibited Use Exception Request Form",
+        "AI Output Human Review Checklist",
+        "AI Training Attendance Log",
+        "Implementation note: This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "heading": "Required Companion Templates",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Implementation Note",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "GovSecure Licensing and Usage",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "License Scope",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "This GovSecure policy template is licensed for use by a single purchasing organization for its internal governance, risk, compliance, privacy, security, and operational activities."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Permitted Use",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may edit, tailor, and deploy this document for internal business use, including policy adoption, training, audit preparation, and enterprise AI governance program development."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Restricted Use",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may not resell, sublicense, redistribute, publish, bundle, or offer this document, whether modified or unmodified, as a standalone product, template pack, or commercial deliverable to third parties without written permission from GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Customization Responsibility",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "This template is intended as a practical governance baseline. The purchaser is responsible for reviewing and customizing roles, approval paths, legal references, technical controls, records requirements, and jurisdiction-specific obligations before adoption."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "No Legal Advice",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "This document is not legal advice and does not create an attorney-client relationship. Organizations should obtain legal, privacy, regulatory, or sector-specific review where required."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Warranty and Liability",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "This material is provided as-is for professional use. GovSecure makes no guarantee that this document alone will satisfy every legal, regulatory, contractual, or audit requirement in every jurisdiction or use case."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Copyright",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "Copyright GovSecure. All rights reserved. Use is subject to the applicable purchase terms, license terms, statement of work, or written authorization issued by GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Contact",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "For enterprise licensing, customization, or commercial reuse inquiries, contact GovSecure through its authorized business channel."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/Enterprise_AI_Acceptable_Use_Policy_Licensed.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 23,
+    "paragraph_count": 11,
+    "section_count": 16,
+    "table_count": 2
+  },
+  "subType": "acceptable-use",
+  "title": "GovSecure — Enterprise AI Acceptable Use Policy — Standalone Branded Policy Document"
+}

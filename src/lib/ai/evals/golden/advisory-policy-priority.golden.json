@@ -1,0 +1,17 @@
+{
+  "id": "advisory-policy-priority",
+  "category": "advisory-query",
+  "input": {
+    "message": "Where should we start with AI policies? We're a 90-person SaaS with no formal AI governance yet."
+  },
+  "requiredClauses": [
+    "Starter",
+    "Acceptable Use",
+    "Governance"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99"
+  ],
+  "expectedIntent": "advisor"
+}

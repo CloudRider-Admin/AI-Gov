@@ -30,6 +30,7 @@ model User {
   conversations            Conversation[]
   passwordResetTokens      PasswordResetToken[]
   generatedArtifacts       GeneratedArtifact[]
+  workflowSessions         WorkflowSession[]
 }
 
 model Account {
@@ -71,11 +72,19 @@ model Conversation {
   id        String    @id @default(cuid())
   userId    String
   title     String    @default("New Conversation")
+  /**
+   * Phase 4.5 — JSON-as-string blob holding the conversation-scoped
+   * `OrgContext` (organization name, industry, size, governance lead,
+   * escalation path, known AI tools, risk appetite, jurisdictions).
+   * Serialized via `JSON.stringify` in `src/lib/ai/orgContext.ts`.
+   */
+  metadata  String?   @db.Text
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages           Message[]
   generatedArtifacts GeneratedArtifact[]
+  workflowSessions   WorkflowSession[]
 
   @@index([userId, updatedAt])
 }
@@ -150,6 +159,34 @@ model TokenUsage {
 
   @@index([userId, createdAt])
   @@index([userId, endpoint, createdAt])
+}
+
+/**
+ * Multi-turn document workflow state — Phase 3.5.
+ *
+ * Used for TPRM, 90-Day Blueprint progress tracking, and any other long-running
+ * questionnaire that needs to survive across browser refreshes and pause/resume.
+ *
+ * `state` is an opaque JSON blob shaped by `WorkflowOrchestrator`; treat it as
+ * a private contract between the orchestrator and Prisma.
+ */
+model WorkflowSession {
+  id             String        @id @default(cuid())
+  userId         String
+  conversationId String?
+  workflowType   String        // 'tprm' | '90day-blueprint' | 'risk-assessment'
+  status         String        @default("in-progress") // 'in-progress' | 'paused' | 'completed' | 'abandoned'
+  currentStep    Int           @default(0)
+  totalSteps     Int
+  state          String        @db.Text // JSON: answers / scores / red-flags
+  artifactId     String?       // GeneratedArtifact link, set when finalized
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, status])
+  @@index([conversationId])
 }
 
 model GeneratedArtifact {

@@ -12,6 +12,7 @@ import { AdvisorResponsePanel } from './AdvisorResponsePanel';
 import { AdvisorStreamingPanel } from './AdvisorStreamingPanel';
 import { ConversationHistory } from './ConversationHistory';
 import { TokenBudgetIndicator } from './TokenBudgetIndicator';
+import { WorkflowPanel } from './WorkflowPanel';
 import { parseAdvisorResponse, buildValidatedResponse } from '@/lib/ai/responseParser';
 import { matchSectors, type SectorGuidance } from '@/data/sectorGuidance';
 import { matchRegulations, type EmergingRegulation } from '@/data/emergingRegulations';
@@ -67,6 +68,10 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
   const [streamingStage, setStreamingStage] = useState<string | null>(null);
   const [streamingQuery, setStreamingQuery] = useState<string | null>(null);
   const [followUpPrompt, setFollowUpPrompt] = useState<string | null>(null);
+  const [activeWorkflowSession, setActiveWorkflowSession] = useState<{
+    sessionId: string;
+    workflowType: string;
+  } | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputAreaRef = useRef<HTMLDivElement>(null);
 
@@ -202,7 +207,25 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
       });
 
       if (!res.ok || !res.body) {
-        throw new Error('Failed to start streaming response');
+        // Surface the server's SSE error message rather than a generic
+        // "Failed to start streaming response". The route emits a single
+        // `data: {"type":"error","error":"..."}` event with status 429/503
+        // for quota/circuit-open paths.
+        let serverMessage: string | undefined;
+        if (res.body) {
+          try {
+            const text = await res.text();
+            const dataLine = text.split('\n').find((l) => l.startsWith('data: '));
+            if (dataLine) {
+              const parsed = JSON.parse(dataLine.slice(6)) as { error?: string };
+              serverMessage = parsed.error;
+            }
+          } catch {
+            // Ignore parse errors — fall through to generic message
+          }
+        }
+        if (res.status === 429 && !serverMessage) serverMessage = 'OpenAI quota exceeded. Please try again later.';
+        throw new Error(serverMessage ?? 'Failed to start streaming response');
       }
 
       const reader = res.body.getReader();
@@ -391,6 +414,28 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
   const handleActionCard = async (action: ActionCardAction) => {
     setActionLoading(true);
     setError(null);
+
+    if (action.type === 'workflow') {
+      try {
+        const res = await fetch('/api/workflows/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            workflowType: action.workflowType,
+            conversationId: activeConversationId ?? undefined,
+            context: { useCaseDescription: action.useCaseDescription },
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json?.error ?? 'Failed to start workflow');
+        setActiveWorkflowSession({ sessionId: json.sessionId, workflowType: action.workflowType });
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Workflow start failed.');
+      } finally {
+        setActionLoading(false);
+      }
+      return;
+    }
 
     const endpointMap: Record<string, string> = {
       intake: '/api/intake',
@@ -601,20 +646,35 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
             <div className="p-6">
               {/* Starter prompts — shown only on empty state */}
               {showStarterPrompts && (
-                <div className="mb-6">
-                  <p className="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3">
-                    Try asking about...
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {STARTER_PROMPTS.map((prompt, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => handleStarterPrompt(prompt)}
-                        className="text-xs font-mono px-3 py-1.5 border border-terminal-border rounded-full text-terminal-muted hover:border-terminal-green hover:text-terminal-green transition-colors text-left"
-                      >
-                        {prompt.length > 65 ? prompt.slice(0, 65) + '…' : prompt}
-                      </button>
-                    ))}
+                <div className="mb-6 space-y-4">
+                  <div>
+                    <p className="text-xs font-mono text-terminal-muted uppercase tracking-wider mb-3">
+                      Try asking about...
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {STARTER_PROMPTS.map((prompt, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleStarterPrompt(prompt)}
+                          className="text-xs font-mono px-3 py-1.5 border border-terminal-border rounded-full text-terminal-muted hover:border-terminal-green hover:text-terminal-green transition-colors text-left"
+                        >
+                          {prompt.length > 65 ? prompt.slice(0, 65) + '…' : prompt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* GovSecure discoverability hint */}
+                  <div className="rounded-lg border border-terminal-green/20 bg-terminal-green/5 p-3 flex items-start gap-3">
+                    <Sparkles className="w-4 h-4 text-terminal-green shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="flex-1 min-w-0 text-xs font-sans text-terminal-text leading-relaxed">
+                      Govi grounds answers in the{' '}
+                      <Link href="/govi/library" className="font-mono text-terminal-green hover:underline">
+                        GovSecure Governance Library
+                      </Link>
+                      . Ask about a vendor or third-party AI tool to launch the
+                      multi-turn TPRM workflow.
+                    </div>
                   </div>
                 </div>
               )}
@@ -653,6 +713,36 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
                   text={streamingText}
                   stage={streamingStage}
                 />
+              )}
+
+              {/* Active multi-turn workflow */}
+              {activeWorkflowSession && (
+                <div className="mt-4">
+                  <WorkflowPanel
+                    sessionId={activeWorkflowSession.sessionId}
+                    onCancel={() => setActiveWorkflowSession(null)}
+                    onComplete={(result) => {
+                      setActiveWorkflowSession(null);
+                      setThread((prev) => {
+                        if (prev.length === 0) return prev;
+                        const updated = [...prev];
+                        const lastIdx = updated.length - 1;
+                        updated[lastIdx] = {
+                          ...updated[lastIdx],
+                          response: {
+                            ...updated[lastIdx].response,
+                            generatedArtifact: {
+                              type: 'document',
+                              id: result.artifactId,
+                              data: result.document,
+                            },
+                          },
+                        };
+                        return updated;
+                      });
+                    }}
+                  />
+                </div>
               )}
 
               {/* Conversation thread */}

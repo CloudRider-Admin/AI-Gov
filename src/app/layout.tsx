@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     template: "%s | GovSecure",
   },
   description:
-    "The leading AI governance platform for small and mid-sized businesses—helping you adopt and scale AI responsibly, compliantly, and profitably.",
+    "GovSecure helps small businesses assess AI use cases, create practical policies, and reduce compliance risk — without enterprise complexity or outside consultants.",
   keywords: [
     "AI governance",
     "AI risk management",
@@ -52,8 +52,9 @@ export const metadata: Metadata = {
     siteName: "GovSecure",
     title: "GovSecure | Confident AI, Controlled Risk",
     description:
-      "The leading AI governance platform for small and mid-sized businesses—helping you adopt and scale AI responsibly, compliantly, and profitably.",
-    images: [
+      "GovSecure helps small businesses assess AI use cases, create practical policies, and reduce compliance risk — without enterprise complexity or outside consultants.",
+
+      images: [
       {
         url: "/og-image.svg",
         width: 1200,

@@ -153,7 +153,7 @@ const EMPTY_FORM: FormState = {
   sourceType: 'manual',
 };
 
-const POLL_MS = 30_000;
+const POLL_MS = 60_000;
 
 export default function AdminKnowledgePage() {
   const router = useRouter();
@@ -179,8 +179,8 @@ export default function AdminKnowledgePage() {
   const [seeding, setSeeding] = useState(false);
   const [seedResult, setSeedResult] = useState<string | null>(null);
 
-  const fetchEntries = useCallback(async () => {
-    setLoading(true);
+  const fetchEntries = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
     setError(null);
     try {
       const res = await fetch('/api/knowledge');
@@ -208,7 +208,7 @@ export default function AdminKnowledgePage() {
     fetchEntries();
     fetchOverview();
     const id = setInterval(() => {
-      fetchEntries();
+      fetchEntries(true);
       fetchOverview();
     }, POLL_MS);
     return () => clearInterval(id);
@@ -332,10 +332,14 @@ export default function AdminKnowledgePage() {
   const handleDelete = async (id: string) => {
     setDeletingId(id);
     try {
-      await fetch(`/api/knowledge/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/knowledge/${id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error ?? 'Failed to delete entry');
+      }
       setEntries((prev) => prev.filter((e) => e.id !== id));
-    } catch {
-      setError('Failed to delete entry');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Failed to delete entry');
     } finally {
       setDeletingId(null);
     }
@@ -717,7 +721,7 @@ export default function AdminKnowledgePage() {
               <Zap className="w-3.5 h-3.5" /> {embedding ? 'Embedding…' : 'Embed All'}
             </button>
             <button
-              onClick={fetchEntries}
+              onClick={() => fetchEntries()}
               className="inline-flex items-center gap-1.5 px-3 py-2 text-xs border border-terminal-border text-terminal-muted rounded-xl hover:text-terminal-text"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Refresh

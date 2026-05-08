@@ -1,0 +1,20 @@
+{
+  "id": "playbook-iso-42001-mfg",
+  "category": "playbook",
+  "input": {
+    "framework": "ISO/IEC 42001",
+    "riskTier": "Medium",
+    "useCaseName": "Defect Detection Vision",
+    "useCaseDescription": "Manufacturing line vision model for surface-defect detection. Operators verify before scrap."
+  },
+  "expectedPhases": ["Govern", "Map", "Measure", "Manage"],
+  "requiredClauses": [
+    "ISO/IEC 42001",
+    "management system",
+    "Plan"
+  ],
+  "forbiddenContent": [
+    "Clause 99",
+    "GOVERN-99"
+  ]
+}

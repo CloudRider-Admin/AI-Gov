@@ -150,3 +150,59 @@ export class ResponseCache<T = unknown> {
 
 /** Singleton advisor response cache */
 export const advisorCache = new ResponseCache({ maxSize: 200, ttlMs: 24 * 60 * 60 * 1000 });
+
+/**
+ * Singleton artifact cache (Phase 7.3).
+ *
+ * Caches the output of the multi-agent orchestrators (intake / document /
+ * playbook) keyed by *generation inputs only* — intent type, document type,
+ * framework, normalized use-case description, role, and an org-context
+ * fingerprint. This intentionally excludes `conversationId` so that two
+ * users with identical inputs share a cache hit; the per-conversation
+ * `advisorCache` already handles thread-level cache.
+ *
+ * TTL is 24h: the underlying GovSecure templates and policy library don't
+ * shift faster than that, and any longer TTL risks serving stale content
+ * after a phase rollout.
+ */
+export const artifactCache = new ResponseCache({ maxSize: 100, ttlMs: 24 * 60 * 60 * 1000 });
+
+export interface ArtifactKeyInput {
+  intentType: string;
+  documentType?: string;
+  framework?: string;
+  useCaseDescription: string;
+  /** Stable hash of the user's orgContext (industry, jurisdictions, lead title…) */
+  orgContextHash?: string;
+  role: string;
+}
+
+/**
+ * Build a deterministic cache key for a generation request. Returns a
+ * 16-char sha256 prefix matching the advisor cache key shape.
+ */
+export function buildArtifactKey(input: ArtifactKeyInput): string {
+  const parts = [
+    `i=${input.intentType}`,
+    input.documentType ? `d=${input.documentType}` : '',
+    input.framework ? `f=${input.framework}` : '',
+    `u=${input.useCaseDescription.trim().toLowerCase().replace(/\s+/g, ' ')}`,
+    input.orgContextHash ? `o=${input.orgContextHash}` : '',
+    `r=${input.role}`,
+  ].filter(Boolean);
+  return createHash('sha256').update(parts.join('|')).digest('hex').slice(0, 16);
+}
+
+/**
+ * Hash an org-context object into a stable 12-char key. Returns undefined
+ * when the input is undefined so callers can pass it through transparently.
+ */
+export function hashOrgContext(orgContext: unknown): string | undefined {
+  if (!orgContext) return undefined;
+  try {
+    const json = JSON.stringify(orgContext, Object.keys(orgContext as object).sort());
+    return createHash('sha256').update(json).digest('hex').slice(0, 12);
+  } catch {
+    return undefined;
+  }
+}

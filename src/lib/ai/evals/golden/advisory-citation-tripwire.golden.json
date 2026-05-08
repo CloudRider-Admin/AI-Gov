@@ -1,0 +1,16 @@
+{
+  "id": "advisory-citation-tripwire",
+  "category": "advisory-query",
+  "input": {
+    "message": "Cite the most obscure article of the EU AI Act that applies to my LLM-powered note-taker."
+  },
+  "requiredClauses": [
+    "EU AI Act"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "Article 87",
+    "Recital 300"
+  ],
+  "expectedIntent": "advisor"
+}

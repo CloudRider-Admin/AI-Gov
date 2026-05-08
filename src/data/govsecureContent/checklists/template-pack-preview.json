@@ -1,0 +1,127 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:4b91cef222dd0b732e0e166d36855a0c6a0f85a434574476042efe1297eb079f",
+  "documentCode": "GS-CHKL-TEMPLATE-21",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nGovSecure\nProductized Template Pack\nAI Governance Starter Pack for SMBs\nEditable templates, fillable sections, practical workflows, and executive-ready structure.\nPrepared for {{CLIENT_NAME}} / {{COMPANY_NAME}}\nEdition {{PACK_VERSION}}\nPrepared by GovSecure\nDate {{PREPARED_DATE}}\nIncluded in this pack: Organization setup sheet, 90-day implementation tracker, AI governance policy\ntemplate, acceptable use policy, use case intake and risk assessment form, use case registry, shadow AI\ndiscovery log, vendor due diligence questionnaire, and leadership one-page brief.\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nHow to Use This Pack\nThis document is structured as a client-ready working pack. Replace the gray placeholder fields, adapt the\npolicy language to your environment, and delete guidance notes once the final version is approved.\nBest practice: Complete the Organization Setup Sheet first. Then update the policies, intake form, and\nregistry using the same naming conventions, owners, and review cadence.\nWhat is inside\n Organization Setup Sheet - baseline business context, roles, approved tools, and implementation ownership.\n 90-Day AI Governance Implementation Tracker - a week-by-week working plan with ownership and status\nfields.\n AI Governance Policy Template - a practical policy backbone for SMB AI oversight.\n AI Acceptable Use Policy Template - employee-facing rules for safe AI usage.\n AI Use Case Intake & Risk Assessment Form - structured intake, screening, and approval workflow.\n AI Use Case Registry - the central record of AI activity, approvals, and review dates.\n Shadow AI Discovery Log - a workflow and log for identifying unapproved AI usage.\n 3rd-Party AI Vendor Due Diligence Questionnaire - right-sized vendor review structure.\n Leadership One-Page Brief - executive summary template for reporting decisions, risk, and momentum.\nTemplate conventions\nConvention Meaning / expected action\nReplace with client-specific content or rename the field\nGray placeholder field\nas needed.\nKeep, trim, or adapt based on risk appetite and business\nPrewritten policy language\nmodel.\nMark manually or replace with your preferred workflow\nCheckbox / status prompt\nnotation.\nUse named individuals or role titles, but be consistent\nOwner / review fields\nacross the pack.\nTemplate 1 - Organization Setup Sheet\nUse this page to anchor the rest of the pack. The information entered here should be reflected across your\npolicies, workflow forms, and leadership reporting.\nBusiness profile and governance ownership\nCompany name {{COMPANY_NAME}}\nIndustry / sector {{INDUSTRY}}\nEmployee count {{EMPLOYEE_COUNT}}\nPrimary operating regions {{PRIMARY_REGIONS}}\nExecutive sponsor {{EXEC_SPONSOR}}\nAI governance lead {{AI_GOVERNANCE_LEAD}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nSecurity / privacy reviewer {{SECURITY_PRIVACY_REVIEWER}}\nImplementation start date {{IMPLEMENTATION_START_DATE}}\nTarget day-90 date {{DAY90_TARGET_DATE}}\nAI operating context\nApproved AI tools / platforms {{APPROVED_AI_TOOLS}}\nKnown or suspected shadow AI tools {{KNOWN_SHADOW_AI_TOOLS}}\nRestricted data types {{RESTRICTED_DATA_TYPES}}\nRisk rating scale used {{RISK_SCALE}}\nPolicy review cadence {{POLICY_REVIEW_CADENCE}}\nQuestions / escalation channel {{ESCALATION_CHANNEL}}\nTemplate 2 - 90-Day AI Governance Implementation Tracker\nHow to use: Assign one owner per line, update status weekly, and keep the notes column brutally honest.\nThis tracker is where strategy stops giving TED Talks and starts doing work.\nNotes /\nWeek Focus Owner Target date Status\nblockers\nConfirm sponsor,\n1 scope, and {{W1_OWNER}} {{W1_DATE}} {{W1_STATUS}} {{W1_NOTES}}\nworking group\nLaunch discovery\n2 and inventory {{W2_OWNER}} {{W2_DATE}} {{W2_STATUS}} {{W2_NOTES}}\ncurrent AI usage\nDraft governance\npolicy and\n3 {{W3_OWNER}} {{W3_DATE}} {{W3_STATUS}} {{W3_NOTES}}\nacceptable use\npolicy\nCapture first\n4 wave of use {{W4_OWNER}} {{W4_DATE}} {{W4_STATUS}} {{W4_NOTES}}\ncases in registry\nFinalize intake\n5 form and triage {{W5_OWNER}} {{W5_DATE}} {{W5_STATUS}} {{W5_NOTES}}\ncriteria\nApprove baseline\n6 policies and {{W6_OWNER}} {{W6_DATE}} {{W6_STATUS}} {{W6_NOTES}}\npublish guidance\n7 Launch vendor {{W7_OWNER}} {{W7_DATE}} {{W7_STATUS}} {{W7_NOTES}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 4",
+      "id": "page-4",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nreview workflow\nReview and\n8 classify existing {{W8_OWNER}} {{W8_DATE}} {{W8_STATUS}} {{W8_NOTES}}\nuse cases\nIdentify and\n9 remediate {{W9_OWNER}} {{W9_DATE}} {{W9_STATUS}} {{W9_NOTES}}\nshadow AI usage\nRun employee\n10 awareness and {{W10_OWNER}} {{W10_DATE}} {{W10_STATUS}} {{W10_NOTES}}\npolicy briefing\nPrepare\nleadership\n11 {{W11_OWNER}} {{W11_DATE}} {{W11_STATUS}} {{W11_NOTES}}\nsummary and\ndecisions needed\nConfirm BAU\n12 cadence and {{W12_OWNER}} {{W12_DATE}} {{W12_STATUS}} {{W12_NOTES}}\ncontrol ownership\nClose out day-90\n13 report and next- {{W13_OWNER}} {{W13_DATE}} {{W13_STATUS}} {{W13_NOTES}}\nstage roadmap\nTemplate 3 - AI Governance Policy Template\nDrafting note: This template is written to be practical and SMB-friendly. Adapt the tone and control depth to\nmatch your industry, data sensitivity, and regulatory pressure.\nDocument control\nPolicy owner {{POLICY_OWNER}}\nApproving authority {{APPROVING_AUTHORITY}}\nEffective date {{POLICY_EFFECTIVE_DATE}}\nNext review date {{POLICY_REVIEW_DATE}}\nApplies to {{POLICY_APPLIES_TO}}\n1. Purpose\nThis policy establishes how {{COMPANY_NAME}} governs the adoption, approval, and oversight of AI\ntechnologies so the business can capture value while managing security, privacy, legal, operational, and\nreputational risk.\nClient customization note: {{1_CLIENT_NOTES}}\n2. Scope\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nThis policy applies to employees, contractors, consultants, business units, and third parties using AI tools,\nAI-enabled features, or AI outputs on behalf of {{COMPANY_NAME}}.\nClient customization note: {{2_CLIENT_NOTES}}\n3. Governance objectives\nThe objectives of this policy are to: (a) define accountability, (b) require use-case intake and review, (c)\nmaintain a central registry, (d) review third-party AI risk, and (e) support safe, business-aligned adoption.\nClient customization note: {{3_CLIENT_NOTES}}\n4. Roles and responsibilities\n{{EXEC_SPONSOR}} serves as executive sponsor. {{AI_GOVERNANCE_LEAD}} coordinates the operating\nprocess. Business owners remain accountable for the purpose, outcomes, and ongoing suitability of\napproved use cases.\nClient customization note: {{4_CLIENT_NOTES}}\n5. Use-case intake and review\nAll new or materially changed AI use cases must be submitted through the approved intake process before\nlaunch, unless expressly exempted in writing by {{APPROVING_AUTHORITY}}. Use cases will be rated\n{{RISK_SCALE}} and escalated when they involve sensitive data, customer impact, employment decisions,\nlegal or financial outcomes, or significant automation.\nClient customization note: {{5_CLIENT_NOTES}}\n6. Registry requirement\nAll submitted, approved, rejected, paused, and retired AI use cases must be recorded in the AI Use Case\nRegistry with an owner, risk level, approval status, review date, and required controls.\nClient customization note: {{6_CLIENT_NOTES}}\n7. Vendor due diligence\nAI vendors and AI-enabled service providers must undergo a right-sized review covering security, privacy,\ndata handling, contractual protections, retention, subprocessors, and incident response before purchase or\nproduction use.\nClient customization note: {{7_CLIENT_NOTES}}\n8. Human oversight\nHigh-impact or externally facing AI outputs must be reviewed by an accountable human prior to use in\ndecisions that could materially affect customers, employees, finances, contracts, compliance, or safety.\nClient customization note: {{8_CLIENT_NOTES}}\n9. Monitoring and revalidation\nApproved use cases must be re-evaluated when the purpose, data used, vendor, model, user population, or\ndownstream decision impact changes, or when an incident, complaint, or control failure occurs.\nClient customization note: {{9_CLIENT_NOTES}}\n10. Exceptions and violations\nAny exception to this policy requires documented approval. Misuse of AI tools, bypassing review, or entering\nrestricted data into unapproved tools may result in remediation, tool restrictions, disciplinary action, or other\ncorrective measures.\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nClient customization note: {{10_CLIENT_NOTES}}\nTemplate 4 - AI Acceptable Use Policy Template\nUse case: This template is intended for employee-facing communication. Keep it plain, direct, and\nenforceable. Fancy words are optional; clarity is not.\nDocument control\nAudience {{AUP_AUDIENCE}}\nPolicy owner {{AUP_OWNER}}\nEffective date {{AUP_EFFECTIVE_DATE}}\nQuestions / reporting channel {{AUP_CONTACT_CHANNEL}}\nPermitted use\nEmployees may use approved AI tools for low- and medium-risk business activities such as drafting,\nsummarization, brainstorming, knowledge assistance, or productivity support, subject to this policy and all\napplicable company policies.\nProhibited data\nEmployees must not enter {{RESTRICTED_DATA_TYPES}} into unapproved AI tools or any AI tool where\ncontractual, technical, or policy controls do not permit such data handling.\nOutput review\nAI outputs must be reviewed by the user for accuracy, bias, confidentiality, appropriateness, and business fit\nbefore being shared or relied upon.\nRestricted decisions\nEmployees may not use AI outputs as the sole basis for decisions involving hiring, termination, legal advice,\nregulated obligations, customer rights, pricing, credit, safety, or any other significant impact area without\napproved oversight controls.\nShadow AI\nEmployees must not procure, connect, or use AI tools for company work outside approved channels without\ndisclosure and review.\nIncident reporting\nSuspected data exposure, harmful output, unauthorized use, or other AI-related issues must be reported\nimmediately through {{AUP_CONTACT_CHANNEL}}.\nConsequences\nFailure to follow this policy may result in access restriction, remediation requirements, disciplinary action, or\nother measures consistent with company policy.\nEmployee acknowledgement block\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nEmployee name {{EMPLOYEE_NAME}}\nRole / department {{EMPLOYEE_ROLE}}\nAcknowledgement date {{ACK_DATE}}\nManager or function lead {{MANAGER_NAME}}\nTemplate 5 - AI Use Case Intake & Risk Assessment Form\nWorkflow note: This form is designed to be completed by the requestor and then reviewed by security,\nprivacy, legal, and business stakeholders as needed.\nSection A - request and ownership\nUse case name {{USE_CASE_NAME}}\nRequestor / business owner {{REQUESTOR_NAME}}\nDepartment / function {{REQUESTOR_DEPARTMENT}}\nRequested launch date {{REQUESTED_LAUNCH_DATE}}\nAI tool / vendor {{AI_TOOL_VENDOR}}\nInternal or external use {{INTERNAL_OR_EXTERNAL_USE}}\nSection B - business case\nBusiness problem being solved {{BUSINESS_PROBLEM}}\nExpected value / benefit {{EXPECTED_BENEFIT}}\nUsers affected {{USERS_AFFECTED}}\nCustomer-facing or employee-facing {{CUSTOMER_OR_EMPLOYEE_FACING}}\nKey outputs produced by AI {{AI_OUTPUTS}}\nSection C - data and control questions\nData inputs used {{DATA_INPUTS}}\nData sensitivity level {{DATA_SENSITIVITY}}\nConnects to internal systems? {{CONNECTS_INTERNAL_SYSTEMS}}\nUses personal, regulated, or confidential data? {{USES_SENSITIVE_DATA}}\nHuman review before action? {{HUMAN_REVIEW_REQUIRED}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nSection D - risk screening\nRisk screening question Response\nCould the output materially affect customers, employees,\n{{RISK_Q1}}\nfinances, contracts, or compliance?\nCould the tool expose or retain sensitive data in a way\n{{RISK_Q2}}\nthe business cannot accept?\nDoes the use case automate or heavily influence\n{{RISK_Q3}}\nimportant decisions?\nIs additional legal, privacy, or security review required? {{RISK_Q4}}\nRecommended overall risk level {{OVERALL_RISK_LEVEL}}\nSection E - approval outcome\nDecision {{INTAKE_DECISION}}\nApprover(s) {{INTAKE_APPROVERS}}\nRequired controls / conditions {{REQUIRED_CONTROLS}}\nNext review date {{USE_CASE_REVIEW_DATE}}\nTemplate 6 - AI Use Case Registry\nThe registry should be treated as the operating center of the program. Every approved, pending, paused,\nrejected, or retired use case should show up here with enough detail to support review and leadership\nreporting.\nRegistry discipline: If the use case is not in the registry, governance is mostly just a PowerPoint hobby.\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 9",
+      "id": "page-9",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nBusiness Tool / Required\n# Use case Data type Risk Status Last review Next review\nowner vendor controls\n{{REG_1_USE {{REG_1_OWN {{REG_1_TOO {{REG_1_DAT {{REG_1_RISK {{REG_1_STA {{REG_1_LAS {{REG_1_NEX {{REG_1_CON\n1\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\n{{REG_2_USE {{REG_2_OWN {{REG_2_TOO {{REG_2_DAT {{REG_2_RISK {{REG_2_STA {{REG_2_LAS {{REG_2_NEX {{REG_2_CON\n2\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\n{{REG_3_USE {{REG_3_OWN {{REG_3_TOO {{REG_3_DAT {{REG_3_RISK {{REG_3_STA {{REG_3_LAS {{REG_3_NEX {{REG_3_CON\n3\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\n{{REG_4_USE {{REG_4_OWN {{REG_4_TOO {{REG_4_DAT {{REG_4_RISK {{REG_4_STA {{REG_4_LAS {{REG_4_NEX {{REG_4_CON\n4\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\n{{REG_5_USE {{REG_5_OWN {{REG_5_TOO {{REG_5_DAT {{REG_5_RISK {{REG_5_STA {{REG_5_LAS {{REG_5_NEX {{REG_5_CON\n5\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\n{{REG_6_USE {{REG_6_OWN {{REG_6_TOO {{REG_6_DAT {{REG_6_RISK {{REG_6_STA {{REG_6_LAS {{REG_6_NEX {{REG_6_CON\n6\n_CASE}} ER}} L}} A}} }} TUS}} T_REVIEW}} T_REVIEW}} TROLS}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 10",
+      "id": "page-10",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nTemplate 7 - Shadow AI Discovery Workflow and Log\nRecommended workflow\n Identify suspected unapproved AI tools through user interviews, procurement signals, browser or SaaS\nreviews, and manager disclosure.\n Confirm the business owner, purpose, and what data is being entered or connected.\n Determine whether the tool is already approved, conditionally acceptable, or prohibited.\n Assign a risk level and decide whether to allow, replace, restrict, or stop the usage.\n Track remediation owners, dates, and communication actions in the log below.\nTool / Owner / Data Source of Decision /\nRisk Due date Status\nworkflow team involved discovery action\n{{SHADOW_\n{{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_\n1_SOURCE}\n1_TOOL}} 1_OWNER}} 1_DATA}} 1_RISK}} 1_ACTION}} 1_DATE}} 1_STATUS}}\n}\n{{SHADOW_\n{{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_\n2_SOURCE}\n2_TOOL}} 2_OWNER}} 2_DATA}} 2_RISK}} 2_ACTION}} 2_DATE}} 2_STATUS}}\n}\n{{SHADOW_\n{{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_\n3_SOURCE}\n3_TOOL}} 3_OWNER}} 3_DATA}} 3_RISK}} 3_ACTION}} 3_DATE}} 3_STATUS}}\n}\n{{SHADOW_\n{{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_\n4_SOURCE}\n4_TOOL}} 4_OWNER}} 4_DATA}} 4_RISK}} 4_ACTION}} 4_DATE}} 4_STATUS}}\n}\n{{SHADOW_\n{{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_ {{SHADOW_\n5_SOURCE}\n5_TOOL}} 5_OWNER}} 5_DATA}} 5_RISK}} 5_ACTION}} 5_DATE}} 5_STATUS}}\n}\nTemplate 8 - 3rd-Party AI Vendor Due Diligence Questionnaire\nPositioning note: Most SMBs buy AI rather than build it. That makes vendor diligence one of the highest-\nleverage controls in the entire pack.\nSection A - profile\nVendor name {{VENDOR_NAME}}\nProduct / service {{VENDOR_PRODUCT}}\nInternal business owner {{VENDOR_BUSINESS_OWNER}}\nProposed use case {{VENDOR_USE_CASE}}\nReview date {{VENDOR_REVIEW_DATE}}\nQuestion area Response / notes\nWhat data will the vendor process, store, or generate? {{VQ_DATA_SCOPE}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 11",
+      "id": "page-11",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Governance Template Pack\nWill customer or business data be used to train the vendor\n{{VQ_TRAINING_USE}}\nmodel?\nCan training on submitted data be disabled? {{VQ_TRAINING_DISABLE}}\nWhere is data stored and processed? {{VQ_DATA_LOCATION}}\nWhat retention and deletion controls are available? {{VQ_RETENTION}}\nWhat security certifications, reports, or independent\n{{VQ_ASSURANCE}}\nassurance exist?\nWhat subprocessors are used? {{VQ_SUBPROCESSORS}}\nHow does the vendor handle incidents and customer\n{{VQ_INCIDENTS}}\nnotification?\nWhat contractual protections are required? {{VQ_CONTRACTS}}\nOverall review outcome {{VQ_OUTCOME}}\nTemplate 9 - Leadership One-Page AI Brief\nUse this page for leadership, founders, or the board. Keep it short, numeric where possible, and decision-\noriented.\nReporting period {{BRIEF_PERIOD}}\nPrepared by {{BRIEF_PREPARED_BY}}\nExecutive sponsor {{BRIEF_SPONSOR}}\nAI footprint summary Top risks and issues\n{{BRIEF_AI_FOOTPRINT}} {{BRIEF_TOP_RISKS}}\nDecisions needed Next 30-60-90 days\n{{BRIEF_DECISIONS}} {{BRIEF_NEXT_STEPS}}\nMetrics snapshot {{BRIEF_METRICS}}\nRequested leadership action {{BRIEF_ACTION_REQUEST}}\nClient-ready editable template pack"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Governance_Template_Pack_Preview.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 17141,
+    "section_count": 11
+  },
+  "subType": "template-pack-preview",
+  "title": "GovSecure AI Governance Template Pack Preview"
+}

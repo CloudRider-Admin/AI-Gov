@@ -78,6 +78,33 @@ export interface DashboardStats {
   };
 }
 
+function normalizeMetricKey(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/^\/+/, '')
+    .replace(/^api\//, '')
+    .trim();
+}
+
+function endpointErrorCount(endpoint: string, errorsByCategory: Map<string, number>): number {
+  const normalizedEndpoint = normalizeMetricKey(endpoint);
+  const endpointRoot = normalizedEndpoint.split('/')[0];
+  let count = 0;
+
+  for (const [category, errors] of errorsByCategory) {
+    const normalizedCategory = normalizeMetricKey(category);
+    if (
+      normalizedCategory === normalizedEndpoint ||
+      normalizedCategory === endpointRoot ||
+      normalizedEndpoint.startsWith(`${normalizedCategory}/`)
+    ) {
+      count += errors;
+    }
+  }
+
+  return count;
+}
+
 /**
  * Fetch dashboard statistics for the admin analytics page.
  */
@@ -269,7 +296,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     tokenUsageHourly.push({ hour: key, input: bucket.input, output: bucket.output });
   }
 
-  // Errors by category map (used for per-endpoint success rate approximation)
+  // Errors by category map. Event categories are not always exact endpoint
+  // names, so endpoint success-rate calculation normalizes/root-matches below.
   const errorsByCategory = new Map<string, number>();
   for (const e of errorsByEndpointRaw) {
     errorsByCategory.set(e.category, e._count as number);
@@ -299,7 +327,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
   const topEndpoints: EndpointStat[] = topEndpointsRaw.map((e) => {
     const endpoint = e.endpoint;
     const count = e._count as number;
-    const errs = errorsByCategory.get(endpoint) ?? 0;
+    const errs = endpointErrorCount(endpoint, errorsByCategory);
     const successRate = count > 0 ? Math.max(0, Math.round(((count - errs) / count) * 1000) / 10) : 100;
     const avgTokens = e._avg?.totalTokens ?? 0;
     // Rough payload-size estimate: 1 token ≈ 4 bytes of request/response text.

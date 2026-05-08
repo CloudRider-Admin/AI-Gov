@@ -1,0 +1,28 @@
+{
+  "id": "doc-monitoring-plan-finserv",
+  "category": "document-generation",
+  "documentType": "monitoring-plan",
+  "input": {
+    "useCaseName": "Fraud Scoring Model",
+    "useCaseDescription": "Payments processor running a real-time fraud scoring model that flags suspicious transactions for analyst review.",
+    "industry": "financial-services",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Metrics",
+    "Thresholds",
+    "Drift",
+    "Owner",
+    "Cadence"
+  ],
+  "requiredClauses": [
+    "drift",
+    "threshold",
+    "alert",
+    "review"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "MEASURE-99"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "playbook-eu-ai-act-edtech",
+  "category": "playbook",
+  "input": {
+    "framework": "EU AI Act",
+    "riskTier": "High",
+    "useCaseName": "Adaptive Learning Platform",
+    "useCaseDescription": "Adaptive learning platform serving EU K-12 schools. Personalises content and tracks learner progress."
+  },
+  "expectedPhases": ["Govern", "Map", "Measure", "Manage"],
+  "requiredClauses": [
+    "high-risk",
+    "conformity",
+    "transparency"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "Recital 500"
+  ]
+}

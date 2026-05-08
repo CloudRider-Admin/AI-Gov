@@ -1,0 +1,33 @@
+{
+  "id": "policy-governance-healthcare",
+  "category": "document-generation",
+  "documentType": "govsecure-governance-policy",
+  "input": {
+    "useCaseName": "Clinical Triage Co-Pilot",
+    "useCaseDescription": "Regional healthcare network deploying an AI clinical triage co-pilot for emergency department intake. Patient PHI processed through a HIPAA-aligned vendor.",
+    "industry": "healthcare",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Governance Structure",
+    "Roles and Responsibilities",
+    "Risk Tiering",
+    "Approval Authority",
+    "Compliance",
+    "Review Cadence"
+  ],
+  "requiredClauses": [
+    "AI Governance Committee",
+    "risk tier",
+    "intake",
+    "human oversight"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "MAP-99",
+    "Article 99"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/governance.json"
+}

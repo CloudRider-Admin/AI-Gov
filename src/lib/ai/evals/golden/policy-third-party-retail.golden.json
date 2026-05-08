@@ -1,0 +1,31 @@
+{
+  "id": "policy-third-party-retail",
+  "category": "document-generation",
+  "documentType": "govsecure-third-party-policy",
+  "input": {
+    "useCaseName": "Vendor AI Procurement",
+    "useCaseDescription": "National retailer evaluating three SaaS vendors that embed LLM features (assortment planning, demand forecasting, store associate co-pilot).",
+    "industry": "retail",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Vendor Risk Tiering",
+    "Due Diligence",
+    "Contractual Requirements",
+    "Ongoing Monitoring",
+    "Off-Boarding"
+  ],
+  "requiredClauses": [
+    "vendor",
+    "due diligence",
+    "contract",
+    "monitoring"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "MAP-99"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/third-party.json"
+}

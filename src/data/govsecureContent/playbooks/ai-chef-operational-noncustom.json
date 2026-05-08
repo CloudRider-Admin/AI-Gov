@@ -1,0 +1,316 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:b8fb8b361e56b2bd357b082364b740d1e5dc8415dc516da5c38c006df482cdd5",
+  "documentCode": "GS-PLBK-AICHEFOP-10",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "xlsx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "RACI Matrix",
+      "id": "raci-matrix",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "GovSecure AI Chef™ - AI Governance RACI Matrix"
+          ],
+          [
+            "Assign R, A, C, or I for each recipe. Adjust roles to match the organization."
+          ],
+          [],
+          [
+            "Recipe Code",
+            "Recipe Name",
+            "EX",
+            "AG",
+            "IT",
+            "SE",
+            "PR",
+            "LE",
+            "DA",
+            "BU",
+            "PC",
+            "EN",
+            "Escalation Owner",
+            "Notes"
+          ],
+          [
+            "Ow",
+            "Head Chef Assignment",
+            "A",
+            "R",
+            "C",
+            "C",
+            "I",
+            "C",
+            "I",
+            "I",
+            "I",
+            "I",
+            "Executive Sponsor",
+            "Foundational accountability"
+          ],
+          [
+            "Pg",
+            "Kitchen Rules",
+            "C",
+            "A",
+            "I",
+            "R",
+            "C",
+            "R",
+            "I",
+            "I",
+            "I",
+            "I",
+            "AI Governance Lead",
+            "Policy baseline"
+          ],
+          [
+            "Sa",
+            "Approved Menu Only",
+            "I",
+            "C",
+            "R",
+            "A",
+            "I",
+            "I",
+            "I",
+            "C",
+            "I",
+            "I",
+            "Security",
+            "Shadow AI control"
+          ],
+          [
+            "Hr",
+            "High-Risk Use Case Flag",
+            "C",
+            "A",
+            "I",
+            "C",
+            "C",
+            "C",
+            "I",
+            "R",
+            "I",
+            "I",
+            "AI Governance Lead",
+            "Enhanced review trigger"
+          ],
+          [
+            "In",
+            "Full Kitchen Inventory",
+            "I",
+            "A",
+            "R",
+            "C",
+            "I",
+            "I",
+            "I",
+            "C",
+            "I",
+            "I",
+            "AI Governance Lead",
+            "Registry ownership"
+          ],
+          [
+            "Ir",
+            "Burn Response Plan",
+            "C",
+            "C",
+            "R",
+            "A",
+            "A",
+            "C",
+            "I",
+            "I",
+            "I",
+            "I",
+            "Security",
+            "AI incident handling"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Risk Tiering",
+      "id": "risk-tiering",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "GovSecure AI Chef™ - AI Risk Tiering Worksheet"
+          ],
+          [
+            "Score the use case and determine the default governance tier."
+          ],
+          [],
+          [
+            "Use Case ID",
+            "Use Case Name",
+            "Business Purpose",
+            "Data Sensitivity (1-4)",
+            "Decision Impact (1-4)",
+            "Automation Level (1-4)",
+            "External Exposure (1-4)",
+            "Regulatory Relevance (1-4)",
+            "Total Score",
+            "Suggested Tier"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI System Registry",
+      "id": "ai-system-registry",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "GovSecure AI Chef™ - AI System Registry"
+          ],
+          [],
+          [],
+          [
+            "System ID",
+            "System Name",
+            "Business Owner",
+            "Technical Owner",
+            "Vendor / Provider",
+            "Use Case",
+            "Model Type",
+            "Data Used",
+            "Integrations",
+            "Risk Tier",
+            "Approval Status",
+            "Monitoring Status",
+            "Last Review",
+            "Incident History",
+            "Retirement Status"
+          ],
+          [
+            "AI-001",
+            "Internal Knowledge Assistant",
+            "Operations",
+            "IT Platform",
+            "OpenAI / Microsoft",
+            "Internal support retrieval",
+            "LLM + RAG",
+            "Internal documents",
+            "M365 / SharePoint",
+            "Tier 2",
+            "Approved",
+            "Enabled",
+            "2026-04-22",
+            "None",
+            "Active"
+          ],
+          [
+            "AI-002",
+            "Vendor Intake Screener",
+            "Procurement",
+            "Engineering",
+            "Third-party SaaS",
+            "Third-party triage",
+            "LLM workflow",
+            "Vendor questionnaires",
+            "Email / Ticketing",
+            "Tier 3",
+            "Pending",
+            "Planned",
+            "2026-04-22",
+            "None",
+            "Pilot"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Dashboard",
+      "id": "dashboard",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "GovSecure AI Chef™ - Executive AI Governance Dashboard"
+          ],
+          [],
+          [
+            "Metric",
+            "Value",
+            "",
+            "Station",
+            "Maturity Score"
+          ],
+          [
+            "Registered AI systems",
+            "12",
+            "",
+            "Foundation & Ownership",
+            "2"
+          ],
+          [
+            "Approved use cases",
+            "8",
+            "",
+            "Data & Knowledge Controls",
+            "2"
+          ],
+          [
+            "Unapproved use cases",
+            "2",
+            "",
+            "Model & Tool Safety",
+            "3"
+          ],
+          [
+            "Percent with assigned owners",
+            "0.83",
+            "",
+            "Agent & Automation Controls",
+            "2"
+          ],
+          [
+            "Percent with risk tier assigned",
+            "0.92",
+            "",
+            "Decision & Human Oversight",
+            "2"
+          ],
+          [
+            "Percent with monitoring enabled",
+            "0.58",
+            "",
+            "Assurance, Monitoring & Response",
+            "1"
+          ],
+          [
+            "Open exceptions",
+            "3"
+          ],
+          [
+            "Incidents this quarter",
+            "1"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Playbook/Non-Customized Playbook/GovSecure_AI_Chef_Operational_Templates.xlsx",
+  "sourceSuffix": ".xlsx",
+  "stats": {
+    "sheet_count": 4,
+    "total_rows": 31
+  },
+  "subType": "ai-chef-operational-noncustom",
+  "title": "GovSecure AI Chef Operational Templates"
+}

@@ -1,0 +1,181 @@
+{
+  "category": "questionnaires",
+  "checksum": "sha256:645e8d355d394e850bbc955c8da96221e99d82ce41be0602d24e1b25db8dd2a2",
+  "documentCode": "GS-QSTN-TPRM-01",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Third-Party Risk Management (TPRM) AI Questionnaire",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Purpose: Assess risk for vendors providing AI/ML/GenAI capabilities or AI-enabled features in SaaS.",
+        "Vendor: ________ Product: ________ Business Owner: ________ Review Date: ________",
+        "Use Case: ☐ Underwriting ☐ Claims ☐ Fraud/SIU ☐ Pricing ☐ Customer Ops ☐ IT/Sec Ops ☐ Other: ________",
+        "Deployment: ☐ Vendor-hosted ☐ API ☐ On-prem ☐ Hybrid",
+        "Data Types Shared: ☐ None ☐ PII ☐ PHI ☐ PCI ☐ Financial ☐ Minors ☐ Biometrics ☐ Telematics ☐ Other: ________"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "1) AI System Overview (Required)",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "Describe the AI capability (model type, purpose, user workflow).",
+        "Is this GenAI/LLM? ☐ Yes ☐ No",
+        "Does the AI output materially influence decisions (eligibility, pricing, claims outcome, fraud actions)? ☐ Yes ☐ No",
+        "What environments does it run in (prod/dev), and where is it hosted (cloud/region)?",
+        "Provide model documentation: ☐ Model Card ☐ System Card ☐ Technical whitepaper ☐ None",
+        "Auto-High trigger: If “Yes” to #3 in insurance lines, treat as High Risk."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "2) Data Handling & Privacy (High Importance)",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "What data is ingested? Is sensitive/regulated data involved (PHI/PCI/minors/biometrics)?",
+        "Data flow: where is data stored, processed, and transmitted (regions)?",
+        "Retention: default retention for prompts, outputs, logs, and training datasets?",
+        "Deletion: can customer data be deleted on request? SLA?",
+        "Is customer data used for model training or tuning?",
+        "☐ No",
+        "☐ Yes (opt-in)",
+        "☐ Yes (default)",
+        "Are prompts/inputs ever reviewed by vendor staff? Under what controls?",
+        "Subprocessors: provide list + change notification process.",
+        "Cross-border transfer mechanism (SCCs, etc.) where applicable.",
+        "Does the vendor support DPIA support docs / privacy annex?",
+        "Required evidence: DPA, data flow diagram, retention schedule, subprocessors list."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "3) Security Controls (High Importance)",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Authentication & access: SSO/SAML/OIDC? MFA enforced? Role-based access?",
+        "Encryption: in transit and at rest (standards used).",
+        "Key management: customer-managed keys (CMK/BYOK) available? ☐ Yes ☐ No",
+        "Logging: what events are logged (admin actions, API calls, data access)? Log retention?",
+        "Vulnerability management: patch SLAs, scanning, pen-test frequency.",
+        "Security certifications/reports: ☐ SOC 2 ☐ ISO 27001 ☐ PCI ☐ Other: ____",
+        "Incident response: notification timeline, IR contacts, breach reporting process.",
+        "Data segregation: multi-tenant isolation controls.",
+        "Backup and DR: RPO/RTO.",
+        "Required evidence: SOC2/ISO report, security whitepaper, IR policy, encryption statement."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "4) GenAI / LLM-Specific Controls (If Applicable)",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "Prompt/response logging: is it enabled? Can customer disable? Redaction options?",
+        "Preventing data leakage: how do you stop sensitive data from being returned?",
+        "Defense against prompt injection / jailbreaks: controls and testing approach.",
+        "Tool use / plugins / connectors:",
+        "What connectors exist?",
+        "Can tool access be restricted per tenant?",
+        "Are there “write actions” possible (send email, update records)?",
+        "Content safety: toxic/harmful content filtering?",
+        "Hallucination management: guardrails, citations, refusal patterns, reliability controls.",
+        "Can outputs be constrained to an approved knowledge base? ☐ Yes ☐ No",
+        "Does vendor provide red-teaming results or safety evaluation reports?",
+        "Auto-High trigger: Write-enabled tools/connectors + sensitive data."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "5) Model Governance & Change Management",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "How are model updates deployed (frequency, forced vs optional)?",
+        "Advance notice period for major model/version changes?",
+        "Can customers pin versions? Roll back?",
+        "What testing occurs before changes (regression, safety, bias)?",
+        "Explainability: can vendor provide reason codes or transparency for decisions (non-GenAI ML)?",
+        "Drift monitoring: do you support drift detection dashboards or alerts?",
+        "Required evidence: change management policy, model update communications, versioning controls."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "6) Fairness, Bias, and Consumer Harm (Insurance-Critical)",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "For underwriting/pricing/claims/fraud: what bias testing is performed?",
+        "What protected/proxy attribute controls exist?",
+        "How do you support adverse-action style explanations (where applicable)?",
+        "Can the system be configured with human review before adverse decisions?",
+        "Customer dispute/appeal support: what audit logs exist to investigate outcomes?",
+        "Auto-High trigger: models influencing underwriting/pricing/claims outcomes without bias testing + explainability support."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "7) Legal, Contract, and Audit Rights",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "Contractually confirm: no training on our data unless explicitly approved. ☐ Confirmed ☐ Not confirmed",
+        "Audit rights: can you provide evidence on demand (SOC2 bridge letters, control attestations)?",
+        "Liability/indemnity: IP infringement, privacy violations, and regulatory exposure (where negotiable).",
+        "SLA commitments: uptime, support, incident response.",
+        "Termination: data return and secure deletion certification.",
+        "Required evidence: contract clauses, DPA, audit report list, deletion attestation."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "8) Operational Controls & Monitoring",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "Admin controls available to customer: disable features, restrict data types, restrict users.",
+        "Monitoring dashboards: usage, anomalies, sensitive data detection.",
+        "Exportable logs to SIEM? ☐ Yes ☐ No",
+        "Support model: escalation path for AI incidents (harmful output, data leak, bias complaint)."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "9) Risk Rating & Decision (Internal)",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "Risk Tier: ☐ Low ☐ Medium ☐ High",
+        "Decision: ☐ Approve ☐ Conditional Approve ☐ Reject",
+        "Conditions / Required Remediations:"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Questionnaires/TPRM/3P RISK MANAGEMENT (TPRM) AI Questionnaire.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 72,
+    "section_count": 10,
+    "table_count": 0
+  },
+  "subType": "tprm",
+  "title": "Third-Party Risk Management (TPRM) AI Questionnaire"
+}

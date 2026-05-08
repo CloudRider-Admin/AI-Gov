@@ -1,0 +1,773 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:c2230118764b6728c224e5c7b1ae5b9591f20ef13aa9678c6f905f1940477e4f",
+  "documentCode": "GS-CHKL-EVIDENCE-04",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "Status:",
+        "☐  Complete          ☐  Complete with Conditions          ☐  Incomplete (Do Not Approve)",
+        "Missing Items / Conditions (if any):"
+      ],
+      "tables": [
+        [
+          [
+            "AI Evidence Pack Checklist\nTemplate\nUse this checklist to assemble a complete, reviewable, and audit-ready evidence package for an AI use case."
+          ]
+        ],
+        [
+          [
+            "Use Case Name:",
+            "",
+            "Use Case ID / Risk ID:",
+            ""
+          ],
+          [
+            "Business Owner:",
+            "",
+            "AI Governance Owner:",
+            ""
+          ],
+          [
+            "Risk Tier:  ☐ Low    ☐ Moderate    ☐ High    ☐ Critical",
+            "Risk Tier:  ☐ Low    ☐ Moderate    ☐ High    ☐ Critical",
+            "Risk Tier:  ☐ Low    ☐ Moderate    ☐ High    ☐ Critical",
+            "Risk Tier:  ☐ Low    ☐ Moderate    ☐ High    ☐ Critical"
+          ],
+          [
+            "Environment:  ☐ Pilot    ☐ Production    ☐ Retired",
+            "Environment:  ☐ Pilot    ☐ Production    ☐ Retired",
+            "Environment:  ☐ Pilot    ☐ Production    ☐ Retired",
+            "Environment:  ☐ Pilot    ☐ Production    ☐ Retired"
+          ],
+          [
+            "Evidence Pack Version:",
+            "",
+            "Prepared By:",
+            ""
+          ],
+          [
+            "Date Prepared:",
+            "",
+            "Review Period Covered:",
+            ""
+          ]
+        ],
+        [
+          [
+            "1) Evidence Pack Cover & Index",
+            "1) Evidence Pack Cover & Index",
+            "1) Evidence Pack Cover & Index",
+            "1) Evidence Pack Cover & Index"
+          ],
+          [
+            "☐",
+            "☐",
+            "Cover page with use case name, version, date, owners",
+            "Cover page with use case name, version, date, owners"
+          ],
+          [
+            "☐",
+            "☐",
+            "Evidence pack table of contents / index included",
+            "Evidence pack table of contents / index included"
+          ],
+          [
+            "☐",
+            "☐",
+            "Document control/version history included",
+            "Document control/version history included"
+          ],
+          [
+            "☐",
+            "☐",
+            "Links/locations to source evidence included (SharePoint, GRC tool, ticket system, etc.)",
+            "Links/locations to source evidence included (SharePoint, GRC tool, ticket system, etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Evidence pack completeness status documented (Complete / Partial / Pending)",
+            "Evidence pack completeness status documented (Complete / Partial / Pending)"
+          ],
+          [
+            "Notes:",
+            "Notes:",
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "2) Use Case Authorization & Intake Evidence",
+            "2) Use Case Authorization & Intake Evidence",
+            "2) Use Case Authorization & Intake Evidence",
+            "2) Use Case Authorization & Intake Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "AI Use Case Intake Form (completed)",
+            "AI Use Case Intake Form (completed)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Business justification / problem statement",
+            "Business justification / problem statement"
+          ],
+          [
+            "☐",
+            "☐",
+            "Scope definition (pilot / production / affected users)",
+            "Scope definition (pilot / production / affected users)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Triage outcome and risk tier assignment",
+            "Triage outcome and risk tier assignment"
+          ],
+          [
+            "☐",
+            "☐",
+            "Approval record(s) for intake / launch decision",
+            "Approval record(s) for intake / launch decision"
+          ],
+          [
+            "☐",
+            "☐",
+            "Exception record(s), if any (with expiry date and compensating controls)",
+            "Exception record(s), if any (with expiry date and compensating controls)"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "3) Governance & Policy Compliance Evidence",
+            "3) Governance & Policy Compliance Evidence",
+            "3) Governance & Policy Compliance Evidence",
+            "3) Governance & Policy Compliance Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "AI Governance Policy applicability confirmation",
+            "AI Governance Policy applicability confirmation"
+          ],
+          [
+            "☐",
+            "☐",
+            "Applicable standards/procedures identified",
+            "Applicable standards/procedures identified"
+          ],
+          [
+            "☐",
+            "☐",
+            "Control mapping (policy/standard → implemented controls)",
+            "Control mapping (policy/standard → implemented controls)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Compliance requirements identified (privacy, cyber, sector, contract, etc.)",
+            "Compliance requirements identified (privacy, cyber, sector, contract, etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Policy exception or deviation approval (if applicable)",
+            "Policy exception or deviation approval (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Governance review meeting minutes / decision log (if used)",
+            "Governance review meeting minutes / decision log (if used)"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "4) Risk Assessment & Triage Evidence",
+            "4) Risk Assessment & Triage Evidence",
+            "4) Risk Assessment & Triage Evidence",
+            "4) Risk Assessment & Triage Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "AI risk assessment completed (scoring + rationale)",
+            "AI risk assessment completed (scoring + rationale)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Technology/security risk assessment completed",
+            "Technology/security risk assessment completed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Compliance risk register entry created/updated",
+            "Compliance risk register entry created/updated"
+          ],
+          [
+            "☐",
+            "☐",
+            "Residual risk rating documented",
+            "Residual risk rating documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Risk treatment plan documented (accept / mitigate / transfer / avoid)",
+            "Risk treatment plan documented (accept / mitigate / transfer / avoid)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Risk owner and due dates assigned",
+            "Risk owner and due dates assigned"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "5) Privacy & Data Protection Evidence",
+            "5) Privacy & Data Protection Evidence",
+            "5) Privacy & Data Protection Evidence",
+            "5) Privacy & Data Protection Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Data classification documented (PII/PHI/PCI/etc.)",
+            "Data classification documented (PII/PHI/PCI/etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Data flow documented (source → processing → storage → output)",
+            "Data flow documented (source → processing → storage → output)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Lawful basis / privacy basis identified (if applicable)",
+            "Lawful basis / privacy basis identified (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "DPIA/PIA completed (if required)",
+            "DPIA/PIA completed (if required)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Cross-border data transfer assessment completed (if applicable)",
+            "Cross-border data transfer assessment completed (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Data minimization and retention requirements documented",
+            "Data minimization and retention requirements documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Privacy notice / consent impact assessment completed (if applicable)",
+            "Privacy notice / consent impact assessment completed (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "DPA / privacy terms reviewed (for vendor AI)",
+            "DPA / privacy terms reviewed (for vendor AI)"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "6) Security Control Evidence",
+            "6) Security Control Evidence",
+            "6) Security Control Evidence",
+            "6) Security Control Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Security architecture review completed",
+            "Security architecture review completed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Authentication / SSO / MFA controls documented",
+            "Authentication / SSO / MFA controls documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Access controls and roles approved (least privilege)",
+            "Access controls and roles approved (least privilege)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Logging and audit trail enabled",
+            "Logging and audit trail enabled"
+          ],
+          [
+            "☐",
+            "☐",
+            "Encryption in transit / at rest confirmed (if applicable)",
+            "Encryption in transit / at rest confirmed (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Secrets / API key management documented",
+            "Secrets / API key management documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Vulnerability/security testing evidence (as applicable)",
+            "Vulnerability/security testing evidence (as applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Threat model completed (required for high/critical risk)",
+            "Threat model completed (required for high/critical risk)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Incident response contacts and escalation path documented",
+            "Incident response contacts and escalation path documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "DLP / prompt handling controls documented (if applicable)",
+            "DLP / prompt handling controls documented (if applicable)"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "7) Model / System Documentation Evidence",
+            "7) Model / System Documentation Evidence",
+            "7) Model / System Documentation Evidence",
+            "7) Model / System Documentation Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Model/system description documented (type, purpose, limitations)",
+            "Model/system description documented (type, purpose, limitations)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Model source identified (internal / vendor / OSS / API)",
+            "Model source identified (internal / vendor / OSS / API)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Model card or equivalent documentation (if applicable)",
+            "Model card or equivalent documentation (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Training data/source summary documented (if applicable)",
+            "Training data/source summary documented (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Version information captured (model version, vendor release, API version)",
+            "Version information captured (model version, vendor release, API version)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Known limitations / prohibited uses documented",
+            "Known limitations / prohibited uses documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Human oversight requirements documented",
+            "Human oversight requirements documented"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "8) Vendor / Third-Party Evidence (if applicable)",
+            "8) Vendor / Third-Party Evidence (if applicable)",
+            "8) Vendor / Third-Party Evidence (if applicable)",
+            "8) Vendor / Third-Party Evidence (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Vendor risk assessment completed",
+            "Vendor risk assessment completed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Contract / MSA / DPA reviewed and approved",
+            "Contract / MSA / DPA reviewed and approved"
+          ],
+          [
+            "☐",
+            "☐",
+            "Vendor security documentation collected (SOC 2 / ISO / etc.)",
+            "Vendor security documentation collected (SOC 2 / ISO / etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Data retention/training usage terms confirmed",
+            "Data retention/training usage terms confirmed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Subprocessor list reviewed",
+            "Subprocessor list reviewed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Incident notification commitments confirmed",
+            "Incident notification commitments confirmed"
+          ],
+          [
+            "☐",
+            "☐",
+            "Hosting region / data residency confirmed",
+            "Hosting region / data residency confirmed"
+          ],
+          [
+            "☐",
+            "☐",
+            "SLA / service dependency documented",
+            "SLA / service dependency documented"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "9) Testing, Validation & Quality Evidence",
+            "9) Testing, Validation & Quality Evidence",
+            "9) Testing, Validation & Quality Evidence",
+            "9) Testing, Validation & Quality Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Test plan approved before go-live",
+            "Test plan approved before go-live"
+          ],
+          [
+            "☐",
+            "☐",
+            "Functional testing results documented",
+            "Functional testing results documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Evaluation metrics defined and recorded (accuracy, precision, relevance, etc.)",
+            "Evaluation metrics defined and recorded (accuracy, precision, relevance, etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Failure mode testing / edge cases documented",
+            "Failure mode testing / edge cases documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Hallucination/error handling evaluation (for GenAI)",
+            "Hallucination/error handling evaluation (for GenAI)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Bias/fairness assessment completed (if applicable)",
+            "Bias/fairness assessment completed (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "User acceptance testing (UAT) evidence included",
+            "User acceptance testing (UAT) evidence included"
+          ],
+          [
+            "☐",
+            "☐",
+            "Go-live readiness decision documented",
+            "Go-live readiness decision documented"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "10) Monitoring & Operations Evidence",
+            "10) Monitoring & Operations Evidence",
+            "10) Monitoring & Operations Evidence",
+            "10) Monitoring & Operations Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Monitoring plan documented (what is monitored + thresholds)",
+            "Monitoring plan documented (what is monitored + thresholds)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Logging/telemetry evidence available",
+            "Logging/telemetry evidence available"
+          ],
+          [
+            "☐",
+            "☐",
+            "Drift/performance review schedule defined (if applicable)",
+            "Drift/performance review schedule defined (if applicable)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Incident/issue tracking process documented",
+            "Incident/issue tracking process documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Periodic review cadence defined (annual / quarterly / etc.)",
+            "Periodic review cadence defined (annual / quarterly / etc.)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Change management process for model/vendor updates documented",
+            "Change management process for model/vendor updates documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Re-approval/reauthorization trigger criteria documented",
+            "Re-approval/reauthorization trigger criteria documented"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "11) Human Oversight & Accountability Evidence",
+            "11) Human Oversight & Accountability Evidence",
+            "11) Human Oversight & Accountability Evidence",
+            "11) Human Oversight & Accountability Evidence"
+          ],
+          [
+            "☐",
+            "☐",
+            "Human reviewer role(s) identified",
+            "Human reviewer role(s) identified"
+          ],
+          [
+            "☐",
+            "☐",
+            "Escalation path for incorrect/harmful outputs documented",
+            "Escalation path for incorrect/harmful outputs documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Override/fallback process documented",
+            "Override/fallback process documented"
+          ],
+          [
+            "☐",
+            "☐",
+            "Training/awareness provided to users/reviewers",
+            "Training/awareness provided to users/reviewers"
+          ],
+          [
+            "☐",
+            "☐",
+            "Accountability matrix (business, IT, security, privacy, legal, governance) documented",
+            "Accountability matrix (business, IT, security, privacy, legal, governance) documented"
+          ],
+          [
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            "Evidence Link(s):",
+            ""
+          ]
+        ],
+        [
+          [
+            "12) Audit Readiness & Traceability Checks",
+            "12) Audit Readiness & Traceability Checks",
+            "12) Audit Readiness & Traceability Checks",
+            "12) Audit Readiness & Traceability Checks"
+          ],
+          [
+            "☐",
+            "☐",
+            "All required artifacts present for assigned risk tier",
+            "All required artifacts present for assigned risk tier"
+          ],
+          [
+            "☐",
+            "☐",
+            "Dates and versions are current (no expired approvals)",
+            "Dates and versions are current (no expired approvals)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Evidence is traceable to source systems (no screenshots only, where better evidence exists)",
+            "Evidence is traceable to source systems (no screenshots only, where better evidence exists)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Approvals are signed/attributable (name + date)",
+            "Approvals are signed/attributable (name + date)"
+          ],
+          [
+            "☐",
+            "☐",
+            "Open issues/exceptions are clearly listed and linked",
+            "Open issues/exceptions are clearly listed and linked"
+          ],
+          [
+            "☐",
+            "☐",
+            "Next review date recorded",
+            "Next review date recorded"
+          ],
+          [
+            "☐",
+            "☐",
+            "Retention location and retention period documented",
+            "Retention location and retention period documented"
+          ],
+          [
+            "Notes:",
+            "Notes:",
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "Final Review & Sign-Off"
+          ]
+        ],
+        [
+          [
+            "Reviewed By (AI Governance)",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Reviewed By (Security)",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Reviewed By (Privacy)",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Reviewed By (Legal/Compliance)",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Business Owner Acknowledgment",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI Evidence Pack Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 1,
+    "table_count": 16
+  },
+  "subType": "evidence-pack",
+  "title": "AI Evidence Pack Checklist"
+}

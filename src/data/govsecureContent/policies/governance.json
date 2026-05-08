@@ -1,0 +1,224 @@
+{
+  "category": "policies",
+  "checksum": "sha256:a5afd33f3dec794479fb038c7dfdc70d250efdfdcd6fff52a2331d7f22ca8032",
+  "documentCode": "GS-AIPS-GOVERNAN-03",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "Practical governance beats vague good intentions.",
+        "Use this document as a client-ready policy baseline. Customize named roles, escalation paths, and references to internal standards, classifications, and regulatory obligations before approval."
+      ],
+      "tables": [
+        [
+          [
+            "Primary owner",
+            "Executive Sponsor / AI Governance Lead"
+          ],
+          [
+            "Version",
+            "v1.0 | Paid SMB Edition"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Policy Overview",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Purpose",
+            "Defines the governance structure for AI across the enterprise, including ownership, oversight, approval authority, escalation, risk accountability, and review responsibilities."
+          ],
+          [
+            "Scope",
+            "Applies to all enterprise AI systems, AI use cases, embedded AI capabilities, significant model/provider changes, and related governance forums and records."
+          ],
+          [
+            "Primary owner",
+            "Executive Sponsor / AI Governance Lead"
+          ],
+          [
+            "Audience",
+            "Executive leadership, business owners, Security, Privacy, Legal, IT, Procurement, Risk, and Compliance teams"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "The enterprise shall maintain a formal AI governance structure with defined ownership, decision rights, escalation paths, and oversight responsibilities.",
+        "Every AI system and AI use case shall have an accountable business owner and an identified technical or platform owner.",
+        "New AI use cases, major changes, and exceptions shall be reviewed through the enterprise AI intake and risk assessment process before approval.",
+        "The AI Governance Lead shall maintain the AI system inventory, governance standards, review cadence, and reporting to leadership.",
+        "High-risk or sensitive AI use cases shall receive enhanced review involving Security, Privacy, Legal, and relevant business stakeholders before deployment.",
+        "The enterprise shall review AI risks, control gaps, incidents, and exceptions on a periodic basis and track remediation to closure.",
+        "No AI initiative may bypass required governance merely because the capability is bundled into an existing SaaS product or business workflow."
+      ],
+      "heading": "Policy Statements",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "Executive Sponsor provides direction, resolves escalations, and approves material risk decisions.",
+        "AI Governance Lead runs the intake process, inventory, review cadence, and governance reporting.",
+        "Business owners are accountable for approved use cases, outcomes, and operational controls.",
+        "Security, Privacy, Legal, IT, and Procurement support reviews based on risk tier and change impact."
+      ],
+      "heading": "Roles and Responsibilities",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI governance charter",
+        "RACI matrix",
+        "AI intake and approval records",
+        "Quarterly governance review deck",
+        "Open risk and exception tracker"
+      ],
+      "heading": "Required Records and Evidence",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [
+        "AI Governance Charter",
+        "AI Governance RACI Matrix",
+        "AI Steering Committee Terms of Reference",
+        "AI Escalation Path Matrix",
+        "Quarterly AI Governance Review Deck",
+        "Implementation note: This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "heading": "Required Companion Templates",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Implementation Note",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [
+        "This policy should be approved by the client’s designated owner, linked to operating procedures, and reviewed at least annually or after a material AI-related change."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "GovSecure Licensing and Usage",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "License Scope",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [
+        "This GovSecure policy template is licensed for use by a single purchasing organization for its internal governance, risk, compliance, privacy, security, and operational activities."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Permitted Use",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may edit, tailor, and deploy this document for internal business use, including policy adoption, training, audit preparation, and enterprise AI governance program development."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Restricted Use",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [
+        "The purchaser may not resell, sublicense, redistribute, publish, bundle, or offer this document, whether modified or unmodified, as a standalone product, template pack, or commercial deliverable to third parties without written permission from GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Customization Responsibility",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "This template is intended as a practical governance baseline. The purchaser is responsible for reviewing and customizing roles, approval paths, legal references, technical controls, records requirements, and jurisdiction-specific obligations before adoption."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "No Legal Advice",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [
+        "This document is not legal advice and does not create an attorney-client relationship. Organizations should obtain legal, privacy, regulatory, or sector-specific review where required."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Warranty and Liability",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [
+        "This material is provided as-is for professional use. GovSecure makes no guarantee that this document alone will satisfy every legal, regulatory, contractual, or audit requirement in every jurisdiction or use case."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Copyright",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "Copyright GovSecure. All rights reserved. Use is subject to the applicable purchase terms, license terms, statement of work, or written authorization issued by GovSecure."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Contact",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [
+        "For enterprise licensing, customization, or commercial reuse inquiries, contact GovSecure through its authorized business channel."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Policies/GovSecure_AI Policy_Suite_Standalaone/govsecure_core8_licensed_final/AI_Governance_Policy_Licensed.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 22,
+    "paragraph_count": 11,
+    "section_count": 16,
+    "table_count": 2
+  },
+  "subType": "governance",
+  "title": "GovSecure — AI Governance Policy — Standalone Branded Policy Document"
+}

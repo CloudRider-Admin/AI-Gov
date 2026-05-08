@@ -1,0 +1,388 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:778d9cb73b266e27f183ad9e2295b5e9f4826aec3b6940f6fda47248cb1a7f53",
+  "documentCode": "GS-CHKL-INVENTOR-11",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Inventory & System Registry Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Registry Governance",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Registry owner and backup owner assigned",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Standard registry fields defined and approved",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Update cadence defined (monthly/quarterly)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Submission process defined for new AI use cases",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Change/update process defined for existing entries",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Decommissioning/retirement process defined (retired AI use cases/tools)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Identity Fields",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Unique Registry/Use Case ID recorded",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Use case name and business purpose recorded",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Business owner and technical owner recorded",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Environment recorded (Pilot/Test/Production/Retired) and status current",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Technical & Architecture Fields",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "AI type captured (GenAI / Predictive / Agentic / Other)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Tool/vendor/model and version captured (if applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Hosting/deployment model captured (SaaS/API/On‑prem/Cloud) and region(s) recorded",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Integrations/connectors documented (read/write capabilities)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Authentication method captured (SSO/MFA/service identities) and access boundaries defined",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Logging/audit capability captured",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Data & Privacy Fields",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Data types processed captured (Public/Internal/Confidential) and regulated flags (PII/PHI/PCI/etc.)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data sources documented; retention/storage behavior captured",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Cross-border transfer implications captured (if applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Vendor training/retention terms captured (if third‑party)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Risk, Compliance & Evidence",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Risk tier assigned (Low/Moderate/High/Critical) and linked to risk assessment",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Approvals and conditions/exceptions recorded (with expiry dates)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Intake, approvals, and evidence links stored (system of record)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Monitoring owner assigned and next review date recorded",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Reconciliation & Quality Checks",
+      "id": "10",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Registry reconciled against procurement/vendor list",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Registry reconciled against SSO/IdP app catalog",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Shadow AI discoveries flagged and remediated (or exception logged)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "No missing critical fields; evidence links accessible",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Inventory_System_Registry_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 10,
+    "table_count": 7
+  },
+  "subType": "inventory-registry",
+  "title": "AI Inventory & System Registry Checklist"
+}

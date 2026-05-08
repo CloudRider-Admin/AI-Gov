@@ -17,9 +17,12 @@ import {
   AUTO_HIGH_TRIGGERS,
   TIER_ARTIFACTS,
   DOCUMENT_SECTION_TEMPLATES,
+  DOCUMENT_TITLES,
   NIST_PLAYBOOK_PHASES,
   getArtifactsForTier,
 } from './documentTemplates';
+import { getExemplarsForGeneration, renderExemplarBlock } from './exemplarRetrieval';
+import { getOrgContext, renderOrgContextBlock } from './orgContext';
 
 export interface Agent {
   id: string;
@@ -469,8 +472,14 @@ Respond with a JSON object:
 /**
  * Returns agent-specific governance framework context from governanceKnowledge.ts.
  * Each agent gets data relevant to its domain expertise.
+ *
+ * Phase 4 extension: every agent additionally receives a tailored slice of
+ * the GovSecure body of knowledge (4-tier risk model, AI Chef stations,
+ * Policy Suite Map, 90-Day Blueprint) so consensus responses cite GovSecure
+ * methodology consistently rather than only when RAG happens to retrieve it.
  */
 export function getAgentFrameworkContext(agentId: string): string | null {
+  const govsecure = getGovSecureAgentContext(agentId);
   switch (agentId) {
     case 'risk-assessor': {
       const chars = NIST_AI_RMF.trustworthyCharacteristics
@@ -479,7 +488,10 @@ export function getAgentFrameworkContext(agentId: string): string | null {
       const tiers = NIST_AI_RMF.implementationTiers
         .map(t => `- Tier ${t.tier} (${t.name}): ${t.description}`)
         .join('\n');
-      return `NIST AI RMF Trustworthiness Characteristics:\n${chars}\n\nNIST Implementation Tiers:\n${tiers}`;
+      return appendGovSecure(
+        `NIST AI RMF Trustworthiness Characteristics:\n${chars}\n\nNIST Implementation Tiers:\n${tiers}`,
+        govsecure,
+      );
     }
     case 'compliance-expert': {
       const highRiskAreas = EU_AI_ACT.riskCategories.HIGH_RISK.useCaseAreas
@@ -492,7 +504,10 @@ export function getAgentFrameworkContext(agentId: string): string | null {
       const timeline = EU_AI_ACT.timeline
         .map(t => `- ${t.date}: ${t.milestone}`)
         .join('\n');
-      return `EU AI Act — High-Risk Use Case Areas:\n${highRiskAreas}\n\nProhibited AI Practices:\n${prohibited}\n\nPenalties:\n${penalties}\n\nTimeline:\n${timeline}`;
+      return appendGovSecure(
+        `EU AI Act — High-Risk Use Case Areas:\n${highRiskAreas}\n\nProhibited AI Practices:\n${prohibited}\n\nPenalties:\n${penalties}\n\nTimeline:\n${timeline}`,
+        govsecure,
+      );
     }
     case 'policy-architect': {
       const clauses = Object.values(ISO_42001.clauses)
@@ -501,7 +516,10 @@ export function getAgentFrameworkContext(agentId: string): string | null {
         .flatMap(c => (c.requirements as Array<{ id: string; name: string; description: string }>)
           .map(r => `- ${r.id} ${r.name}: ${r.description}`))
         .join('\n');
-      return `ISO/IEC 42001:2023 — Key Requirements:\n${clauses}`;
+      return appendGovSecure(
+        `ISO/IEC 42001:2023 — Key Requirements:\n${clauses}`,
+        govsecure,
+      );
     }
     case 'implementation-advisor': {
       const nistActions = Object.values(NIST_AI_RMF.coreFunctions)
@@ -510,11 +528,19 @@ export function getAgentFrameworkContext(agentId: string): string | null {
       const highRiskReqs = EU_AI_ACT.riskCategories.HIGH_RISK.requirements
         .map(r => `- ${r.name}: ${r.description}`)
         .join('\n');
-      return `NIST AI RMF — Key Actions by Function:\n${nistActions}\n\nEU AI Act — High-Risk Requirements:\n${highRiskReqs}`;
+      return appendGovSecure(
+        `NIST AI RMF — Key Actions by Function:\n${nistActions}\n\nEU AI Act — High-Risk Requirements:\n${highRiskReqs}`,
+        govsecure,
+      );
     }
     default:
       return null;
   }
+}
+
+function appendGovSecure(base: string, govsecure: string | null): string {
+  if (!govsecure) return base;
+  return `${base}\n\n${govsecure}`;
 }
 
 /**
@@ -590,7 +616,13 @@ export class IntakeOrchestrator {
       `${a.name} (minimum tier: ${a.minimumTier}): ${a.description}`
     ).join('\n');
 
+    // Phase 4.5: pull conversation-scoped OrgContext.
+    const orgContext = req.conversationId ? await getOrgContext(req.conversationId) : {};
+    const orgBlock = renderOrgContextBlock(orgContext);
+
     const systemPrompt = `You are an AI Governance Risk Assessment specialist. Your task is to complete a formal AI Intake Risk Assessment.
+
+${orgBlock ? orgBlock + '\n' : ''}
 
 You will score 10 risk drivers (0–3 each, max 30), check 6 auto-high triggers, determine the risk tier, list required artifacts, make a launch decision, and classify the use case under the EU AI Act.
 
@@ -764,24 +796,31 @@ export class DocumentOrchestrator {
     const now = new Date().toISOString();
 
     const sectionTemplates = DOCUMENT_SECTION_TEMPLATES[req.documentType];
-    const sectionsContext = sectionTemplates.map((s, i) =>
-      `Section ${i + 1}: ${s.heading}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}`
-    ).join('\n\n');
+    // Phase 2.5: per-section guidance now stays compact; the brand-voice
+    // anchor lives in a single REFERENCE EXEMPLARS block built below.
+    const sectionsContext = sectionTemplates.map((s, i) => {
+      const provenance = s.sourceDocCode
+        ? ` [source: ${s.sourceDocCode}${s.sourceSection ? ` §${s.sourceSection}` : ''}]`
+        : '';
+      return `Section ${i + 1}: ${s.heading}${provenance}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}`;
+    }).join('\n\n');
 
-    const docTitles: Record<string, string> = {
-      'use-case-summary': 'Use Case Summary',
-      'data-sheet': 'Data Sheet',
-      'vendor-model-facts': 'Vendor / Model Facts Sheet',
-      'threat-model': 'Threat Model',
-      'human-oversight-statement': 'Human Oversight Statement',
-      'dpia': 'Data Protection Impact Assessment (DPIA)',
-      'model-card': 'Model Card',
-      'risk-memo': 'Risk Memo',
-      'operational-readiness-plan': 'Operational Readiness Plan',
-      'monitoring-plan': 'Monitoring Plan',
-      'evidence-pack': 'Evidence Pack',
-    };
-    const docTitle = `${docTitles[req.documentType] ?? req.documentType} — ${req.useCaseName ?? 'AI Use Case'}`;
+    const docTitle = `${DOCUMENT_TITLES[req.documentType] ?? req.documentType} — ${req.useCaseName ?? 'AI Use Case'}`;
+
+    // Phase 2.5: pick 1-2 representative GovSecure exemplars for this doc
+    // type. Empty for generic governance docs — `renderExemplarBlock` returns
+    // an empty string so it can be concatenated unconditionally.
+    const exemplars = getExemplarsForGeneration(
+      req.documentType,
+      sectionTemplates.map((s) => s.heading),
+    );
+    const exemplarBlock = renderExemplarBlock(exemplars, DOCUMENT_TITLES[req.documentType] ?? req.documentType);
+
+    // Phase 4.5: pull conversation-scoped OrgContext so all generated
+    // documents in the session share the same org name, lead title,
+    // jurisdictions, and known AI tools. Empty when no metadata captured.
+    const orgContext = req.conversationId ? await getOrgContext(req.conversationId) : {};
+    const orgBlock = renderOrgContextBlock(orgContext);
 
     const reviewCycles: Record<string, string> = {
       Low: 'Annual', Medium: 'Semi-annual', High: 'Quarterly', Critical: 'Quarterly',
@@ -789,11 +828,11 @@ export class DocumentOrchestrator {
 
     const systemPrompt = `You are an AI Governance specialist who produces formal governance documents for AI use cases.
 
-Generate a complete "${docTitles[req.documentType]}" document grounded in NIST AI RMF 1.0, EU AI Act (2024/1689), ISO/IEC 42001:2023, and GDPR where applicable.
+Generate a complete "${DOCUMENT_TITLES[req.documentType]}" document grounded in NIST AI RMF 1.0, EU AI Act (2024/1689), ISO/IEC 42001:2023, and GDPR where applicable.
 
 The document is for a risk tier: ${req.riskTier}
 
-## Required Sections
+${orgBlock ? orgBlock + '\n\n' : ''}${exemplarBlock}## Required Sections
 ${sectionsContext}
 
 Write substantive, specific content for each section grounded in the use case description provided. Do not use placeholder text. Each section content should be 100–300 words of professional, actionable prose (or structured checklist items for checklist sections).
@@ -802,7 +841,7 @@ Include 3–6 framework citations across NIST AI RMF, EU AI Act, ISO/IEC 42001, 
 
 Respond ONLY with a valid JSON object.`;
 
-    const userPrompt = `Generate a complete ${docTitles[req.documentType]} for this AI use case.
+    const userPrompt = `Generate a complete ${DOCUMENT_TITLES[req.documentType]} for this AI use case.
 
 Use Case Name: ${req.useCaseName ?? 'AI Use Case'}
 Risk Tier: ${req.riskTier}
@@ -895,29 +934,32 @@ export class PlaybookOrchestrator {
     const openai = new OpenAI({ apiKey });
     const now = new Date().toISOString();
 
-    const phasesContext = NIST_PLAYBOOK_PHASES.map(p =>
-      `Phase ${p.phaseNumber}: ${p.phaseName}\n` +
-      `Duration (${req.riskTier}): ${p.durationGuide[req.riskTier as 'Low' | 'Medium' | 'High'] ?? p.durationGuide.High}\n` +
-      `Objectives: ${p.objectives.join('; ')}\n` +
-      `NIST Subcategories: ${p.nistSubcategories.join(', ')}` +
-      (p.euAiActArticles ? `\nEU AI Act: ${p.euAiActArticles.join(', ')}` : '') +
-      (p.iso42001Clauses ? `\nISO 42001: ${p.iso42001Clauses.join(', ')}` : '')
-    ).join('\n\n');
+    // Phase 3: GovSecure flagship products use bespoke phase contexts so the
+    // generated playbook mirrors the AI Chef stations or the 90-Day Blueprint
+    // phases exactly. The output schema (PlaybookOutput) is unchanged.
+    const phasesContext = buildPhasesContext(req);
+    const phaseCount = countPhases(req);
+
+    // Phase 4.5: pull conversation-scoped OrgContext.
+    const orgContext = req.conversationId ? await getOrgContext(req.conversationId) : {};
+    const orgBlock = renderOrgContextBlock(orgContext);
 
     const frameworkVersions: Record<string, string[]> = {
       'NIST AI RMF': ['NIST AI RMF 1.0'],
       'EU AI Act': ['EU AI Act 2024/1689'],
       'ISO/IEC 42001': ['ISO/IEC 42001:2023'],
       'Combined': ['NIST AI RMF 1.0', 'EU AI Act 2024/1689', 'ISO/IEC 42001:2023'],
+      'GovSecure AI Chef': ['GovSecure AI Chef Operating Model v1.0'],
+      'GovSecure 90-Day Blueprint': ['GovSecure 90-Day Implementation Blueprint v1.0'],
     };
 
     const systemPrompt = `You are an AI Governance Implementation specialist. Generate a detailed, actionable governance playbook grounded in ${req.framework}.
 
-## Framework Phases (use these as the basis for your phases)
+${orgBlock ? orgBlock + '\n\n' : ''}## Framework Phases (use these as the basis for your phases)
 ${phasesContext}
 
 ## Instructions
-- Generate ${NIST_PLAYBOOK_PHASES.length} phases matching the structure above
+- Generate ${phaseCount} phases matching the structure above
 - Each phase must have 3–6 concrete tasks with realistic effort estimates
 - Tasks must have specific owners from: AI Governance Lead, Business Owner, Security Team, Privacy/Legal, IT/Engineering, HR/Training, Risk/Compliance, Executive Sponsor
 - Ground each phase's tasks in the NIST subcategories listed for that phase
@@ -1045,3 +1087,136 @@ function buildPlaybookMarkdown(pb: PlaybookOutput): string {
 }
 
 export const playbookOrchestrator = new PlaybookOrchestrator();
+
+// ─── Phase 3: framework-specific phase context builders ─────────────────────
+
+import {
+  AI_CHEF_STATIONS,
+  GOVSECURE_90_DAY_PHASES,
+} from '@/data/govsecurePlaybooks';
+import {
+  GOVSECURE_POLICY_SUITE,
+  GOVSECURE_RISK_MODEL,
+} from '@/data/govsecureKnowledge';
+import { AUTO_HIGH_TRIGGERS as AUTO_HIGH_TRIGGER_DEFS } from './documentTemplates';
+
+/**
+ * Returns a GovSecure-flavored slice of context tailored to each agent role.
+ * Phase 4 — every agent now sees the GovSecure methodology in addition to
+ * the regulatory framework data. Returns `null` when no GovSecure context
+ * is meaningful for the role (defensive — current matrix covers all agents).
+ */
+function getGovSecureAgentContext(agentId: string): string | null {
+  switch (agentId) {
+    case 'risk-assessor': {
+      const tiers = GOVSECURE_RISK_MODEL.tiers
+        .map(t => `- ${t.tier} (Level ${t.numericLevel}): ${t.shortDescription}`)
+        .join('\n');
+      const triggers = AUTO_HIGH_TRIGGER_DEFS
+        .map(t => `- ${t.id}: ${t.description}`)
+        .join('\n');
+      const kitchen = AI_CHEF_STATIONS
+        .find(s => s.id === 'S2');
+      return [
+        'GOVSECURE 4-TIER RISK MODEL — apply this when assigning risk levels:',
+        tiers,
+        '',
+        'GOVSECURE AUTO-HIGH TRIGGERS — fire any of these to force tier ≥ High:',
+        triggers,
+        kitchen
+          ? `\nGovSecure Risk Assessment Kitchen (Station ${kitchen.id}): ${kitchen.purpose}`
+          : '',
+      ].filter(Boolean).join('\n');
+    }
+    case 'compliance-expert': {
+      const tierLines = GOVSECURE_POLICY_SUITE.tiers
+        .map(t => {
+          const policies = t.policies
+            .slice(0, 6)
+            .map(p => `  - ${p.name}`)
+            .join('\n');
+          return `- ${t.tier} tier (${t.policies.length} policies): ${t.description}\n${policies}`;
+        })
+        .join('\n\n');
+      return [
+        'GOVSECURE POLICY SUITE MAP — recommend policies from this 15-policy structure',
+        '(Starter → Operational → Maturity tiers map to client lifecycle stage):',
+        tierLines,
+        '',
+        'When discussing compliance, name the GovSecure policy that satisfies each',
+        'NIST/EU/ISO/GDPR obligation rather than listing the obligation alone.',
+      ].join('\n');
+    }
+    case 'policy-architect': {
+      const stations = AI_CHEF_STATIONS
+        .map(s => `- Station ${s.id} (${s.name}): ${s.purpose}`)
+        .join('\n');
+      const policies = GOVSECURE_POLICY_SUITE.tiers
+        .flatMap(t => t.policies.map(p => `- ${p.name} [${t.tier}]`))
+        .join('\n');
+      return [
+        'GOVSECURE AI CHEF™ OPERATING MODEL — 6 governance stations:',
+        stations,
+        '',
+        'GOVSECURE 15-POLICY SUITE (Starter / Operational / Maturity tiers):',
+        policies,
+        '',
+        'When recommending organizational structure, anchor it in the AI Chef stations',
+        '(governance lead, station owners, recipe-level RACI) rather than inventing a new model.',
+      ].join('\n');
+    }
+    case 'implementation-advisor': {
+      const phases = GOVSECURE_90_DAY_PHASES
+        .map(p =>
+          `- ${p.name} (${p.weekRange}, ${p.durationDays} days, NIST: ${p.nistFunctionAlignment.join('/')})\n  Objectives: ${p.objectives.slice(0, 3).join('; ')}`,
+        )
+        .join('\n\n');
+      return [
+        'GOVSECURE 90-DAY IMPLEMENTATION BLUEPRINT — use this as the default rollout plan',
+        'when no contrary timing constraint exists:',
+        phases,
+        '',
+        'Default to GovSecure phase weeks rather than reinventing a Quarter 1/2/3 plan.',
+        'For SMB resource constraints, name the AI Chef station that owns each task.',
+      ].join('\n');
+    }
+    default:
+      return null;
+  }
+}
+
+function buildPhasesContext(req: PlaybookRequest): string {
+  if (req.framework === 'GovSecure AI Chef') {
+    return AI_CHEF_STATIONS.map((s, i) =>
+      `Phase ${i + 1} — ${s.name} (Station ${s.id})\n` +
+      `Purpose: ${s.purpose}\n` +
+      `Map this AI Chef station to a playbook phase. Tasks should reflect the recipes ` +
+      `(intake, risk-tiering, policy authoring, vendor diligence, monitoring, incident response) ` +
+      `that the station owns in the GovSecure operating model.`,
+    ).join('\n\n');
+  }
+
+  if (req.framework === 'GovSecure 90-Day Blueprint') {
+    return GOVSECURE_90_DAY_PHASES.map((p, i) =>
+      `Phase ${i + 1}: ${p.name}\n` +
+      `Duration: ${p.durationDays} days (${p.weekRange})\n` +
+      `NIST function alignment: ${p.nistFunctionAlignment.join(', ')}\n` +
+      `Objectives: ${p.objectives.join('; ')}`,
+    ).join('\n\n');
+  }
+
+  return NIST_PLAYBOOK_PHASES.map(p =>
+    `Phase ${p.phaseNumber}: ${p.phaseName}\n` +
+    `Duration (${req.riskTier}): ${p.durationGuide[req.riskTier as 'Low' | 'Medium' | 'High'] ?? p.durationGuide.High}\n` +
+    `Objectives: ${p.objectives.join('; ')}\n` +
+    `NIST Subcategories: ${p.nistSubcategories.join(', ')}` +
+    (p.euAiActArticles ? `\nEU AI Act: ${p.euAiActArticles.join(', ')}` : '') +
+    (p.iso42001Clauses ? `\nISO 42001: ${p.iso42001Clauses.join(', ')}` : ''),
+  ).join('\n\n');
+}
+
+function countPhases(req: PlaybookRequest): number {
+  if (req.framework === 'GovSecure AI Chef') return AI_CHEF_STATIONS.length;
+  if (req.framework === 'GovSecure 90-Day Blueprint') return GOVSECURE_90_DAY_PHASES.length;
+  return NIST_PLAYBOOK_PHASES.length;
+}

@@ -1,0 +1,18 @@
+{
+  "id": "advisory-risk-tier",
+  "category": "advisory-query",
+  "input": {
+    "message": "How does GovSecure's 4-tier risk model work and what triggers a High classification?"
+  },
+  "requiredClauses": [
+    "Low",
+    "Medium",
+    "High",
+    "Critical"
+  ],
+  "forbiddenContent": [
+    "5-tier",
+    "Tier 5"
+  ],
+  "expectedIntent": "advisor"
+}

@@ -1,0 +1,254 @@
+{
+  "category": "policies",
+  "checksum": "sha256:3fa046c368c47ecf5866460053477b2d74a8c8ee6435c8d4d985d1a631563a33",
+  "documentCode": "GS-AIPS-SUITEOFF-09",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "GovSecure AI Policy Suite",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "GovSecure AI Policy Suite",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "Single-offering package of core policies, supporting standards, forms, questionnaire, registry, and charter",
+        "Document Code: GS-AIPS-GUIDE-01",
+        "For internal operational use and paid client delivery. Customization remains the responsibility of the adopting organization."
+      ],
+      "tables": [
+        [
+          [
+            "Audience\nSMBs and growing enterprises",
+            "Style\nCreative-enterprise, client-ready",
+            "Package\nOperational governance toolkit"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "What is included",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "This package combines the core policy layer already completed with the operational artifacts needed to turn policy into day-to-day governance. It is designed as a paid SMB-friendly offering that can be adopted internally or delivered to clients as a practical AI governance starter set."
+      ],
+      "tables": [
+        [
+          [
+            "Component",
+            "What the component does"
+          ],
+          [
+            "8 core policies",
+            "Standalone licensed DOCX and matching PDF versions of the primary AI governance policies."
+          ],
+          [
+            "4 supporting standards / procedures",
+            "Operational documents that define logging, change control, transparency, and records/evidence expectations."
+          ],
+          [
+            "1 AI use-case intake form",
+            "A branded form in DOCX and XLSX for requesting and screening new AI use cases."
+          ],
+          [
+            "1 vendor questionnaire",
+            "The GovSecure Third-Party AI Privacy Risk Assessment in DOCX, PDF, and XLSX."
+          ],
+          [
+            "1 AI system registry",
+            "A standalone XLSX register to inventory approved AI systems, owners, vendors, and review status."
+          ],
+          [
+            "1 executive governance charter",
+            "A charter defining governance authority, membership, cadence, and outputs."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Package structure",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "• 00_Overview — offering guide and usage notes",
+        "• 01_Core_Policies — licensed standalone policy documents in DOCX and PDF",
+        "• 02_Supporting_Standards_and_Procedures — four operational standards/procedures in DOCX and PDF",
+        "• 03_Forms_and_Registers — use-case intake form and system registry in editable formats",
+        "• 04_Questionnaires — third-party AI privacy vendor questionnaire and scoring workbook",
+        "• 05_Governance_Charter — executive AI governance charter in DOCX and PDF"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Recommended deployment sequence",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "• Adopt or tailor the Executive AI Governance Charter and AI Governance Policy first so ownership is not left floating.",
+        "• Publish the Enterprise AI Acceptable Use Policy and AI Data Handling and Privacy Policy next so day-to-day use has guardrails.",
+        "• Stand up the AI Use-Case Intake Form, Third-Party AI Privacy Risk Assessment, and AI System Registry so approvals and inventory start immediately.",
+        "• Layer in the supporting standards and procedures for monitoring, changes, disclosure, and evidence retention once the initial intake and inventory process is running."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Included file map",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Folder",
+            "File"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Data_Handling_and_Privacy_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Data_Handling_and_Privacy_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Governance_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Governance_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Incident_Response_and_Monitoring_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Incident_Response_and_Monitoring_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Risk_Assessment_and_Use-Case_Approval_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Risk_Assessment_and_Use-Case_Approval_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Security_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "AI_Security_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "Enterprise_AI_Acceptable_Use_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "Enterprise_AI_Acceptable_Use_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "Human_Oversight_and_Decision-Making_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "Human_Oversight_and_Decision-Making_Policy_Licensed.pdf"
+          ],
+          [
+            "01_Core_Policies",
+            "Third-Party_-_Vendor_AI_Due_Diligence_Policy_Licensed.docx"
+          ],
+          [
+            "01_Core_Policies",
+            "Third-Party_-_Vendor_AI_Due_Diligence_Policy_Licensed.pdf"
+          ],
+          [
+            "02_Supporting_Standards_and_Procedures",
+            "AI_Logging_and_Monitoring_Standard.docx"
+          ],
+          [
+            "02_Supporting_Standards_and_Procedures",
+            "AI_Model_and_Prompt_Change_Management_Procedure.docx"
+          ],
+          [
+            "02_Supporting_Standards_and_Procedures",
+            "AI_Records_Retention_and_Evidence_Procedure.docx"
+          ],
+          [
+            "02_Supporting_Standards_and_Procedures",
+            "AI_Transparency_and_Disclosure_Standard.docx"
+          ],
+          [
+            "03_Forms_and_Registers",
+            "AI_System_Registry.xlsx"
+          ],
+          [
+            "03_Forms_and_Registers",
+            "AI_Use_Case_Intake_Form.docx"
+          ],
+          [
+            "03_Forms_and_Registers",
+            "AI_Use_Case_Intake_Form.xlsx"
+          ],
+          [
+            "04_Questionnaires",
+            "GovSecure_Third_Party_AI_Privacy_Risk_Assessment.docx"
+          ],
+          [
+            "04_Questionnaires",
+            "GovSecure_Third_Party_AI_Privacy_Risk_Assessment.pdf"
+          ],
+          [
+            "04_Questionnaires",
+            "GovSecure_Third_Party_AI_Privacy_Risk_Assessment_Workbook.xlsx"
+          ],
+          [
+            "05_Governance_Charter",
+            "Executive_AI_Governance_Charter.docx"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Licensing and use",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "• License scope: This document is licensed for internal business use by the purchasing organization and its controlled affiliates unless otherwise agreed in writing.",
+        "• Permitted use: The purchasing organization may adapt branding, terminology, roles, and implementation details to fit its operating model and legal environment.",
+        "• Restricted use: The document may not be resold, redistributed, sublicensed, or published externally as a standalone product without written authorization from GovSecure.",
+        "• Customization responsibility: The adopting organization remains responsible for tailoring the content to applicable law, sector obligations, contractual requirements, and risk appetite.",
+        "• No legal advice: Materials are provided as operational governance content and do not constitute legal advice, regulatory certification, or a guarantee of compliance.",
+        "• Warranty and liability: Materials are provided as-is for practical governance use. GovSecure disclaims implied warranties to the maximum extent permitted by law."
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Policies/Govsecure_AI Policy_Suite/00_Overview/GovSecure_AI_Policy_Suite_Offering_Guide.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 20,
+    "section_count": 7,
+    "table_count": 3
+  },
+  "subType": "suite-offering",
+  "title": "GovSecure AI Policy Suite"
+}

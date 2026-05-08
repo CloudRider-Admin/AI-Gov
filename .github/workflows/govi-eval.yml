@@ -1,0 +1,113 @@
+name: Govi Eval
+
+on:
+  pull_request:
+    paths:
+      - 'src/lib/ai/**'
+      - 'src/data/govsecureContent/**'
+      - 'src/data/govsecureKnowledge.ts'
+      - 'src/lib/knowledge/**'
+      - 'scripts/runEvalSuite.ts'
+      - '.github/workflows/govi-eval.yml'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Run Govi eval suite
+        id: eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Fall back to mock mode automatically when the secret is not set
+          # (e.g. PRs from forks). The runner reads EVAL_MOCK and process.env.OPENAI_API_KEY.
+          EVAL_MOCK: ${{ secrets.OPENAI_API_KEY == '' && '1' || '' }}
+        run: npm run eval:govi
+        continue-on-error: true
+
+      - name: Read eval report
+        id: report
+        if: always()
+        run: |
+          if [ ! -f evals/reports/latest.json ]; then
+            echo "no report produced"
+            exit 0
+          fi
+          {
+            echo "summary<<__EOF__"
+            node -e "const r=require('./evals/reports/latest.json');\
+              const lines=[\
+                '## Govi Eval Suite',\
+                '',\
+                'rubric '+r.rubricVersion+' · '+r.totalCases+' cases · '+r.durationSec+'s',\
+                '',\
+                '| metric | value |',\
+                '|---|---|',\
+                '| pass-rate | '+(r.passRate*100).toFixed(1)+'% |',\
+                '| mean overall | '+r.meanOverall.toFixed(3)+' |',\
+                '| passed | '+r.passed+' |',\
+                '| failed | '+r.failed+' |',\
+                '| errored / skipped | '+r.errored+' |',\
+                '',\
+                '### per-category',\
+                '',\
+                '| category | passed/total | pass-rate | mean |',\
+                '|---|---|---|---|',\
+                ...Object.entries(r.byCategory).map(([k,v])=>'| '+k+' | '+v.passed+'/'+v.total+' | '+(v.passRate*100).toFixed(1)+'% | '+v.meanOverall.toFixed(3)+' |')\
+              ];\
+              const failed=r.cases.filter(c=>!c.passed&&!c.error);\
+              if(failed.length){lines.push('', '### failed cases', '', ...failed.map(c=>'- `'+c.caseId+'` overall '+c.overall.toFixed(3)+' · missing '+c.deterministic.missingClauses.length+' · forbidden '+c.deterministic.forbiddenHits.length));}\
+              const errored=r.cases.filter(c=>c.error);\
+              if(errored.length){lines.push('', '### skipped / errored', '', ...errored.map(c=>'- `'+c.caseId+'` '+c.error));}\
+              console.log(lines.join('\n'));"
+            echo "__EOF__"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Comment on PR
+        if: always() && steps.report.outputs.summary != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `${{ steps.report.outputs.summary }}`;
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const marker = '## Govi Eval Suite';
+            const existing = comments.find(c => c.user.type === 'Bot' && c.body.startsWith(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+            }
+
+      - name: Fail if eval regressed
+        if: steps.eval.outcome == 'failure'
+        run: |
+          echo "Govi eval suite reported a regression beyond the 2pp pass-rate tolerance."
+          exit 1

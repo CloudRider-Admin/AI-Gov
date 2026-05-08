@@ -1,0 +1,272 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:9f40884497765b4400a3af0f703c0d81a35537aace314b15f794009b8270474a",
+  "documentCode": "GS-CHKL-DPIASCRE-03",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Privacy & DPIA Screening Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Data & Processing",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "PII involved? assessed and documented",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Sensitive/regulated data involved (PHI/PCI/financial/minors)? assessed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data sources and retention behavior documented",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Cross-border processing/transfers assessed",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "People Impact & Automation",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Profiling or automated decisions about individuals assessed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Customer-facing outputs assessed (disclosures/notice impacts)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "DPIA Triggers",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "High-risk processing triggers evaluated and documented",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Decision recorded: DPIA/PIA Required vs Not Required (with rationale)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Privacy Controls",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Lawful basis identified (where applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Data minimization and purpose limitation confirmed",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Notices/consent impact assessed (if applicable)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Vendor DPA and training/retention terms reviewed (if third-party)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Approval",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Privacy review sign-off recorded (and conditions if any)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Next review date set (if ongoing processing)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Privacy_DPIA_Screening_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 9,
+    "table_count": 6
+  },
+  "subType": "dpia-screening",
+  "title": "AI Privacy & DPIA Screening Checklist"
+}

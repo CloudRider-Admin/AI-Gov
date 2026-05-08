@@ -1,0 +1,265 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:29d7b6faf45a3a7dc450d6b564250f13bf723915a9a1b696a4f29fe7fec8affc",
+  "documentCode": "GS-CHKL-POLICYTO-15",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Policy-to-Control Mapping Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Requirement Catalog",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Policy requirement ID and exact requirement statement recorded",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Applicability/scope defined (which AI systems/use cases it applies to)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Control Mapping",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Mapped control(s) documented (preventive/detective/corrective)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Control owner assigned (single accountable role)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Implementation location captured (system/config/process)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Evidence & Testing",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Evidence required defined (logs/exports/tickets; avoid screenshots where possible)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Test method defined (design effectiveness vs operating effectiveness)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Test frequency defined (monthly/quarterly/annual) and data source identified",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Gaps & Exceptions",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Current status captured (Implemented / Partial / Not Implemented)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Gaps documented with remediation plan, owner, and due date",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Exceptions/waivers documented with expiry date and compensating controls",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Review & Reporting",
+      "id": "9",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Mapping stored in system of record and reviewed on a defined cadence",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Metrics defined (coverage %, overdue remediation %, recurring control failures)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Policy_to_Control_Mapping_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 9,
+    "table_count": 6
+  },
+  "subType": "policy-to-control",
+  "title": "AI Policy-to-Control Mapping Checklist"
+}

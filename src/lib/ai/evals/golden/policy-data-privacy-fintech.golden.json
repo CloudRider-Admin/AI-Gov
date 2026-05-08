@@ -1,0 +1,32 @@
+{
+  "id": "policy-data-privacy-fintech",
+  "category": "document-generation",
+  "documentType": "govsecure-data-privacy-policy",
+  "input": {
+    "useCaseName": "Loan Pre-Qualification Model",
+    "useCaseDescription": "Mid-market lender using a predictive ML model to pre-qualify consumer loan applicants. Inputs include credit bureau data and demographic attributes.",
+    "industry": "fintech",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Lawful Basis",
+    "Data Minimization",
+    "Retention",
+    "Subject Rights",
+    "Cross-Border Transfer",
+    "Vendor Obligations"
+  ],
+  "requiredClauses": [
+    "lawful basis",
+    "data subject",
+    "retention",
+    "GDPR"
+  ],
+  "forbiddenContent": [
+    "Article 99 of GDPR",
+    "Recital 500"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/data-privacy.json"
+}

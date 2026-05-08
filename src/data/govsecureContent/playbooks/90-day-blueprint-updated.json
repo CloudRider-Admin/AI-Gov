@@ -1,0 +1,1295 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:517274dc50276da9c420c0389df87f160d99ddace2d0f5c940fc3b4cb9fb6ead",
+  "documentCode": "GS-PLBK-90DAYBLU-02",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "90-Day AI Governance",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Implementation Blueprint",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [
+        "A Step-by-Step Rollout Plan for SMBs",
+        "Version 1.0  |  April 2026  |  Confidential – Internal Use Only"
+      ],
+      "tables": [
+        [
+          [
+            "Phase 1\nDays 1–30\nFoundation &\nDiscovery",
+            "Phase 2\nDays 31–60\nBuild &\nAssess",
+            "Phase 3\nDays 61–90\nOperationalize\n& Sustain"
+          ]
+        ],
+        [
+          [
+            "Confident AI, Controlled Risk.   ·   govsecure.ai   ·   AI Governance Platform for SMBs"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Executive Summary",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "This 90-Day AI Governance Implementation Blueprint provides Govsecure clients with a structured, actionable roadmap for standing up a complete AI governance program from scratch. Designed specifically for small and mid-sized businesses (SMBs), it transforms the comprehensive Govsecure AI Governance Checklist Templates into a phased sequence of concrete activities, ownership assignments, and measurable milestones.",
+        "At the end of 90 days, your organization will have a live AI inventory, a documented policy framework, completed risk assessments for active AI systems, trained staff, and a repeatable operational rhythm for ongoing AI governance—all aligned to NIST AI RMF, ISO 42001, and emerging regulatory requirements."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "What This Blueprint Delivers",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "AI Inventory & System Registry",
+            "Every AI tool, model, and vendor feature documented and risk-tiered."
+          ],
+          [
+            "AI Governance Policy Suite",
+            "Foundational policies covering use, risk, privacy, and vendor management."
+          ],
+          [
+            "Risk Assessments",
+            "Completed risk assessments for all Active/High-risk AI use cases."
+          ],
+          [
+            "Vendor Due Diligence Files",
+            "Documented assessments for all AI-enabled vendors and SaaS tools."
+          ],
+          [
+            "Human Oversight Controls",
+            "Reviewer roles, escalation paths, and override procedures in place."
+          ],
+          [
+            "Incident Response Playbook",
+            "AI-specific IR procedures tested and embedded in existing processes."
+          ],
+          [
+            "Training Program",
+            "Role-based AI literacy and governance training completed across key staff."
+          ],
+          [
+            "Monitoring Cadence",
+            "Recurring review schedule established with assigned owners."
+          ]
+        ],
+        [
+          [
+            "Govsecure Tip:  AI governance does not require a large team or a big budget. It requires clarity, consistency, and accountability. This blueprint is designed so that a single part-time program owner, with cross-functional support, can complete it on schedule."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use This Blueprint",
+      "id": "5",
+      "level": 1,
+      "paragraphs": [
+        "This blueprint is organized into three 30-day phases, each broken down by week. Every week includes a structured activity table referencing the specific Govsecure checklist template that drives the work. Use it alongside your Govsecure checklist files—not as a replacement for them."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Core Roles",
+      "id": "6",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Role",
+            "Description",
+            "Suggested Profile"
+          ],
+          [
+            "AI Governance Lead (AGL)",
+            "Owns the program, drives the blueprint, reports to leadership.",
+            "GRC Manager / CISO / COO delegate"
+          ],
+          [
+            "Business Unit Leads (BUL)",
+            "Submit use cases, confirm AI tools in their area, review risk tiers.",
+            "Department Heads / Team Leads"
+          ],
+          [
+            "IT / Security",
+            "Provide technical context, conduct security reviews, manage integrations.",
+            "IT Manager / Security Analyst"
+          ],
+          [
+            "Legal / Privacy",
+            "Review data handling, contracts, DPIA requirements.",
+            "General Counsel / Privacy Officer"
+          ],
+          [
+            "Procurement / Vendor Mgmt",
+            "Identify AI-enabled vendor agreements, support due diligence.",
+            "Procurement / Finance Lead"
+          ],
+          [
+            "Executive Sponsor",
+            "Approves policies, receives monthly status briefings.",
+            "CEO / COO / CTO"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Checklist Reference Key",
+      "id": "7",
+      "level": 1,
+      "paragraphs": [
+        "Phase 1 lays the bedrock of your AI governance program. You will establish the governance structure, discover every AI system in use (including shadow AI), assign risk tiers, and launch foundational policy work. Nothing in the program can be calibrated without knowing what AI you actually have—so the AI inventory is the single most critical output of this phase."
+      ],
+      "tables": [
+        [
+          [
+            "AIR",
+            "AI Inventory & System Registry Checklist",
+            "VDD",
+            "AI Third-Party / Vendor Due Diligence Checklist"
+          ],
+          [
+            "SEC",
+            "AI Security Review Checklist",
+            "PRI",
+            "AI Privacy & DPIA Screening Checklist"
+          ],
+          [
+            "MVT",
+            "AI Model Validation / Testing Checklist",
+            "MON",
+            "AI Monitoring & Revalidation Checklist"
+          ],
+          [
+            "CMC",
+            "AI Change Management Checklist",
+            "HOE",
+            "AI Human Oversight & Escalation Checklist"
+          ],
+          [
+            "IRP",
+            "AI Incident Response Checklist",
+            "TRN",
+            "AI Training & Role-Based Awareness Checklist"
+          ],
+          [
+            "POL",
+            "AI Policy-to-Control Mapping Checklist",
+            "REG",
+            "AI Regulatory Change Impact Assessment Checklist"
+          ]
+        ],
+        [
+          [
+            "PHASE\n1",
+            "Foundation & Discovery",
+            "Days 1 – 30"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Stand up the AI Governance program with a named lead, executive sponsor, and cross-functional working group.",
+        "Complete a comprehensive AI Inventory covering all AI tools, models, vendors, and use cases.",
+        "Assign a risk tier (Low / Moderate / High / Critical) to every discovered AI use case.",
+        "Initiate foundational AI policy drafts (Acceptable Use, Risk, Data Handling).",
+        "Establish intake and submission processes for new AI use case requests.",
+        "Complete initial vendor identification for all AI-enabled third-party tools."
+      ],
+      "heading": "Phase 1 Objectives",
+      "id": "8",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Week 1",
+            "Week 1",
+            "Focus: Program Launch & Governance Setup",
+            "Focus: Program Launch & Governance Setup"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Appoint AI Governance Lead (AGL) and Executive Sponsor",
+            "Exec Sponsor",
+            "AIR §1",
+            "Day 3"
+          ],
+          [
+            "Form AI Governance Working Group (cross-functional)",
+            "AGL",
+            "AIR §1",
+            "Day 5"
+          ],
+          [
+            "Define program charter, scope, and 90-day success criteria",
+            "AGL",
+            "POL",
+            "Day 7"
+          ],
+          [
+            "Set up program tracking system (Jira / SharePoint / GRC tool)",
+            "IT / AGL",
+            "AIR §7",
+            "Day 7"
+          ],
+          [
+            "Schedule all Phase 1 recurring standups and checkpoints",
+            "AGL",
+            "—",
+            "Day 5"
+          ],
+          [
+            "Brief Executive Sponsor on program timeline and resource needs",
+            "AGL",
+            "POL",
+            "Day 7"
+          ]
+        ],
+        [
+          [
+            "Week 2",
+            "Week 2",
+            "Focus: AI Discovery & Shadow AI Detection",
+            "Focus: AI Discovery & Shadow AI Detection"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Send AI discovery survey to all Business Unit Leads",
+            "AGL",
+            "AIR §§1–3",
+            "Day 10"
+          ],
+          [
+            "Reconcile AI tools against procurement and vendor contract list",
+            "Procurement / AGL",
+            "AIR §9",
+            "Day 12"
+          ],
+          [
+            "Reconcile AI tools against SSO / IdP app catalog",
+            "IT",
+            "AIR §9",
+            "Day 12"
+          ],
+          [
+            "Reconcile AI tools against cloud / API inventory",
+            "IT",
+            "AIR §4",
+            "Day 14"
+          ],
+          [
+            "Flag shadow AI tools discovered outside approved channels",
+            "IT / AGL",
+            "AIR §9",
+            "Day 14"
+          ],
+          [
+            "Populate AI Inventory: identity, business context, and technical fields",
+            "AGL + BULs",
+            "AIR §§2–4",
+            "Day 14"
+          ]
+        ],
+        [
+          [
+            "Week 3",
+            "Week 3",
+            "Focus: Risk Tiering & Data/Privacy Fields",
+            "Focus: Risk Tiering & Data/Privacy Fields"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Complete data and privacy fields for all discovered AI entries",
+            "Privacy / Legal",
+            "AIR §5, PRI",
+            "Day 17"
+          ],
+          [
+            "Assign initial risk tier to every AI entry (Low/Moderate/High/Critical)",
+            "AGL + BULs",
+            "AIR §6",
+            "Day 19"
+          ],
+          [
+            "Flag any AI systems requiring DPIA / privacy impact assessment",
+            "Privacy",
+            "PRI",
+            "Day 21"
+          ],
+          [
+            "Complete risk and compliance fields for all AI registry entries",
+            "AGL / GRC",
+            "AIR §6",
+            "Day 21"
+          ],
+          [
+            "Document applicable regulations per AI entry (CCPA, HIPAA, etc.)",
+            "Legal",
+            "REG",
+            "Day 21"
+          ],
+          [
+            "Identify top 5 highest-risk AI use cases for priority assessment",
+            "AGL",
+            "AIR §6",
+            "Day 21"
+          ]
+        ],
+        [
+          [
+            "Week 4",
+            "Week 4",
+            "Focus: AI Intake Process & Policy Kickoff",
+            "Focus: AI Intake Process & Policy Kickoff"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Publish AI Inventory v1.0 to shared program repository",
+            "AGL",
+            "AIR §§7–10",
+            "Day 25"
+          ],
+          [
+            "Design and launch AI Use Case Intake / Triage process",
+            "AGL / IT",
+            "AIR §1",
+            "Day 25"
+          ],
+          [
+            "Define registry update cadence (monthly) and assign registry owner",
+            "AGL",
+            "AIR §§1, 8",
+            "Day 25"
+          ],
+          [
+            "Begin drafting AI Acceptable Use Policy",
+            "AGL / Legal",
+            "POL",
+            "Day 28"
+          ],
+          [
+            "Begin drafting AI Risk Management Policy",
+            "AGL / GRC",
+            "POL",
+            "Day 28"
+          ],
+          [
+            "Begin vendor identification list for AI Third-Party Due Diligence",
+            "Procurement",
+            "VDD §1",
+            "Day 30"
+          ],
+          [
+            "Phase 1 review and executive briefing",
+            "AGL / Exec Sponsor",
+            "—",
+            "Day 30"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Phase Milestones & Success Criteria",
+      "id": "9",
+      "level": 1,
+      "paragraphs": [
+        "Phase 2 is where governance goes deep. You will complete risk assessments for priority AI systems, run security and privacy reviews, conduct vendor due diligence, finalize and approve foundational policies, and begin standing up human oversight and monitoring frameworks. This phase converts your inventory into an assessed, documented, and controlled AI portfolio."
+      ],
+      "tables": [
+        [
+          [
+            "Day",
+            "Milestone",
+            "Evidence / Output",
+            "Owner"
+          ],
+          [
+            "Day 5",
+            "AI Governance Working Group formed",
+            "Meeting minutes, member list",
+            "Exec Sponsor"
+          ],
+          [
+            "Day 7",
+            "Program charter approved",
+            "Signed charter document",
+            "AGL"
+          ],
+          [
+            "Day 14",
+            "AI Inventory v0.1 populated (discovery draft)",
+            "Registry spreadsheet / GRC entry",
+            "AGL"
+          ],
+          [
+            "Day 21",
+            "All AI entries risk-tiered",
+            "Updated registry with risk tiers",
+            "AGL + BULs"
+          ],
+          [
+            "Day 25",
+            "AI Inventory v1.0 published",
+            "Accessible registry in shared repo",
+            "AGL"
+          ],
+          [
+            "Day 28",
+            "Policy drafts initiated",
+            "Working drafts in review pipeline",
+            "AGL / Legal"
+          ],
+          [
+            "Day 30",
+            "Phase 1 executive briefing complete",
+            "Briefing deck + action items log",
+            "Exec Sponsor"
+          ]
+        ],
+        [
+          [
+            "PHASE\n2",
+            "Build & Assess",
+            "Days 31 – 60"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Complete risk assessments for all High/Critical AI use cases; triage Moderate cases.",
+        "Finalize and gain executive approval for the AI Acceptable Use Policy and AI Risk Management Policy.",
+        "Complete vendor due diligence assessments for all active AI-enabled vendors.",
+        "Conduct security reviews for all production AI systems.",
+        "Complete privacy screening and flag DPIA candidates.",
+        "Design human oversight controls and escalation paths for high-risk AI decisions.",
+        "Stand up the AI Model Validation framework for any internally developed or fine-tuned models."
+      ],
+      "heading": "Phase 2 Objectives",
+      "id": "10",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Week 5",
+            "Week 5",
+            "Focus: Risk Assessments – High & Critical AI Use Cases",
+            "Focus: Risk Assessments – High & Critical AI Use Cases"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Conduct full risk assessment for each High/Critical AI use case",
+            "AGL / GRC",
+            "AIR §6",
+            "Day 35"
+          ],
+          [
+            "Document risk findings, controls, and residual risk per use case",
+            "AGL / GRC",
+            "AIR §6",
+            "Day 35"
+          ],
+          [
+            "Link risk assessment records to AI registry entries",
+            "AGL",
+            "AIR §7",
+            "Day 35"
+          ],
+          [
+            "Flag unacceptable residual risks for executive decision / suspension",
+            "AGL",
+            "POL",
+            "Day 35"
+          ],
+          [
+            "Begin security review for production AI systems",
+            "IT / Security",
+            "SEC",
+            "Day 37"
+          ],
+          [
+            "Identify and document applicable compliance obligations per AI use case",
+            "Legal / GRC",
+            "REG",
+            "Day 37"
+          ]
+        ],
+        [
+          [
+            "Week 6",
+            "Week 6",
+            "Focus: Security Reviews & Vendor Due Diligence",
+            "Focus: Security Reviews & Vendor Due Diligence"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Complete AI Security Review for all production AI systems",
+            "IT / Security",
+            "SEC",
+            "Day 42"
+          ],
+          [
+            "Document access controls, MFA/SSO coverage, API scopes per system",
+            "IT",
+            "SEC",
+            "Day 42"
+          ],
+          [
+            "Identify and document logging / audit trail gaps",
+            "IT / Security",
+            "SEC",
+            "Day 42"
+          ],
+          [
+            "Send AI Third-Party Due Diligence Questionnaire to all AI vendors",
+            "Procurement / AGL",
+            "VDD §§1–3",
+            "Day 44"
+          ],
+          [
+            "Review vendor DPA / data processing agreements for AI-specific terms",
+            "Legal",
+            "VDD §3",
+            "Day 44"
+          ],
+          [
+            "Document vendor training/retention terms and cross-border data transfers",
+            "Privacy / Legal",
+            "VDD §3",
+            "Day 44"
+          ]
+        ],
+        [
+          [
+            "Week 7",
+            "Week 7",
+            "Focus: Privacy Screening, Policy Finalization & DPIA",
+            "Focus: Privacy Screening, Policy Finalization & DPIA"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Complete Privacy & DPIA Screening for all flagged AI use cases",
+            "Privacy",
+            "PRI",
+            "Day 49"
+          ],
+          [
+            "Initiate DPIAs for use cases that meet DPIA threshold criteria",
+            "Privacy / Legal",
+            "PRI",
+            "Day 49"
+          ],
+          [
+            "Finalize AI Acceptable Use Policy – legal and exec review cycle",
+            "AGL / Legal / Exec",
+            "POL",
+            "Day 49"
+          ],
+          [
+            "Finalize AI Risk Management Policy – legal and exec review cycle",
+            "AGL / GRC / Legal",
+            "POL",
+            "Day 49"
+          ],
+          [
+            "Draft AI Data Handling & Privacy Policy",
+            "Privacy / Legal",
+            "POL",
+            "Day 49"
+          ],
+          [
+            "Review and finalize Vendor Due Diligence responses from vendors",
+            "Procurement / AGL",
+            "VDD §§4–7",
+            "Day 51"
+          ]
+        ],
+        [
+          [
+            "Week 8",
+            "Week 8",
+            "Focus: Human Oversight, Model Validation & Policy Approval",
+            "Focus: Human Oversight, Model Validation & Policy Approval"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Define reviewer roles and decision boundaries for all High/Critical AI",
+            "AGL / BULs",
+            "HOE",
+            "Day 55"
+          ],
+          [
+            "Document escalation paths, override rules, and fallback procedures",
+            "AGL / BULs",
+            "HOE",
+            "Day 55"
+          ],
+          [
+            "Confirm human oversight controls are operational for production AI",
+            "IT / BULs",
+            "HOE",
+            "Day 55"
+          ],
+          [
+            "Complete Model Validation / Testing Checklist for internally developed models",
+            "IT / Data Team",
+            "MVT",
+            "Day 57"
+          ],
+          [
+            "Gain executive approval: Acceptable Use Policy",
+            "Exec Sponsor",
+            "POL",
+            "Day 58"
+          ],
+          [
+            "Gain executive approval: Risk Management Policy",
+            "Exec Sponsor",
+            "POL",
+            "Day 58"
+          ],
+          [
+            "Publish approved policies to internal policy repository",
+            "AGL",
+            "POL",
+            "Day 60"
+          ],
+          [
+            "Phase 2 review and executive briefing",
+            "AGL / Exec Sponsor",
+            "—",
+            "Day 60"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Phase Milestones & Success Criteria",
+      "id": "11",
+      "level": 1,
+      "paragraphs": [
+        "Phase 3 converts your governance program from a project into a repeatable operational discipline. You will complete staff training, stand up monitoring and revalidation processes, finalize and test the AI incident response playbook, complete change management procedures, and deliver a 90-Day Program Completion Report to your executive leadership. Governance must run after Day 90—this phase ensures it does."
+      ],
+      "tables": [
+        [
+          [
+            "Day",
+            "Milestone",
+            "Evidence / Output",
+            "Owner"
+          ],
+          [
+            "Day 35",
+            "Risk assessments complete (High/Critical)",
+            "Assessment docs linked in registry",
+            "AGL / GRC"
+          ],
+          [
+            "Day 42",
+            "Security reviews complete – all production",
+            "Security review log per system",
+            "IT / Security"
+          ],
+          [
+            "Day 44",
+            "VDD questionnaires sent to all AI vendors",
+            "Questionnaire distribution log",
+            "Procurement"
+          ],
+          [
+            "Day 49",
+            "Privacy screening complete; DPIAs initiated",
+            "PRI screening log; DPIA intake list",
+            "Privacy"
+          ],
+          [
+            "Day 55",
+            "Human oversight controls documented",
+            "HOE checklist complete per use case",
+            "AGL / BULs"
+          ],
+          [
+            "Day 58",
+            "Two core policies approved by Exec",
+            "Signed / version-controlled policy docs",
+            "Exec Sponsor"
+          ],
+          [
+            "Day 60",
+            "Phase 2 executive briefing complete",
+            "Briefing deck + policy publication",
+            "Exec Sponsor"
+          ]
+        ],
+        [
+          [
+            "PHASE\n3",
+            "Operationalize & Sustain",
+            "Days 61 – 90"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [
+        "Complete role-based AI governance training for all staff categories.",
+        "Stand up the AI Monitoring & Revalidation process with assigned owners and schedules.",
+        "Finalize and tabletop-test the AI Incident Response Playbook.",
+        "Document and activate Change Management procedures for AI system updates.",
+        "Complete regulatory change mapping for applicable AI laws and frameworks.",
+        "Deliver the 90-Day AI Governance Completion Report to leadership.",
+        "Establish the ongoing governance calendar (quarterly reviews, annual policy refresh)."
+      ],
+      "heading": "Phase 3 Objectives",
+      "id": "12",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Week 9",
+            "Week 9",
+            "Focus: AI Training Program Rollout",
+            "Focus: AI Training Program Rollout"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Deploy role-based AI governance training for Business Users",
+            "AGL / HR",
+            "TRN",
+            "Day 65"
+          ],
+          [
+            "Deploy AI governance training for IT / Developers / Data Teams",
+            "AGL / IT",
+            "TRN",
+            "Day 65"
+          ],
+          [
+            "Brief Executive Team on AI governance program status and obligations",
+            "AGL",
+            "TRN",
+            "Day 65"
+          ],
+          [
+            "Track training completion rates per role category",
+            "AGL / HR",
+            "TRN",
+            "Day 67"
+          ],
+          [
+            "Draft AI Incident Response Playbook (AI-specific IR procedures)",
+            "Security / AGL",
+            "IRP",
+            "Day 67"
+          ],
+          [
+            "Identify AI incident categories and response owners",
+            "Security / AGL",
+            "IRP",
+            "Day 67"
+          ]
+        ],
+        [
+          [
+            "Week 10",
+            "Week 10",
+            "Focus: Monitoring Framework & Change Management",
+            "Focus: Monitoring Framework & Change Management"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Assign monitoring owners for every Active AI use case",
+            "AGL",
+            "MON §§1–3",
+            "Day 72"
+          ],
+          [
+            "Define KPIs and KRIs for each monitored AI system",
+            "AGL / BULs",
+            "MON §4",
+            "Day 72"
+          ],
+          [
+            "Set up monitoring schedules (continuous / quarterly / semi-annual by tier)",
+            "AGL / IT",
+            "MON §§10–12",
+            "Day 72"
+          ],
+          [
+            "Configure logging and alerting for High/Critical AI systems",
+            "IT / Security",
+            "MON §5",
+            "Day 72"
+          ],
+          [
+            "Finalize AI Change Management Checklist and process",
+            "AGL / IT",
+            "CMC",
+            "Day 74"
+          ],
+          [
+            "Document what constitutes a 'material change' requiring re-review",
+            "AGL / Legal",
+            "CMC",
+            "Day 74"
+          ]
+        ],
+        [
+          [
+            "Week 11",
+            "Week 11",
+            "Focus: Incident Response Testing & Regulatory Mapping",
+            "Focus: Incident Response Testing & Regulatory Mapping"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Tabletop test AI Incident Response Playbook (hallucination scenario)",
+            "Security / AGL / BUL",
+            "IRP",
+            "Day 79"
+          ],
+          [
+            "Tabletop test AI Incident Response Playbook (data leakage scenario)",
+            "Security / Privacy",
+            "IRP",
+            "Day 79"
+          ],
+          [
+            "Document IR test findings and update playbook accordingly",
+            "Security / AGL",
+            "IRP",
+            "Day 79"
+          ],
+          [
+            "Complete Regulatory Change Impact Assessment for current AI regulations",
+            "Legal / GRC",
+            "REG",
+            "Day 81"
+          ],
+          [
+            "Map applicable regulations to specific AI use cases and required controls",
+            "Legal / AGL",
+            "REG",
+            "Day 81"
+          ],
+          [
+            "Confirm training completion at or above 90% target for all roles",
+            "AGL / HR",
+            "TRN",
+            "Day 81"
+          ]
+        ],
+        [
+          [
+            "Week 12",
+            "Week 12",
+            "Focus: Program Completion & Governance Calendar",
+            "Focus: Program Completion & Governance Calendar"
+          ],
+          [
+            "Activity",
+            "Owner",
+            "Checklist Reference",
+            "Due (Day)"
+          ],
+          [
+            "Complete evidence pack for all High/Critical AI use cases",
+            "AGL",
+            "AIR §7",
+            "Day 85"
+          ],
+          [
+            "Conduct final registry quality check – all fields complete and current",
+            "AGL",
+            "AIR §10",
+            "Day 85"
+          ],
+          [
+            "Establish ongoing AI governance calendar (quarterly reviews, annual refresh)",
+            "AGL",
+            "MON",
+            "Day 87"
+          ],
+          [
+            "Draft 90-Day AI Governance Completion Report",
+            "AGL",
+            "—",
+            "Day 87"
+          ],
+          [
+            "Present 90-Day Completion Report to Executive Leadership",
+            "AGL / Exec Sponsor",
+            "—",
+            "Day 90"
+          ],
+          [
+            "Transition program to steady-state operational ownership",
+            "AGL",
+            "—",
+            "Day 90"
+          ],
+          [
+            "Schedule Day 180 program maturity review",
+            "AGL / Exec Sponsor",
+            "—",
+            "Day 90"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Phase Milestones & Success Criteria",
+      "id": "13",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Day",
+            "Milestone",
+            "Evidence / Output",
+            "Owner"
+          ],
+          [
+            "Day 65",
+            "Role-based training deployed to all staff categories",
+            "Training completion tracker",
+            "AGL / HR"
+          ],
+          [
+            "Day 72",
+            "Monitoring owners and schedules assigned – all AI",
+            "MON checklist per active use case",
+            "AGL"
+          ],
+          [
+            "Day 74",
+            "Change Management process finalized",
+            "CMC documented and published",
+            "AGL / IT"
+          ],
+          [
+            "Day 79",
+            "IR Playbook tabletop test complete",
+            "Test report + updated playbook",
+            "Security"
+          ],
+          [
+            "Day 81",
+            "Regulatory mapping complete",
+            "REG impact assessment document",
+            "Legal / GRC"
+          ],
+          [
+            "Day 85",
+            "Evidence packs complete – High/Critical use cases",
+            "Evidence pack per use case",
+            "AGL"
+          ],
+          [
+            "Day 90",
+            "90-Day Completion Report presented to leadership",
+            "Signed report; governance calendar",
+            "Exec Sponsor"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Program Health Metrics & KPIs",
+      "id": "14",
+      "level": 1,
+      "paragraphs": [
+        "Track the following metrics throughout the 90 days to measure program health and report progress to your Executive Sponsor. These metrics align directly to the Govsecure AI Governance Checklist completion criteria."
+      ],
+      "tables": [
+        [
+          [
+            "KPI",
+            "Target by Day 30",
+            "Target by Day 60",
+            "Target by Day 90"
+          ],
+          [
+            "AI Inventory completeness",
+            "80% fields populated",
+            "95% fields populated",
+            "100% complete & verified"
+          ],
+          [
+            "Risk tier assigned – all entries",
+            "100% tiered",
+            "100% tiered",
+            "100% current & revalidated"
+          ],
+          [
+            "High/Critical risk assessments",
+            "Initiated",
+            "100% complete",
+            "100% + evidence linked"
+          ],
+          [
+            "Security reviews completed",
+            "Initiated for top 3",
+            "100% production systems",
+            "100% + gaps remediated"
+          ],
+          [
+            "Vendor due diligence assessments",
+            "Vendors identified",
+            "100% questionnaires sent",
+            "100% reviewed & filed"
+          ],
+          [
+            "Privacy screening / DPIAs",
+            "Flagging complete",
+            "DPIAs initiated",
+            "DPIAs complete or scheduled"
+          ],
+          [
+            "Policies approved (core set)",
+            "Drafts in review",
+            "2 policies approved",
+            "Full suite approved"
+          ],
+          [
+            "Human oversight controls",
+            "Designed",
+            "Documented for High/Crit",
+            "Operational & tested"
+          ],
+          [
+            "Staff training completion rate",
+            "Program designed",
+            "Deployed to all roles",
+            "≥ 90% completion"
+          ],
+          [
+            "Monitoring cadence established",
+            "Planned",
+            "Owners assigned",
+            "Active & documented"
+          ],
+          [
+            "AI IR Playbook",
+            "Drafted",
+            "Finalized",
+            "Tabletop tested"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Quick Reference: 90-Day Governance Calendar",
+      "id": "15",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Week",
+            "Days",
+            "Phase",
+            "Key Outputs"
+          ],
+          [
+            "Week 1",
+            "1–7",
+            "PHASE 1",
+            "Working group formed, program charter, tracking system live"
+          ],
+          [
+            "Week 2",
+            "8–14",
+            "PHASE 1",
+            "AI discovery complete, inventory v0.1, shadow AI flagged"
+          ],
+          [
+            "Week 3",
+            "15–21",
+            "PHASE 1",
+            "Risk tiers assigned, privacy flags set, compliance obligations documented"
+          ],
+          [
+            "Week 4",
+            "22–30",
+            "PHASE 1",
+            "Inventory v1.0 published, intake process live, policy drafts started"
+          ],
+          [
+            "Week 5",
+            "31–37",
+            "PHASE 2",
+            "Risk assessments complete (High/Critical), security reviews initiated"
+          ],
+          [
+            "Week 6",
+            "38–44",
+            "PHASE 2",
+            "Security reviews complete, VDD questionnaires sent"
+          ],
+          [
+            "Week 7",
+            "45–51",
+            "PHASE 2",
+            "Privacy screening done, DPIAs initiated, policy final review"
+          ],
+          [
+            "Week 8",
+            "52–60",
+            "PHASE 2",
+            "Human oversight documented, model validation done, 2 policies approved"
+          ],
+          [
+            "Week 9",
+            "61–67",
+            "PHASE 3",
+            "All staff trained, IR playbook drafted"
+          ],
+          [
+            "Week 10",
+            "68–74",
+            "PHASE 3",
+            "Monitoring owners + schedules active, change management live"
+          ],
+          [
+            "Week 11",
+            "75–81",
+            "PHASE 3",
+            "IR playbook tabletop tested, regulatory mapping complete"
+          ],
+          [
+            "Week 12",
+            "82–90",
+            "PHASE 3",
+            "Evidence packs done, 90-Day report presented, governance calendar set"
+          ]
+        ],
+        [
+          [
+            "Post-90 Days:  Run your first quarterly AI governance review (Month 6), annual policy refresh (Month 12), and use the Govsecure AI Monitoring & Revalidation Checklist for each scheduled revalidation cycle. Governance is not a project—it is an operating discipline."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "About Govsecure",
+      "id": "16",
+      "level": 1,
+      "paragraphs": [
+        "Govsecure is the AI Governance platform built for SMBs. Our checklist templates, intake forms, risk assessment frameworks, and implementation blueprints are designed to give small and mid-sized organizations enterprise-grade AI governance capabilities—without the enterprise-grade overhead. For questions, customization support, or platform access, contact your Govsecure program advisor.",
+        "Govsecure AI Governance Platform  |  Practical AI Governance for SMBs  |  Confidential"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "AI Adoption and Implementation BluePrint Template/90-Day Blueprint (Updated).docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 20,
+    "paragraph_count": 11,
+    "section_count": 17,
+    "table_count": 28
+  },
+  "subType": "90-day-blueprint-updated",
+  "title": "90-Day Blueprint (Updated)"
+}

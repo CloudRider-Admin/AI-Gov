@@ -1,0 +1,341 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:77f541155a985bdc329a619838b62694acc9d2ceca2f12e6ea10e9afa84dff44",
+  "documentCode": "GS-CHKL-INTAKETR-10",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "(preamble)",
+      "id": "0",
+      "level": 1,
+      "paragraphs": [
+        "Status:",
+        "☐  Approved to Proceed          ☐  Escalated for Further Review          ☐  Rejected / Not Approved"
+      ],
+      "tables": [
+        [
+          [
+            "AI Use Case Intake & Triage Checklist\nTemplate\nUse this checklist to capture, evaluate, and triage new AI use case proposals to determine whether they should proceed and at what risk tier."
+          ]
+        ],
+        [
+          [
+            "Use Case Name:",
+            "",
+            "Proposed By (Name / Team):",
+            ""
+          ],
+          [
+            "Date Submitted:",
+            "",
+            "Business Unit / Function:",
+            ""
+          ],
+          [
+            "Estimated Go-Live Date:",
+            "",
+            "AI Governance Owner (Assigned):",
+            ""
+          ],
+          [
+            "Intake Ticket / Reference ID:",
+            "",
+            "Triage Completed By:",
+            ""
+          ],
+          [
+            "Triage Date:",
+            "",
+            "",
+            ""
+          ]
+        ],
+        [
+          [
+            "1) Use Case Identification"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Use case name and one-line description provided"
+          ],
+          [
+            "☐",
+            "Business problem or opportunity clearly stated"
+          ],
+          [
+            "☐",
+            "Proposed AI approach / tool described (e.g., LLM, ML model, RPA with AI, vendor SaaS)"
+          ],
+          [
+            "☐",
+            "Affected business process(es) identified"
+          ],
+          [
+            "☐",
+            "Estimated number of users / population impacted documented"
+          ],
+          [
+            "☐",
+            "Pilot or production intent confirmed"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "2) Business Justification"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Strategic alignment articulated (link to business objective or OKR)"
+          ],
+          [
+            "☐",
+            "Expected benefits quantified or described (efficiency, quality, cost, risk reduction)"
+          ],
+          [
+            "☐",
+            "Alternatives considered (non-AI approaches evaluated)"
+          ],
+          [
+            "☐",
+            "Business sponsor identified and engaged"
+          ],
+          [
+            "☐",
+            "Urgency / priority level indicated"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "3) Data & Technology Profile"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Data sources identified (internal / external / third-party)"
+          ],
+          [
+            "☐",
+            "Data types described (structured, unstructured, PII, PHI, sensitive, etc.)"
+          ],
+          [
+            "☐",
+            "Data volume and velocity characterized"
+          ],
+          [
+            "☐",
+            "Proposed technology / vendor / platform named"
+          ],
+          [
+            "☐",
+            "Integration points with existing systems identified"
+          ],
+          [
+            "☐",
+            "Data residency / hosting region noted (if known)"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "4) Initial Risk Indicators"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Automated decision-making with material impact on individuals? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Use of personal, sensitive, or regulated data? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Customer-facing or externally visible output? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Safety-critical or high-stakes domain (healthcare, finance, HR, legal)? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Involves a third-party AI vendor or open-source model? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Cross-border data transfer or international user base? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Potential for bias, discrimination, or fairness concerns identified? (Y/N noted)"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "5) Regulatory & Compliance Flags"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Applicable regulations identified (GDPR, CCPA, AI Act, sector-specific, etc.)"
+          ],
+          [
+            "☐",
+            "Legal review requirement flagged (if applicable)"
+          ],
+          [
+            "☐",
+            "Privacy / DPIA requirement flagged (if applicable)"
+          ],
+          [
+            "☐",
+            "Contractual obligations reviewed (customer contracts, vendor agreements)"
+          ],
+          [
+            "☐",
+            "Export control or data sovereignty constraints noted (if applicable)"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "6) Vendor / Third-Party Involvement"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Third-party vendor / provider identified (if applicable)"
+          ],
+          [
+            "☐",
+            "Vendor already approved through TPRM / procurement? (Y/N noted)"
+          ],
+          [
+            "☐",
+            "Net-new vendor requiring TPRM onboarding? (flagged for TPRM team)"
+          ],
+          [
+            "☐",
+            "Open-source model or API usage noted"
+          ],
+          [
+            "☐",
+            "Subprocessor or data-sharing arrangement identified"
+          ]
+        ],
+        [
+          [
+            "Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "7) Triage Outcome & Next Steps"
+          ]
+        ],
+        [
+          [
+            "☐",
+            "Risk tier assigned: ☐ Low  ☐ Moderate  ☐ High  ☐ Critical"
+          ],
+          [
+            "☐",
+            "Required governance workstreams identified (risk assessment, DPIA, TPRM, security review, etc.)"
+          ],
+          [
+            "☐",
+            "Intake approved to proceed / escalated / rejected (decision recorded)"
+          ],
+          [
+            "☐",
+            "Assigned AI Governance owner confirmed"
+          ],
+          [
+            "☐",
+            "Next milestone and target date communicated to requestor"
+          ],
+          [
+            "☐",
+            "Intake record created in GRC tool / register"
+          ]
+        ],
+        [
+          [
+            "Decision Notes:",
+            ""
+          ]
+        ],
+        [
+          [
+            "Final Review & Sign-Off"
+          ]
+        ],
+        [
+          [
+            "AI Governance Owner",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Reviewed By (Risk / Compliance)",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ],
+          [
+            "Business Sponsor Acknowledgment",
+            "Name / Signature: ________________________",
+            "Date: __________"
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI Intake Triage Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 2,
+    "section_count": 1,
+    "table_count": 25
+  },
+  "subType": "intake-triage",
+  "title": "AI Intake Triage Checklist"
+}

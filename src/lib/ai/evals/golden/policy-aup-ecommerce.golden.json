@@ -1,0 +1,35 @@
+{
+  "id": "policy-aup-ecommerce",
+  "category": "document-generation",
+  "documentType": "govsecure-aup",
+  "input": {
+    "useCaseName": "Customer Support AI Stack",
+    "useCaseDescription": "280-person ecommerce SMB using ChatGPT Enterprise, Microsoft Copilot, and Zendesk AI for customer support and product copy generation.",
+    "industry": "ecommerce",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Purpose and Scope",
+    "Roles and Responsibilities",
+    "Permitted Uses",
+    "Prohibited Uses",
+    "Data Handling",
+    "Human Review",
+    "Training and Awareness",
+    "Enforcement",
+    "Review and Maintenance"
+  ],
+  "requiredClauses": [
+    "AI Governance Lead",
+    "intake",
+    "human review",
+    "sensitive data"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99",
+    "Recital 300"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/acceptable-use.json",
+  "voiceTargetSections": ["1", "2"]
+}

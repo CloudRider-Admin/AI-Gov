@@ -1,0 +1,28 @@
+{
+  "id": "doc-use-case-summary",
+  "category": "document-generation",
+  "documentType": "use-case-summary",
+  "input": {
+    "useCaseName": "Resume Screening Assistant",
+    "useCaseDescription": "120-person staffing firm using an LLM to summarize and pre-rank candidate resumes for recruiter review. No automated rejection decisions.",
+    "industry": "staffing",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Use Case",
+    "Owner",
+    "Risk",
+    "Stakeholders",
+    "Decision Type",
+    "Data"
+  ],
+  "requiredClauses": [
+    "human review",
+    "recruiter",
+    "high"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "Article 99"
+  ]
+}

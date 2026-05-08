@@ -1,19 +1,20 @@
+import type { DocumentType } from './documents';
+import type { SourceProvenance } from '@/lib/ai/rag';
+
+export type { SourceProvenance };
+
 export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
 export type Priority = 'high' | 'medium' | 'low';
 export type Relevance = 'high' | 'medium' | 'low';
 
-export type PolicyDocumentType =
-  | 'use-case-summary'
-  | 'data-sheet'
-  | 'vendor-model-facts'
-  | 'threat-model'
-  | 'human-oversight-statement'
-  | 'dpia'
-  | 'model-card'
-  | 'risk-memo'
-  | 'operational-readiness-plan'
-  | 'monitoring-plan'
-  | 'evidence-pack';
+/**
+ * Re-export of `DocumentType` under the advisor-domain alias. The advisor
+ * surface used to maintain a parallel union; Phase 5 collapsed both onto
+ * the single source of truth in `@/types/documents`. The runtime equivalent
+ * is `DOCUMENT_TYPE_VALUES` in `@/lib/ai/schemas`, and the sync guard test
+ * (`schemas.test.ts`) catches any drift.
+ */
+export type PolicyDocumentType = DocumentType;
 
 export interface PolicyRecommendation {
   title: string;
@@ -42,6 +43,18 @@ export interface AdvisorResponse {
   regulationCheck: RegulationMatch[];
   followUpQuestions: string[];
   sources: string[];
+  /**
+   * Structured provenance for `sources`. Each entry's `label` matches the
+   * corresponding string in `sources[]`; consumers should prefer this for
+   * grouping/filtering rather than parsing the human label.
+   */
+  sourcesStructured?: SourceProvenance[];
+  /**
+   * Soft post-processing warnings — citation validator flags, framework
+   * sync notes, etc. Populated by `/api/advisor/route.ts` after the multi-
+   * agent response is validated. Renders as a banner above the answer.
+   */
+  warnings?: string[];
   conversationId: string;
   timestamp: string;
   gated?: boolean;

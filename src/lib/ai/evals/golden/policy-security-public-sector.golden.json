@@ -1,0 +1,31 @@
+{
+  "id": "policy-security-public-sector",
+  "category": "document-generation",
+  "documentType": "govsecure-security-policy",
+  "input": {
+    "useCaseName": "Constituent Inquiry Chatbot",
+    "useCaseDescription": "State agency deploying a constituent services chatbot grounded on public policy documents. No PII collected; logs retained 90 days.",
+    "industry": "public-sector",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Purpose",
+    "Scope",
+    "Access Controls",
+    "Model and Data Security",
+    "Logging and Monitoring",
+    "Vendor Security",
+    "Incident Coordination"
+  ],
+  "requiredClauses": [
+    "access control",
+    "logging",
+    "vendor",
+    "monitoring"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "Article 99"
+  ],
+  "exemplarPath": "src/data/govsecureContent/policies/security.json"
+}

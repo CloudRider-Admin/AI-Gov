@@ -1,0 +1,47 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:84d4df010bfe6e565f89ef5e647afa5773cd47f2d0e9ae92f794a9b0a20d06d0",
+  "documentCode": "GS-CHKL-RISKASSE-18",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "AI INTAKE RISK ASSESSMENT CHECKLIST\nPage 1 | v1.0\nStakeholder Input Template | Complete all sections before governance sign-off\nUSE CASE NAME What is this AI tool / feature / model called? OWNER Who is the named responsible owner?\n(Name / Title)\nBUSINESS UNIT Which team or department is sponsoring this? MODEL TYPE n GenAI n Predictive ML n Rules +\nML n Vendor Feature\nDEPLOYMENT n Internal n Customer-facing n GO-LIVE TARGET Target launch date\nPublic-facing\nJURISDICTIONS Countries / regions this will operate in ASSESSMENT DATE Date of this assessment\nA) Risk Scoring | Score each driver 0–3: 0 = None / N/A · 1 = Low · 2 = Medium · 3 = High\nRisk Driver Score (0–3) Notes / Evidence\n1. Decision Impact\neligibility / pricing / hiring / claims / benefits\n2. Autonomy\nhuman-in-loop vs automated action\n3. Data Sensitivity\nPII / PHI / PCI / minors / biometrics\n4. Security Exposure\nintegrations, tool use, write-access, data retrieval\n5. Regulatory / Contract\nprivacy laws, sector rules, customer commitments\n6. Bias / Discrimination\nprotected classes, disparate impact\n7. Transparency Need\nexplainability, disclosures, contestability\n8. Reliability Risk\nhallucinations, accuracy, drift, edge cases\n9. Vendor / Supply Chain\nretention, training use, subcontractors, audit rights\n10. Reputational Risk\nbrand exposure, harmful content\nTOTAL SCORE / 30\nCONFIDENTIAL — For internal governance use only | 0 = None/N/A 1 = Low 2 = Medium 3 = High"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "AI INTAKE RISK ASSESSMENT CHECKLIST\nPage 2 | v1.0\nStakeholder Input Template | Complete all sections before governance sign-off\nB) \"Auto-High\" Triggers — tick any that apply fi any n automatically sets tier to HIGH\nn Automates or materially influences decisions about people (employment, credit, claims, pricing, eligibility)\nn Uses regulated data (PHI / PCI) or sensitive personal data (biometrics / minors)\nn Public-facing or customer-facing generative output\nn Connects to internal systems with write access or broad data retrieval\nn Vendor terms unclear on data retention / training or no audit / incident rights\nn No logging / monitoring feasible (can't measure failures or usage)\nC) Risk Tier Determination — tick the applicable tier\nn Low: Total score 0–9 AND no Auto-High triggers\nn Medium: Total score 10–19 AND no Auto-High triggers\nn High: Total score 20–30 OR any Auto-High trigger checked\nRequired Approver(s) — tick all\nn Compliance n Security n Legal / Privacy n Risk / ERM\nthat apply:\nD) Required Artifacts by Tier — check off each item before launch\nTier 1 — LOW (required for all tiers)\nn Use Case Summary (purpose, users, workflow, boundaries)\nn Data Sheet (data types, sources, retention, access)\nn Vendor / Model Facts (who, where hosted, version)\nn Basic Security Review (access control, least privilege)\nn Evaluation Plan — Lite (basic accuracy / prompt tests for GenAI)\nn Monitoring Plan — Lite (usage logging + incident route)\nn Human Oversight Statement (who reviews outputs, when)\nTier 2 — MEDIUM (adds to Low)\nn DPIA / Privacy Impact Assessment (or equivalent)\nn Threat Model — Lite (prompt injection, data leakage, abuse paths)\nn Model Card — Standard (intended use, limits, risks, training data summary)\nn Evaluation Plan — Standard (quality, bias checks, red-team prompts for GenAI)\nn Monitoring Plan — Standard (drift / hallucination tracking, alerts, review cadence)\nn Human-in-the-Loop Design (decision points, override, escalation)\nn Third-Party Risk Review (DPA, retention, subprocessors, incident notification, audit rights)\nTier 3 — HIGH (adds to Medium)\nCONFIDENTIAL — For internal governance use only | 0 = None/N/A 1 = Low 2 = Medium 3 = High"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "AI INTAKE RISK ASSESSMENT CHECKLIST\nPage 3 | v1.0\nStakeholder Input Template | Complete all sections before governance sign-off\nn Formal Risk Assessment Memo (what can go wrong + mitigations + residual risk)\nn Full Threat Model & Security Test Evidence (abuse testing, prompt injection defences, access controls)\nn Bias / Fairness Assessment (if people-impacting) + mitigation plan\nn Explainability & Notice Plan (disclosures, contestability / appeals if relevant)\nn Robust Evaluation Report (benchmarks, failure modes, acceptance thresholds)\nn Operational Readiness Plan (SOPs, incident runbook, rollback plan, model change control)\nn Monitoring & Audit Evidence Plan (logs, retention, periodic review schedule)\nn Legal Review Sign-off (contracts, regulatory obligations, customer commitments)\nE) Launch Decision\nDecision: n Go n Conditional Go n No-Go\nConditions (if Conditional Go):\nNext Review Date:\nReassessment Trigger(s): model change / new data source / new geography / new feature or integration\nAssessed by: Date: Signature:\n_____________________________ ____________________ _____________________________\nCONFIDENTIAL — For internal governance use only | 0 = None/N/A 1 = Low 2 = Medium 3 = High"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/AI_Risk_Assessment_TEMPLATE Checklist.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 4827,
+    "section_count": 3
+  },
+  "subType": "risk-assessment-template",
+  "title": "AI Risk Assessment TEMPLATE Checklist"
+}

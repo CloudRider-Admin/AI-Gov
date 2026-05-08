@@ -1,0 +1,233 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:04da93c1715b310b1f0b64b32553a7e802888f467cd05bc26407ad5a0a75a058",
+  "documentCode": "GS-CHKL-TRAINING-24",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "docx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "AI Training & Role-Based Awareness Checklist",
+      "id": "1",
+      "level": 1,
+      "paragraphs": [
+        "Template • Version 1.0 • 2026-04-03"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Document Details",
+      "id": "2",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "Use Case / Project Name",
+            "[Enter name]",
+            "Use Case ID / Registry ID",
+            "[Enter ID]"
+          ],
+          [
+            "Risk Tier",
+            "Low / Moderate / High / Critical",
+            "Environment",
+            "Pilot / Test / Production / Retired"
+          ],
+          [
+            "Prepared By",
+            "[Name]",
+            "Reviewed By",
+            "[Name]"
+          ],
+          [
+            "Review Date",
+            "[YYYY-MM-DD]",
+            "Next Review Date",
+            "[YYYY-MM-DD]"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Purpose",
+      "id": "3",
+      "level": 1,
+      "paragraphs": [
+        "Use this checklist to validate completion of required governance activities and maintain an audit-ready record."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "How to Use",
+      "id": "4",
+      "level": 1,
+      "paragraphs": [
+        "Mark each item as completed (☒) when done. Add owner, due date, and evidence link/location for audit traceability."
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Audience Mapping",
+      "id": "5",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Audience groups defined (business users, builders, reviewers/approvers, executives)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Role-based training paths assigned",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Core Training Content",
+      "id": "6",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Acceptable use + prohibited data covered",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Prompt hygiene and secure usage covered",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Key AI risks covered (hallucinations, bias, injection, data leakage)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Escalation and incident reporting process covered",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Delivery & Tracking",
+      "id": "7",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Training delivery method defined (LMS, live sessions, office hours)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Completion tracking and attestations captured",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Refresher cadence defined (quarterly/semi-annual/annual)",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Metrics & Continuous Improvement",
+      "id": "8",
+      "level": 2,
+      "paragraphs": [],
+      "tables": [
+        [
+          [
+            "✓",
+            "Checklist Item",
+            "Owner",
+            "Due Date",
+            "Evidence / Notes"
+          ],
+          [
+            "☐",
+            "Metrics defined (completion %, repeat incidents, policy violations)",
+            "",
+            "",
+            ""
+          ],
+          [
+            "☐",
+            "Targeted refresh training triggered for high-risk teams or repeat issues",
+            "",
+            "",
+            ""
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Checklists/AI_Training_Role_Based_Awareness_Checklist.docx",
+  "sourceSuffix": ".docx",
+  "stats": {
+    "bullet_count": 0,
+    "paragraph_count": 3,
+    "section_count": 8,
+    "table_count": 5
+  },
+  "subType": "training-awareness",
+  "title": "AI Training & Role-Based Awareness Checklist"
+}

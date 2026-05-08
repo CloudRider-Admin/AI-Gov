@@ -1,0 +1,17 @@
+{
+  "id": "advisory-90-day-blueprint",
+  "category": "advisory-query",
+  "input": {
+    "message": "Can you describe the 90-day implementation blueprint and what should ship in each phase?"
+  },
+  "requiredClauses": [
+    "90-day",
+    "Phase",
+    "30"
+  ],
+  "forbiddenContent": [
+    "120-day",
+    "Phase 5"
+  ],
+  "expectedIntent": "advisor"
+}

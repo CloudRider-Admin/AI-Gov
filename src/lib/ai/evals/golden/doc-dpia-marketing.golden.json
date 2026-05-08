@@ -1,0 +1,29 @@
+{
+  "id": "doc-dpia-marketing",
+  "category": "document-generation",
+  "documentType": "dpia",
+  "input": {
+    "useCaseName": "Marketing Personalization Engine",
+    "useCaseDescription": "Subscription media company building an AI-driven content recommendation engine using behavioural data of EU subscribers.",
+    "industry": "media",
+    "riskTier": "High"
+  },
+  "expectedSections": [
+    "Necessity",
+    "Proportionality",
+    "Risks",
+    "Mitigations",
+    "Consultation",
+    "Data Subject Rights"
+  ],
+  "requiredClauses": [
+    "data subject",
+    "lawful basis",
+    "mitigation",
+    "GDPR"
+  ],
+  "forbiddenContent": [
+    "Article 99 of GDPR",
+    "Recital 500"
+  ]
+}

@@ -1,0 +1,597 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:5e03c22ae33af0b06c09aa7727802e2ae86403f34f3c64f61728e35d192706f2",
+  "documentCode": "GS-PLBK-AICHEFOP-09",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "xlsx",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Read Me",
+      "id": "read-me",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "GovSecure AI Chef™ Operational Templates"
+          ],
+          [
+            "",
+            "Paid SMB edition with realistic sample data and editable working sheets."
+          ],
+          [],
+          [
+            "",
+            "What this workbook is",
+            "A working set of templates for SMB AI governance: RACI, risk tiering, system registry, evidence tracking, and a lightweight executive dashboard."
+          ],
+          [
+            "",
+            "How to start",
+            "1) Review the RACI. 2) Use the Intake and Tiering sheet for every new use case. 3) Register every AI system. 4) Review the Dashboard monthly or quarterly."
+          ],
+          [
+            "",
+            "Sample company",
+            "HarborCraft Home Goods - a 280-person ecommerce and operations business."
+          ],
+          [
+            "",
+            "Important rule",
+            "If a tool has no named owner, no risk tier, or no review date, it is not production-ready."
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "RACI Matrix",
+      "id": "raci-matrix",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "AI Governance RACI Matrix"
+          ],
+          [
+            "",
+            "Example accountability model for a lean SMB AI program."
+          ],
+          [],
+          [
+            "",
+            "Activity",
+            "Executive Sponsor",
+            "AI Governance Lead",
+            "IT / Platform",
+            "Business Owner",
+            "Legal / Privacy",
+            "Procurement",
+            "Review Cadence"
+          ],
+          [
+            "",
+            "Approve high-risk use case",
+            "A",
+            "R",
+            "C",
+            "C",
+            "C",
+            "I",
+            "Per case"
+          ],
+          [
+            "",
+            "Maintain AI system registry",
+            "I",
+            "A",
+            "R",
+            "C",
+            "I",
+            "I",
+            "Monthly"
+          ],
+          [
+            "",
+            "Enable logging and connector controls",
+            "I",
+            "C",
+            "A/R",
+            "C",
+            "I",
+            "I",
+            "Monthly"
+          ],
+          [
+            "",
+            "Complete vendor review",
+            "I",
+            "C",
+            "C",
+            "I",
+            "C",
+            "A/R",
+            "Before production"
+          ],
+          [
+            "",
+            "Run quarterly governance review",
+            "A",
+            "R",
+            "C",
+            "C",
+            "C",
+            "I",
+            "Quarterly"
+          ],
+          [
+            "",
+            "Pause harmful automation",
+            "I",
+            "C",
+            "A/R",
+            "C",
+            "I",
+            "I",
+            "As needed"
+          ],
+          [
+            "",
+            "Approve policy changes",
+            "A",
+            "R",
+            "C",
+            "C",
+            "C",
+            "I",
+            "Annual / material change"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Risk Tiering",
+      "id": "risk-tiering",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "AI Use Case Intake and Risk Tiering"
+          ],
+          [
+            "",
+            "Score new use cases, then assign the tier and review path."
+          ],
+          [],
+          [
+            "",
+            "Use Case",
+            "Purpose",
+            "Data Sensitivity",
+            "External Impact",
+            "Human Oversight",
+            "Automation Level",
+            "Regulatory Relevance",
+            "Score",
+            "Assigned Tier",
+            "Approval Path"
+          ],
+          [
+            "",
+            "Support Co-Pilot",
+            "Draft ticket responses",
+            "Medium",
+            "Medium",
+            "Required",
+            "Assist only",
+            "Privacy",
+            "8",
+            "Tier 2",
+            "Manager + Governance"
+          ],
+          [
+            "",
+            "Refund Risk Agent",
+            "Suggest refund risk labels",
+            "High",
+            "High",
+            "Required",
+            "Semi-automated",
+            "Privacy + consumer",
+            "11",
+            "Tier 3",
+            "Director + Governance + Legal"
+          ],
+          [
+            "",
+            "Copilot for Meetings",
+            "Summaries and action items",
+            "Low",
+            "Low",
+            "Optional",
+            "Assist only",
+            "Low",
+            "4",
+            "Tier 1",
+            "Manager"
+          ],
+          [
+            "",
+            "Contract Review GPT",
+            "Summarize supplier clauses",
+            "Medium",
+            "Medium",
+            "Required",
+            "Assist only",
+            "Legal",
+            "8",
+            "Tier 2",
+            "Manager + Legal"
+          ],
+          [],
+          [],
+          [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Tier 1",
+            "Low risk internal productivity"
+          ],
+          [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Tier 2",
+            "Moderate risk with human review"
+          ],
+          [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Tier 3",
+            "High impact or sensitive use"
+          ],
+          [
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Tier 4",
+            "Prohibited / executive decision"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "AI System Registry",
+      "id": "ai-system-registry",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "AI System Registry"
+          ],
+          [
+            "",
+            "Track every approved, restricted, pilot, or retired AI capability."
+          ],
+          [],
+          [
+            "",
+            "System Name",
+            "Business Owner",
+            "Technical Owner",
+            "Vendor",
+            "Use Case",
+            "Data Used",
+            "Tier",
+            "Status",
+            "Review Cycle",
+            "Last Review",
+            "Logging",
+            "Incident History"
+          ],
+          [
+            "",
+            "ChatGPT Enterprise",
+            "Marketing Director",
+            "IT Manager",
+            "OpenAI",
+            "Research and draft campaigns",
+            "Internal docs, web research",
+            "Tier 2",
+            "Approved",
+            "Monthly",
+            "2026-04-01",
+            "Enabled",
+            "None"
+          ],
+          [
+            "",
+            "Microsoft Copilot",
+            "COO",
+            "IT Manager",
+            "Microsoft",
+            "Productivity and meeting notes",
+            "M365 data",
+            "Tier 1",
+            "Approved",
+            "Quarterly",
+            "2026-04-05",
+            "Enabled",
+            "None"
+          ],
+          [
+            "",
+            "Zendesk AI Assist",
+            "Support Director",
+            "Support Systems Lead",
+            "Zendesk",
+            "Ticket drafting and suggestions",
+            "Ticket data, KB",
+            "Tier 2",
+            "Approved",
+            "Monthly",
+            "2026-04-03",
+            "Enabled",
+            "1 low-severity drift issue"
+          ],
+          [
+            "",
+            "Refund Risk Agent",
+            "Support Director",
+            "Automation Engineer",
+            "Azure OpenAI",
+            "Risk labels before refunds",
+            "Ticket + order data",
+            "Tier 3",
+            "Pilot only",
+            "Bi-weekly",
+            "2026-04-08",
+            "Partial",
+            "None"
+          ],
+          [
+            "",
+            "Contract Review GPT",
+            "Ops & Finance Manager",
+            "Security Manager",
+            "Anthropic",
+            "Summarize vendor clauses",
+            "Contracts, templates",
+            "Tier 2",
+            "Restricted approval",
+            "Quarterly",
+            "2026-03-28",
+            "Enabled",
+            "None"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Evidence Register",
+      "id": "evidence-register",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "AI Governance Evidence Register"
+          ],
+          [
+            "",
+            "Simple SMB evidence log to support reviews and client delivery."
+          ],
+          [],
+          [
+            "",
+            "Artifact",
+            "Owner",
+            "Cycle",
+            "Storage Location",
+            "Status",
+            "Last Updated",
+            "Notes"
+          ],
+          [
+            "",
+            "AI Policy",
+            "AI Governance Lead",
+            "Annual",
+            "SharePoint/Governance",
+            "Current",
+            "2026-04-01",
+            "Approved by COO"
+          ],
+          [
+            "",
+            "Approved Tools List",
+            "IT Manager",
+            "Monthly",
+            "SharePoint/IT",
+            "Current",
+            "2026-04-07",
+            "Published to teams"
+          ],
+          [
+            "",
+            "Use Case Intake Log",
+            "AI Governance Lead",
+            "Per case",
+            "SharePoint/Governance",
+            "Current",
+            "2026-04-08",
+            "4 active entries"
+          ],
+          [
+            "",
+            "Vendor Review Pack",
+            "Security Manager",
+            "Before prod + annual",
+            "SharePoint/Vendor Risk",
+            "Current",
+            "2026-03-29",
+            "Anthropic renewal due Q4"
+          ],
+          [
+            "",
+            "Quarterly Review Deck",
+            "Executive Sponsor",
+            "Quarterly",
+            "SharePoint/Leadership",
+            "In progress",
+            "2026-04-10",
+            "Q2 deck underway"
+          ]
+        ]
+      ]
+    },
+    {
+      "bullets": [],
+      "heading": "Dashboard",
+      "id": "dashboard",
+      "level": 1,
+      "paragraphs": [],
+      "tables": [
+        [
+          [],
+          [
+            "",
+            "Executive AI Governance Dashboard"
+          ],
+          [
+            "",
+            "Leadership snapshot for a lean SMB program."
+          ],
+          [],
+          [
+            "",
+            "Registered systems",
+            "",
+            "% with owners",
+            "",
+            "Open incidents",
+            "",
+            "Maturity score"
+          ],
+          [
+            "",
+            "5",
+            "",
+            "100%",
+            "",
+            "1",
+            "",
+            "2.6 / 5"
+          ],
+          [],
+          [],
+          [],
+          [
+            "",
+            "Station",
+            "Score",
+            "Commentary"
+          ],
+          [
+            "",
+            "Foundation & Ownership",
+            "3",
+            "Owners and review paths are defined."
+          ],
+          [
+            "",
+            "Data & Knowledge Controls",
+            "2.5",
+            "Retention and provenance need tighter evidence."
+          ],
+          [
+            "",
+            "Model & Tool Safety",
+            "2",
+            "Pilot controls exist but testing depth is limited."
+          ],
+          [
+            "",
+            "Agent & Automation Controls",
+            "2",
+            "Kill switch and approval thresholds are in pilot stage."
+          ],
+          [
+            "",
+            "Decision & Human Oversight",
+            "3",
+            "Human review is strong for customer-facing use cases."
+          ],
+          [
+            "",
+            "Assurance, Monitoring & Response",
+            "2.8",
+            "Logging exists; evidence discipline still maturing."
+          ]
+        ]
+      ]
+    }
+  ],
+  "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Operational_Templates.xlsx",
+  "sourceSuffix": ".xlsx",
+  "stats": {
+    "sheet_count": 6,
+    "total_rows": 71
+  },
+  "subType": "ai-chef-operational",
+  "title": "GovSecure AI Chef Client Ready Operational Templates"
+}

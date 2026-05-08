@@ -1,0 +1,21 @@
+{
+  "id": "playbook-combined-healthcare",
+  "category": "playbook",
+  "input": {
+    "framework": "Combined",
+    "riskTier": "High",
+    "useCaseName": "Radiology Triage Assist",
+    "useCaseDescription": "Radiology triage assistant ranking incoming chest x-rays by likelihood of acute findings. Radiologist always reads the image."
+  },
+  "expectedPhases": ["Govern", "Map", "Measure", "Manage"],
+  "requiredClauses": [
+    "NIST",
+    "EU AI Act",
+    "ISO/IEC 42001",
+    "human"
+  ],
+  "forbiddenContent": [
+    "Article 99",
+    "GOVERN-99"
+  ]
+}

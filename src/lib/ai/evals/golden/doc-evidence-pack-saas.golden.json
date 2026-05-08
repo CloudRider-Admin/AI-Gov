@@ -1,0 +1,27 @@
+{
+  "id": "doc-evidence-pack-saas",
+  "category": "document-generation",
+  "documentType": "evidence-pack",
+  "input": {
+    "useCaseName": "AI Meeting Notetaker",
+    "useCaseDescription": "B2B SaaS company embedding an AI meeting notetaker. Audio processed in-region; transcripts retained for 30 days unless user pins.",
+    "industry": "saas",
+    "riskTier": "Medium"
+  },
+  "expectedSections": [
+    "Use Case",
+    "Risk Assessment",
+    "Controls",
+    "Approval",
+    "Monitoring"
+  ],
+  "requiredClauses": [
+    "control",
+    "approval",
+    "evidence"
+  ],
+  "forbiddenContent": [
+    "GOVERN-99",
+    "Article 99"
+  ]
+}

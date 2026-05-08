@@ -1,0 +1,97 @@
+{
+  "category": "checklists",
+  "checksum": "sha256:99a3753a8eb708b90e363dca89822a49607a8a59a6a9792270d97b446fcae4fc",
+  "documentCode": "GS-CHKL-USECASEI-26",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [
+    {
+      "bullets": [],
+      "heading": "Page 1",
+      "id": "page-1",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\nGOVSECURE | CHECKLIST & QUESTIONNAIRE LIBRARY\nAI Use Case Intake Form\nStandard intake, triage, and approval form for proposed or materially changed AI use\ncases.\nVersion: 1.0 Classification: Confidential Owner: AI Governance Lead\nUse this form to capture the business purpose, data profile, risk triggers, and approval conditions\nfor any new or materially changed AI activity. It is designed to help SMBs review quickly without\nturning governance into paperwork theater.\nPrepared for: {{COMPANY_NAME}}\nConfidential - Controlled | Page 1"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 2",
+      "id": "page-2",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\n1. Overview\nThis intake form is the standard entry point for reviewing AI use cases before approval, expansion, or\nmaterial change. It creates a consistent record for business, IT, security, privacy, legal, and compliance\nreviewers.\n2. When to use this form\n New AI tools, copilots, agents, assistants, or AI-enabled features.\n Material changes to an already approved use case, such as new data types, new vendors, new users, or\ncustomer-facing deployment.\n Third-party AI tools that will process company, employee, customer, supplier, or partner data.\n Pilots, proofs of concept, or experiments that may move into production.\n3. Fast triage outcomes\nOutcome Meaning Typical treatment\nLow-risk internal use with no\nApprove with standard guardrails\nFast-track sensitive data and no high-impact\nand enter in registry.\ndecisions.\nModerate-risk use or approved\nSecurity/business review and\nStandard review tools handling internal confidential\ncontrol conditions documented.\ndata.\nSensitive data, customer impact,\nCross-functional review; additional\nEscalated review automated decisions, or unclear\ncontrols or restriction may apply.\nvendor posture.\n4. Completion instructions\n The requester completes Sections A-H before submission.\n The reviewer or governance lead completes Sections I-K during triage.\n Be specific. Short vague answers create longer review cycles.\n If the use case is already live, state that clearly and provide the current state in the business\njustification.\n5. Section A - Request profile\nUse Case ID {{ID}} Date Submitted {{DATE}}\nBusiness Owner {{OWNER_NAME}} Department / Function {{DEPARTMENT}}\nRequester Name {{REQUESTER_NAME}} Requester Email {{EMAIL}}\nImplementation Stage Idea / Pilot / Live / Change Target Decision Date {{TARGET_DATE}}\n6. Section B - Business objective and value\nBusiness problem or opportunity\nConfidential - Controlled | Page 2"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 3",
+      "id": "page-3",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\nDescribe the process pain point, capacity gap, customer need, or decision bottleneck.\n{{ENTER_RESPONSE}}\nProposed AI-enabled solution\nExplain what the AI tool or workflow will do and where it will be used.\n{{ENTER_RESPONSE}}\nExpected business value\nState expected benefits such as time saved, quality uplift, risk reduction, revenue support, or customer\nexperience improvement.\n{{ENTER_RESPONSE}}\nConfidential - Controlled | Page 3"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 4",
+      "id": "page-4",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\n7. Section C - Tool, vendor, and deployment profile\nAI Tool / Service {{TOOL_NAME}} Vendor {{VENDOR_NAME}}\nSaaS / Embedded / API /\nDeployment Model Environment Prod / Pilot / Sandbox\nInternal\nPrimary Users {{USER_GROUPS}} Customer-Facing Yes / No\nThird-Party {{KNOWN_SUBPROCESSOR\nModel Provider {{MODEL_PROVIDER}}\nSubprocessors S}}\nIntegrations / Connected\n{{SYSTEMS}} External Sharing Yes / No / Unknown\nSystems\n8. Section D - Data profile\nData category Included? Description / examples Control notes\nPublic or non-sensitive {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\ndata E}} APPROVED ONLY}}\nInternal confidential {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\nbusiness data E}} APPROVED ONLY}}\nCustomer or consumer {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\ndata E}} APPROVED ONLY}}\n{{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nEmployee or HR data Yes / No\nE}} APPROVED ONLY}}\nFinancial / legal / regulated {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\ndata E}} APPROVED ONLY}}\nSource code / security {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\ndata / credentials E}} APPROVED ONLY}}\nPersonal data / sensitive {{DESCRIBE_IF_APPLICABL {{MASK / MINIMIZE /\nYes / No\npersonal data E}} APPROVED ONLY}}\nEnter only the categories that are actually required. If data can be minimized, masked, or removed before\nAI processing, state that as a control rather than burying it in a note.\n9. Section E - Output and decision impact\nDraft text / summary / code Outputs used for\nOutput type Yes / No\n/ decision support / other decisions?\nHuman review before Affects customers or\nAlways / Sometimes / No Yes / No\naction employees?\nAutomated action taken HR / Finance / Legal / Ops /\nYes / No Decision domain\nfrom output Customer / Other\nConfidential - Controlled | Page 4"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 5",
+      "id": "page-5",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\nError tolerance Low / Medium / High Fallback if AI fails {{FALLBACK_PROCESS}}\nConfidential - Controlled | Page 5"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 6",
+      "id": "page-6",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\n10. Section F - Risk screening questions\nCheck all triggers that apply. Any single high-impact trigger may require escalated review.\nRisk trigger Response Notes / evidence\nWill the tool process personal,\nYes / No {{OPTIONAL_NOTE}}\nconfidential, or regulated data?\nWill outputs influence decisions\nabout people, money, legal rights, Yes / No {{OPTIONAL_NOTE}}\nsafety, or customer treatment?\nIs the use case customer-facing or\nYes / No {{OPTIONAL_NOTE}}\nexternally visible?\nIs any automated action taken\nYes / No {{OPTIONAL_NOTE}}\nwithout human review?\nIs the vendor or model provider\nunknown, immature, or unable to Yes / No {{OPTIONAL_NOTE}}\nexplain data handling?\nWill data be retained, used for\ntraining, or shared with Yes / No {{OPTIONAL_NOTE}}\nsubprocessors?\nDoes the use case operate across\njurisdictions with privacy or sector- Yes / No {{OPTIONAL_NOTE}}\nspecific requirements?\nCould an incorrect output create\nmaterial operational, legal, or Yes / No {{OPTIONAL_NOTE}}\nreputational harm?\nEscalate immediately if the use case involves sensitive data, customer-facing decisions, HR or\nemployment impact, legal interpretation, payments, safety, or any automated action without reliable\nhuman review.\n11. Section G - Requested controls or conditions\nRequired safeguards before launch\n{{ENTER_DETAILS}}\nMonitoring, QA, or human review steps\n{{ENTER_DETAILS}}\nRequested exceptions, if any\n{{ENTER_DETAILS}}\nConfidential - Controlled | Page 6"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 7",
+      "id": "page-7",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\n12. Section H - Reviewer triage summary\nFast-track / Standard /\nTriage status Overall risk level Low / Medium / High\nEscalated / Hold\nPrimary reviewer {{REVIEWER}} Review date {{REVIEW_DATE}}\nPrivacy / Legal review\nSecurity review required Yes / No Yes / No\nrequired\nVendor review required Yes / No Registry entry complete Yes / No\nApprove / Approve with\nDecision\nconditions / Reject / More Next review date {{NEXT_REVIEW_DATE}}\nrecommendation\ninfo\n13. Section I - Reviewer findings and conditions\nKey findings\n{{REVIEWER_NOTES}}\nMandatory conditions for approval\n{{REVIEWER_NOTES}}\nOutstanding questions / evidence needed\n{{REVIEWER_NOTES}}\n14. Section J - Final approval record\nApproved / Approved with\nDecision conditions / Rejected / Decision date {{DECISION_DATE}}\nDeferred\nApproving role {{ROLE}} Approver name {{APPROVER_NAME}}\nImplementation allowed\nbefore controls Yes / No Registry status Entered / Pending\ncomplete?\nBusiness sign-off {{OWNER_SIGNOFF}} Security sign-off {{SECURITY_SIGNOFF}}\nConfidential - Controlled | Page 7"
+      ],
+      "tables": []
+    },
+    {
+      "bullets": [],
+      "heading": "Page 8",
+      "id": "page-8",
+      "level": 1,
+      "paragraphs": [
+        "GovSecure | AI Use Case Intake Form\n15. Field guidance and scoring prompts\nUse the prompts below to improve answer quality and reduce back-and-forth during review.\nField What good looks like Weak answer example\nTies the use case to a real process,\nBusiness objective measurable value, and defined \"Use AI to help us.\"\nowner.\nNames the exact data categories and\nData profile \"May include files.\"\nwhether sensitive data is involved.\nStates whether humans review\nDecision impact outputs before action and what \"Team will use it as needed.\"\nhappens if AI is wrong.\nIdentifies vendor, model provider,\nVendor details \"Vendor TBD.\"\nand retention or training concerns.\nLists specific safeguards, not vague\nControls \"We will be careful.\"\nintentions.\n16. Quick processing checklist\nChecklist item Complete\nRequester completed Sections A-H with specific details. [ ]\nUse case entered or updated in the AI Use Case Registry. [ ]\nRisk triggers checked and escalations initiated where\n[ ]\nrequired.\nVendor due diligence request launched if third-party AI\n[ ]\nis involved.\nFinal decision and conditions recorded and\n[ ]\ncommunicated.\nConfidential - Controlled | Page 8"
+      ],
+      "tables": []
+    }
+  ],
+  "sourcePath": "Checklists/GovSecure_AI_Use_Case_Intake_Form.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 8644,
+    "section_count": 8
+  },
+  "subType": "use-case-intake-form",
+  "title": "GovSecure AI Use Case Intake Form"
+}

@@ -1,0 +1,16 @@
+{
+  "category": "playbooks",
+  "checksum": "sha256:b9c81ed11464d7b6c2f2eee31f85b0db4646969493be4bc6aeadede80b15b505",
+  "documentCode": "GS-PLBK-AICHEFIN-06",
+  "extractedAt": "2026-05-05T11:11:58+00:00",
+  "format": "pdf",
+  "sections": [],
+  "sourcePath": "Playbook/GovSecure_AI_Chef_Client_Ready_Package/GovSecure_AI_Chef_Client_Ready_Infographic.pdf",
+  "sourceSuffix": ".pdf",
+  "stats": {
+    "char_count": 0,
+    "section_count": 0
+  },
+  "subType": "ai-chef-infographic",
+  "title": "GovSecure AI Chef Client Ready Infographic"
+}

@@ -13,6 +13,17 @@
  */
 
 import { NIST_AI_RMF, EU_AI_ACT, ISO_42001, FRAMEWORK_ALIGNMENT, IMPLEMENTATION_GUIDANCE } from '@/data/governanceKnowledge';
+import {
+  AI_CHEF_STATIONS,
+  GOVSECURE_90_DAY_PHASES,
+  GOVSECURE_NIST_RCM,
+  GOVSECURE_POLICY_SUITE,
+  GOVSECURE_RISK_MODEL,
+  getAllChecklists,
+  getAllPolicies,
+  getDocumentBySubType,
+} from '@/data/govsecureKnowledge';
+import type { ExtractedDocument } from '@/types/govsecure';
 
 interface SeedEntry {
   title: string;
@@ -323,6 +334,376 @@ async function buildNistPlaybookEntries(): Promise<SeedEntry[]> {
   }));
 }
 
+// ─── GovSecure Content Library Entries ──────────────────────────────────────
+//
+// Phase 1 of the GovSecure integration plan. These builders flatten the
+// extracted GovSecure content (policies, checklists, AI Chef toolkit, 90-day
+// blueprint, NIST RCM, TPRM) into individually embeddable entries tagged
+// with `sourceType: 'govsecure'`.
+// @see GOVI_GOVSECURE_INTEGRATION_PLAN.md — Phase 1.2
+
+/**
+ * Render a section's content as a prose paragraph for embedding. Bullet lists
+ * are joined into sentences because semantic search performs better on prose
+ * than on raw bullet markers.
+ */
+/**
+ * Reduce a verbose extracted document title down to a clean, embedding-friendly
+ * label. Strips a leading "GovSecure" (which would otherwise duplicate the
+ * "GovSecure ..." prefix we add to every entry title) and drops trailing
+ * subtitle fragments like "— Standalone Branded Policy Document".
+ */
+function cleanDocTitle(title: string): string {
+  let cleaned = title.replace(/^GovSecure\s+(?:—\s+)?/i, '');
+  // Take the first segment before any " — " subtitle separator.
+  const parts = cleaned.split(/\s+—\s+/);
+  if (parts.length > 1) cleaned = parts[0];
+  return cleaned.trim();
+}
+
+function sectionToProse(section: ExtractedDocument['sections'][number]): string {
+  const parts: string[] = [];
+  if (section.paragraphs.length) {
+    parts.push(section.paragraphs.join('\n\n'));
+  }
+  if (section.bullets.length) {
+    // Render bullets as a sentence joined by semicolons. Preserves enumeration
+    // signals while reading more naturally to an embedding model.
+    parts.push(section.bullets.map((b) => b.trim()).join('; '));
+  }
+  if (section.tables.length) {
+    // Tables flatten to newline-separated cell tuples. Two-column tables read
+    // as "key: value" pairs which retains the metadata semantics.
+    for (const table of section.tables) {
+      const lines: string[] = [];
+      for (const row of table) {
+        const cleaned = row.map((c) => c.trim()).filter(Boolean);
+        if (cleaned.length === 2) {
+          lines.push(`${cleaned[0]}: ${cleaned[1]}`);
+        } else if (cleaned.length > 0) {
+          lines.push(cleaned.join(' | '));
+        }
+      }
+      if (lines.length) parts.push(lines.join('\n'));
+    }
+  }
+  return parts.filter(Boolean).join('\n\n').trim();
+}
+
+/**
+ * One seed entry per (policy × section). Produces ~80 entries across the 8
+ * core licensed policies (each with ~10 substantive sections).
+ */
+function buildGovSecurePolicyEntries(): SeedEntry[] {
+  const entries: SeedEntry[] = [];
+
+  for (const doc of getAllPolicies()) {
+    // Skip the suite-meta and offering-guide variants — they are surfaced
+    // separately via buildGovSecureFrameworkEntries (suite map) so we don't
+    // double-embed.
+    if (doc.subType === 'suite-map' || doc.subType === 'suite-offering') continue;
+
+    for (const section of doc.sections) {
+      const content = sectionToProse(section);
+      if (!content || section.heading === '(preamble)') continue;
+
+      entries.push({
+        title: `GovSecure ${cleanDocTitle(doc.title)} — ${section.heading}`,
+        content: `Source: ${doc.title} (${doc.documentCode})\nSection: ${section.heading}\n\n${content}`,
+        category: 'policy',
+        tags: [
+          'govsecure',
+          'policy',
+          doc.subType,
+          doc.documentCode.toLowerCase(),
+          'tier-starter',
+        ],
+        source: doc.title,
+        sourceType: 'govsecure',
+      });
+    }
+  }
+
+  return entries;
+}
+
+/**
+ * One seed entry per checklist (whole-document level). Each entry includes
+ * the title, purpose, all section headings, and key item text rendered as
+ * prose. Checklists are not split per-section because their value comes from
+ * the complete enumeration.
+ */
+function buildGovSecureChecklistEntries(): SeedEntry[] {
+  const entries: SeedEntry[] = [];
+
+  for (const doc of getAllChecklists()) {
+    // Build a prose digest of the whole checklist.
+    const headings = doc.sections
+      .filter((s) => s.heading !== '(preamble)')
+      .map((s) => s.heading);
+
+    // Pull a representative sample of items (first 3 bullets per section, plus
+    // any table rows that look like checklist items).
+    const sampleItems: string[] = [];
+    for (const section of doc.sections) {
+      sampleItems.push(...section.bullets.slice(0, 3));
+      for (const table of section.tables) {
+        for (const row of table.slice(0, 5)) {
+          const cell = row.find((c) => c && c.length > 4);
+          if (cell) sampleItems.push(cell.trim());
+        }
+      }
+      if (sampleItems.length >= 25) break;
+    }
+
+    const content = [
+      `Purpose: ${doc.title} — operational checklist used to verify governance coverage for the named domain.`,
+      headings.length ? `Sections: ${headings.join(' · ')}` : '',
+      sampleItems.length
+        ? `Representative items: ${sampleItems.slice(0, 25).join('; ')}`
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+
+    if (!content) continue;
+
+    entries.push({
+      title: `GovSecure ${cleanDocTitle(doc.title)}`,
+      content: `Source: ${doc.title} (${doc.documentCode})\n\n${content}`,
+      category: 'checklist',
+      tags: ['govsecure', 'checklist', doc.subType, doc.documentCode.toLowerCase()],
+      source: doc.title,
+      sourceType: 'govsecure',
+    });
+  }
+
+  return entries;
+}
+
+/**
+ * Framework-level entries: the 4-tier risk model, AI Chef stations, 90-Day
+ * Blueprint phases, Policy Suite Map, NIST RCM rows, and the TPRM
+ * questionnaire. These are the high-level constructs that allow Govi to
+ * answer methodology questions ("what risk tier does this fall into?",
+ * "which stations apply?", "what's the 90-day plan?").
+ */
+function buildGovSecureFrameworkEntries(): SeedEntry[] {
+  const entries: SeedEntry[] = [];
+
+  // — 4-tier risk model: one entry per tier
+  for (const tier of GOVSECURE_RISK_MODEL.tiers) {
+    entries.push({
+      title: `GovSecure Risk Tier — ${tier.tier} (Level ${tier.numericLevel})`,
+      content: [
+        `GovSecure 4-Tier Risk Model — ${tier.tier} tier (numeric level ${tier.numericLevel}).`,
+        tier.shortDescription,
+        `Examples: ${tier.examples.join('; ')}.`,
+        `Decision criteria: ${tier.decisionCriteria.join('; ')}.`,
+        tier.triggers.length
+          ? `Auto-elevation triggers: ${tier.triggers.join('; ')}.`
+          : '',
+        `Required governance: ${tier.requiredGovernance.join('; ')}.`,
+        `Review cadence: ${tier.reviewCadence}.`,
+      ]
+        .filter(Boolean)
+        .join('\n\n'),
+      category: 'methodology',
+      tags: ['govsecure', 'risk-model', 'risk-tier', tier.tier.toLowerCase()],
+      source: 'GovSecure 4-Tier Risk Model',
+      sourceType: 'govsecure',
+    });
+  }
+
+  // — Risk model overview
+  entries.push({
+    title: 'GovSecure 4-Tier Risk Model — Scoring Dimensions',
+    content: [
+      'GovSecure assigns every AI use case to one of four risk tiers (Low / Moderate / High / Prohibited) using five scoring dimensions.',
+      ...GOVSECURE_RISK_MODEL.scoringDimensions.map(
+        (d) => `${d.name} (${d.scale}): ${d.description}`,
+      ),
+      'Use the highest dimensional score as a baseline; auto-elevation triggers can override to High or Prohibited regardless of base score.',
+    ].join('\n\n'),
+    category: 'methodology',
+    tags: ['govsecure', 'risk-model', 'scoring', 'risk-tiering'],
+    source: 'GovSecure 4-Tier Risk Model',
+    sourceType: 'govsecure',
+  });
+
+  // — AI Chef Operating Model: one overview entry + one per station
+  entries.push({
+    title: 'GovSecure AI Chef™ Operating Model — Overview',
+    content: [
+      'The GovSecure AI Chef™ is a 24-recipe governance operating model for SMBs. It organizes AI governance work into six "stations" (governance domains), each with four "recipes" (concrete activities) mapped to risk tiers.',
+      'Stations: ' + AI_CHEF_STATIONS.map((s) => s.name).join(' · '),
+      'AI Chef converts AI governance from scattered policies into an operational system busy operators can run. It includes a RACI ownership model, sample SMB scenario (HarborCraft Home Goods), and operational templates for the AI System Registry, risk tiering, and dashboard reporting.',
+      'When users ask about how to structure or run an AI governance program, point them at the relevant AI Chef station(s) and recipes.',
+    ].join('\n\n'),
+    category: 'methodology',
+    tags: ['govsecure', 'ai-chef', 'operating-model', 'playbook'],
+    source: 'GovSecure AI Chef™ Toolkit',
+    sourceType: 'govsecure',
+  });
+
+  for (const station of AI_CHEF_STATIONS) {
+    entries.push({
+      title: `GovSecure AI Chef — Station: ${station.name}`,
+      content: [
+        `Station ${station.id}: ${station.name}`,
+        `Purpose: ${station.purpose}`,
+        'Each station contains four recipes (concrete activities) that map to risk tiers and assign clear RACI ownership. Use this station when the user is asking about activities in this governance domain.',
+      ].join('\n\n'),
+      category: 'methodology',
+      tags: ['govsecure', 'ai-chef', 'station', station.id.toLowerCase(), ...station.name.toLowerCase().split(/\s+/)],
+      source: 'GovSecure AI Chef™ Toolkit',
+      sourceType: 'govsecure',
+    });
+  }
+
+  // — 90-Day Blueprint: one entry per phase
+  entries.push({
+    title: 'GovSecure 90-Day AI Governance Implementation Blueprint — Overview',
+    content: [
+      'The GovSecure 90-Day Blueprint is a step-by-step rollout plan for SMBs to stand up a full AI governance program in three 30-day phases.',
+      'Phase 1 — Foundation (Weeks 1–4): governance structure, AI inventory, risk tiering, foundational policy drafts, intake process.',
+      'Phase 2 — Implementation (Weeks 5–8): risk assessments, policy approvals, vendor due diligence, security reviews, oversight controls.',
+      'Phase 3 — Operationalize (Weeks 9–13): monitoring, change management, role-based training, evidence pack for first quarterly review, steady-state cadence.',
+      'The blueprint is aligned to NIST AI RMF functions and ISO/IEC 42001 clauses and references specific GovSecure checklists at each step.',
+    ].join('\n\n'),
+    category: 'implementation',
+    tags: ['govsecure', '90-day-blueprint', 'implementation-plan', 'roadmap', 'smb'],
+    source: 'GovSecure 90-Day AI Governance Implementation Blueprint',
+    sourceType: 'govsecure',
+  });
+
+  for (const phase of GOVSECURE_90_DAY_PHASES) {
+    entries.push({
+      title: `GovSecure 90-Day Blueprint — ${phase.name}`,
+      content: [
+        `${phase.name} (${phase.weekRange}, ${phase.durationDays} days)`,
+        `NIST AI RMF function alignment: ${phase.nistFunctionAlignment.join(', ')}.`,
+        'Objectives:',
+        ...phase.objectives.map((o) => `- ${o}`),
+      ].join('\n\n'),
+      category: 'implementation',
+      tags: ['govsecure', '90-day-blueprint', phase.id, ...phase.nistFunctionAlignment.map((f) => f.toLowerCase())],
+      source: 'GovSecure 90-Day AI Governance Implementation Blueprint',
+      sourceType: 'govsecure',
+    });
+  }
+
+  // — Policy Suite Map: one overview + one entry per tier + one per policy
+  entries.push({
+    title: 'GovSecure AI Policy Suite Map — Overview',
+    content: [
+      'The GovSecure AI Policy Suite Map defines 15 enterprise AI policies organized into three tiers: Starter (Tier 1, the baseline), Operational Control (Tier 2), and Maturity / Assurance (Tier 3).',
+      'When advising on policy prioritization, recommend Tier 1 policies first (Acceptable Use, Governance, Data Handling, Risk Approval, Vendor Due Diligence, Incident Response). Layer in Tier 2 once those are operational. Tier 3 supports audit readiness and maturity.',
+      'Every policy has named primary owners, audience, companion templates, and explicit mapping to NIST AI RMF, ISO/IEC 42001, EU AI Act, and GDPR clauses where applicable.',
+    ].join('\n\n'),
+    category: 'policy-architecture',
+    tags: ['govsecure', 'policy-suite', 'policy-map', 'policy-architecture'],
+    source: 'GovSecure AI Policy Suite Map',
+    sourceType: 'govsecure',
+  });
+
+  for (const tier of GOVSECURE_POLICY_SUITE.tiers) {
+    entries.push({
+      title: `GovSecure Policy Suite — Tier: ${tier.tier}`,
+      content: [
+        `Tier: ${tier.tier}`,
+        tier.description,
+        `Policies in this tier: ${tier.policies.map((p) => p.name).join('; ')}.`,
+      ].join('\n\n'),
+      category: 'policy-architecture',
+      tags: ['govsecure', 'policy-suite', `tier-${tier.tier.toLowerCase()}`],
+      source: 'GovSecure AI Policy Suite Map',
+      sourceType: 'govsecure',
+    });
+  }
+
+  for (const tier of GOVSECURE_POLICY_SUITE.tiers) {
+    for (const policy of tier.policies) {
+      const compliance: string[] = [];
+      if (policy.satisfies.nist) compliance.push(`NIST AI RMF: ${policy.satisfies.nist.join(', ')}`);
+      if (policy.satisfies.iso42001) compliance.push(`ISO 42001: ${policy.satisfies.iso42001.join(', ')}`);
+      if (policy.satisfies.euAiAct) compliance.push(`EU AI Act: ${policy.satisfies.euAiAct.join(', ')}`);
+      if (policy.satisfies.gdpr) compliance.push(`GDPR: ${policy.satisfies.gdpr.join(', ')}`);
+
+      entries.push({
+        title: `GovSecure Policy — ${policy.name}`,
+        content: [
+          `${policy.name} — Tier ${policy.tier}`,
+          `Scope: ${policy.scope}`,
+          `Primary owner: ${policy.primaryOwner}`,
+          `Audience: ${policy.audience.join(', ')}.`,
+          `Companion templates: ${policy.companionTemplates.join('; ')}.`,
+          compliance.length ? `Regulatory mapping: ${compliance.join(' · ')}.` : '',
+        ]
+          .filter(Boolean)
+          .join('\n\n'),
+        category: 'policy-architecture',
+        tags: ['govsecure', 'policy', policy.id, `tier-${policy.tier.toLowerCase()}`],
+        source: 'GovSecure AI Policy Suite Map',
+        sourceType: 'govsecure',
+      });
+    }
+  }
+
+  // — NIST RCM: one entry per row of the Summary sheet (9 risk categories)
+  for (const ctrl of GOVSECURE_NIST_RCM) {
+    entries.push({
+      title: `GovSecure NIST RCM — ${ctrl.riskCategory} (ID ${ctrl.riskCategoryId})`,
+      content: [
+        `Risk Category: ${ctrl.riskCategory} (ID ${ctrl.riskCategoryId})`,
+        `Risk Statement: ${ctrl.riskStatement}`,
+        ctrl.riskExample ? `Example: ${ctrl.riskExample}` : '',
+        ctrl.riskRootCause ? `Root cause: ${ctrl.riskRootCause}` : '',
+        `Control Objective: ${ctrl.controlObjective}`,
+      ]
+        .filter(Boolean)
+        .join('\n\n'),
+      category: 'control',
+      tags: ['govsecure', 'nist-rcm', 'risk-control', `rcm-${ctrl.riskCategoryId}`],
+      source: 'GovSecure NIST Risk Control Matrix v5',
+      sourceType: 'govsecure',
+    });
+  }
+
+  // — TPRM Questionnaire: one entry per top-level section
+  const tprmDoc = getDocumentBySubType('questionnaires', 'tprm');
+  if (tprmDoc) {
+    entries.push({
+      title: 'GovSecure Third-Party Risk Management (TPRM) AI Questionnaire — Overview',
+      content: [
+        'The GovSecure TPRM AI Questionnaire is a 12-section vendor risk assessment for AI/ML/GenAI capabilities and AI-enabled SaaS features.',
+        'Each section is scored 1–5 (1 = informational concern, 5 = critical concern requiring escalation). Specific responses act as automatic red-flag triggers (e.g. customer data used for training by default, unclear retention/deletion scope).',
+        'Use this questionnaire during vendor onboarding, contract renewal, major product changes, or post-incident reassessment.',
+      ].join('\n\n'),
+      category: 'vendor-risk',
+      tags: ['govsecure', 'tprm', 'vendor-risk', 'questionnaire', 'third-party'],
+      source: tprmDoc.title,
+      sourceType: 'govsecure',
+    });
+
+    for (const section of tprmDoc.sections) {
+      if (section.heading === '(preamble)') continue;
+      const content = sectionToProse(section);
+      if (!content) continue;
+      entries.push({
+        title: `GovSecure TPRM — ${section.heading}`,
+        content: `Source: GovSecure TPRM AI Questionnaire\nSection: ${section.heading}\n\n${content}`,
+        category: 'vendor-risk',
+        tags: ['govsecure', 'tprm', 'vendor-risk', 'questionnaire'],
+        source: tprmDoc.title,
+        sourceType: 'govsecure',
+      });
+    }
+  }
+
+  return entries;
+}
+
 // ─── Export All Seed Data ────────────────────────────────────────────────────
 
 export async function getAllSeedEntries(): Promise<SeedEntry[]> {
@@ -336,6 +717,10 @@ export async function getAllSeedEntries(): Promise<SeedEntry[]> {
     ...buildImplementationEntries(),
     ...buildGdprEntries(),
     ...nistPlaybookEntries,
+    // GovSecure Content Library — Phase 1 of the integration plan.
+    ...buildGovSecurePolicyEntries(),
+    ...buildGovSecureChecklistEntries(),
+    ...buildGovSecureFrameworkEntries(),
   ];
 
   return entries;

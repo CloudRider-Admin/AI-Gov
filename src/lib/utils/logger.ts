@@ -1,4 +1,4 @@
-export type LogEvent = 'request.received' | 'openai.completed' | 'response.validated' | 'response.fallback' | 'request.failed' | 'artifact.generated' | 'cache.hit' | 'circuit.open' | 'token.budget_exceeded' | 'orchestrator.error' | 'security.injection_detected';
+export type LogEvent = 'request.received' | 'openai.completed' | 'response.validated' | 'response.fallback' | 'request.failed' | 'artifact.generated' | 'artifact.cache_hit' | 'cache.hit' | 'circuit.open' | 'token.budget_exceeded' | 'orchestrator.error' | 'security.injection_detected' | 'citation.unverified';
 
 interface LogOptions {
   event: LogEvent;
