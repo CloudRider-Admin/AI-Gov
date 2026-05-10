@@ -18,6 +18,7 @@ import { pickAdvisorModel } from '@/lib/ai/modelRouter';
 import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
 import { unverifiedCitations, validateCitations } from '@/lib/ai/citationValidator';
+import { claudeStream, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
 
 const SSE_HEADERS = {
   'Content-Type': 'text/event-stream',
@@ -164,23 +165,59 @@ export async function POST(request: NextRequest) {
       classifiedIntent: deterministicIntent,
     });
 
-    // ── OpenAI streaming call (with circuit breaker) ──
+    const userMessage = hasConversationHistory
+      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
+      : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
+
+    // ── OpenAI streaming call (with circuit breaker), Claude fallback on quota/circuit-open ──
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const stream = await openaiCircuit.execute(() =>
-      openai.chat.completions.create({
-        model: modelChoice.model,
-        messages: [
-          { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
-          { role: 'user', content: hasConversationHistory
-            ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
-            : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.` },
-        ],
+    let provider: 'openai' | 'claude' = 'openai';
+    let textStream: AsyncIterable<string>;
+    let providerModel = modelChoice.model;
+
+    try {
+      const openaiStream = await openaiCircuit.execute(() =>
+        openai.chat.completions.create({
+          model: modelChoice.model,
+          messages: [
+            { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
+            { role: 'user', content: userMessage },
+          ],
+          temperature: 0.3,
+          max_tokens: 4000,
+          stream: true,
+          response_format: { type: 'json_object' },
+        }),
+      );
+      textStream = (async function* () {
+        for await (const chunk of openaiStream) {
+          const c = chunk.choices[0]?.delta?.content || '';
+          if (c) yield c;
+        }
+      })();
+    } catch (err) {
+      const shouldFallback =
+        (isOpenAIQuotaError(err) || err instanceof CircuitOpenError) && isClaudeFallbackAvailable();
+      if (!shouldFallback) throw err;
+      auditLog({
+        event: 'fallback.claude',
+        data: {
+          reason: err instanceof CircuitOpenError ? 'circuit_open' : 'openai_quota',
+          error: err instanceof Error ? err.message : String(err),
+          conversationId: dbConversationId,
+          stream: true,
+        },
+      });
+      provider = 'claude';
+      providerModel = process.env.ANTHROPIC_MODEL || 'claude-sonnet-4-6';
+      textStream = claudeStream({
+        system: GOVERNANCE_SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userMessage }],
         temperature: 0.3,
-        max_tokens: 2000,
-        stream: true,
-        response_format: { type: 'json_object' },
-      }),
-    );
+        maxTokens: 4000,
+        jsonOnly: true,
+      });
+    }
 
     const encoder = new TextEncoder();
     let accumulatedContent = '';
@@ -206,9 +243,8 @@ export async function POST(request: NextRequest) {
             timestamp: new Date().toISOString(),
           })}\n\n`));
 
-          // Stage 2: streaming content
-          for await (const chunk of stream) {
-            const content = chunk.choices[0]?.delta?.content || '';
+          // Stage 2: streaming content (unified text deltas across providers)
+          for await (const content of textStream) {
             if (content) {
               accumulatedContent += content;
               streamBuffer.append(streamId, content);
@@ -241,8 +277,29 @@ export async function POST(request: NextRequest) {
           let artifactData: Record<string, unknown> | undefined;
           try {
             const parsed = parseAdvisorResponse(accumulatedContent);
+            // Diagnostic: when the parser falls back to clarification because
+            // JSON.parse + repair both failed, log a sample of what the model
+            // actually emitted so the failure is debuggable in production.
+            const parseFellBack =
+              parsed.mode === 'clarification' &&
+              Array.isArray(parsed.followUpQuestions) &&
+              parsed.followUpQuestions[0]?.startsWith('What AI system or tool are you assessing');
+            if (parseFellBack) {
+              auditLog({
+                event: 'advisor.parse.fallback',
+                data: {
+                  provider,
+                  conversationId: dbConversationId,
+                  contentLength: accumulatedContent.length,
+                  contentHead: accumulatedContent.slice(0, 400),
+                  contentTail: accumulatedContent.slice(-200),
+                },
+              });
+            }
             const validated = buildValidatedResponse(parsed, dbConversationId, ragResult);
-            if (validated.success && validated.data.mode !== 'clarification') {
+            // Orchestrator pipeline still calls OpenAI directly — skip when we
+            // fell back to Claude so we don't trip the same quota/circuit error.
+            if (validated.success && validated.data.mode !== 'clarification' && provider === 'openai') {
               const dispatch = await dispatchOrchestrator({
                 userId: session.user.id,
                 conversationId: dbConversationId,
@@ -279,11 +336,11 @@ export async function POST(request: NextRequest) {
             ...(artifactData ? { artifact: artifactData } : {}),
           })}\n\n`));
 
-          const model = modelChoice.model;
           auditLog({
-            event: 'openai.completed',
+            event: provider === 'openai' ? 'openai.completed' : 'claude.completed',
             data: {
-              model,
+              provider,
+              model: providerModel,
               modelTier: modelChoice.tier,
               modelReason: modelChoice.reason,
               stream: true,
@@ -299,15 +356,61 @@ export async function POST(request: NextRequest) {
             endpoint: 'advisor/stream',
             promptTokens: 0, // not available in streaming
             completionTokens: estimatedTokens,
-            model,
+            model: providerModel,
           });
         } catch (error) {
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({
+          // Surface the actual failure cause to the server log — the SSE
+          // "error" event below is generic by design (the client resumes on
+          // it), but if we don't log here we lose visibility into mid-stream
+          // throws from claudeStream / OpenAI / parser.
+          const errMsg = error instanceof Error ? error.message : String(error);
+          const errStack = error instanceof Error ? error.stack : undefined;
+          auditLog({
+            event: 'request.failed',
+            data: {
+              provider,
+              providerModel,
+              conversationId: dbConversationId,
+              stream: true,
+              accumulatedLength: accumulatedContent.length,
+              error: errMsg,
+              stack: errStack?.split('\n').slice(0, 8).join(' | '),
+            },
+          });
+          console.error('[advisor/stream] mid-stream error:', error);
+
+          // Classify the error: provider billing / credit / quota / auth
+          // failures are fatal — there is nothing to resume to. Surface a
+          // human-readable message and OMIT resumeOffset so the client
+          // throws instead of looping through resume+empty content (which
+          // ultimately renders the canned-clarification fallback).
+          const lower = errMsg.toLowerCase();
+          const fatal =
+            accumulatedContent.length === 0 ||
+            lower.includes('credit balance') ||
+            lower.includes('insufficient_quota') ||
+            lower.includes('quota') ||
+            lower.includes('billing') ||
+            lower.includes('invalid_api_key') ||
+            lower.includes('authentication') ||
+            lower.includes('unauthorized');
+
+          let userMsg = errMsg;
+          if (lower.includes('credit balance')) {
+            userMsg = 'Anthropic credit balance is too low. Add credits at https://console.anthropic.com/settings/billing.';
+          } else if (lower.includes('insufficient_quota') || (provider === 'openai' && lower.includes('quota'))) {
+            userMsg = 'OpenAI quota exceeded. Check your plan & billing at https://platform.openai.com/account/billing.';
+          } else if (lower.includes('invalid_api_key') || lower.includes('authentication')) {
+            userMsg = `${provider === 'openai' ? 'OpenAI' : 'Anthropic'} API key is invalid or missing.`;
+          }
+
+          const payload: Record<string, unknown> = {
             type: 'error',
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: userMsg,
             streamId,
-            resumeOffset: accumulatedContent.length,
-          })}\n\n`));
+          };
+          if (!fatal) payload.resumeOffset = accumulatedContent.length;
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(payload)}\n\n`));
         } finally {
           clearInterval(heartbeat);
           controller.close();

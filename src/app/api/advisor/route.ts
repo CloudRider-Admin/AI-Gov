@@ -17,6 +17,7 @@ import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { guardInput, PromptInjectionError } from '@/lib/security/promptGuard';
 import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
+import { claudeComplete, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
 import {
   flattenStrings,
   STRIP_THRESHOLD,
@@ -113,34 +114,74 @@ export async function POST(request: NextRequest) {
     });
     const model = modelChoice.model;
 
-    // ── OpenAI call (with circuit breaker) ──
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const completion = await openaiCircuit.execute(() =>
-      openai.chat.completions.create({
-        model,
-        messages: [
-          { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
-          { role: 'user', content: hasConversationHistory
-            ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
-            : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.` },
-        ],
-        temperature: 0.3,
-        max_tokens: 2000,
-        response_format: { type: 'json_object' },
-      }),
-    );
+    // ── Build the user message once (reused across providers) ──
+    const userMessage = hasConversationHistory
+      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
+      : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
 
-    const cachedTokens = (completion.usage as { prompt_tokens_details?: { cached_tokens?: number } } | undefined)
-      ?.prompt_tokens_details?.cached_tokens ?? 0;
+    // ── OpenAI call (with circuit breaker), Claude fallback on quota/circuit-open ──
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    let aiResponse: string | null = null;
+    let usedProvider: 'openai' | 'claude' = 'openai';
+    let usedModel = model;
+    let promptTokens = 0;
+    let completionTokens = 0;
+    let cachedTokens = 0;
+
+    try {
+      const completion = await openaiCircuit.execute(() =>
+        openai.chat.completions.create({
+          model,
+          messages: [
+            { role: 'system', content: GOVERNANCE_SYSTEM_PROMPT },
+            { role: 'user', content: userMessage },
+          ],
+          temperature: 0.3,
+          max_tokens: 4000,
+          response_format: { type: 'json_object' },
+        }),
+      );
+      cachedTokens = (completion.usage as { prompt_tokens_details?: { cached_tokens?: number } } | undefined)
+        ?.prompt_tokens_details?.cached_tokens ?? 0;
+      promptTokens = completion.usage?.prompt_tokens ?? 0;
+      completionTokens = completion.usage?.completion_tokens ?? 0;
+      aiResponse = completion.choices[0]?.message?.content ?? null;
+    } catch (err) {
+      const shouldFallback =
+        (isOpenAIQuotaError(err) || err instanceof CircuitOpenError) && isClaudeFallbackAvailable();
+      if (!shouldFallback) throw err;
+      auditLog({
+        event: 'fallback.claude',
+        data: {
+          reason: err instanceof CircuitOpenError ? 'circuit_open' : 'openai_quota',
+          error: err instanceof Error ? err.message : String(err),
+          conversationId,
+        },
+      });
+      const claudeRes = await claudeComplete({
+        system: GOVERNANCE_SYSTEM_PROMPT,
+        messages: [{ role: 'user', content: userMessage }],
+        temperature: 0.3,
+        maxTokens: 4000,
+        jsonOnly: true,
+      });
+      usedProvider = 'claude';
+      usedModel = claudeRes.model;
+      promptTokens = claudeRes.usage.input_tokens;
+      completionTokens = claudeRes.usage.output_tokens;
+      aiResponse = claudeRes.content;
+    }
+
     auditLog({
-      event: 'openai.completed',
+      event: usedProvider === 'openai' ? 'openai.completed' : 'claude.completed',
       data: {
-        model,
+        provider: usedProvider,
+        model: usedModel,
         modelTier: modelChoice.tier,
         modelReason: modelChoice.reason,
-        promptTokens: completion.usage?.prompt_tokens,
+        promptTokens,
         cachedPromptTokens: cachedTokens,
-        completionTokens: completion.usage?.completion_tokens,
+        completionTokens,
         durationMs: Date.now() - startTime,
       },
     });
@@ -150,17 +191,32 @@ export async function POST(request: NextRequest) {
       recordTokenUsage({
         userId: session.user.id,
         endpoint: 'advisor',
-        promptTokens: completion.usage?.prompt_tokens ?? 0,
-        completionTokens: completion.usage?.completion_tokens ?? 0,
-        model,
+        promptTokens,
+        completionTokens,
+        model: usedModel,
       });
     }
 
-    const aiResponse = completion.choices[0]?.message?.content;
     if (!aiResponse) throw new Error('No response from AI service');
 
     // ── Parse & validate ──
     const parsed = parseAdvisorResponse(aiResponse);
+    const parseFellBack =
+      parsed.mode === 'clarification' &&
+      Array.isArray(parsed.followUpQuestions) &&
+      parsed.followUpQuestions[0]?.startsWith('What AI system or tool are you assessing');
+    if (parseFellBack) {
+      auditLog({
+        event: 'advisor.parse.fallback',
+        data: {
+          provider: usedProvider,
+          conversationId,
+          contentLength: aiResponse.length,
+          contentHead: aiResponse.slice(0, 400),
+          contentTail: aiResponse.slice(-200),
+        },
+      });
+    }
     let dbConversationId = isGuest ? 'guest' : conversationId;
     if (!isGuest) {
       dbConversationId = await ensureConversation(session.user.id, query, conversationId);
@@ -203,9 +259,11 @@ export async function POST(request: NextRequest) {
     });
 
     // ── Intent detection & orchestrator dispatch ──
+    // Skipped when we fell back to Claude — the orchestrator pipeline still
+    // calls OpenAI directly, so it will hit the same quota/circuit failure.
     let generatedArtifact = undefined;
     let dispatch: Awaited<ReturnType<typeof dispatchOrchestrator>> | undefined;
-    if (process.env.OPENAI_API_KEY && !isGuest) {
+    if (process.env.OPENAI_API_KEY && !isGuest && usedProvider === 'openai') {
       dispatch = await dispatchOrchestrator({
         userId: session.user.id,
         conversationId: dbConversationId,

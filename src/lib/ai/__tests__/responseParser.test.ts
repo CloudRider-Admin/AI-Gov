@@ -29,12 +29,29 @@ describe('parseAdvisorResponse', () => {
     expect(result.riskProfile?.level).toBe('medium');
   });
 
-  it('should return fallback structure for completely unparseable text', () => {
+  it('should fall back to clarification mode for completely unparseable text', () => {
     const raw = 'This is just plain text with no JSON at all.';
     const result = parseAdvisorResponse(raw);
+    expect(result.mode).toBe('clarification');
     expect(result.riskProfile?.level).toBe('medium');
-    expect(result.riskProfile?.confidence).toBe(0.5);
-    expect(result.riskProfile?.description).toContain('This is just plain text');
+    expect(result.riskProfile?.confidence).toBeLessThan(0.5);
+    expect(result.followUpQuestions?.length).toBeGreaterThanOrEqual(3);
+    expect(result.suggestedPolicies).toEqual([]);
+    expect(result.regulationCheck).toEqual([]);
+  });
+
+  it('should repair truncated JSON missing closing braces', () => {
+    const raw = '{"mode":"assessment","riskProfile":{"level":"high","description":"big risk","confidence":0.8,"reasoning":["one","two"';
+    const result = parseAdvisorResponse(raw);
+    expect(result.mode).toBe('assessment');
+    expect(result.riskProfile?.level).toBe('high');
+    expect(result.riskProfile?.reasoning).toEqual(['one', 'two']);
+  });
+
+  it('should repair JSON with a trailing comma', () => {
+    const raw = '{"mode":"assessment","followUpQuestions":["a","b",]}';
+    const result = parseAdvisorResponse(raw);
+    expect(result.followUpQuestions).toEqual(['a', 'b']);
   });
 
   it('should handle empty string', () => {

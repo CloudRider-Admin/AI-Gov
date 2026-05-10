@@ -12,44 +12,128 @@ import {
 import type { EnhancedRAGResult } from './rag';
 
 /**
- * Parse raw OpenAI response text into a partial AdvisorResponse.
- * Handles json_object format (primary) and falls back to regex extraction.
+ * Repair a truncated or lightly-malformed JSON string.
+ *
+ * Common failure modes from LLMs we patch here:
+ *   - Truncation at max_tokens leaves unclosed `{`, `[`, or `"`.
+ *   - Trailing comma before `}` / `]`.
+ *   - A stray comma at the very end of the document.
+ *
+ * The repair is intentionally conservative: it walks the string once,
+ * tracks string/escape state so braces inside string literals don't
+ * unbalance the stack, and only appends what's needed to terminate
+ * cleanly. If repair still doesn't yield parseable JSON, the caller
+ * falls back to clarification mode.
  */
-export function parseAdvisorResponse(raw: string): Partial<AdvisorResponse> {
-  // Primary path: response_format: json_object should give clean JSON
-  try {
-    return JSON.parse(raw.trim());
-  } catch {
-    // Fallback: try to extract JSON from markdown code blocks
-    const cleaned = raw
-      .replace(/^```(?:json)?\s*\n?/i, '')
-      .replace(/\n?```\s*$/i, '')
-      .trim();
-    try {
-      return JSON.parse(cleaned);
-    } catch {
-      // Last resort: regex match
-      const jsonMatch = raw.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        try {
-          return JSON.parse(jsonMatch[0]);
-        } catch { /* fall through */ }
-      }
+function repairJson(input: string): string {
+  // Pass 1: walk the string tracking string/escape state. Collect indices of
+  // commas that should be stripped (those immediately followed — after
+  // whitespace — by `}` or `]`, or by end-of-input). Track open brackets so
+  // we can close them.
+  let inString = false;
+  let escape = false;
+  const stack: string[] = [];
+  const stripCommaAt = new Set<number>();
+  let lastCommaIdx = -1;
+
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i];
+    if (escape) { escape = false; continue; }
+    if (ch === '\\') { if (inString) escape = true; continue; }
+    if (ch === '"') { inString = !inString; lastCommaIdx = -1; continue; }
+    if (inString) continue;
+    if (/\s/.test(ch)) continue;
+
+    if (ch === ',') { lastCommaIdx = i; continue; }
+    if (ch === '}' || ch === ']') {
+      if (lastCommaIdx >= 0) stripCommaAt.add(lastCommaIdx);
+      if (ch === '}' && stack[stack.length - 1] === '{') stack.pop();
+      else if (ch === ']' && stack[stack.length - 1] === '[') stack.pop();
+      lastCommaIdx = -1;
+      continue;
     }
+    if (ch === '{' || ch === '[') stack.push(ch);
+    lastCommaIdx = -1;
+  }
+  // Comma still hanging at EOF (truncated array/object).
+  if (lastCommaIdx >= 0) stripCommaAt.add(lastCommaIdx);
+
+  // Pass 2: rebuild the string skipping stripped commas.
+  let repaired = '';
+  for (let i = 0; i < input.length; i++) {
+    if (!stripCommaAt.has(i)) repaired += input[i];
   }
 
-  // Complete failure — return minimal structure
+  // Close an unterminated string literal so the appended brackets land
+  // outside the string.
+  if (inString) repaired += '"';
+  // Close still-open containers in reverse order.
+  while (stack.length > 0) {
+    const open = stack.pop();
+    repaired += open === '{' ? '}' : ']';
+  }
+  return repaired;
+}
+
+/** Extract the outermost JSON object from text, stripping prose and code fences. */
+function extractJsonCandidate(raw: string): string {
+  const fenced = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (fenced) return fenced[1].trim();
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start !== -1 && end > start) return raw.slice(start, end + 1);
+  if (start !== -1) return raw.slice(start);
+  return raw.trim();
+}
+
+/**
+ * Parse raw LLM response text into a partial AdvisorResponse.
+ *
+ * Strategy, in order:
+ *   1. Direct JSON.parse on the trimmed input (the happy path under
+ *      OpenAI's `response_format: json_object`).
+ *   2. Strip code fences / surrounding prose, parse that.
+ *   3. Repair common truncation/trailing-comma damage and parse.
+ *   4. Last-ditch: extract candidate then repair then parse.
+ *
+ * If every path fails, return a clarification-mode shape rather than a
+ * fake risk score — the broken "Medium · 50%" card was misleading users
+ * into thinking the model had assessed their query.
+ */
+export function parseAdvisorResponse(raw: string): Partial<AdvisorResponse> {
+  const trimmed = raw.trim();
+
+  try { return JSON.parse(trimmed); } catch { /* try next */ }
+
+  const candidate = extractJsonCandidate(trimmed);
+  try { return JSON.parse(candidate); } catch { /* try next */ }
+
+  try { return JSON.parse(repairJson(candidate)); } catch { /* try next */ }
+
+  try { return JSON.parse(repairJson(trimmed)); } catch { /* fall through */ }
+
+  // Total parse failure → render as clarification so the UI shows the
+  // questionnaire instead of a misleading risk card.
   return {
+    mode: 'clarification',
     riskProfile: {
       level: 'medium',
-      description: raw.substring(0, 500),
-      confidence: 0.5,
-      reasoning: ['Response received but could not parse structured data'],
+      description:
+        "I didn't quite catch the specifics — could you tell me a bit more about the AI system or use case you'd like me to assess?",
+      confidence: 0.3,
+      reasoning: [],
     },
     suggestedPolicies: [],
     regulationCheck: [],
-    followUpQuestions: [],
+    followUpQuestions: [
+      'What AI system or tool are you assessing (e.g. chatbot, ML model, vendor product)?',
+      'What industry or sector is this deployed in?',
+      'What kind of data does it process (personal, financial, health, public)?',
+      'Who are the end users and what decisions does the system inform?',
+      'What is the deployment context — internal pilot, customer-facing, regulated workflow?',
+    ],
     sources: [],
+    intent: { type: 'advisor' },
   };
 }
 
