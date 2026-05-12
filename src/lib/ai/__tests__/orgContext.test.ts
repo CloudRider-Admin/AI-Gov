@@ -78,6 +78,23 @@ describe('orgContext — pure helpers', () => {
       expect(out.jurisdictions).toEqual(expect.arrayContaining(['DE', 'IE', 'US-CA']));
     });
 
+    it('expands the "North America" region to both US and CA', () => {
+      const out = extractFromText('Our operations are in North America only.');
+      expect(out.jurisdictions).toEqual(expect.arrayContaining(['US', 'CA']));
+    });
+
+    it('expands EMEA / APAC / LATAM regional shorthand', () => {
+      expect(extractFromText('We sell in EMEA.').jurisdictions).toEqual(
+        expect.arrayContaining(['EU', 'UK']),
+      );
+      expect(extractFromText('Our APAC business is small.').jurisdictions).toEqual(
+        expect.arrayContaining(['SG', 'AU', 'JP', 'IN']),
+      );
+      expect(extractFromText('LATAM rollout starts next year.').jurisdictions).toEqual(
+        expect.arrayContaining(['MX', 'BR']),
+      );
+    });
+
     it('captures risk appetite vocabulary', () => {
       expect(extractFromText('We have a conservative approach.').riskAppetite).toBe('conservative');
       expect(extractFromText('Our org is risk-averse.').riskAppetite).toBe('conservative');

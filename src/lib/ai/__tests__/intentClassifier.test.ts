@@ -106,14 +106,51 @@ describe('classifyIntent', () => {
       expect(result.type).toBe('advisor');
     });
 
-    it('should handle verbose real-world queries', () => {
+    it('routes verbose real-world use-case + governance question to intake', () => {
       const result = classifyIntent(EDGE_CASE_QUERIES.verbose);
-      // This is a description, not a generation request — should be advisor
-      expect(result.type).toBe('advisor');
+      // The verbose fixture describes a concrete deployed AI ("We are a
+      // financial services company...using an AI-powered credit scoring
+      // model...what governance requirements apply"). Post-Bug-C fix this
+      // routes to intake so the orchestrator's HARD CONSTRAINTS run and
+      // the response chains DPIA / TPRM / Blueprint next actions.
+      expect(result.type).toBe('intake');
     });
 
     it('should handle empty string', () => {
       const result = classifyIntent('');
+      expect(result.type).toBe('advisor');
+    });
+  });
+
+  describe('use-case + governance question routing (Bug C fix)', () => {
+    // Before the fix, "Our startup uses AI to generate marketing content. What
+    // governance do we need?" classified as advisor and bypassed the intake
+    // orchestrator's HARD CONSTRAINTS. After the fix it routes to intake so
+    // the new anti-hallucination guard + suggestedNextActions chain fire.
+    it('routes "Our X uses AI to Y. What governance do we need?" to intake', () => {
+      const result = classifyIntent(
+        'Our startup uses AI to generate marketing content. What governance do we need?',
+      );
+      expect(result.type).toBe('intake');
+    });
+
+    it('routes "We use ChatGPT in customer support. What risks should we address?" to intake', () => {
+      const result = classifyIntent(
+        'We use ChatGPT in our customer support team. What risks should we address?',
+      );
+      expect(result.type).toBe('intake');
+    });
+
+    it('routes "We are building an AI tool to screen CVs. What regulations apply?" to intake', () => {
+      const result = classifyIntent(
+        "We're building an AI tool to screen CVs for hiring. What regulations apply?",
+      );
+      expect(result.type).toBe('intake');
+    });
+
+    // Negative case — abstract governance question without a use case stays advisor.
+    it('keeps "What governance framework should we adopt?" as advisor', () => {
+      const result = classifyIntent('What governance framework should we adopt?');
       expect(result.type).toBe('advisor');
     });
   });

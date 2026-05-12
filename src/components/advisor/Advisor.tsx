@@ -15,7 +15,24 @@ import { TokenBudgetIndicator } from './TokenBudgetIndicator';
 import { WorkflowPanel } from './WorkflowPanel';
 import { parseAdvisorResponse, buildValidatedResponse } from '@/lib/ai/responseParser';
 import { matchSectors, type SectorGuidance } from '@/data/sectorGuidance';
-import { matchRegulations, type EmergingRegulation } from '@/data/emergingRegulations';
+import { matchRegulations, EMERGING_REGULATIONS, type EmergingRegulation } from '@/data/emergingRegulations';
+
+/**
+ * Pick regulations to show in the "Relevant emerging regulations" panel.
+ * Prefers the server-side ranked list (sector + jurisdiction aware) when
+ * the advisor route attached `rankedRegulationIds`; falls back to the
+ * keyword-only client matcher when the server didn't rank (e.g., overlay
+ * disabled or guest-session cache hit).
+ */
+function pickRegulations(response: AdvisorResponse, queryText: string): EmergingRegulation[] {
+  const ids = (response as unknown as { rankedRegulationIds?: string[] }).rankedRegulationIds;
+  if (ids && ids.length) {
+    const byId = new Map(EMERGING_REGULATIONS.map(r => [r.id, r]));
+    const resolved = ids.map(id => byId.get(id)).filter((r): r is EmergingRegulation => Boolean(r));
+    if (resolved.length) return resolved.slice(0, 4);
+  }
+  return matchRegulations(queryText, 2);
+}
 import type { ActionCardAction } from './ActionCardsPanel';
 import type { AdvisorResponse, ConversationSummary } from '@/types/advisor';
 
@@ -163,7 +180,7 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
 
       const data: AdvisorResponse = await res.json();
       const detectedSectors = matchSectors(queryText);
-      const detectedRegulations = matchRegulations(queryText, 2);
+      const detectedRegulations = pickRegulations(data, queryText);
       setThread((prev) => [...prev, { query: queryText, response: data, detectedSectors, detectedRegulations }]);
       setActiveConversationId(data.conversationId);
       setQuery('');
@@ -335,7 +352,7 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
       }
 
       const detectedSectors = matchSectors(queryText);
-      const detectedRegulations = matchRegulations(queryText, 2);
+      const detectedRegulations = pickRegulations(response, queryText);
       setThread(prev => [...prev, { query: queryText, response, detectedSectors, detectedRegulations }]);
       setActiveConversationId(response.conversationId);
       setQuery('');
@@ -543,7 +560,7 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
                 query: userMsg.content,
                 response: parsed,
                 detectedSectors: matchSectors(userMsg.content),
-                detectedRegulations: matchRegulations(userMsg.content, 2),
+                detectedRegulations: pickRegulations(parsed, userMsg.content),
               });
               i++; // skip assistant message on next iteration
             } catch {

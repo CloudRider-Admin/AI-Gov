@@ -241,6 +241,28 @@ const requiredArtifactSchema = z.object({
   status: artifactStatusEnum.default('pending'),
 });
 
+/**
+ * Suggested next-action handoff (Phase: orchestration chaining).
+ * Populated by IntakeOrchestrator when the assessment outcome warrants
+ * follow-on work (e.g. High tier → DPIA + TPRM + 90-Day Blueprint).
+ * The UI renders these as quick-action buttons.
+ */
+const suggestedNextActionSchema = z.object({
+  /** Stable id so the UI can deduplicate. */
+  id: z.string(),
+  /** Short imperative label, e.g. "Generate DPIA draft". */
+  label: z.string(),
+  /** One-sentence rationale shown under the button. */
+  rationale: z.string(),
+  /** Intent the action would dispatch — drives the follow-up turn. */
+  intent: z.enum(['document', 'playbook', 'workflow']),
+  /** documentType / framework / workflowKey depending on intent. */
+  payload: z.record(z.string()),
+  /** Sort order (lower = higher priority). */
+  priority: z.number().int().min(1).max(99).default(50),
+});
+export type SuggestedNextAction = z.infer<typeof suggestedNextActionSchema>;
+
 export const intakeAssessmentSchema = z.object({
   useCaseName: z.string(),
   owner: z.string().default(''),
@@ -265,6 +287,8 @@ export const intakeAssessmentSchema = z.object({
   euAIActClassification: euAIActClassificationEnum,
   euAIActRationale: z.string(),
   nistKeySubcategories: z.array(z.string()).default([]),
+  /** Auto-populated handoffs — DPIA / TPRM / Blueprint / Registry. */
+  suggestedNextActions: z.array(suggestedNextActionSchema).default([]),
   markdownExport: z.string().default(''),
 });
 

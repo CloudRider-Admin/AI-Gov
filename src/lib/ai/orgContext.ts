@@ -106,14 +106,23 @@ const HEADCOUNT_REGEX = /\b(\d{2,5})[-\s]?(?:person|employee|people|staff|headco
 const JURISDICTION_REGEX =
   /\b(?:in|across|spanning|operate(?:s)?\s+(?:in|across))\s+((?:[A-Z][A-Za-z]+(?:[,\s]+(?:and\s+)?[A-Z][A-Za-z]+)*))\b/g;
 
-const COUNTRY_TOKENS: Record<string, string> = {
+/**
+ * Token → jurisdiction code(s). A string array value means the token expands
+ * to multiple codes (e.g. "North America" → ['US', 'CA']). The extraction
+ * loop unions all codes into the captured `jurisdictions` set.
+ */
+const COUNTRY_TOKENS: Record<string, string | string[]> = {
   us: 'US',
   usa: 'US',
   america: 'US',
+  unitedstates: 'US',
   uk: 'UK',
   britain: 'UK',
+  unitedkingdom: 'UK',
   eu: 'EU',
   europe: 'EU',
+  europeanunion: 'EU',
+  eea: 'EEA',
   germany: 'DE',
   france: 'FR',
   spain: 'ES',
@@ -132,6 +141,12 @@ const COUNTRY_TOKENS: Record<string, string> = {
   texas: 'US-TX',
   newyork: 'US-NY',
   ny: 'US-NY',
+  // ── Regions that expand to multiple jurisdictions ──
+  northamerica: ['US', 'CA'],
+  na: ['US', 'CA'],
+  emea: ['EU', 'UK'],
+  apac: ['SG', 'AU', 'JP', 'IN'],
+  latam: ['MX', 'BR'],
 };
 
 const RISK_APPETITE_REGEX = /\b(conservative|balanced|aggressive|risk[-\s]?(?:averse|tolerant))\b/i;
@@ -175,22 +190,31 @@ export function extractFromText(text: string): Partial<OrgContext> {
   }
   if (tools.size) update.knownAITools = Array.from(tools);
 
-  // Jurisdictions — both explicit "in California" and bare country tokens
+  // Jurisdictions — both explicit "in California" and bare country tokens.
+  // Token values may be a single code or an array (e.g. "North America" → US, CA).
   const jurisdictions = new Set<string>();
+  const addCode = (val: string | string[] | undefined) => {
+    if (!val) return;
+    if (Array.isArray(val)) val.forEach(v => jurisdictions.add(v));
+    else jurisdictions.add(val);
+  };
   for (const m of text.matchAll(JURISDICTION_REGEX)) {
     const block = m[1].toLowerCase().replace(/\s+/g, '');
     for (const part of block.split(/[,]/)) {
-      const code = COUNTRY_TOKENS[part];
-      if (code) jurisdictions.add(code);
+      addCode(COUNTRY_TOKENS[part]);
     }
   }
-  // Bare country tokens fallback
+  // Bare country/region tokens fallback. Multi-word tokens (northamerica) are
+  // checked against the whitespace-stripped lowercase text; single-word tokens
+  // against the original to avoid false hits (e.g. "europe" inside "europeans").
+  const stripped = text.replace(/\s+/g, '').toLowerCase();
   for (const [needle, code] of Object.entries(COUNTRY_TOKENS)) {
-    const re = new RegExp(`\\b${needle}\\b`, 'i');
-    if (re.test(text.replace(/\s+/g, '').toLowerCase())) {
-      // Skip — handled by phrase regex more accurately above
-    } else if (re.test(text)) {
-      jurisdictions.add(code);
+    const isMultiWord = /[a-z]{8,}/.test(needle) && (needle === 'northamerica' || needle === 'unitedstates' || needle === 'unitedkingdom' || needle === 'europeanunion');
+    if (isMultiWord) {
+      if (stripped.includes(needle)) addCode(code);
+    } else {
+      const re = new RegExp(`\\b${needle}\\b`, 'i');
+      if (re.test(text)) addCode(code);
     }
   }
   if (jurisdictions.size) update.jurisdictions = Array.from(jurisdictions);

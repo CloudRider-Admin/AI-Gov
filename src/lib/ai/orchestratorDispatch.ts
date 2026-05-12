@@ -9,6 +9,13 @@ import { intakeOrchestrator, documentOrchestrator, playbookOrchestrator } from '
 import { saveArtifact } from '@/lib/artifacts';
 import { classifyIntent, reconcileIntents, type ClassifiedIntent } from './intentClassifier';
 import { captureOrgContext, getOrgContext } from './orgContext';
+import {
+  captureIntakeProfile,
+  getIntakeProfile,
+  assessIntakeProfileCompleteness,
+  intakeProfileToOrchestratorInput,
+  type IntakeProfile,
+} from './intakeProfile';
 import { artifactCache, buildArtifactKey, hashOrgContext } from '@/lib/responseCache';
 import { auditLog } from '@/lib/utils/logger';
 import type { AdvisorResponse } from './schemas';
@@ -36,6 +43,18 @@ export interface DispatchResult {
     message: string;
     intentType: string;
     retryable: boolean;
+  };
+  /**
+   * For intake intents only: the orchestrator was deferred because the
+   * GovSecure Use-Case Intake Form is incomplete. Contains the questions
+   * the advisor should ask before scoring. The advisor route surfaces
+   * these as `followUpQuestions`.
+   */
+  intakeNeedsMoreInfo?: {
+    missingFields: string[];
+    questions: string[];
+    completeness: number;
+    capturedProfile: IntakeProfile;
   };
 }
 
@@ -80,6 +99,10 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
   // captureOrgContext is a no-op via its prisma try/catch.
   if (ctx.conversationId) {
     await captureOrgContext(ctx.conversationId, ctx.query);
+    // Capture GovSecure intake-form fields from the user's turn so the
+    // intake orchestrator can score against real input rather than
+    // inventing "humans retain control" / "Vendor DPA in place".
+    await captureIntakeProfile(ctx.conversationId, ctx.query);
   }
 
   // If intent is just advisory, no orchestrator dispatch needed
@@ -118,8 +141,50 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
     let artifact: AdvisorResponse['generatedArtifact'] | undefined;
 
     if (finalIntent.type === 'intake') {
+      // Gate scoring on intake-form completeness. If the GovSecure Section
+      // A / C / D minimum isn't captured, ask for it BEFORE running the
+      // orchestrator — never default to "Internal" / "Not specified" and
+      // let the LLM invent driver-note context to fill the gap.
+      const profile = ctx.conversationId
+        ? await getIntakeProfile(ctx.conversationId)
+        : ({} as IntakeProfile);
+      const completeness = assessIntakeProfileCompleteness(profile);
+      if (!completeness.ok) {
+        auditLog({
+          event: 'intake.deferred_incomplete_profile',
+          data: {
+            conversationId: ctx.conversationId,
+            missing: completeness.missing,
+            completeness: completeness.completeness,
+          },
+        });
+        return {
+          intentUsed: finalIntent,
+          contested,
+          intakeNeedsMoreInfo: {
+            missingFields: completeness.missing,
+            questions: completeness.questions,
+            completeness: completeness.completeness,
+            capturedProfile: profile,
+          },
+        };
+      }
+
+      // Profile is complete — thread the captured fields into the
+      // orchestrator so the prompt scores against real input.
+      const orgCtxFull = ctx.conversationId
+        ? await getOrgContext(ctx.conversationId)
+        : undefined;
+      const orchestratorInput = intakeProfileToOrchestratorInput(
+        profile,
+        orgCtxFull?.jurisdictions,
+      );
       const result = await intakeOrchestrator.run(
-        { useCaseDescription: useCaseDesc, conversationId: ctx.conversationId },
+        {
+          useCaseDescription: useCaseDesc,
+          conversationId: ctx.conversationId,
+          ...orchestratorInput,
+        },
         ctx.apiKey,
       );
       const artifactId = await saveArtifact({

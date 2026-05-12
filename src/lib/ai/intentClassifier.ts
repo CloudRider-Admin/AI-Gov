@@ -90,6 +90,34 @@ const GENERATE_DOCUMENT_PATTERN = /\b(?:generate|create|write|produce|draft|buil
 /** Patterns that strongly indicate intake/risk assessment intent */
 const INTAKE_PATTERN = /\b(?:assess|evaluate|intake|risk\s+assessment|analyze\s+(?:the\s+)?risk|score\s+(?:the\s+)?risk|run\s+(?:an?\s+)?(?:intake|assessment))\b/i;
 
+/**
+ * Softer intake signal — phrased as a question but describing a concrete use
+ * case the user already runs. "Our X uses AI to do Y. What governance / risks
+ * / controls do we need?" should route through the intake orchestrator (with
+ * the new HARD CONSTRAINTS), not the generic advisor.
+ *
+ * Decomposed into three independently-tested regexes that must all match the
+ * same query: a first-person subject, a deployment verb, and an AI-related
+ * noun. Keeps each piece tolerant of contractions ("We're"), inflections
+ * ("uses", "building"), and compound nouns ("ChatGPT", "marketing content").
+ */
+const INTAKE_FIRST_PERSON_PATTERN = /\b(?:we(?:['’]re)?|our|my|i(?:['’]m)?)\b/i;
+const INTAKE_DEPLOYMENT_VERB_PATTERN =
+  /\b(?:uses?|using|run(?:s|ning)?|deploy(?:s|ing|ed)?|build(?:s|ing|t)?|launch(?:es|ing|ed)?|are\s+(?:building|deploying|using|running)|currently\s+(?:use|using|run|running))\b/i;
+const INTAKE_AI_NOUN_PATTERN =
+  /\b(?:ai|a\.i\.|chatbot|chatgpt|llm|llms|gpt|claude|gemini|copilot|generative|recommendation\s+(?:engine|system)|hiring|cv|cvs|resume|screening|fraud|credit\s+scor|content|marketing|customer\s+support|automation)\b/i;
+const GOVERNANCE_QUESTION_PATTERN =
+  /\b(?:what|which)\s+(?:[a-z]+\s+){0,3}(?:governance|risks?|regulations?|policies|controls|compliance|safeguards?|requirements?)\b/i;
+
+function isUseCaseGovernanceQuestion(query: string): boolean {
+  return (
+    INTAKE_FIRST_PERSON_PATTERN.test(query) &&
+    INTAKE_DEPLOYMENT_VERB_PATTERN.test(query) &&
+    INTAKE_AI_NOUN_PATTERN.test(query) &&
+    GOVERNANCE_QUESTION_PATTERN.test(query)
+  );
+}
+
 /** Patterns that strongly indicate playbook/implementation plan intent */
 const PLAYBOOK_PATTERN = /\b(?:playbook|roadmap|implementation\s+plan|compliance\s+plan|governance\s+plan|action\s+plan|step-by-step\s+plan|ai\s+chef|90.?day\s+(?:blueprint|plan))\b/i;
 
@@ -179,6 +207,21 @@ export function classifyIntent(query: string, hasExistingThread = false): Classi
     return {
       type: 'intake',
       confidence: 'high',
+      extractedDescription: extractDescription(trimmed),
+      needsClarification,
+    };
+  }
+
+  // 2a. Softer intake routing — question phrased about a concrete use case.
+  // "Our startup uses AI to generate marketing content. What governance do
+  // we need?" — the user has supplied a use case AND is asking for
+  // governance/risk advice on it. Route through the intake orchestrator so
+  // the new anti-hallucination constraints + suggestedNextActions chain fire.
+  if (isUseCaseGovernanceQuestion(trimmed)) {
+    const needsClarification = !hasExistingThread && !hasSpecificContext(trimmed);
+    return {
+      type: 'intake',
+      confidence: 'medium',
       extractedDescription: extractDescription(trimmed),
       needsClarification,
     };

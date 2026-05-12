@@ -62,3 +62,4 @@ pnpm-debug.log*
 prisma/*.db
 prisma/*.db-journal
 prisma/migrations/dev.db*
+.vercel

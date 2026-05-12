@@ -8,6 +8,15 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import { parseAdvisorResponse, buildValidatedResponse, applyGating } from '@/lib/ai/responseParser';
 import { dispatchOrchestrator } from '@/lib/ai/orchestratorDispatch';
 import { classifyIntent } from '@/lib/ai/intentClassifier';
+import { getOrgContext, extractFromText as extractOrgContextFromText, type OrgContext } from '@/lib/ai/orgContext';
+import {
+  getIntakeProfile,
+  extractIntakeProfileFromText,
+  mergeIntakeProfile,
+  type IntakeProfile,
+} from '@/lib/ai/intakeProfile';
+import { recommendPolicies, toPolicyRecommendation } from '@/data/govsecurePolicySuite';
+import { rankRegulationsForContext } from '@/data/emergingRegulations';
 import { pickAdvisorModel } from '@/lib/ai/modelRouter';
 import { ensureConversation, persistMessages } from '@/lib/conversation';
 import { checkTokenBudget, recordTokenUsage } from '@/lib/tokenBudget';
@@ -284,6 +293,96 @@ export async function POST(request: NextRequest) {
         auditLog({ event: 'orchestrator.error', data: dispatch.orchestratorError });
         trackEvent({ userId: session.user.id, event: 'error', category: 'orchestrator', metadata: dispatch.orchestratorError });
       }
+
+      // Intake form not yet complete — replace the LLM's generic clarifier
+      // with the GovSecure-form-specific questions the user actually needs
+      // to answer before scoring. Switches the response into clarification
+      // mode so the UI doesn't render the (now-misleading) risk profile.
+      if (dispatch.intakeNeedsMoreInfo) {
+        validated.data.mode = 'clarification';
+        validated.data.followUpQuestions = dispatch.intakeNeedsMoreInfo.questions;
+      }
+    }
+
+    // ── Overlay GovSecure suite recommendations on top of LLM suggestions ──
+    // Replaces invented generic policies (e.g. "Data Privacy and Security
+    // Policy", "AI System Monitoring and Evaluation Policy") with the
+    // canonical GovSecure Suite Map titles the client will receive in
+    // their licensed delivery. Also re-ranks regulations using sector +
+    // jurisdiction signals so financial-services intakes lead with
+    // GLBA/CFPB/SEC instead of GDPR.
+    //
+    // Runs for BOTH authenticated and guest sessions. When a conversationId
+    // exists we read the persisted org/intake profile; otherwise we infer
+    // them inline from the current query + prior thread context (passed in
+    // `context`) so guest users get the same Suite Map intelligence.
+    let rankedRegulationIds: string[] = [];
+    // Build-marker log — appears once per cold start when the overlay code
+    // path runs. Lets us verify from server console whether the new build
+    // is actually loaded after a dev-server restart.
+    const markerHolder = globalThis as { __advisorOverlayBuildMarkerLogged?: boolean };
+    if (!markerHolder.__advisorOverlayBuildMarkerLogged) {
+      console.log('[advisor] policy/reg overlay v2026-05-12 active — Suite Map + rankRegulationsForContext + intake gating');
+      markerHolder.__advisorOverlayBuildMarkerLogged = true;
+    }
+    if (!dispatch?.intakeNeedsMoreInfo) {
+      try {
+        let orgCtx: OrgContext;
+        let intakeProf: IntakeProfile;
+        if (dbConversationId) {
+          [orgCtx, intakeProf] = await Promise.all([
+            getOrgContext(dbConversationId),
+            getIntakeProfile(dbConversationId),
+          ]);
+        } else {
+          // Guest path — derive from current turn + thread history.
+          const inlineSource = `${context ?? ''}\n${query}`;
+          orgCtx = extractOrgContextFromText(inlineSource) as OrgContext;
+          intakeProf = mergeIntakeProfile({}, extractIntakeProfileFromText(inlineSource));
+        }
+        const tier = generatedArtifact && (generatedArtifact.data as { riskTier?: string })?.riskTier;
+        const policyCtx = {
+          hasExistingFramework: false,
+          riskTier: tier as 'Low' | 'Medium' | 'High' | 'Critical' | undefined,
+          customerFacing:
+            intakeProf.deploymentScope === 'Customer-facing' ||
+            intakeProf.deploymentScope === 'Public-facing',
+          handlesSensitiveData: Boolean(
+            intakeProf.dataCategories?.personalOrSensitive ||
+              intakeProf.dataCategories?.financialOrRegulated,
+          ),
+          industry: orgCtx.industry,
+        };
+        const govsecure = recommendPolicies(policyCtx).map(toPolicyRecommendation);
+        if (govsecure.length) {
+          // Prefer GovSecure titles; keep any LLM suggestion whose title
+          // does NOT collide with a canonical GovSecure title.
+          const canonical = new Set(govsecure.map(p => p.title.toLowerCase()));
+          const llmKeepers = (validated.data.suggestedPolicies ?? []).filter(
+            p => !canonical.has(p.title.toLowerCase()),
+          );
+          validated.data.suggestedPolicies = [...govsecure, ...llmKeepers];
+        }
+
+        const ranked = rankRegulationsForContext({
+          query,
+          industry: orgCtx.industry,
+          jurisdictions: orgCtx.jurisdictions,
+          customerFacing: policyCtx.customerFacing,
+        });
+        if (ranked.length) {
+          validated.data.regulationCheck = ranked.map(r => ({
+            regulation: r.shortName,
+            article: r.keyProvisions[0]?.provision ?? r.name,
+            relevance: 'high' as const,
+            description: r.summary.slice(0, 280),
+          }));
+          rankedRegulationIds = ranked.map(r => r.id);
+        }
+      } catch (err) {
+        // Non-fatal — overlay is enrichment, not core path.
+        console.warn('[advisor] policy/reg overlay failed:', err);
+      }
     }
 
     // ── Apply gating & respond ──
@@ -292,6 +391,21 @@ export async function POST(request: NextRequest) {
     // ── Surface orchestrator error to client ──
     if (generatedArtifact === undefined && dispatch?.orchestratorError) {
       (finalResponse as Record<string, unknown>).orchestratorError = dispatch.orchestratorError;
+    }
+
+    // ── Surface intake-needs-more-info to client (non-fatal hint) ──
+    if (dispatch?.intakeNeedsMoreInfo) {
+      (finalResponse as Record<string, unknown>).intakeNeedsMoreInfo = {
+        missingFields: dispatch.intakeNeedsMoreInfo.missingFields,
+        completeness: dispatch.intakeNeedsMoreInfo.completeness,
+      };
+    }
+
+    // ── Surface server-ranked regulation IDs so the client renders the
+    // sector/jurisdiction-aware list (not the keyword-only `matchRegulations`
+    // fallback). Client maps IDs to full `EmergingRegulation` objects locally.
+    if (rankedRegulationIds.length) {
+      (finalResponse as Record<string, unknown>).rankedRegulationIds = rankedRegulationIds;
     }
 
     // ── Cache the response ──
