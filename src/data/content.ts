@@ -187,6 +187,7 @@ export const visualGuides: VisualGuide[] = [
     description:
       'A visual walkthrough of the four core functions — GOVERN, MAP, MEASURE, MANAGE — and how they fit together.',
     type: 'Infographic',
+    image: '/infographicsforgovsecure/nist-rmf-blueprint.png',
   },
   {
     id: 'eu-ai-act-risk-pyramid',
@@ -194,6 +195,7 @@ export const visualGuides: VisualGuide[] = [
     description:
       'Understand the four risk tiers of the EU AI Act and where your AI systems fit.',
     type: 'Diagram',
+    image: '/infographicsforgovsecure/eu-ai-act-framework.png',
   },
   {
     id: 'governance-maturity-model',
