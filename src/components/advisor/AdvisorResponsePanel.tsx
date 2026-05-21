@@ -8,6 +8,7 @@ import { PoliciesGrid } from './PoliciesGrid';
 import { RegulationsPanel } from './RegulationsPanel';
 import { FollowUpsPanel } from './FollowUpsPanel';
 import { ActionCardsPanel, type ActionCardAction } from './ActionCardsPanel';
+import { IntentSuggestionBanner } from './IntentSuggestionBanner';
 import { ArtifactViewer } from './ArtifactViewer';
 import { SectorRegulationBadges } from './SectorRegulationBadges';
 import type { AdvisorResponse, PolicyRecommendation } from '@/types/advisor';
@@ -235,12 +236,36 @@ export function AdvisorResponsePanel({
                   Submit Answers
                 </button>
               </div>
+              {onQuestionClick && (
+                <div className="pt-2 text-xs font-mono text-terminal-muted">
+                  Not ready for the full assessment?{' '}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      onQuestionClick(
+                        `Just chat — give me a quick overview of: ${submittedQuery}`,
+                      )
+                    }
+                    className="text-terminal-cyan hover:underline"
+                  >
+                    Skip the questions and give me a quick overview instead →
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </>
       ) : (
         <>
           {/* ── Full assessment mode ── */}
+          {response.intentSuggestion && (
+            <IntentSuggestionBanner
+              suggestion={response.intentSuggestion}
+              useCaseDescription={submittedQuery}
+              isPaidUser={isPaidUser}
+              onAction={onActionCard}
+            />
+          )}
           <SectorRegulationBadges sectors={detectedSectors} regulations={detectedRegulations} />
           <RiskProfileCard riskProfile={response.riskProfile} confidencePercent={confidencePercent} />
           <PoliciesGrid
@@ -278,6 +303,7 @@ export function AdvisorResponsePanel({
               regulations={response.regulationCheck}
               sourcesStructured={response.sourcesStructured}
               sources={response.sources}
+              query={submittedQuery}
             />
           )}
 

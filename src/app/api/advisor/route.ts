@@ -401,6 +401,12 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    // ── Surface soft routing suggestion (classifier saw a use case but
+    // didn't auto-route to intake). UI renders this as an inline CTA. ──
+    if (dispatch?.suggestedAction && !generatedArtifact && !dispatch.intakeNeedsMoreInfo) {
+      finalResponse.intentSuggestion = dispatch.suggestedAction;
+    }
+
     // ── Surface server-ranked regulation IDs so the client renders the
     // sector/jurisdiction-aware list (not the keyword-only `matchRegulations`
     // fallback). Client maps IDs to full `EmergingRegulation` objects locally.

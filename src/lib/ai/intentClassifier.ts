@@ -17,6 +17,27 @@ export interface ClassifiedIntent {
   extractedDescription?: string;
   /** True when the query intends generation but lacks specifics (no use case, industry, etc.) */
   needsClarification?: boolean;
+  /**
+   * Routing mode for the dispatcher.
+   * - `auto`   → run the orchestrator for `type` immediately (default).
+   * - `suggest` → soft signal only. Stay in advisor (chat) mode and surface
+   *   a one-tap CTA via `suggestedAction` so the user opts in explicitly
+   *   instead of being dropped into a questionnaire mid-conversation.
+   */
+  mode?: 'auto' | 'suggest';
+  /**
+   * Populated when the classifier detected an opportunity to upgrade the
+   * conversation to a structured flow (intake / document / playbook) but
+   * didn't have explicit user authorization to commit. The advisor route
+   * passes this through to the UI which renders an inline CTA card.
+   */
+  suggestedAction?: {
+    type: 'intake' | 'document' | 'playbook';
+    /** Short human-readable reason — shown to the user. */
+    reason: string;
+    documentType?: string;
+    framework?: string;
+  };
 }
 
 /**
@@ -89,6 +110,24 @@ const GENERATE_DOCUMENT_PATTERN = /\b(?:generate|create|write|produce|draft|buil
 
 /** Patterns that strongly indicate intake/risk assessment intent */
 const INTAKE_PATTERN = /\b(?:assess|evaluate|intake|risk\s+assessment|analyze\s+(?:the\s+)?risk|score\s+(?:the\s+)?risk|run\s+(?:an?\s+)?(?:intake|assessment))\b/i;
+
+/**
+ * Explicit cues that the user wants a structured risk assessment / tier
+ * classification — not just a chat. When present alongside use-case
+ * signals we commit to intake mode automatically. When absent we only
+ * SUGGEST intake (mode: 'suggest') so the user can opt in.
+ */
+const ASSESSMENT_CUE_PATTERN =
+  /\b(?:score|tier(?:ing|s)?|rate(?:d)?\s+(?:the\s+)?risk|classif(?:y|ication)|is\s+(?:this|it|that)\s+(?:high|medium|low|critical)\s+risk|risk\s+(?:level|rating|tier|grade)|dpia\s+(?:needed|required)|need(?:ed)?\s+(?:a\s+)?dpia|intake\s+form|formal\s+assessment|structured\s+(?:assessment|review))\b/i;
+
+/**
+ * Explicit cues the user wants a CONVERSATIONAL answer, not an
+ * intake/questionnaire flow. When matched we force advisor mode even if
+ * other intake heuristics would have fired. Used by the "Skip questions —
+ * give me a quick overview" escape hatch in the clarification UI.
+ */
+const DISCUSS_CUE_PATTERN =
+  /\b(?:just\s+(?:chat|discuss|tell|explain)|quick\s+(?:overview|summary|read|answer|chat)|brief(?:ly)?\s+(?:explain|describe|summarize)|(?:in\s+)?plain\s+(?:english|terms)|no\s+(?:form|questionnaire|intake)|don'?t\s+ask|conversational(?:ly)?|skip\s+(?:the\s+)?(?:form|questions|intake))\b/i;
 
 /**
  * Softer intake signal — phrased as a question but describing a concrete use
@@ -186,6 +225,13 @@ export function classifyIntent(query: string, hasExistingThread = false): Classi
   // Check if this is a question about something (not a generation request)
   const isQuestion = QUESTION_PATTERN.test(trimmed) && !GENERATION_VERBS.test(trimmed);
 
+  // If the user explicitly asked to chat / skip the form, force advisor
+  // mode regardless of other heuristics. Powers the clarification-mode
+  // "Skip questions — give me a quick overview" escape hatch.
+  if (DISCUSS_CUE_PATTERN.test(trimmed)) {
+    return { type: 'advisor', confidence: 'high', mode: 'auto' };
+  }
+
   // 1. Check for explicit document generation
   if (GENERATE_DOCUMENT_PATTERN.test(trimmed) && !isQuestion) {
     const documentType = detectDocumentType(trimmed);
@@ -194,6 +240,7 @@ export function classifyIntent(query: string, hasExistingThread = false): Classi
       return {
         type: 'document',
         confidence: 'high',
+        mode: 'auto',
         documentType,
         extractedDescription: extractDescription(trimmed),
         needsClarification,
@@ -207,23 +254,65 @@ export function classifyIntent(query: string, hasExistingThread = false): Classi
     return {
       type: 'intake',
       confidence: 'high',
+      mode: 'auto',
+      extractedDescription: extractDescription(trimmed),
+      needsClarification,
+    };
+  }
+
+  // 2.5. Explicit assessment cue ("score the risk", "is this high risk?",
+  // "DPIA needed", "risk tier") in an AI context → commit to intake even
+  // when the sentence is phrased as a question. The `!isQuestion` guard on
+  // INTAKE_PATTERN above misses these because the user often asks "is X
+  // high risk?" or "tell me the tier" rather than imperative phrasing.
+  if (
+    ASSESSMENT_CUE_PATTERN.test(trimmed) &&
+    INTAKE_AI_NOUN_PATTERN.test(trimmed)
+  ) {
+    const needsClarification = !hasExistingThread && !hasSpecificContext(trimmed);
+    return {
+      type: 'intake',
+      confidence: 'high',
+      mode: 'auto',
       extractedDescription: extractDescription(trimmed),
       needsClarification,
     };
   }
 
   // 2a. Softer intake routing — question phrased about a concrete use case.
-  // "Our startup uses AI to generate marketing content. What governance do
-  // we need?" — the user has supplied a use case AND is asking for
-  // governance/risk advice on it. Route through the intake orchestrator so
-  // the new anti-hallucination constraints + suggestedNextActions chain fire.
+  //
+  // OLD behavior: any "Our X uses AI to do Y, what governance/risks do we
+  // need?" auto-routed to intake. That dropped users into a questionnaire
+  // mid-conversation even when they were just exploring.
+  //
+  // NEW behavior: only auto-route when an explicit assessment cue is
+  // present ("score", "tier", "DPIA needed", "is this high risk", etc.).
+  // Otherwise stay in advisor (chat) mode but attach a `suggestedAction`
+  // so the UI can offer a one-tap upgrade to a structured assessment.
   if (isUseCaseGovernanceQuestion(trimmed)) {
     const needsClarification = !hasExistingThread && !hasSpecificContext(trimmed);
+    const extractedDescription = extractDescription(trimmed);
+
+    if (ASSESSMENT_CUE_PATTERN.test(trimmed)) {
+      return {
+        type: 'intake',
+        confidence: 'high',
+        mode: 'auto',
+        extractedDescription,
+        needsClarification,
+      };
+    }
+
     return {
-      type: 'intake',
+      type: 'advisor',
       confidence: 'medium',
-      extractedDescription: extractDescription(trimmed),
-      needsClarification,
+      mode: 'suggest',
+      extractedDescription,
+      suggestedAction: {
+        type: 'intake',
+        reason:
+          'You described a real AI use case. Want a structured risk assessment with a tier classification and recommended controls?',
+      },
     };
   }
 
@@ -274,6 +363,7 @@ export function classifyIntent(query: string, hasExistingThread = false): Classi
   return {
     type: 'advisor',
     confidence: isQuestion ? 'high' : 'low',
+    mode: 'auto',
   };
 }
 

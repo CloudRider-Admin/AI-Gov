@@ -38,6 +38,13 @@ export interface DispatchResult {
   artifact?: AdvisorResponse['generatedArtifact'];
   intentUsed: ClassifiedIntent;
   contested: boolean;
+  /**
+   * Soft routing hint — when the classifier detected a use case worth
+   * upgrading to a structured assessment / document / playbook but didn't
+   * have explicit authorization. The route surfaces this as
+   * `response.intentSuggestion` so the UI can render a one-tap CTA.
+   */
+  suggestedAction?: ClassifiedIntent['suggestedAction'];
   /** If the orchestrator failed, this contains the error details for the UI */
   orchestratorError?: {
     message: string;
@@ -105,9 +112,24 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
     await captureIntakeProfile(ctx.conversationId, ctx.query);
   }
 
-  // If intent is just advisory, no orchestrator dispatch needed
+  // If intent is just advisory, no orchestrator dispatch needed.
+  // Pass through any soft suggestion so the UI can offer a CTA.
   if (finalIntent.type === 'advisor') {
-    return { intentUsed: finalIntent, contested };
+    return {
+      intentUsed: finalIntent,
+      contested,
+      suggestedAction: finalIntent.suggestedAction,
+    };
+  }
+
+  // Soft-suggest mode: classifier wants the user to opt in before we
+  // commit to a structured flow. Skip orchestrator and surface the CTA.
+  if (finalIntent.mode === 'suggest') {
+    return {
+      intentUsed: finalIntent,
+      contested,
+      suggestedAction: finalIntent.suggestedAction,
+    };
   }
 
   // If the query needs clarification (too vague for generation), skip dispatch

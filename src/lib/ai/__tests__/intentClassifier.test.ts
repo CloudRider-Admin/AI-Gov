@@ -122,30 +122,73 @@ describe('classifyIntent', () => {
     });
   });
 
-  describe('use-case + governance question routing (Bug C fix)', () => {
-    // Before the fix, "Our startup uses AI to generate marketing content. What
-    // governance do we need?" classified as advisor and bypassed the intake
-    // orchestrator's HARD CONSTRAINTS. After the fix it routes to intake so
-    // the new anti-hallucination guard + suggestedNextActions chain fire.
-    it('routes "Our X uses AI to Y. What governance do we need?" to intake', () => {
+  describe('use-case + governance question routing', () => {
+    // Soft signal: real use case + governance question, but NO explicit
+    // assessment cue ("score", "tier", "DPIA needed", "high risk?"). The
+    // classifier used to auto-route these to intake, which dropped the user
+    // into a questionnaire mid-conversation. Now it stays in advisor mode
+    // and surfaces a `suggestedAction` so the UI offers a one-tap CTA.
+    it('soft-suggests intake for "Our X uses AI to Y. What governance do we need?"', () => {
       const result = classifyIntent(
         'Our startup uses AI to generate marketing content. What governance do we need?',
       );
-      expect(result.type).toBe('intake');
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
     });
 
-    it('routes "We use ChatGPT in customer support. What risks should we address?" to intake', () => {
+    it('soft-suggests intake for "We use ChatGPT in customer support. What risks should we address?"', () => {
       const result = classifyIntent(
         'We use ChatGPT in our customer support team. What risks should we address?',
       );
-      expect(result.type).toBe('intake');
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
     });
 
-    it('routes "We are building an AI tool to screen CVs. What regulations apply?" to intake', () => {
+    it('soft-suggests intake for "We are building an AI tool to screen CVs. What regulations apply?"', () => {
       const result = classifyIntent(
         "We're building an AI tool to screen CVs for hiring. What regulations apply?",
       );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
+    });
+
+    // Explicit assessment cue should commit to intake (no soft-suggest).
+    it('commits to intake when an explicit assessment cue is present', () => {
+      const result = classifyIntent(
+        'Our team uses ChatGPT for hiring. Score the risk and tell me the tier.',
+      );
       expect(result.type).toBe('intake');
+      expect(result.mode).toBe('auto');
+    });
+
+    it('commits to intake when the user asks "is this high risk?"', () => {
+      const result = classifyIntent(
+        "We're deploying an AI credit-scoring model. Is this high risk?",
+      );
+      expect(result.type).toBe('intake');
+      expect(result.mode).toBe('auto');
+    });
+
+    // Discuss cue forces advisor mode even when soft intake heuristics
+    // would match. Powers the "Skip questions — give me a quick overview"
+    // escape hatch in the clarification UI.
+    it('forces advisor when the user asks for a "quick overview"', () => {
+      const result = classifyIntent(
+        'Just chat — give me a quick overview of: Our HR team uses AI to screen CVs. What risks apply?',
+      );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('auto');
+      expect(result.suggestedAction).toBeUndefined();
+    });
+
+    it('forces advisor when the user says "no form, plain english"', () => {
+      const result = classifyIntent(
+        "In plain english — what should we know about deploying ChatGPT for customer support?",
+      );
+      expect(result.type).toBe('advisor');
     });
 
     // Negative case — abstract governance question without a use case stays advisor.

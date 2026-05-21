@@ -196,6 +196,18 @@ export const advisorResponseSchema = z.object({
     intentType: z.string(),
     retryable: z.boolean(),
   }).optional(),
+  /**
+   * Soft routing hint from the classifier. Set when we detected a use
+   * case worth upgrading to a structured assessment / document / playbook
+   * but kept the response conversational. The UI renders a dismissible
+   * inline CTA so the user can opt in with one click.
+   */
+  intentSuggestion: z.object({
+    type: z.enum(['intake', 'document', 'playbook']),
+    reason: z.string(),
+    documentType: z.string().optional(),
+    framework: z.string().optional(),
+  }).optional(),
 });
 
 export type AdvisorRequest = z.infer<typeof advisorRequestSchema>;
