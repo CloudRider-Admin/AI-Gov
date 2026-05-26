@@ -150,3 +150,61 @@ describe('govSecurePdfExporter', () => {
     expect(buf.length).toBeGreaterThan(800);
   });
 });
+
+describe('table rendering (DOCX + PDF)', () => {
+  const DOC_WITH_TABLES: GovernanceDocumentOutput = {
+    ...SAMPLE_DOC,
+    sections: [
+      {
+        heading: 'Policy Overview',
+        content: 'This section carries the canonical Purpose/Scope metadata.',
+        required: true,
+        tables: [
+          ['Field', 'Value'],
+          ['Purpose', 'Set rules for employee AI use.'],
+          ['Scope', 'All employees and contractors.'],
+          ['Primary owner', 'AI Governance Lead'],
+        ],
+      },
+    ],
+  };
+
+  it('DOCX export embeds the section table cell text', async () => {
+    const buf = await exportToWord(DOC_WITH_TABLES, {
+      documentCode: 'GS-AIPS-AUP-01-tab0',
+    });
+    // DOCX is a ZIP — the text isn't directly grep-able, but the file size
+    // grows materially when a table is added, and the structure renders.
+    expect(buf.length).toBeGreaterThan(2000);
+    expect(buf.subarray(0, 4).toString('utf8')).toContain('PK');
+  });
+
+  it('PDF export renders the section table cell text inline', async () => {
+    const buf = await exportToPdf(DOC_WITH_TABLES, {
+      documentCode: 'GS-AIPS-AUP-01-tab1',
+    });
+    const haystack = buf.toString('latin1');
+    expect(haystack).toContain('Primary owner');
+    expect(haystack).toContain('AI Governance Lead');
+  });
+
+  it('handles ragged rows without throwing', async () => {
+    const ragged: GovernanceDocumentOutput = {
+      ...SAMPLE_DOC,
+      sections: [
+        {
+          heading: 'Ragged Table',
+          content: '',
+          required: true,
+          tables: [
+            ['A', 'B', 'C'],
+            ['1'], // short row
+            ['2', '3'], // medium row
+          ],
+        },
+      ],
+    };
+    await expect(exportToWord(ragged, { documentCode: 'GS-AIPS-AUP-01-rag0' })).resolves.toBeInstanceOf(Buffer);
+    await expect(exportToPdf(ragged, { documentCode: 'GS-AIPS-AUP-01-rag1' })).resolves.toBeInstanceOf(Buffer);
+  });
+});

@@ -18,6 +18,7 @@
 
 import {
   AlignmentType,
+  BorderStyle,
   Document,
   Footer,
   HeadingLevel,
@@ -25,7 +26,12 @@ import {
   PageNumber,
   Packer,
   Paragraph,
+  ShadingType,
+  Table,
+  TableCell,
+  TableRow,
   TextRun,
+  WidthType,
 } from 'docx';
 
 import type { GovernanceDocumentOutput } from '@/lib/ai/schemas';
@@ -61,7 +67,7 @@ export async function exportToWord(
     ? new Date(metadata.generatedAt)
     : new Date();
 
-  const children: Paragraph[] = [];
+  const children: (Paragraph | Table)[] = [];
   pushTitle(children, doc, metadata.documentCode, version, generatedAt);
   pushSections(children, doc);
   pushFrameworkCitations(children, doc);
@@ -101,7 +107,7 @@ export async function exportToWord(
 // ─── Builders ──────────────────────────────────────────────────────────────
 
 function pushTitle(
-  children: Paragraph[],
+  children: (Paragraph | Table)[],
   doc: GovernanceDocumentOutput,
   documentCode: string,
   version: string,
@@ -155,7 +161,7 @@ function pushTitle(
   );
 }
 
-function pushSections(children: Paragraph[], doc: GovernanceDocumentOutput): void {
+function pushSections(children: (Paragraph | Table)[], doc: GovernanceDocumentOutput): void {
   for (const section of doc.sections) {
     children.push(
       new Paragraph({
@@ -191,6 +197,10 @@ function pushSections(children: Paragraph[], doc: GovernanceDocumentOutput): voi
       }
     }
 
+    if (section.tables && section.tables.length > 0) {
+      children.push(buildTable(section.tables));
+    }
+
     if (section.checklistItems && section.checklistItems.length > 0) {
       for (const item of section.checklistItems) {
         children.push(
@@ -212,8 +222,63 @@ function pushSections(children: Paragraph[], doc: GovernanceDocumentOutput): voi
   }
 }
 
+/**
+ * Render a 2-D string matrix as a branded `docx` Table. The first row is
+ * styled as a header (bold text, light accent shading). Defensive against
+ * ragged rows: pads short rows to the widest row's column count.
+ */
+function buildTable(rows: string[][]): Table {
+  const colCount = Math.max(...rows.map((r) => r.length));
+  const padded = rows.map((row) =>
+    Array.from({ length: colCount }, (_, i) => (row[i] ?? '').trim()),
+  );
+  const borderColor = BRAND_COLORS.divider;
+  const cellBorder = { style: BorderStyle.SINGLE, size: 4, color: borderColor };
+  const cellBorders = {
+    top: cellBorder,
+    bottom: cellBorder,
+    left: cellBorder,
+    right: cellBorder,
+  };
+
+  const tableRows = padded.map((row, rowIdx) => {
+    const isHeader = rowIdx === 0;
+    return new TableRow({
+      tableHeader: isHeader,
+      children: row.map(
+        (cell) =>
+          new TableCell({
+            borders: cellBorders,
+            shading: isHeader
+              ? { type: ShadingType.CLEAR, color: 'auto', fill: 'EAF7EE' }
+              : undefined,
+            children: [
+              new Paragraph({
+                spacing: { before: 40, after: 40 },
+                children: [
+                  new TextRun({
+                    text: cell,
+                    bold: isHeader,
+                    font: BRAND_FONTS.body,
+                    size: FONT_SIZES_HALF_PT.body,
+                    color: BRAND_COLORS.textPrimary,
+                  }),
+                ],
+              }),
+            ],
+          }),
+      ),
+    });
+  });
+
+  return new Table({
+    width: { size: 100, type: WidthType.PERCENTAGE },
+    rows: tableRows,
+  });
+}
+
 function pushFrameworkCitations(
-  children: Paragraph[],
+  children: (Paragraph | Table)[],
   doc: GovernanceDocumentOutput,
 ): void {
   if (!doc.frameworkCitations || doc.frameworkCitations.length === 0) return;
@@ -259,7 +324,7 @@ function pushFrameworkCitations(
   }
 }
 
-function pushLicense(children: Paragraph[]): void {
+function pushLicense(children: (Paragraph | Table)[]): void {
   children.push(
     new Paragraph({
       spacing: { before: 480, after: 120 },
