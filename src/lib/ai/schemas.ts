@@ -334,6 +334,11 @@ const documentSectionSchema = z.object({
   heading: z.string(),
   content: z.string(),
   checklistItems: z.array(checklistItemSchema).optional(),
+  // Optional structured tables — used when the source GovSecure template
+  // carried key/value or matrix tables (Purpose/Scope/Owner metadata,
+  // role/responsibility matrices, etc). Shape mirrors the extractor:
+  // outer = rows, inner = cells.
+  tables: z.array(z.array(z.string())).optional(),
   required: z.boolean().default(true),
 });
 

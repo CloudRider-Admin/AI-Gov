@@ -86,6 +86,9 @@ function toSectionTemplate(
   const heading = section.heading.trim();
   const guidance = buildGuidance(section);
   const govsecureContext = buildContext(section);
+  const hasTables = Boolean(
+    section.tables?.some((t) => t.length > 0 && t.some((row) => row.length > 0)),
+  );
   return {
     heading,
     guidance,
@@ -94,6 +97,7 @@ function toSectionTemplate(
     govsecureContext,
     sourceDocCode: doc.documentCode,
     sourceSection: section.id,
+    hasTables,
   };
 }
 
@@ -116,10 +120,33 @@ function buildContext(section: ExtractedSection): string {
   const parts: string[] = [];
   if (section.paragraphs.length) parts.push(section.paragraphs.join('\n\n'));
   if (section.bullets.length) parts.push(section.bullets.map((b) => `- ${b}`).join('\n'));
+  // Source policies carry their Purpose / Scope / Owner / Audience metadata
+  // as DOCX tables; the LLM must see them or the generated document drops
+  // the structural backbone of the template.
+  if (section.tables?.length) {
+    parts.push(section.tables.map(renderTableAsMarkdown).join('\n\n'));
+  }
   const joined = parts.join('\n\n');
   return joined.length > MAX_CONTEXT_CHARS
     ? `${joined.slice(0, MAX_CONTEXT_CHARS - 1)}…`
     : joined;
+}
+
+function renderTableAsMarkdown(table: string[][]): string {
+  if (!table.length) return '';
+  const colCount = Math.max(...table.map((row) => row.length));
+  if (colCount === 0) return '';
+  const pad = (row: string[]) =>
+    Array.from({ length: colCount }, (_, i) => (row[i] ?? '').replace(/\s+/g, ' ').trim());
+  const lines: string[] = [];
+  // Two-column key/value tables (the dominant shape in GovSecure policies)
+  // render as `| Key | Value |` which the LLM can mirror cleanly.
+  lines.push(`| ${pad(table[0]).join(' | ')} |`);
+  lines.push(`| ${Array.from({ length: colCount }, () => '---').join(' | ')} |`);
+  for (let i = 1; i < table.length; i++) {
+    lines.push(`| ${pad(table[i]).join(' | ')} |`);
+  }
+  return lines.join('\n');
 }
 
 /**

@@ -910,8 +910,13 @@ export class DocumentOrchestrator {
       const provenance = s.sourceDocCode
         ? ` [source: ${s.sourceDocCode}${s.sourceSection ? ` §${s.sourceSection}` : ''}]`
         : '';
-      return `Section ${i + 1}: ${s.heading}${provenance}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}`;
+      const tableHint = s.hasTables
+        ? ' (source has structured tables — emit a `tables` array mirroring them)'
+        : '';
+      return `Section ${i + 1}: ${s.heading}${provenance}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}${tableHint}`;
     }).join('\n\n');
+
+    const anySectionHasTables = sectionTemplates.some((s) => s.hasTables);
 
     const docTitle = `${DOCUMENT_TITLES[req.documentType] ?? req.documentType} — ${req.useCaseName ?? 'AI Use Case'}`;
 
@@ -946,7 +951,10 @@ ${sectionsContext}
 Write substantive, specific content for each section grounded in the use case description provided. Do not use placeholder text. Each section content should be 100–300 words of professional, actionable prose (or structured checklist items for checklist sections).
 
 Include 3–6 framework citations across NIST AI RMF, EU AI Act, ISO/IEC 42001, and GDPR where relevant.
-
+${anySectionHasTables ? `
+## Tables (structural fidelity)
+Sections marked "source has structured tables" in the list above MUST include a \`tables\` array on the section object. Mirror the source's shape (typically a 2-column key/value matrix for Purpose / Scope / Owner / Audience metadata, or a multi-column RACI / control-mapping grid). Each table is an array of rows, each row is an array of string cells. The first row is treated as the header. Keep cell text concise (≤120 chars). Tables are in addition to \`content\`, not a replacement for it.
+` : ''}
 Respond ONLY with a valid JSON object.`;
 
     const userPrompt = `Generate a complete ${DOCUMENT_TITLES[req.documentType]} for this AI use case.
@@ -967,6 +975,7 @@ Return a JSON object with this exact structure:
       "heading": string,
       "content": string,
       "checklistItems": [{ "text": string, "complete": false }] | undefined,
+      "tables": [["Header A", "Header B"], ["Row 1 A", "Row 1 B"]] | undefined,
       "required": boolean
     }
   ],
@@ -1015,6 +1024,10 @@ function buildDocumentMarkdown(doc: GovernanceDocumentOutput): string {
   for (const section of doc.sections) {
     lines.push(`## ${section.heading}`);
     if (section.content) lines.push(section.content);
+    if (section.tables?.length) {
+      lines.push('');
+      lines.push(renderMarkdownTable(section.tables));
+    }
     if (section.checklistItems?.length) {
       for (const item of section.checklistItems) {
         lines.push(`- [${item.complete ? 'x' : ' '}] ${item.text}`);
@@ -1031,6 +1044,27 @@ function buildDocumentMarkdown(doc: GovernanceDocumentOutput): string {
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Render an LLM-emitted table (rows × cells) as a GitHub-flavored Markdown
+ * table. The first row is treated as the header. Defensive against ragged
+ * rows: pads short rows to the widest row's column count.
+ */
+function renderMarkdownTable(rows: string[][]): string {
+  if (!rows.length) return '';
+  const colCount = Math.max(...rows.map((r) => r.length));
+  if (colCount === 0) return '';
+  const sanitize = (cell: string) => cell.replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
+  const pad = (row: string[]) =>
+    Array.from({ length: colCount }, (_, i) => sanitize(row[i] ?? ''));
+  const out: string[] = [];
+  out.push(`| ${pad(rows[0]).join(' | ')} |`);
+  out.push(`| ${Array.from({ length: colCount }, () => '---').join(' | ')} |`);
+  for (let i = 1; i < rows.length; i++) {
+    out.push(`| ${pad(rows[i]).join(' | ')} |`);
+  }
+  return out.join('\n');
 }
 
 export const documentOrchestrator = new DocumentOrchestrator();

@@ -293,6 +293,14 @@ export interface SectionTemplate {
   sourceDocCode?: string;
   /** Section id within the source document, e.g. `1.2`. */
   sourceSection?: string;
+  /**
+   * True iff the source GovSecure section carried at least one DOCX table.
+   * Signals to the DocumentOrchestrator that the LLM should emit a `tables`
+   * array for this section so the generated document keeps the structural
+   * backbone of the original (Purpose/Scope/Owner blocks, role/RACI matrices,
+   * cross-reference grids).
+   */
+  hasTables?: boolean;
 }
 
 export const DOCUMENT_SECTION_TEMPLATES: Record<DocumentType, SectionTemplate[]> = {

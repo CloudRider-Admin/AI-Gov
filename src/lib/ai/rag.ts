@@ -187,9 +187,15 @@ export async function buildEnhancedRAGContext(
   // ── 4. DB knowledge entries (only if no vector search) ──
   if (!usedVectorSearch) {
     try {
+      // Capped at 200 most-recently-updated rows. Without this the keyword-
+      // search fallback scans the entire KB on every advisor turn — fine
+      // while the table is small, a perf bomb once the GovSecure library +
+      // sector content + regulation library are seeded at scale.
       const allEntries = await prisma.knowledgeEntry.findMany({
         where: { isActive: true },
         select: { title: true, content: true, category: true, tags: true, sourceType: true },
+        orderBy: { updatedAt: 'desc' },
+        take: 200,
       });
       const scored = allEntries
         .map((entry: DbEntry) => {

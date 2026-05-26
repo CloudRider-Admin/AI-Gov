@@ -33,14 +33,7 @@ import {
   unverifiedCitations,
   validateCitations,
 } from '@/lib/ai/citationValidator';
-
-function getClientIp(request: NextRequest): string {
-  return (
-    request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
-    request.headers.get('x-real-ip') ??
-    'unknown'
-  );
-}
+import { getClientIp } from '@/lib/utils/clientIp';
 
 export async function POST(request: NextRequest) {
   const session = await getOptionalSession();
