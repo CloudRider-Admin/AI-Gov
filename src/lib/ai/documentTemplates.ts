@@ -297,11 +297,13 @@ export interface SectionTemplate {
 
 export const DOCUMENT_SECTION_TEMPLATES: Record<DocumentType, SectionTemplate[]> = {
   'use-case-summary': [
-    { heading: 'Purpose & Business Objective', guidance: 'Describe why this AI system is being deployed and what business problem it solves.', required: true },
-    { heading: 'System Description', guidance: 'Describe the AI model type, capabilities, and how it works at a high level.', required: true },
-    { heading: 'Intended Users & Affected Parties', guidance: 'List who operates the system and who is affected by its outputs.', required: true },
-    { heading: 'Workflow & Integration', guidance: 'Describe the end-to-end workflow and how the system integrates with existing processes.', required: true },
-    { heading: 'System Boundaries & Scope', guidance: 'Define what is and is not in scope; list exclusions and constraints.', required: true },
+    { heading: 'Use Case Overview', guidance: 'Describe the AI use case: the business problem it solves, the model type, and how it works at a high level.', required: true },
+    { heading: 'System Owner & Accountability', guidance: 'Name the accountable owner for the use case and the team responsible for operating it.', required: true },
+    { heading: 'Risk Summary', guidance: 'Summarise the risk tier and the principal risks; state plainly when the use case is high risk.', required: true },
+    { heading: 'Stakeholders & Affected Parties', guidance: 'List who operates the system and the stakeholders affected by its outputs (e.g. recruiters, applicants, customers).', required: true },
+    { heading: 'Decision Type & Automation', guidance: 'Describe the type of decision the AI informs or makes and the degree of automation versus human control.', required: true },
+    { heading: 'Data Description', guidance: 'Describe the data the system processes, its sources, and sensitivity.', required: true },
+    { heading: 'Human Review & Oversight', guidance: 'Describe the human review applied to AI outputs before action, and who performs it.', required: true },
     { heading: 'Known Limitations & Prohibited Uses', guidance: 'Document known model limitations and explicitly prohibited use cases.', required: true },
   ],
   'data-sheet': [
@@ -344,14 +346,15 @@ export const DOCUMENT_SECTION_TEMPLATES: Record<DocumentType, SectionTemplate[]>
     { heading: 'Accountability Matrix', guidance: 'Map accountability across business, IT, security, privacy, legal, and governance functions.', required: true },
   ],
   'dpia': [
-    { heading: 'Processing Description', guidance: 'Describe the nature, scope, context, and purposes of the AI-related processing.', required: true },
+    { heading: 'Processing Description & Lawful Basis', guidance: 'Describe the nature, scope, context, and purposes of the AI-related processing, and state the lawful basis for it under the GDPR.', required: true },
     { heading: 'Necessity & Proportionality', guidance: 'Is the processing necessary for the stated purpose? Is it proportionate to the risk?', required: true },
-    { heading: 'Risks to Individuals', guidance: 'Identify risks to rights and freedoms: privacy, discrimination, loss of control over personal data.', required: true },
-    { heading: 'Likelihood & Severity Assessment', guidance: 'For each risk: assess likelihood (1–5) and severity (1–5); calculate risk score.', required: true },
-    { heading: 'Mitigation Measures', guidance: 'Document technical and organisational measures to mitigate identified risks.', required: true },
+    { heading: 'Risks to Individuals', guidance: 'Identify risks to the rights and freedoms of data subjects: privacy, discrimination, and loss of control over personal data.', required: true },
+    { heading: 'Likelihood & Severity Assessment', guidance: 'For each risk: assess likelihood (1–5) and severity (1–5); calculate the risk score.', required: true },
+    { heading: 'Mitigations', guidance: 'Document the technical and organisational mitigation measures applied to each identified risk.', required: true },
+    { heading: 'Data Subject Rights', guidance: 'Explain how data subject rights under the GDPR (access, rectification, erasure, objection, and rights around automated decisions) are upheld.', required: true },
     { heading: 'Residual Risk & Acceptability', guidance: 'After mitigations: is residual risk acceptable? Is supervisory authority consultation required?', required: true },
-    { heading: 'Consultation Record', guidance: 'Record of consultations with DPO, data subjects, or supervisory authority (if applicable).', required: false },
-    { heading: 'Review & Update Commitment', guidance: 'Commit to review the DPIA when the processing changes significantly.', required: true },
+    { heading: 'Consultation', guidance: 'Record consultations with the DPO, data subjects, or the supervisory authority where applicable.', required: false },
+    { heading: 'Review & Update Commitment', guidance: 'Commit to reviewing the DPIA when the processing changes significantly.', required: true },
   ],
   'model-card': [
     { heading: 'Model Overview', guidance: 'Model type, version, provider, and primary purpose.', required: true },

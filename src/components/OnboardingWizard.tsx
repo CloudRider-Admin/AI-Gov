@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, X } from 'lucide-react';
+import { OCCUPATIONAL_ROLES } from '@/lib/occupationalRoles';
 
 const AI_TOOLS = [
   'ChatGPT / OpenAI',
@@ -33,6 +34,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [step, setStep] = useState(1);
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [selectedConcern, setSelectedConcern] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
   const [loading, setLoading] = useState(false);
 
   const toggleTool = (tool: string) => {
@@ -45,7 +47,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     await fetch('/api/onboarding', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ aiTools: selectedTools, primaryConcern: selectedConcern || undefined }),
+      body: JSON.stringify({
+        aiTools: selectedTools,
+        primaryConcern: selectedConcern || undefined,
+        occupationalRole: selectedRole || undefined,
+      }),
     });
     onComplete();
   };
@@ -55,7 +61,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     await fetch('/api/onboarding', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ aiTools: selectedTools, primaryConcern: selectedConcern }),
+      body: JSON.stringify({
+        aiTools: selectedTools,
+        primaryConcern: selectedConcern,
+        occupationalRole: selectedRole || undefined,
+      }),
     });
 
     const tools = selectedTools.length > 0 ? selectedTools.join(', ') : 'various AI tools';
@@ -88,11 +98,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           <div className="flex items-center gap-2 mb-6">
             <div className={`h-1 flex-1 rounded-full ${step >= 1 ? 'bg-terminal-green' : 'bg-terminal-border'}`} />
             <div className={`h-1 flex-1 rounded-full ${step >= 2 ? 'bg-terminal-green' : 'bg-terminal-border'}`} />
+            <div className={`h-1 flex-1 rounded-full ${step >= 3 ? 'bg-terminal-green' : 'bg-terminal-border'}`} />
           </div>
 
           {step === 1 && (
             <>
-              <p className="font-mono text-terminal-green text-xs uppercase tracking-wider mb-1">Step 1 of 2</p>
+              <p className="font-mono text-terminal-green text-xs uppercase tracking-wider mb-1">Step 1 of 3</p>
               <h2 className="font-mono text-lg font-bold text-terminal-text mb-1">
                 Which AI tools does your business use?
               </h2>
@@ -128,7 +139,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
           {step === 2 && (
             <>
-              <p className="font-mono text-terminal-green text-xs uppercase tracking-wider mb-1">Step 2 of 2</p>
+              <p className="font-mono text-terminal-green text-xs uppercase tracking-wider mb-1">Step 2 of 3</p>
               <h2 className="font-mono text-lg font-bold text-terminal-text mb-1">
                 What&apos;s your primary AI governance concern?
               </h2>
@@ -153,8 +164,47 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   ← Back
                 </button>
                 <button
+                  onClick={() => setStep(3)}
+                  disabled={!selectedConcern}
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-terminal-green text-terminal-black font-mono text-sm font-bold rounded hover:bg-terminal-green/90 transition-colors disabled:opacity-50"
+                >
+                  Next <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </>
+          )}
+
+          {step === 3 && (
+            <>
+              <p className="font-mono text-terminal-green text-xs uppercase tracking-wider mb-1">Step 3 of 3</p>
+              <h2 className="font-mono text-lg font-bold text-terminal-text mb-1">
+                What&apos;s your role?
+              </h2>
+              <p className="text-sm text-terminal-muted font-sans mb-5">
+                We tailor clarifying questions and assessments to your lens.
+              </p>
+              <div className="space-y-2 mb-6">
+                {OCCUPATIONAL_ROLES.map((r) => (
+                  <button
+                    key={r.value}
+                    onClick={() => setSelectedRole(r.value)}
+                    className={`w-full text-left px-4 py-3 rounded border font-mono text-sm transition-colors ${
+                      selectedRole === r.value
+                        ? 'border-terminal-green bg-terminal-green/10 text-terminal-green'
+                        : 'border-terminal-border text-terminal-muted hover:border-terminal-green/50 hover:text-terminal-text'
+                    }`}
+                  >
+                    {selectedRole === r.value ? '● ' : '○ '}{r.label}
+                  </button>
+                ))}
+              </div>
+              <div className="flex justify-between items-center">
+                <button onClick={() => setStep(2)} className="text-xs font-mono text-terminal-muted hover:text-terminal-text transition-colors">
+                  ← Back
+                </button>
+                <button
                   onClick={handleComplete}
-                  disabled={!selectedConcern || loading}
+                  disabled={!selectedRole || loading}
                   className="inline-flex items-center gap-2 px-5 py-2 bg-terminal-green text-terminal-black font-mono text-sm font-bold rounded hover:bg-terminal-green/90 transition-colors disabled:opacity-50"
                 >
                   {loading ? 'Starting…' : 'Start My Assessment'}

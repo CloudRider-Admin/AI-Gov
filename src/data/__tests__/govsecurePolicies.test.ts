@@ -9,10 +9,10 @@ import {
 } from '../govsecurePolicies';
 
 describe('govsecurePolicies', () => {
-  it('exposes 8 policy types and 14 checklist types', () => {
-    expect(Object.keys(GOVSECURE_POLICY_SECTION_TEMPLATES)).toHaveLength(8);
+  it('exposes 9 policy types and 14 checklist types', () => {
+    expect(Object.keys(GOVSECURE_POLICY_SECTION_TEMPLATES)).toHaveLength(9);
     expect(Object.keys(GOVSECURE_CHECKLIST_SECTION_TEMPLATES)).toHaveLength(14);
-    expect(GOVSECURE_DOCUMENT_TYPE_VALUES).toHaveLength(22);
+    expect(GOVSECURE_DOCUMENT_TYPE_VALUES).toHaveLength(23);
   });
 
   it('every type has a non-empty SectionTemplate[] (≥3 sections)', () => {
@@ -48,13 +48,19 @@ describe('govsecurePolicies', () => {
     }
   });
 
-  it('voice-anchor context is populated for at least 60% of sections', () => {
-    // Some source sections are heading-only with no body — those legitimately
-    // produce no context. 60% is enough to make the exemplar block useful in
-    // Phase 2.5 without flapping when the extractor is updated.
-    const all = Object.values(GOVSECURE_DOCUMENT_TEMPLATES).flat();
-    const withContext = all.filter((t) => t.govsecureContext && t.govsecureContext.length > 0);
-    expect(withContext.length / all.length).toBeGreaterThanOrEqual(0.6);
+  it('every document type carries at least one voice-anchor section', () => {
+    // The policy curation refactor anchors one representative voice exemplar
+    // per document (the first section) rather than scraping context onto every
+    // section. The primary generation-time voice anchor is the source-document
+    // prose selected by `getExemplarsForGeneration` (see exemplarRetrieval.ts);
+    // `govsecureContext` is the per-document fallback anchor. The invariant that
+    // matters is therefore "every type has ≥1 anchor", not a per-section ratio.
+    for (const [type, templates] of Object.entries(GOVSECURE_DOCUMENT_TEMPLATES)) {
+      const anchored = templates.filter(
+        (t) => t.govsecureContext && t.govsecureContext.length > 0,
+      );
+      expect(anchored.length, `${type} has no voice-anchor section`).toBeGreaterThanOrEqual(1);
+    }
   });
 
   it('every type has a human display title', () => {

@@ -116,6 +116,11 @@ const META: Record<DocumentType, DocumentTypeMeta> = {
     category: 'govsecure-policy',
     blurb: 'GovSecure-licensed vendor due diligence and contract requirements',
   },
+  'govsecure-third-party-policy': {
+    label: 'AI Third-Party / Vendor Due Diligence Policy',
+    category: 'govsecure-policy',
+    blurb: 'GovSecure-licensed third-party AI risk tiering, due diligence, and off-boarding',
+  },
   // ── GovSecure checklists ──────────────────────────────────────────────────
   'govsecure-checklist-intake': {
     label: 'Intake Checklist',

@@ -19,6 +19,7 @@ model User {
   onboardingCompleted      Boolean              @default(false)
   aiTools                  String[]             @default([])
   primaryConcern           String?
+  occupationalRole         String?
   stripeCustomerId         String?              @unique
   stripeSubscriptionId     String?              @unique
   stripePriceId            String?

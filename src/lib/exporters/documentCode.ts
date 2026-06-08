@@ -43,6 +43,7 @@ const PREFIX_BY_TYPE: Record<DocumentType, string> = {
   'govsecure-incident-response-policy': 'AIPS-INCIDENT-06',
   'govsecure-human-oversight-policy': 'AIPS-HUMOVER-07',
   'govsecure-vendor-policy': 'AIPS-VENDOR-08',
+  'govsecure-third-party-policy': 'AIPS-TPRM-09',
   // GovSecure checklists — `CHKL` mirrors the source library prefix.
   'govsecure-checklist-intake': 'CHKL-INTAKE-01',
   'govsecure-checklist-evidence-pack': 'CHKL-EVIDENCE-02',

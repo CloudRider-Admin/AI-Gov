@@ -17,6 +17,8 @@ import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { guardInput, PromptInjectionError } from '@/lib/security/promptGuard';
 import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
+import { prisma } from '@/lib/prisma';
+import { roleLabel } from '@/lib/occupationalRoles';
 import { claudeComplete, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
 import {
   flattenStrings,
@@ -104,6 +106,15 @@ export async function POST(request: NextRequest) {
     const hasConversationHistory = !!context;
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;
     if (ragResult.context) contextualQuery = `${ragResult.context}\n\n${contextualQuery}`;
+
+    // ── Requestor role (tailors clarifying questions; see systemPrompt.ts) ──
+    if (!isGuest) {
+      const dbUser = await prisma.user
+        .findUnique({ where: { id: session.user.id }, select: { occupationalRole: true } })
+        .catch(() => null);
+      const requestorRole = roleLabel(dbUser?.occupationalRole);
+      if (requestorRole) contextualQuery = `Requestor role: ${requestorRole}\n\n${contextualQuery}`;
+    }
 
     // ── Tiered model selection (Phase 7.2) ──
     const deterministicIntent = classifyIntent(query, hasConversationHistory);

@@ -16,7 +16,7 @@ import type {
   JudgedScore,
 } from './types';
 
-export const RUBRIC_VERSION = '1.1.0';
+export const RUBRIC_VERSION = '1.2.0';
 
 /** Score weights — must sum to 1.0. */
 export const SCORE_WEIGHTS = {
@@ -83,6 +83,23 @@ function includesCi(haystack: string, needle: string): boolean {
 }
 
 /**
+ * Word-boundary-aware presence check for forbidden terms.
+ *
+ * Plain substring matching produces false positives: forbidden `"Low"` would
+ * match inside `"allow"`, `"below"`, `"follow"`, and `"workflow"`, failing
+ * otherwise-correct High/Critical assessments. We require the forbidden term
+ * to be bounded by non-alphanumeric characters so `"Low"` matches the tier
+ * word and `"Low-Risk"` but not `"allow"`. Multi-word phrases ("Conditional
+ * Go") and citation patterns ("Article 99") are matched verbatim with the
+ * same boundaries. (Rubric v1.2.0 correctness fix.)
+ */
+function containsForbidden(haystack: string, needle: string): boolean {
+  const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'iu');
+  return re.test(haystack);
+}
+
+/**
  * Score the deterministic rubric components against generated text.
  *
  * @param generatedText — the rendered output (markdown, prose, etc.).
@@ -110,7 +127,7 @@ export function scoreDeterministic(
   const requiredClausesPresent =
     requiredClauses.length === 0 ? 1 : clausesFound.length / requiredClauses.length;
 
-  const forbiddenHits = forbiddenContent.filter((c) => includesCi(text, c));
+  const forbiddenHits = forbiddenContent.filter((c) => containsForbidden(text, c));
   const suspicious = findSuspiciousCitations(text);
   // Phase 1.6: hard gate on the structured citation validator. Anything the
   // regex tripwire missed but the validator catches still fails the case.

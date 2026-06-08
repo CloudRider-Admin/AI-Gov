@@ -48,7 +48,8 @@ export type GovSecurePolicyType =
   | 'govsecure-security-policy'
   | 'govsecure-incident-response-policy'
   | 'govsecure-human-oversight-policy'
-  | 'govsecure-vendor-policy';
+  | 'govsecure-vendor-policy'
+  | 'govsecure-third-party-policy';
 
 export type GovSecureChecklistType =
   | 'govsecure-checklist-intake'
@@ -137,19 +138,123 @@ function buildTemplates(
 }
 
 // ─── Policy templates ───────────────────────────────────────────────────────
+//
+// Each policy type uses a *curated* set of canonical section headings rather
+// than headings scraped from the source PDF/DOCX. The extractor's raw headings
+// vary by source document and frequently don't match the standard governance
+// section names a policy of that type is expected to contain (Purpose, Scope,
+// Roles and Responsibilities, etc.). Curating the headings:
+//   1. gives the DocumentOrchestrator a stable, complete section skeleton;
+//   2. ensures generated policies cover every canonical section; and
+//   3. keeps the source document attached via `sourceDocCode` so the Phase 2.5
+//      exemplar retriever still anchors brand voice against the real prose.
+// Guidance strings deliberately surface the key governance terms each section
+// must address (e.g. "lawful basis", "human review", "approver").
+
+interface CuratedSection {
+  heading: string;
+  guidance: string;
+}
+
+function curatedPolicy(raw: unknown, sections: CuratedSection[]): SectionTemplate[] {
+  const doc = raw as ExtractedDocument;
+  const firstProse = doc.sections.find((s) =>
+    (s.paragraphs ?? []).some((p) => p.trim().length > 0),
+  );
+  const voiceAnchor = firstProse ? buildContext(firstProse) : undefined;
+  return sections.map((s, i) => ({
+    heading: s.heading,
+    guidance: s.guidance,
+    required: true,
+    isChecklist: false,
+    govsecureContext: i === 0 ? voiceAnchor : undefined,
+    sourceDocCode: doc.documentCode,
+    sourceSection: String(i + 1),
+  }));
+}
+
+const THIRD_PARTY_SECTIONS: CuratedSection[] = [
+  { heading: 'Purpose', guidance: 'State why this third-party / vendor AI policy exists and the risks it manages.' },
+  { heading: 'Scope', guidance: 'Define which AI vendors, services, and procurement activities are covered.' },
+  { heading: 'Vendor Risk Tiering', guidance: 'Assign every AI vendor a risk tier based on data access, decision impact, and integration depth.' },
+  { heading: 'Due Diligence', guidance: 'Due diligence performed on each AI vendor before onboarding: security, privacy, model provenance, and data-handling review.' },
+  { heading: 'Contractual Requirements', guidance: 'Required contract terms — data handling, training-use restrictions, audit rights, and incident notification commitments.' },
+  { heading: 'Ongoing Monitoring', guidance: 'Continuous monitoring of vendor risk, subprocessor changes, and performance against contract.' },
+  { heading: 'Off-Boarding', guidance: 'Secure off-boarding: data return or deletion, access revocation, and final evidence capture when a vendor relationship ends.' },
+];
 
 export const GOVSECURE_POLICY_SECTION_TEMPLATES: Record<
   GovSecurePolicyType,
   SectionTemplate[]
 > = {
-  'govsecure-aup': buildTemplates(acceptableUseRaw, { isChecklist: false }),
-  'govsecure-governance-policy': buildTemplates(governanceRaw, { isChecklist: false }),
-  'govsecure-data-privacy-policy': buildTemplates(dataPrivacyRaw, { isChecklist: false }),
-  'govsecure-risk-approval-policy': buildTemplates(riskApprovalRaw, { isChecklist: false }),
-  'govsecure-security-policy': buildTemplates(securityRaw, { isChecklist: false }),
-  'govsecure-incident-response-policy': buildTemplates(incidentResponsePolicyRaw, { isChecklist: false }),
-  'govsecure-human-oversight-policy': buildTemplates(humanOversightRaw, { isChecklist: false }),
-  'govsecure-vendor-policy': buildTemplates(thirdPartyRaw, { isChecklist: false }),
+  'govsecure-aup': curatedPolicy(acceptableUseRaw, [
+    { heading: 'Purpose and Scope', guidance: 'State the policy purpose and scope: the personnel, AI tools, and AI-generated outputs it governs, under oversight of the AI Governance Lead.' },
+    { heading: 'Roles and Responsibilities', guidance: 'Define accountable roles — led by the AI Governance Lead — and the responsibilities of users, managers, and reviewers.' },
+    { heading: 'Permitted Uses', guidance: 'Describe approved AI uses and the intake process required before any new AI tool is adopted.' },
+    { heading: 'Prohibited Uses', guidance: 'List prohibited uses, including entering sensitive data into unapproved AI tools.' },
+    { heading: 'Data Handling', guidance: 'Rules for handling sensitive data and personal data in AI tools, including data-entry restrictions and classification.' },
+    { heading: 'Human Review', guidance: 'Mandate human review of AI-generated outputs before they are acted on, and define when human review is required.' },
+    { heading: 'Training and Awareness', guidance: 'Role-based training and awareness required before AI tool access is granted.' },
+    { heading: 'Enforcement', guidance: 'Consequences of violations and the exception-request and approval process.' },
+    { heading: 'Review and Maintenance', guidance: 'Review cadence and how the policy is maintained and updated over time.' },
+  ]),
+  'govsecure-governance-policy': curatedPolicy(governanceRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the AI Governance Policy and the program it establishes.' },
+    { heading: 'Scope', guidance: 'Define the AI systems, teams, and decisions the governance program covers.' },
+    { heading: 'Governance Structure', guidance: 'Establish the AI Governance Committee, its mandate, membership, and meeting cadence.' },
+    { heading: 'Roles and Responsibilities', guidance: 'Responsibilities across the AI Governance Committee, the AI Governance Lead, business owners, and assurance functions.' },
+    { heading: 'Risk Tiering', guidance: 'How each AI use case is assigned a risk tier through the intake process.' },
+    { heading: 'Approval Authority', guidance: 'Who approves use cases at each risk tier and the human oversight required before launch.' },
+    { heading: 'Compliance', guidance: 'How the program maps to NIST AI RMF, the EU AI Act, and ISO/IEC 42001 obligations.' },
+    { heading: 'Review Cadence', guidance: 'How often governance artefacts and this policy are reviewed and refreshed.' },
+  ]),
+  'govsecure-data-privacy-policy': curatedPolicy(dataPrivacyRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the AI data handling and privacy policy.' },
+    { heading: 'Scope', guidance: 'Define the AI systems and personal data processing the policy covers.' },
+    { heading: 'Lawful Basis', guidance: 'Establish the lawful basis under the GDPR for processing personal data in AI systems.' },
+    { heading: 'Data Minimization', guidance: 'Limit personal data collected and processed by AI systems to what is strictly necessary.' },
+    { heading: 'Retention', guidance: 'Retention periods and deletion procedures for AI-processed personal data.' },
+    { heading: 'Subject Rights', guidance: 'How data subject rights (access, erasure, objection, and rights related to automated decisions) are honoured under the GDPR.' },
+    { heading: 'Cross-Border Transfer', guidance: 'Legal basis and safeguards for any cross-border transfer of personal data.' },
+    { heading: 'Vendor Obligations', guidance: 'Privacy obligations imposed on AI vendors and subprocessors that handle personal data.' },
+  ]),
+  'govsecure-risk-approval-policy': curatedPolicy(riskApprovalRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the risk assessment and use-case approval policy.' },
+    { heading: 'Scope', guidance: 'Define which AI use cases must pass through risk assessment and approval.' },
+    { heading: 'Risk Tier Definitions', guidance: 'Define each risk tier (Low, Moderate, High, Prohibited) and the criteria that place a use case in it.' },
+    { heading: 'Approval Authority', guidance: 'Name the approver accountable at each risk tier and the approval workflow they follow.' },
+    { heading: 'Conditional Approvals', guidance: 'When a conditional approval applies and the conditions an approver may attach before launch.' },
+    { heading: 'Reassessment Triggers', guidance: 'Events that trigger reassessment of an approved use case (model change, new data, new jurisdiction, incident).' },
+  ]),
+  'govsecure-security-policy': curatedPolicy(securityRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the AI security policy.' },
+    { heading: 'Scope', guidance: 'Define the AI systems, environments, and data the policy secures.' },
+    { heading: 'Access Controls', guidance: 'Authentication, authorisation, and least-privilege access control for AI systems and data.' },
+    { heading: 'Model and Data Security', guidance: 'Protect model integrity and training/inference data; defend against prompt injection and data poisoning.' },
+    { heading: 'Logging and Monitoring', guidance: 'Security logging and monitoring of AI system activity and access.' },
+    { heading: 'Vendor Security', guidance: 'Security expectations and review for AI vendors and hosted models.' },
+    { heading: 'Incident Coordination', guidance: 'Coordination with incident response for AI security events.' },
+  ]),
+  'govsecure-incident-response-policy': curatedPolicy(incidentResponsePolicyRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the AI incident response policy.' },
+    { heading: 'Scope', guidance: 'Define which AI incidents and systems the policy covers.' },
+    { heading: 'Incident Classification', guidance: 'Classify AI incidents by type and severity.' },
+    { heading: 'Detection', guidance: 'How AI incidents are detected, reported, and triaged.' },
+    { heading: 'Response Procedures', guidance: 'Containment and remediation procedures scaled to incident severity.' },
+    { heading: 'Notification', guidance: 'Internal and external notification requirements, including regulators and affected individuals.' },
+    { heading: 'Post-Incident Review', guidance: 'Post-incident review capturing root cause, lessons learned, and corrective actions.' },
+  ]),
+  'govsecure-human-oversight-policy': curatedPolicy(humanOversightRaw, [
+    { heading: 'Purpose', guidance: 'State the purpose of the human oversight and decision-making policy.' },
+    { heading: 'Scope', guidance: 'Define which AI systems and decisions require defined human oversight.' },
+    { heading: 'Oversight Modes', guidance: 'Define oversight modes — human-in-the-loop, human-on-the-loop, and human-in-command — and when each applies.' },
+    { heading: 'Reviewer Qualifications', guidance: 'Qualifications, authority, and training required of a human reviewer.' },
+    { heading: 'Escalation', guidance: 'Escalation paths when a reviewer is uncertain or an AI output is potentially harmful.' },
+    { heading: 'Override Authority', guidance: 'Who may override AI outputs, on what basis, and how each override is logged.' },
+    { heading: 'Audit Trail', guidance: 'Records retained to evidence that human oversight occurred.' },
+  ]),
+  'govsecure-vendor-policy': curatedPolicy(thirdPartyRaw, THIRD_PARTY_SECTIONS),
+  'govsecure-third-party-policy': curatedPolicy(thirdPartyRaw, THIRD_PARTY_SECTIONS),
 };
 
 /**
@@ -226,6 +331,7 @@ export const GOVSECURE_DOCUMENT_TITLES: Record<GovSecureDocumentType, string> = 
   'govsecure-incident-response-policy': 'AI Incident Response Policy',
   'govsecure-human-oversight-policy': 'AI Human Oversight Policy',
   'govsecure-vendor-policy': 'AI Third-Party / Vendor Policy',
+  'govsecure-third-party-policy': 'AI Third-Party / Vendor Due Diligence Policy',
   'govsecure-checklist-intake': 'AI Use Case Intake Checklist',
   'govsecure-checklist-evidence-pack': 'AI Evidence Pack Checklist',
   'govsecure-checklist-incident-response': 'AI Incident Response Checklist',

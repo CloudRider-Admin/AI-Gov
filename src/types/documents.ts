@@ -149,6 +149,7 @@ export type DocumentType =
   | 'govsecure-incident-response-policy'
   | 'govsecure-human-oversight-policy'
   | 'govsecure-vendor-policy'
+  | 'govsecure-third-party-policy'
   // ── GovSecure checklists (Phase 2.1) ──────────────────────────────────────
   | 'govsecure-checklist-intake'
   | 'govsecure-checklist-evidence-pack'

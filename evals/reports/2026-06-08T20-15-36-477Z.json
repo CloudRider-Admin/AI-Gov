@@ -1,25 +1,25 @@
 {
-  "startedAt": "2026-06-08T21:56:22.318Z",
-  "durationSec": 439.85,
+  "startedAt": "2026-06-08T20:15:36.477Z",
+  "durationSec": 437.07,
   "rubricVersion": "1.2.0",
   "totalCases": 30,
   "passed": 30,
   "failed": 0,
   "errored": 0,
   "passRate": 1,
-  "meanOverall": 0.934,
+  "meanOverall": 0.938,
   "byCategory": {
     "document-generation": {
       "total": 13,
       "passed": 13,
       "passRate": 1,
-      "meanOverall": 0.949
+      "meanOverall": 0.955
     },
     "advisory-query": {
       "total": 9,
       "passed": 9,
       "passRate": 1,
-      "meanOverall": 0.891
+      "meanOverall": 0.897
     },
     "intake": {
       "total": 4,
@@ -51,12 +51,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output aligns well with the GovSecure brand voice, demonstrating a formal and precise tone. The language is action-oriented, focusing on proactive governance and responsible AI practices, which is consistent with GovSecure's emphasis on structured guidance.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal, precise, and action-oriented tone. The structured breakdown of the 90-day implementation blueprint into phases reflects a methodical approach typical of GovSecure advisories.",
         "hallucinations": []
       },
       "overall": 0.87,
       "passed": true,
-      "durationMs": 3458
+      "durationMs": 17387
     },
     {
       "caseId": "advisory-ai-chef",
@@ -72,12 +72,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal and precise tone. The language is action-oriented, focusing on the structured approach to AI governance. However, the absence of specific regulatory references slightly reduces the score.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, demonstrating a formal and precise tone. The description of the AI Chef Operating Model is clear and action-oriented, reflecting the structured approach typical of GovSecure communications.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 4078
+      "durationMs": 7489
     },
     {
       "caseId": "advisory-citation-tripwire",
@@ -92,13 +92,13 @@
         "unverifiedCitationSamples": []
       },
       "judged": {
-        "voiceMatch": 0.7,
-        "rationale": "The response maintains a formal and precise tone, aligning with GovSecure's brand voice. However, it lacks action-oriented language and specific guidance, which slightly detracts from the overall match. The use of terminology is appropriate, but the confidence level could be more assertive.",
+        "voiceMatch": 0.8,
+        "rationale": "The response maintains a formal and precise tone, aligning well with the GovSecure brand voice. It is action-oriented by prompting for specific information to provide accurate guidance. However, the confidence level could be more assertive to fully match the GovSecure tone.",
         "hallucinations": []
       },
-      "overall": 0.91,
+      "overall": 0.94,
       "passed": true,
-      "durationMs": 4574
+      "durationMs": 9535
     },
     {
       "caseId": "advisory-clarification-vague",
@@ -113,13 +113,13 @@
         "unverifiedCitationSamples": []
       },
       "judged": {
-        "voiceMatch": 0.7,
-        "rationale": "The output maintains a formal and precise tone, aligning with GovSecure's brand voice. However, it lacks action-oriented language, which is a key component of the GovSecure tone. The response is clear but could be more directive in guiding the user towards next steps.",
+        "voiceMatch": 0.8,
+        "rationale": "The generated output aligns well with the GovSecure brand voice by maintaining a formal and precise tone. It is action-oriented, providing clear follow-up questions to guide the advisory process. However, the confidence level and reasoning could be more assertive to fully match the GovSecure tone.",
         "hallucinations": []
       },
-      "overall": 0.91,
+      "overall": 0.94,
       "passed": true,
-      "durationMs": 3711
+      "durationMs": 12688
     },
     {
       "caseId": "advisory-eu-ai-act-prohibited",
@@ -135,12 +135,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal and precise tone. It clearly outlines prohibited AI practices under the EU AI Act, using appropriate terminology and an action-oriented approach. However, it could benefit from slightly more detailed explanations to fully match the density of an exemplar document.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal and precise tone. It clearly outlines prohibited AI practices under the EU AI Act, using appropriate terminology and an action-oriented approach. However, it could benefit from slightly more detailed explanations of each point to fully match the density of an exemplar document.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 4505
+      "durationMs": 7996
     },
     {
       "caseId": "advisory-nist-vs-iso",
@@ -158,12 +158,12 @@
       },
       "judged": {
         "voiceMatch": 0.8,
-        "rationale": "The generated output aligns well with the GovSecure brand voice by maintaining a formal and precise tone. It is action-oriented, focusing on gathering necessary information to provide a tailored recommendation. However, the confidence level is relatively low, which slightly detracts from the decisiveness expected in GovSecure communications.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal and precise tone. It is action-oriented, focusing on gathering necessary information to provide tailored advice. However, the confidence level could be more assertive to fully match the GovSecure tone.",
         "hallucinations": []
       },
       "overall": 0.84,
       "passed": true,
-      "durationMs": 4977
+      "durationMs": 9938
     },
     {
       "caseId": "advisory-policy-priority",
@@ -181,12 +181,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal, precise, and action-oriented tone. The terminology used is appropriate for a governance context, and the suggestions are clear and actionable.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal, precise, and action-oriented tone. The use of specific terminology related to AI governance and compliance reflects the expected density and clarity. However, the absence of direct regulatory citations slightly reduces the score.",
         "hallucinations": []
       },
       "overall": 0.87,
       "passed": true,
-      "durationMs": 10459
+      "durationMs": 16506
     },
     {
       "caseId": "advisory-risk-tier",
@@ -209,7 +209,7 @@
       },
       "overall": 0.835,
       "passed": true,
-      "durationMs": 4580
+      "durationMs": 8290
     },
     {
       "caseId": "advisory-vendor-risk",
@@ -227,12 +227,12 @@
       },
       "judged": {
         "voiceMatch": 0.8,
-        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal and precise tone. It is action-oriented, focusing on gathering necessary information to assess vendor risk. However, the confidence level could be more assertive to fully match the GovSecure tone.",
+        "rationale": "The output maintains a formal and precise tone consistent with GovSecure's brand voice. It is action-oriented, focusing on gathering necessary information to assess vendor risk. However, the confidence level could be more assertive to align fully with GovSecure's authoritative stance.",
         "hallucinations": []
       },
       "overall": 0.84,
       "passed": true,
-      "durationMs": 5214
+      "durationMs": 15800
     },
     {
       "caseId": "doc-dpia-marketing",
@@ -248,12 +248,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses appropriate terminology and structure, aligning with the expected standards for a Data Protection Impact Assessment.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses appropriate terminology and structure, effectively communicating the DPIA's purpose and findings.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 9309
+      "durationMs": 14224
     },
     {
       "caseId": "doc-evidence-pack-saas",
@@ -269,12 +269,14 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses clear terminology and structured sections to convey necessary compliance and governance information effectively.",
-        "hallucinations": []
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses clear terminology and structured sections to convey information effectively. However, the prose could be slightly more dense to fully align with the exemplar tone.",
+        "hallucinations": [
+          "ISO/IEC 42001:2023"
+        ]
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 10898
+      "durationMs": 11134
     },
     {
       "caseId": "doc-monitoring-plan-finserv",
@@ -290,12 +292,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It clearly outlines objectives, metrics, and procedures, using specific terminology relevant to fraud monitoring and compliance. The structure is logical and supports the action-oriented nature of the content.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to clearly outline objectives, metrics, and compliance requirements, aligning well with the expected tone.",
         "hallucinations": []
       },
       "overall": 0.91,
       "passed": true,
-      "durationMs": 8649
+      "durationMs": 9898
     },
     {
       "caseId": "doc-threat-model-llm-app",
@@ -311,12 +313,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It clearly outlines threats, risks, and mitigations with appropriate technical terminology and structured sections.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses appropriate terminology and clearly outlines threats, risks, and mitigations. The structure is logical and comprehensive, aligning well with GovSecure's standards.",
         "hallucinations": []
       },
       "overall": 0.895,
       "passed": true,
-      "durationMs": 7339
+      "durationMs": 7558
     },
     {
       "caseId": "doc-use-case-summary",
@@ -332,12 +334,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It clearly outlines the use case, risks, and compliance requirements, using appropriate terminology and structure. However, minor improvements could be made in enhancing the action-oriented aspect by specifying more concrete actions or steps for compliance and oversight.",
+        "rationale": "The document maintains a formal and precise tone consistent with GovSecure's brand voice. It clearly outlines the use case, risks, and regulatory references, demonstrating an action-oriented approach. However, minor improvements could be made in the specificity of the language used in the risk summary.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 21179
+      "durationMs": 18633
     },
     {
       "caseId": "intake-critical-social-scoring",
@@ -353,12 +355,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to clearly convey risk assessment details and required actions.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to convey critical information effectively. However, minor improvements in conciseness could enhance clarity.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 30636
+      "durationMs": 27744
     },
     {
       "caseId": "intake-high-credit-decision",
@@ -374,12 +376,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to clearly convey the risk assessment process. However, minor improvements could be made in the clarity of some sections.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to convey detailed information effectively. However, minor improvements in conciseness could enhance alignment with the exemplar tone.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 31364
+      "durationMs": 24098
     },
     {
       "caseId": "intake-low-internal-tool",
@@ -395,12 +397,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses clear terminology and structured sections to convey information effectively.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal, precise, and action-oriented tone throughout the document. The use of structured sections and clear, concise language supports the professional and methodical style expected from GovSecure.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 44723
+      "durationMs": 16791
     },
     {
       "caseId": "intake-medium-customer-chat",
@@ -416,12 +418,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured formatting to convey detailed information effectively. However, minor improvements in clarity and conciseness could enhance alignment.",
+        "rationale": "The generated output aligns well with the GovSecure brand voice, maintaining a formal, precise, and action-oriented tone throughout the document. The use of structured sections and clear, concise language supports the professional and methodical approach characteristic of GovSecure.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 42183
+      "durationMs": 22067
     },
     {
       "caseId": "playbook-combined-healthcare",
@@ -437,12 +439,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured phases to outline tasks and objectives clearly. However, minor improvements could be made in prose density to enhance clarity.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured phases to outline tasks and objectives clearly. However, minor improvements could be made in enhancing the density of technical details.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 27233
+      "durationMs": 22728
     },
     {
       "caseId": "playbook-eu-ai-act-edtech",
@@ -458,12 +460,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured phases to outline the governance framework effectively. However, the absence of an exemplar makes it challenging to score a perfect match.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses appropriate terminology and structured formatting to convey governance processes effectively.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 25869
+      "durationMs": 25827
     },
     {
       "caseId": "playbook-iso-42001-mfg",
@@ -481,12 +483,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses clear terminology and structured phases to outline the governance framework effectively. However, the absence of an exemplar makes it challenging to achieve a perfect score.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured sections to clearly outline governance processes, aligning well with the expected style.",
         "hallucinations": []
       },
       "overall": 0.87,
       "passed": true,
-      "durationMs": 29096
+      "durationMs": 36840
     },
     {
       "caseId": "playbook-nist-rmf-saas",
@@ -502,35 +504,33 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses specific terminology and structured phases to guide implementation, aligning well with the expected governance framework style.",
+        "rationale": "The document maintains a formal, precise, and action-oriented tone consistent with GovSecure's brand voice. It uses clear terminology and structured phases to outline the governance process effectively. However, minor improvements could be made in enhancing the density of the prose for conciseness.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 23367
+      "durationMs": 19738
     },
     {
       "caseId": "policy-aup-ecommerce",
       "category": "document-generation",
       "deterministic": {
         "structureMatch": 1,
-        "requiredClausesPresent": 0.75,
+        "requiredClausesPresent": 1,
         "hallucinationCheck": "pass",
-        "missingClauses": [
-          "sensitive data"
-        ],
+        "missingClauses": [],
         "forbiddenHits": [],
         "unverifiedCitationCount": 0,
         "unverifiedCitationSamples": []
       },
       "judged": {
-        "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and precise tone with clear delineation of roles and responsibilities. The document structure and terminology are consistent with the exemplar, though minor deviations in phrasing slightly reduce the score.",
+        "voiceMatch": 0.95,
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a clear, authoritative tone and structured format. The terminology and density are consistent with the exemplar, effectively communicating policy details. However, minor deviations in phrasing slightly reduce the score.",
         "hallucinations": []
       },
-      "overall": 0.895,
+      "overall": 0.985,
       "passed": true,
-      "durationMs": 7773
+      "durationMs": 9610
     },
     {
       "caseId": "policy-data-privacy-fintech",
@@ -545,13 +545,15 @@
         "unverifiedCitationSamples": []
       },
       "judged": {
-        "voiceMatch": 0.95,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, demonstrating a clear, structured, and professional tone. The terminology used is consistent with industry standards and the exemplar, effectively conveying the policy's purpose and scope. The document maintains a high level of detail and specificity, which is characteristic of GovSecure's style.",
-        "hallucinations": []
+        "voiceMatch": 0.9,
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and precise tone with clear terminology and structured sections. The document effectively mirrors the exemplar's density and style, providing comprehensive coverage of data privacy policy elements.",
+        "hallucinations": [
+          "ISO/IEC 42001 — Clause 8.2"
+        ]
       },
-      "overall": 0.985,
+      "overall": 0.97,
       "passed": true,
-      "durationMs": 9802
+      "durationMs": 11878
     },
     {
       "caseId": "policy-governance-healthcare",
@@ -567,12 +569,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, demonstrating a clear, structured, and professional tone. The terminology used is consistent with governance and compliance contexts, and the document maintains a focus on practical governance. However, minor deviations in prose density slightly affect the score.",
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, demonstrating a clear, structured, and professional tone. It effectively uses precise terminology and maintains a focus on governance and compliance, similar to the exemplar. However, minor deviations in prose density slightly affect the score.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 10167
+      "durationMs": 7474
     },
     {
       "caseId": "policy-human-oversight-saas",
@@ -588,12 +590,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a clear, structured, and professional tone. The terminology and density are consistent with the exemplar, effectively conveying the policy's purpose and scope. However, slight deviations in phrasing prevent a perfect score.",
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a clear, structured, and professional tone. The terminology and density are consistent with the exemplar, effectively conveying the policy's purpose and scope. However, slight deviations in phrasing could be refined for a perfect match.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 9729
+      "durationMs": 8545
     },
     {
       "caseId": "policy-incident-response-edu",
@@ -609,12 +611,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and structured tone with clear terminology and detailed procedural descriptions. The document effectively mirrors the density and style of the exemplar, providing a comprehensive incident response policy.",
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a structured and formal tone with clear terminology and density similar to the exemplar. The document effectively outlines the policy's purpose, scope, and procedures, consistent with GovSecure's practical governance approach.",
         "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 10296
+      "durationMs": 7634
     },
     {
       "caseId": "policy-risk-approval-mfg",
@@ -632,12 +634,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a structured and formal tone with clear definitions and procedural guidelines. The terminology used is consistent with governance and risk management contexts, similar to the exemplar.",
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a structured and formal tone with clear terminology and a focus on risk management. The document is well-organized and follows a logical flow similar to the exemplar.",
         "hallucinations": []
       },
       "overall": 0.895,
       "passed": true,
-      "durationMs": 7352
+      "durationMs": 8362
     },
     {
       "caseId": "policy-security-public-sector",
@@ -653,14 +655,12 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and precise tone with clear policy directives. The terminology and structure are consistent with the exemplar, though minor deviations in prose density are noted.",
-        "hallucinations": [
-          "ISO/IEC 42001 — ISO/IEC 42001:2023"
-        ]
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and precise tone with clear policy directives. The terminology used is consistent with industry standards and the exemplar document. However, the document could benefit from slightly more concise language in some sections.",
+        "hallucinations": []
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 17648
+      "durationMs": 13370
     },
     {
       "caseId": "policy-third-party-retail",
@@ -676,12 +676,14 @@
       },
       "judged": {
         "voiceMatch": 0.9,
-        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and precise tone with clear terminology and structured sections. The document effectively communicates the policy's purpose, scope, and procedures, similar to the exemplar. However, minor deviations in prose density slightly affect the score.",
-        "hallucinations": []
+        "rationale": "The generated output closely aligns with the GovSecure brand voice, maintaining a formal and structured tone with precise terminology. The document effectively outlines policy elements such as purpose, scope, and due diligence, consistent with the exemplar's style. However, minor deviations in prose density slightly affect the score.",
+        "hallucinations": [
+          "ISO/IEC 42001 — 2023"
+        ]
       },
       "overall": 0.97,
       "passed": true,
-      "durationMs": 9665
+      "durationMs": 7261
     }
   ]
 }

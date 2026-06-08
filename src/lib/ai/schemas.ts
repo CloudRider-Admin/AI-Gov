@@ -30,6 +30,7 @@ export const DOCUMENT_TYPE_VALUES = [
   'govsecure-incident-response-policy',
   'govsecure-human-oversight-policy',
   'govsecure-vendor-policy',
+  'govsecure-third-party-policy',
   // GovSecure checklists
   'govsecure-checklist-intake',
   'govsecure-checklist-evidence-pack',
@@ -214,6 +215,9 @@ export const intakeRequestSchema = z.object({
   deployment: deploymentTypeEnum.optional(),
   jurisdictions: z.array(z.string()).optional(),
   goLiveTarget: z.string().optional(),
+  /** Occupational role of the requesting user (e.g. "Security / CISO"), used to
+   *  surface the requestor lens on the assessment. Captured at onboarding. */
+  occupationalRole: z.string().optional(),
   conversationId: z.string().optional(),
 });
 
@@ -245,6 +249,8 @@ export const intakeAssessmentSchema = z.object({
   useCaseName: z.string(),
   owner: z.string().default(''),
   businessUnit: z.string().default(''),
+  /** Occupational role of the requesting user, echoed into the header block. */
+  requestorRole: z.string().optional(),
   modelType: modelTypeEnum.default('GenAI'),
   deployment: deploymentTypeEnum.default('Internal'),
   jurisdictions: z.array(z.string()).default([]),
@@ -296,8 +302,12 @@ const checklistItemSchema = z.object({
 
 const documentSectionSchema = z.object({
   heading: z.string(),
-  content: z.string(),
-  checklistItems: z.array(checklistItemSchema).optional(),
+  // GPT-4o emits `null` for `content` on checklist-only sections and for
+  // `checklistItems` on prose-only sections. Coerce both nullish forms to
+  // their empty equivalents so a structurally valid document isn't discarded
+  // on a type technicality (was the dominant DocumentOrchestrator error).
+  content: z.string().nullish().transform((v) => v ?? ''),
+  checklistItems: z.array(checklistItemSchema).nullish().transform((v) => v ?? undefined),
   required: z.boolean().default(true),
 });
 

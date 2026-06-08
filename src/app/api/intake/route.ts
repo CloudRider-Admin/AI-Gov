@@ -6,6 +6,8 @@ import { checkRateLimit } from '@/lib/rate-limit';
 import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { auditLog } from '@/lib/utils/logger';
 import { saveArtifact } from '@/lib/artifacts';
+import { prisma } from '@/lib/prisma';
+import { roleLabel } from '@/lib/occupationalRoles';
 
 export async function POST(request: NextRequest) {
   const session = await getOptionalSession();
@@ -50,7 +52,16 @@ export async function POST(request: NextRequest) {
 
     auditLog({ event: 'request.received', data: { route: '/api/intake', userId } });
 
-    const assessment = await intakeOrchestrator.run(parseResult.data, process.env.OPENAI_API_KEY);
+    // Surface the requesting user's occupational role on the assessment header.
+    const dbUser = await prisma.user
+      .findUnique({ where: { id: userId }, select: { occupationalRole: true } })
+      .catch(() => null);
+    const intakeRequest = {
+      ...parseResult.data,
+      occupationalRole: roleLabel(dbUser?.occupationalRole) ?? parseResult.data.occupationalRole,
+    };
+
+    const assessment = await intakeOrchestrator.run(intakeRequest, process.env.OPENAI_API_KEY);
 
     const artifactId = await saveArtifact({
       userId,

@@ -157,9 +157,9 @@ describe('schemas — Phase 5 sync guard', () => {
         const b: (typeof DOCUMENT_TYPE_VALUES)[number] = a;
         void b;
       });
-      // Sanity: the runtime arity should be 35
-      // (11 generic + 8 policies + 14 checklists + 2 flagship Phase 3).
-      expect(DOCUMENT_TYPE_VALUES.length).toBe(35);
+      // Sanity: the runtime arity should be 36
+      // (11 generic + 9 policies + 14 checklists + 2 flagship Phase 3).
+      expect(DOCUMENT_TYPE_VALUES.length).toBe(36);
     });
 
     it('playbook frameworks', () => {
