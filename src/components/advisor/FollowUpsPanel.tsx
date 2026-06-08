@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { HelpCircle, Link2, Send } from 'lucide-react';
+import { HelpCircle, Link2, Send, Sparkles } from 'lucide-react';
 
 interface FollowUpsPanelProps {
   questions?: string[];
@@ -17,6 +17,7 @@ export function FollowUpsPanel({
   onAnswersSubmit,
 }: FollowUpsPanelProps) {
   const [answers, setAnswers] = useState<Record<number, string>>({});
+  const [revealed, setRevealed] = useState(false);
   const hasQuestions = questions.length > 0;
   const hasSources = sources.length > 0;
 
@@ -37,7 +38,27 @@ export function FollowUpsPanel({
 
   return (
     <div className="mb-6 space-y-4">
-      {hasQuestions && (
+      {hasQuestions && !revealed && (
+        <div className="rounded-xl border border-terminal-green/30 bg-terminal-green/5 px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-start gap-2">
+            <Sparkles className="w-4 h-4 text-terminal-green mt-0.5 shrink-0" />
+            <p className="text-sm font-sans text-terminal-muted">
+              Govi has {questions.length} optional follow-up question{questions.length > 1 ? 's' : ''} that
+              would sharpen this assessment — answer {questions.length > 1 ? 'them' : 'it'} only if you want more detail.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setRevealed(true)}
+            className="self-start sm:self-auto shrink-0 inline-flex items-center gap-2 px-4 py-2 text-sm font-mono rounded-md border border-terminal-green text-terminal-green hover:bg-terminal-green/10 transition-colors"
+          >
+            <HelpCircle className="w-3.5 h-3.5" />
+            Refine Assessment
+          </button>
+        </div>
+      )}
+
+      {hasQuestions && revealed && (
         <div>
           <h4 className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
             <HelpCircle className="w-4 h-4" /> Refine Your Assessment
