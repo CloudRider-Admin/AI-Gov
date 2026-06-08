@@ -90,6 +90,7 @@ export function AdvisorResponsePanel({
 }: AdvisorResponsePanelProps) {
   const [copied, setCopied] = useState(false);
   const [clarificationAnswers, setClarificationAnswers] = useState<Record<number, string>>({});
+  const [clarifyRevealed, setClarifyRevealed] = useState(false);
 
   const handleCopy = async () => {
     try {
@@ -180,8 +181,17 @@ export function AdvisorResponsePanel({
             </div>
           </div>
 
-          {/* Follow-up questions as inline questionnaire */}
-          {response.followUpQuestions?.length > 0 && onAnswersSubmit && (
+          {/* Follow-up questions — gated behind the user's opt-in */}
+          {response.followUpQuestions?.length > 0 && onAnswersSubmit && !clarifyRevealed && (
+            <button
+              type="button"
+              onClick={() => setClarifyRevealed(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-mono rounded-md border border-terminal-cyan text-terminal-cyan hover:bg-terminal-cyan/10 transition-colors"
+            >
+              Answer {response.followUpQuestions.length} clarifying question{response.followUpQuestions.length > 1 ? 's' : ''}
+            </button>
+          )}
+          {response.followUpQuestions?.length > 0 && onAnswersSubmit && clarifyRevealed && (
             <div className="space-y-4">
               <p className="text-sm font-sans text-terminal-muted">
                 Answer the questions below so I can tailor your assessment:
