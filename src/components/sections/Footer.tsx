@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { navigationLevels, trustBadges } from "@/data/content";
+import { trustBadges } from "@/data/content";
 import { Mail, ArrowRight, Github, Linkedin, Shield } from "lucide-react";
 
 
@@ -111,25 +111,6 @@ export function Footer() {
                   <Github className="w-4 h-4" />
                 </a>
               </div>
-            </div>
-
-            {/* Learn by Level */}
-            <div>
-              <h4 className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-4">
-                Learn by Level
-              </h4>
-              <ul className="space-y-3">
-                {navigationLevels.map((level) => (
-                  <li key={level.id}>
-                    <Link
-                      href={level.href}
-                      className="text-terminal-muted hover:text-terminal-green font-sans text-sm transition-colors"
-                    >
-                      {level.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
             </div>
 
             {/* Resources */}

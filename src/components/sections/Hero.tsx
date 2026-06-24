@@ -43,7 +43,7 @@ export function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-            <Link href="/learn/getting-started" className="btn-primary group">
+            <Link href="/signup" className="btn-primary group">
               {heroContent.primaryCta}
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>

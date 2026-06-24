@@ -17,15 +17,6 @@ type NavItem = {
 const publicNav: NavItem[] = [
   { name: "Home", href: "/" },
   { name: "Govi Advisor", href: "/govi" },
-  {
-    name: "Learn",
-    href: "/learn",
-    children: [
-      { name: "Getting Started", href: "/learn/getting-started" },
-      { name: "Scaling", href: "/learn/scaling" },
-      { name: "Advanced", href: "/learn/advanced" },
-    ],
-  },
   { name: "Pricing", href: "/pricing" },
   { name: "FAQ", href: "/faq" },
   { name: "Contact", href: "/contact" },
@@ -36,15 +27,6 @@ const authedNav: NavItem[] = [
   { name: "Playbooks", href: "/playbooks" },
   { name: "Topics", href: "/topics" },
   { name: "Govi", href: "/govi" },
-  {
-    name: "Learn",
-    href: "/learn",
-    children: [
-      { name: "Getting Started", href: "/learn/getting-started" },
-      { name: "Scaling", href: "/learn/scaling" },
-      { name: "Advanced", href: "/learn/advanced" },
-    ],
-  },
   { name: "FAQ", href: "/faq" },
   { name: "Contact", href: "/contact" },
 ];

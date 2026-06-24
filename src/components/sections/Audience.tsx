@@ -13,7 +13,7 @@ const iconMap: Record<string, LucideIcon> = {
 
 // Map audience cards to relevant content pages
 const audienceLinks: Record<string, string> = {
-  "founders-execs": "/learn/getting-started",
+  "founders-execs": "/signup",
   "cios-cisos": "/topics/security",
   "data-ai-teams": "/topics/operations",
   "compliance-legal": "/topics/risk-compliance",
@@ -34,7 +34,7 @@ export function Audience() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {audienceCards.map((card, index) => {
             const Icon = iconMap[card.icon] || Briefcase;
-            const href = audienceLinks[card.id] || "/learn/getting-started";
+            const href = audienceLinks[card.id] || "/signup";
             return (
               <Link
                 key={card.id}
