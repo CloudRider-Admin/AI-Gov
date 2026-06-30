@@ -398,7 +398,7 @@ export default function PricingPage() {
             <h2 className="font-mono text-2xl font-bold text-terminal-text text-center mb-10">
               Full Feature Comparison
             </h2>
-            <div className="overflow-x-auto rounded-xl border border-terminal-border">
+            <div className="overflow-x-auto rounded-xl border border-terminal-border bg-terminal-dark">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-terminal-border bg-terminal-dark/50">

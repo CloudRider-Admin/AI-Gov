@@ -21,7 +21,7 @@ const audienceLinks: Record<string, string> = {
 
 export function Audience() {
   return (
-    <section className="section bg-terminal-dark/30">
+    <section className="section bg-terminal-dark">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="text-center mb-12">

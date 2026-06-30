@@ -6,7 +6,7 @@ import { FileText, Download, ArrowRight } from "lucide-react";
 
 export function Templates() {
   return (
-    <section id="templates" className="section bg-terminal-dark/30 scroll-mt-20">
+    <section id="templates" className="section bg-terminal-dark scroll-mt-20">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">

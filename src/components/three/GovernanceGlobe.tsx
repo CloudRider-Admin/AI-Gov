@@ -217,10 +217,11 @@ function GlobeCanvas({
       ctx.clearRect(0, 0, canvas!.width, canvas!.height);
       ctx.scale(dpr, dpr);
 
-      // Sphere
+      // Sphere — fully opaque so the page's dot-mesh/aurora background
+      // effect does not bleed through the globe.
       ctx.beginPath();
       path(SPHERE);
-      ctx.fillStyle = "rgba(6, 22, 14, 0.55)";
+      ctx.fillStyle = "rgb(6, 22, 14)";
       ctx.fill();
 
       // Graticule — symmetric grid lines, kept light & bright

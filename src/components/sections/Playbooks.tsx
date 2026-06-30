@@ -404,7 +404,7 @@ function downloadTemplate(id: string) {
 
 export function Playbooks() {
   return (
-    <section className="section bg-terminal-dark/30">
+    <section className="section bg-terminal-dark">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 gap-4">

@@ -426,7 +426,7 @@ export function HowItWorks() {
           {/* Step cards */}
           <ol className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Card 01 — Intake form popup */}
-            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray/30 p-6 flex flex-col gap-3">
+            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray p-6 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-terminal-green/10 text-terminal-green">
                   <MessageSquare className="w-5 h-5" aria-hidden="true" />
@@ -451,7 +451,7 @@ export function HowItWorks() {
             </li>
 
             {/* Card 02 — Go to Govi */}
-            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray/30 p-6 flex flex-col gap-3">
+            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray p-6 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-terminal-green/10 text-terminal-green">
                   <ScanSearch className="w-5 h-5" aria-hidden="true" />
@@ -475,7 +475,7 @@ export function HowItWorks() {
             </li>
 
             {/* Card 03 — Generate free DPIA */}
-            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray/30 p-6 flex flex-col gap-3">
+            <li className="relative rounded-xl border border-terminal-border bg-terminal-gray p-6 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span className="inline-flex items-center justify-center w-10 h-10 rounded-md bg-terminal-green/10 text-terminal-green">
                   <FileSignature className="w-5 h-5" aria-hidden="true" />
