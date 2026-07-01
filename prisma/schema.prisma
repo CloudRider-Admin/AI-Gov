@@ -20,6 +20,7 @@ model User {
   aiTools                  String[]             @default([])
   primaryConcern           String?
   occupationalRole         String?
+  goviInterface            String               @default("terminal") // terminal | sovereign — chosen Govi UI skin
   stripeCustomerId         String?              @unique
   stripeSubscriptionId     String?              @unique
   stripePriceId            String?

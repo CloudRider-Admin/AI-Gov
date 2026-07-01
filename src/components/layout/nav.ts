@@ -15,6 +15,7 @@ import {
   FileBarChart,
   Users,
   FileText,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -46,4 +47,5 @@ export const authedNav: NavItem[] = [
   { name: "Team", href: "/team", icon: Users },
   { name: "Playbooks", href: "/playbooks", icon: BookOpen },
   { name: "Topics", href: "/topics", icon: Hash },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];

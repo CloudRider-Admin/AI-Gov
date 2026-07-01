@@ -40,38 +40,95 @@ export function Footer() {
   };
 
   return (
-    <footer className="bg-terminal-dark border-t border-terminal-border">
-      {/*  Trust badges section */}
-      <div className="section py-12 border-b border-terminal-border">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="font-mono text-terminal-green text-sm uppercase tracking-wider">
-              Aligned With Industry Standards
-            </span>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-8">
-            {trustBadges.map((badge) => (
-              <div
-                key={badge.id}
-                className="flex items-center gap-3 px-6 py-3 border border-terminal-border rounded-xl bg-terminal-gray/30 hover:border-terminal-green/50 transition-colors"
-              >
-                <Shield className="w-5 h-5 text-terminal-green" />
-                <div>
-                  <div className="font-mono text-sm text-terminal-text">
-                    {badge.name}
+    <footer className="relative rounded-t-[2.5rem] border-t border-terminal-border bg-terminal-dark">
+      {/* Moving highlight that travels along the curved top border */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[2px] overflow-hidden rounded-t-[2.5rem]"
+      >
+        <div className="h-full w-1/4 bg-gradient-to-r from-transparent via-terminal-green to-transparent animate-shimmer motion-reduce:hidden" />
+      </div>
+
+      {/* ── Industry-standards CTA — a standout, motion-bordered card ── */}
+      <div className="relative z-10 mx-auto max-w-5xl px-4 pt-16">
+        <div className="group relative overflow-hidden rounded-[2rem] p-[1.5px]">
+          {/* Rotating conic-gradient ring = the curved border in motion */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-[-120%] animate-spin [animation-duration:9s] motion-reduce:hidden"
+            style={{
+              background:
+                "conic-gradient(from 0deg, transparent 0deg, rgb(var(--color-accent-rgb)) 55deg, transparent 130deg, transparent 230deg, rgb(var(--color-cyan-rgb)) 305deg, transparent 360deg)",
+            }}
+          />
+          {/* Static border fallback (visible under the ring / for reduced motion) */}
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 rounded-[2rem] border border-terminal-border"
+          />
+
+          {/* Card body */}
+          <div className="relative overflow-hidden rounded-[calc(2rem-1.5px)] bg-terminal-dark px-6 py-10 text-center shadow-[0_0_60px_-20px_rgba(0,255,136,0.35)] sm:px-12">
+            {/* Ambient glow wash */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 0%, rgba(0,255,136,0.10), transparent 60%)",
+              }}
+            />
+            <div className="relative">
+              <span className="inline-flex items-center gap-2 rounded-full border border-terminal-green/30 bg-terminal-green/10 px-3 py-1 font-mono text-xs uppercase tracking-wider text-terminal-green animate-glow motion-reduce:animate-none">
+                <Shield className="h-3.5 w-3.5" />
+                Aligned With Industry Standards
+              </span>
+              <h3 className="mx-auto mt-5 max-w-2xl font-mono text-2xl font-bold leading-tight text-terminal-text sm:text-3xl">
+                Compliance mapped to the frameworks that matter
+              </h3>
+              <p className="mx-auto mt-3 max-w-xl font-sans text-sm leading-relaxed text-terminal-muted">
+                Every assessment, policy, and playbook GovSecure generates is aligned to the
+                standards regulators and auditors expect.
+              </p>
+
+              {/* Standards as interactive pills */}
+              <div className="mt-7 flex flex-wrap items-center justify-center gap-2.5">
+                {trustBadges.map((badge) => (
+                  <div
+                    key={badge.id}
+                    className="flex items-center gap-2 rounded-full border border-terminal-border bg-terminal-black/40 px-3.5 py-1.5 transition-all duration-300 hover:-translate-y-0.5 hover:border-terminal-green/60 hover:shadow-[0_0_18px_-6px_rgba(0,255,136,0.5)]"
+                  >
+                    <Shield className="h-3.5 w-3.5 shrink-0 text-terminal-green" />
+                    <span className="font-mono text-xs text-terminal-text">{badge.name}</span>
+                    <span className="hidden font-sans text-[11px] text-terminal-muted sm:inline">
+                      · {badge.description}
+                    </span>
                   </div>
-                  <div className="text-xs text-terminal-muted">
-                    {badge.description}
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
+
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/signup"
+                  className="group/btn inline-flex items-center gap-2 rounded-full bg-terminal-green px-6 py-3 font-mono text-sm font-semibold text-terminal-black transition-all duration-300 hover:gap-3 hover:bg-terminal-green-dim"
+                >
+                  Start your free assessment
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" />
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="inline-flex items-center gap-2 rounded-full border border-terminal-border px-6 py-3 font-mono text-sm font-semibold text-terminal-text transition-all duration-300 hover:border-terminal-green/60 hover:text-terminal-green"
+                >
+                  View pricing
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main footer content */}
-      <div className="section py-16">
+      <div className="section pt-14 pb-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Brand column */}
