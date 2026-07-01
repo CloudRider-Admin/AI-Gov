@@ -4,6 +4,7 @@ import { extractDocumentText } from '@/lib/documentParser';
 import { analyzeDocumentGaps } from '@/lib/documentAnalysis';
 import { checkRateLimit } from '@/lib/rate-limit';
 import { checkTokenBudget } from '@/lib/tokenBudget';
+import { ingestUserDocument } from '@/lib/userDocuments';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = new Set([
@@ -49,6 +50,8 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
     const framework = (formData.get('framework') as string) ?? 'Combined';
+    // Documents are added to the user's RAG corpus by default; opt out with addToKnowledge=false.
+    const addToKnowledge = (formData.get('addToKnowledge') as string) !== 'false';
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
@@ -83,6 +86,21 @@ export async function POST(request: NextRequest) {
       framework,
     });
 
+    // Persist + embed so the advisor can retrieve this document later (RAG).
+    let indexed: { documentId: string; chunkCount: number } | null = null;
+    if (addToKnowledge) {
+      try {
+        indexed = await ingestUserDocument({
+          userId: session.user.id,
+          fileName: file.name,
+          text: extractedText,
+          framework,
+        });
+      } catch (err) {
+        console.error('[documents/upload] Indexing failed (analysis still returned):', err);
+      }
+    }
+
     return NextResponse.json({
       fileName: file.name,
       fileSize: file.size,
@@ -90,6 +108,7 @@ export async function POST(request: NextRequest) {
       truncated: extractedText.length > 32000,
       framework,
       analysis,
+      indexed,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';

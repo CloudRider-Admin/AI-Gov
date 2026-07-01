@@ -38,6 +38,7 @@ export interface DashboardPayload {
   };
   memberSince: string | null;
   onboardingCompleted: boolean;
+  occupationalRole: string | null;
   recentConversations: RecentConversation[];
   systemStatus: 'nominal' | 'degraded' | 'offline';
   sessionsLast7Days: number[];
@@ -127,7 +128,7 @@ export async function GET() {
 
     prisma.user.findUnique({
       where: { id: userId },
-      select: { role: true, createdAt: true, name: true, onboardingCompleted: true },
+      select: { role: true, createdAt: true, name: true, onboardingCompleted: true, occupationalRole: true },
     }),
 
     prisma.message.count({
@@ -257,6 +258,7 @@ export async function GET() {
     },
     memberSince: user?.createdAt?.toISOString() ?? null,
     onboardingCompleted: user?.onboardingCompleted ?? false,
+    occupationalRole: user?.occupationalRole ?? null,
     recentConversations: recentConversations.map((c) => ({
       id: c.id,
       title: c.title,

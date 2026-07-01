@@ -401,6 +401,36 @@ model MaturitySnapshot {
   @@index([organizationId, createdAt])
 }
 
+/// Tier 3 — a document the user uploaded, embedded for retrieval by the advisor (RAG).
+model UserDocument {
+  id         String              @id @default(cuid())
+  userId     String
+  fileName   String
+  framework  String?
+  charCount  Int                 @default(0)
+  chunkCount Int                 @default(0)
+  createdAt  DateTime            @default(now())
+  chunks     UserDocumentChunk[]
+
+  @@index([userId, createdAt])
+}
+
+/// A single embedded chunk of a UserDocument. Vector column managed via raw SQL.
+model UserDocumentChunk {
+  id         String                       @id @default(cuid())
+  documentId String
+  userId     String
+  chunkIndex Int
+  content    String                       @db.Text
+  embedding  Unsupported("vector(1536)")?
+  embeddedAt DateTime?
+  createdAt  DateTime                     @default(now())
+  document   UserDocument                 @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([documentId])
+}
+
 /// Tier 3 — regulatory horizon-scanning feed item.
 model RegulatoryUpdate {
   id           String   @id @default(cuid())

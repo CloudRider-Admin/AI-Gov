@@ -150,8 +150,11 @@ export async function POST(request: NextRequest) {
     const streamId = generateStreamId();
     streamBuffer.create(streamId, dbConversationId);
 
-    // ── RAG context ──
-    const ragResult = await buildEnhancedRAGContext(query, { totalBudget: 7 });
+    // ── RAG context (includes the user's own uploaded documents) ──
+    const ragResult = await buildEnhancedRAGContext(query, {
+      totalBudget: 7,
+      userId: session.user.id,
+    });
     let contextualQuery = query;
     const hasConversationHistory = !!context;
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;

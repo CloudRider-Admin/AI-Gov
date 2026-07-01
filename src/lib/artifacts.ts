@@ -1,5 +1,10 @@
 import { prisma } from './prisma';
 import { dispatchWebhooks } from './webhooks';
+import { writeAuditLog } from './audit';
+import { REVIEW_STATUSES, type ReviewStatus } from './governanceEnums';
+
+export { REVIEW_STATUSES };
+export type { ReviewStatus };
 
 export interface SaveArtifactParams {
   userId: string;
@@ -58,8 +63,49 @@ export async function getUserArtifacts(
       useCaseName: true,
       createdAt: true,
       conversationId: true,
+      reviewStatus: true,
+      reviewedAt: true,
     },
   });
+}
+
+/**
+ * Advance an artifact through the review workflow (Tier 2):
+ * draft → in-review → approved. Records approver + timestamp on approval.
+ */
+export async function setArtifactReviewStatus(
+  id: string,
+  userId: string,
+  status: ReviewStatus,
+) {
+  const existing = await prisma.generatedArtifact.findFirst({
+    where: { id, userId },
+    select: { id: true, title: true },
+  });
+  if (!existing) return null;
+
+  const artifact = await prisma.generatedArtifact.update({
+    where: { id },
+    data: {
+      reviewStatus: status,
+      reviewedById: status === 'approved' ? userId : null,
+      reviewedAt: status === 'approved' ? new Date() : null,
+    },
+    select: { id: true, reviewStatus: true, reviewedAt: true },
+  });
+
+  if (status === 'approved') {
+    writeAuditLog({
+      actorId: userId,
+      action: 'artifact.approved',
+      entityType: 'artifact',
+      entityId: id,
+      summary: `Approved document "${existing.title}"`,
+    });
+    dispatchWebhooks(userId, 'artifact.approved', { artifactId: id, title: existing.title });
+  }
+
+  return artifact;
 }
 
 export async function getArtifactById(id: string, userId: string) {

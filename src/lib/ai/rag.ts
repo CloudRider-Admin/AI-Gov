@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { matchSectors } from '@/data/sectorGuidance';
 import { matchRegulations } from '@/data/emergingRegulations';
 import { semanticSearch, isVectorSearchAvailable } from './vectorSearch';
+import { searchUserDocuments } from '@/lib/userDocuments';
 
 import type { KnowledgeDocument } from './knowledgeBase';
 
@@ -23,6 +24,7 @@ export type SourceProvenanceType =
   | 'static-kb'
   | 'vector-kb'
   | 'db-kb'
+  | 'user-document'
   | 'sector-guidance'
   | 'regulation';
 
@@ -56,7 +58,12 @@ export interface EnhancedRAGResult {
 
 // ── Unified scored candidate for dynamic allocation ──
 
-type SourceKind = 'vector' | 'static' | 'nist' | 'db';
+type SourceKind = 'vector' | 'static' | 'nist' | 'db' | 'user-doc';
+
+interface UserDocEntry {
+  fileName: string;
+  content: string;
+}
 
 interface ScoredCandidate {
   kind: SourceKind;
@@ -66,7 +73,7 @@ interface ScoredCandidate {
   snippet: string;
   sourceLabel: string;
   /** Original data for rich formatting */
-  raw: KnowledgeDocument | NistEntry | DbEntry;
+  raw: KnowledgeDocument | NistEntry | DbEntry | UserDocEntry;
 }
 
 interface DbEntry {
@@ -118,6 +125,12 @@ export async function buildEnhancedRAGContext(
     totalBudget?: number;
     /** Max candidates to fetch per source before ranking (default 5) */
     candidatesPerSource?: number;
+    /**
+     * When set, the user's own uploaded documents are searched and merged into
+     * the candidate pool (RAG over personal documents). Omit for anonymous /
+     * global-only retrieval — behaviour is then identical to before.
+     */
+    userId?: string;
     // Legacy compat — ignored if totalBudget is set
     staticLimit?: number;
     nistLimit?: number;
@@ -151,6 +164,26 @@ export async function buildEnhancedRAGContext(
     }
   } catch {
     // Non-fatal
+  }
+
+  // ── 1b. User's own uploaded documents (personal RAG) ──
+  if (options.userId) {
+    try {
+      const userDocs = await searchUserDocuments(options.userId, query, perSource);
+      for (const d of userDocs) {
+        candidates.push({
+          kind: 'user-doc',
+          key: `userdoc:${d.id}`,
+          score: d.similarity,
+          title: d.fileName,
+          snippet: createSnippet(d.content),
+          sourceLabel: `Your document — ${d.fileName}`,
+          raw: { fileName: d.fileName, content: d.content },
+        });
+      }
+    } catch {
+      // Non-fatal — fall back to global sources only.
+    }
   }
 
   // ── 2. Static knowledge base (keyword) ──
@@ -247,6 +280,7 @@ export async function buildEnhancedRAGContext(
     if (c.kind === 'nist') return 'nist';
     if (c.kind === 'vector') return 'vector-kb';
     if (c.kind === 'static') return 'static-kb';
+    if (c.kind === 'user-doc') return 'user-document';
     return 'db-kb';
   };
 
@@ -291,6 +325,19 @@ export async function buildEnhancedRAGContext(
         .map((c, i) => {
           const doc = c.raw as KnowledgeDocument;
           return `${i + 1}. ${doc.title} (Source: ${doc.source}, Relevance: ${(c.score * 100).toFixed(0)}%)\n${c.snippet}`;
+        })
+        .join('\n\n')
+    );
+  }
+
+  const userDocSelected = byKind('user-doc');
+  if (userDocSelected.length) {
+    parts.push(
+      "From the user's own uploaded documents (prioritise these for organization-specific context):\n" +
+      userDocSelected
+        .map((c, i) => {
+          const e = c.raw as UserDocEntry;
+          return `${i + 1}. ${e.fileName} (Relevance: ${(c.score * 100).toFixed(0)}%)\n${c.snippet}`;
         })
         .join('\n\n')
     );

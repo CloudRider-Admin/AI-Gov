@@ -92,6 +92,21 @@ Leverages the existing AI stack (multi-agent Govi, embeddings, jurisdiction data
 
 ---
 
+## Delivered
+
+All four tiers shipped as working vertical slices (routes + data-access + UI + sidebar nav):
+
+- **T1** — `/inventory`, `/compliance`, `/tasks`, `/audit`, plus auto-written audit trail.
+- **T2** — `/team` (create workspace, invite-by-email token flow, RBAC, workspace switcher), `/invite/[token]`; artifact review/approval via `/library` (draft → in-review → approved, `PATCH /api/artifacts/[id]/review`).
+- **T3** — `/maturity` (live score gauge, dimension breakdown, proactive nudges, regulatory radar).
+- **T5** — `/report` (printable board scorecard), `/assessment` (onboarding quiz → seeds tasks + baseline snapshot), role-tailored dashboard priorities strip keyed on `User.occupationalRole`.
+
+Shared client-safe enums live in `src/lib/governanceEnums.ts` to keep server-only code (Prisma/Resend) out of the browser bundle.
+
+- **T3 (RAG over user documents)** — uploaded documents are chunked + embedded (`UserDocument`/`UserDocumentChunk`, pgvector) on upload and retrieved by the Govi advisor via `buildEnhancedRAGContext({ userId })`. Managed from `/library` ("Your knowledge base"). Additive: no `userId` → identical global-only behaviour.
+
+All roadmap tiers (1, 2, 3, 5) are now delivered.
+
 ## Build sequence
 
 1. ✅ Foundation migration (all models) — unblocks everything.

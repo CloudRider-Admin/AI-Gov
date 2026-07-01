@@ -15,6 +15,7 @@ import {
   Layers,
 } from "lucide-react";
 import { OnboardingWizard } from "@/components/OnboardingWizard";
+import { RolePriorities } from "./RolePriorities";
 
 interface RecentConversation {
   id: string;
@@ -49,6 +50,7 @@ interface DashboardData {
   };
   memberSince: string | null;
   onboardingCompleted: boolean;
+  occupationalRole: string | null;
   recentConversations: RecentConversation[];
   systemStatus: "nominal" | "degraded" | "offline";
   sessionsLast7Days: number[];
@@ -210,6 +212,9 @@ export function DashboardContent() {
             </button>
           </div>
         </div>
+
+        {/* ── Role-tailored priorities (Tier 5) ─────────────────────── */}
+        <RolePriorities role={data?.occupationalRole ?? null} />
 
         {error && (
           <div className="flex items-center justify-between rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-4 py-3 text-sm text-terminal-red">

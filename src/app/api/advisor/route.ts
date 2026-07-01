@@ -100,8 +100,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(cached);
     }
 
-    // ── RAG context retrieval ──
-    const ragResult = await buildEnhancedRAGContext(query, { totalBudget: 7 });
+    // ── RAG context retrieval (includes the user's own documents when signed in) ──
+    const ragResult = await buildEnhancedRAGContext(query, {
+      totalBudget: 7,
+      userId: isGuest ? undefined : session.user.id,
+    });
     let contextualQuery = query;
     const hasConversationHistory = !!context;
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;

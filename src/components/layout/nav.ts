@@ -14,6 +14,7 @@ import {
   Gauge,
   FileBarChart,
   Users,
+  FileText,
   type LucideIcon,
 } from "lucide-react";
 
@@ -34,16 +35,15 @@ export const publicNav: NavItem[] = [
 
 export const authedNav: NavItem[] = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Govi", href: "/govi", icon: Bot },
   { name: "Maturity", href: "/maturity", icon: Gauge },
   { name: "Inventory", href: "/inventory", icon: Server },
   { name: "Compliance", href: "/compliance", icon: ShieldCheck },
   { name: "Tasks", href: "/tasks", icon: ListChecks },
+  { name: "Library", href: "/library", icon: FileText },
   { name: "Audit", href: "/audit", icon: FileClock },
   { name: "Report", href: "/report", icon: FileBarChart },
   { name: "Team", href: "/team", icon: Users },
   { name: "Playbooks", href: "/playbooks", icon: BookOpen },
   { name: "Topics", href: "/topics", icon: Hash },
-  { name: "Govi", href: "/govi", icon: Bot },
-  { name: "FAQ", href: "/faq", icon: HelpCircle },
-  { name: "Contact", href: "/contact", icon: Mail },
 ];

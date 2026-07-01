@@ -11,6 +11,7 @@ import crypto from 'crypto';
 export type WebhookEvent =
   | 'artifact.created'
   | 'artifact.versioned'
+  | 'artifact.approved'
   | 'query.completed';
 
 export interface WebhookPayload {

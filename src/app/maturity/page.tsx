@@ -83,8 +83,11 @@ export default async function MaturityPage() {
             <p className="font-mono text-xs text-terminal-muted mt-3">
               {trend.length > 1
                 ? `${trend.length} snapshots recorded`
-                : 'Snapshot your score to start a trend'}
+                : 'Take the assessment to set your baseline'}
             </p>
+            <Link href="/assessment" className="btn-secondary text-xs py-1.5 mt-3">
+              {trend.length > 0 ? 'Retake assessment' : 'Start assessment'}
+            </Link>
           </div>
 
           {/* Dimensions */}

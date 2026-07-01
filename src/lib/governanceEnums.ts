@@ -31,3 +31,7 @@ export type TaskPriority = (typeof TASK_PRIORITIES)[number];
 // Team invitations (Tier 2).
 export const INVITE_ROLES = ['ADMIN', 'MEMBER', 'VIEWER'] as const;
 export type InviteRole = (typeof INVITE_ROLES)[number];
+
+// Artifact review/approval workflow (Tier 2).
+export const REVIEW_STATUSES = ['draft', 'in-review', 'approved'] as const;
+export type ReviewStatus = (typeof REVIEW_STATUSES)[number];
