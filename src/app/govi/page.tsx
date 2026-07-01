@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
-import { Advisor } from "@/components/advisor";
+import { BookOpen, Settings } from "lucide-react";
+import { GoviExperience } from "@/components/advisor/GoviExperience";
 
 export const metadata: Metadata = {
   title: "Govi - AI Governance Advisor",
@@ -27,17 +27,26 @@ export default async function GoviPage({
               Anchored by the GovSecure Governance Library
             </p>
           </div>
-          <Link
-            href="/govi/library"
-            className="hidden sm:flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 border border-terminal-border rounded hover:border-terminal-green hover:text-terminal-green transition-colors text-terminal-muted"
-          >
-            <BookOpen className="w-3 h-3" />
-            GovSecure Library
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/settings"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 border border-terminal-border rounded hover:border-terminal-green hover:text-terminal-green transition-colors text-terminal-muted"
+            >
+              <Settings className="w-3 h-3" />
+              Interface
+            </Link>
+            <Link
+              href="/govi/library"
+              className="hidden sm:flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 border border-terminal-border rounded hover:border-terminal-green hover:text-terminal-green transition-colors text-terminal-muted"
+            >
+              <BookOpen className="w-3 h-3" />
+              GovSecure Library
+            </Link>
+          </div>
         </div>
       </div>
 
-      <Advisor showHeader={false} initialQuery={params.q} initialConversationId={params.c} />
+      <GoviExperience initialQuery={params.q} initialConversationId={params.c} />
     </div>
   );
 }
