@@ -67,8 +67,8 @@ export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: Audi
   const docs = referenceDocuments(response);
 
   return (
-    <aside className="w-full lg:w-[340px] lg:shrink-0 border-l border-slate-200/80 bg-white">
-      <div className="sticky top-24 p-6 space-y-7">
+    <aside className="w-full shrink-0 border-t border-slate-200/80 bg-white lg:h-full lg:w-[340px] lg:overflow-y-auto lg:border-l lg:border-t-0">
+      <div className="space-y-7 p-6">
         <h2 className="text-[15px] font-semibold text-slate-900 tracking-tight">
           Audit Intelligence Panel
         </h2>

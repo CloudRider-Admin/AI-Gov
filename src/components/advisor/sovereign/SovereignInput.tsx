@@ -10,6 +10,8 @@ interface SovereignInputProps {
   query: string;
   isLoading: boolean;
   followUpPrompt?: string | null;
+  /** Optional actions affordance (the "+" menu) rendered beside the attach button. */
+  actionsSlot?: React.ReactNode;
   onChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
 }
@@ -18,6 +20,7 @@ export function SovereignInput({
   query,
   isLoading,
   followUpPrompt,
+  actionsSlot,
   onChange,
   onSubmit,
 }: SovereignInputProps) {
@@ -65,6 +68,7 @@ export function SovereignInput({
         <p className="mb-2 px-1 text-xs text-red-500">{validationError}</p>
       )}
       <div className="flex items-end gap-2 rounded-2xl border border-slate-200 bg-white p-2.5 shadow-[0_2px_16px_rgba(15,23,42,0.06)] transition-shadow focus-within:shadow-[0_4px_24px_rgba(15,23,42,0.1)] focus-within:border-slate-300">
+        {actionsSlot}
         <button
           type="button"
           aria-label="Attach document"
