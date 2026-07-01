@@ -1,0 +1,140 @@
+import type { Metadata } from 'next';
+import { requireSession } from '@/lib/auth-guard';
+import { getInventorySummary } from '@/lib/aiSystems';
+import { getAllPostures } from '@/lib/compliance';
+import { getRemediationSummary } from '@/lib/remediation';
+import { computeMaturity } from '@/lib/maturity';
+import { PrintButton } from './PrintButton';
+
+export const metadata: Metadata = {
+  title: 'Board Report',
+  description: 'An executive-ready AI governance scorecard.',
+};
+
+export default async function ReportPage() {
+  const session = await requireSession();
+  const [maturity, inventory, postures, remediation] = await Promise.all([
+    computeMaturity(session.user.id),
+    getInventorySummary(session.user.id),
+    getAllPostures(session.user.id),
+    getRemediationSummary(session.user.id),
+  ]);
+
+  const highRisk = (inventory.byRisk.high ?? 0) + (inventory.byRisk.prohibited ?? 0);
+  const generatedAt = new Date().toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  return (
+    <div className="section min-h-screen print:p-0">
+      <div className="max-w-3xl mx-auto">
+        {/* Toolbar (screen only) */}
+        <div className="flex items-center justify-between mb-8 print:hidden">
+          <div>
+            <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-2 block">
+              Governance / Report
+            </span>
+            <h1 className="text-3xl font-mono font-bold text-terminal-text">Board Report</h1>
+          </div>
+          <PrintButton />
+        </div>
+
+        {/* Report body */}
+        <article className="glass-card rounded-xl p-8 print:border-0 print:shadow-none space-y-8">
+          <header className="border-b border-terminal-border pb-4">
+            <h2 className="font-mono text-2xl font-bold text-terminal-text">
+              AI Governance Scorecard
+            </h2>
+            <p className="text-sm text-terminal-muted mt-1">
+              Prepared for {session.user?.name ?? session.user?.email} · {generatedAt}
+            </p>
+          </header>
+
+          {/* Headline metrics */}
+          <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Metric label="Maturity score" value={`${maturity.score}/100`} />
+            <Metric label="Systems tracked" value={inventory.total} />
+            <Metric label="High-risk systems" value={highRisk} accent={highRisk > 0} />
+            <Metric label="Open remediation" value={remediation.open} accent={remediation.overdue > 0} />
+          </section>
+
+          {/* Compliance coverage */}
+          <section>
+            <h3 className="font-mono text-sm uppercase tracking-wider text-terminal-muted mb-3">
+              Compliance coverage
+            </h3>
+            <div className="space-y-3">
+              {postures.map((p) => (
+                <div key={p.id}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-mono text-sm text-terminal-text">{p.name}</span>
+                    <span className="font-mono text-sm text-terminal-text">{p.coverage}%</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-terminal-gray overflow-hidden">
+                    <div className="h-full bg-terminal-green" style={{ width: `${p.coverage}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Risk profile */}
+          <section>
+            <h3 className="font-mono text-sm uppercase tracking-wider text-terminal-muted mb-3">
+              Portfolio risk profile
+            </h3>
+            <div className="grid grid-cols-4 gap-3 text-center">
+              {(['prohibited', 'high', 'limited', 'minimal'] as const).map((r) => (
+                <div key={r} className="rounded-lg border border-terminal-border p-3">
+                  <div className="font-mono text-xl font-bold text-terminal-text">
+                    {inventory.byRisk[r] ?? 0}
+                  </div>
+                  <div className="font-mono text-[11px] uppercase tracking-wider text-terminal-muted">
+                    {r}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Priorities */}
+          <section>
+            <h3 className="font-mono text-sm uppercase tracking-wider text-terminal-muted mb-3">
+              Key priorities
+            </h3>
+            {maturity.nudges.length === 0 ? (
+              <p className="text-sm text-terminal-muted">
+                No material gaps identified. Maintain review cadence and monitor regulatory changes.
+              </p>
+            ) : (
+              <ol className="list-decimal list-inside space-y-1.5 text-sm text-terminal-text">
+                {maturity.nudges.map((n, i) => (
+                  <li key={i}>{n}</li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          <footer className="border-t border-terminal-border pt-4 text-xs text-terminal-muted">
+            Generated by GovSecure. Figures reflect the workspace state at time of export.
+          </footer>
+        </article>
+      </div>
+    </div>
+  );
+}
+
+function Metric({ label, value, accent }: { label: string; value: string | number; accent?: boolean }) {
+  return (
+    <div className="rounded-lg border border-terminal-border p-3">
+      <div className={`font-mono text-2xl font-bold ${accent ? 'text-terminal-amber' : 'text-terminal-text'}`}>
+        {value}
+      </div>
+      <div className="font-mono text-[11px] uppercase tracking-wider text-terminal-muted mt-0.5">
+        {label}
+      </div>
+    </div>
+  );
+}

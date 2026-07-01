@@ -197,6 +197,11 @@
     @apply inline-flex items-center gap-1 font-mono text-terminal-green hover:underline underline-offset-2 transition-colors;
   }
 
+  /* Form input — used across the governance dashboard (inventory, tasks, etc.). */
+  .input-field {
+    @apply w-full px-3 py-2 rounded-md bg-terminal-gray border border-terminal-border font-mono text-sm text-terminal-text placeholder:text-terminal-muted/60 transition-colors focus:outline-none focus:border-terminal-green/60 focus:ring-1 focus:ring-terminal-green/30;
+  }
+
   /* Card styling */
   .card {
     @apply glass-card;
