@@ -273,24 +273,18 @@ export function Footer() {
             © {new Date().getFullYear()} CloudRider Nexus. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a
-              href="#"
+            <Link
+              href="/privacy"
               className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms"
               className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
             >
               Terms of Service
-            </a>
-            <a
-              href="#"
-              className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
-            >
-              Cookie Settings
-            </a>
+            </Link>
           </div>
         </div>
       </div>
