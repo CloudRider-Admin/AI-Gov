@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { getOptionalSession } from '@/lib/auth-guard';
-
-/** Valid Govi interface skins. Keep in sync with `goviInterface` on the User model. */
-export const GOVI_INTERFACES = ['terminal', 'sovereign'] as const;
-export type GoviInterface = (typeof GOVI_INTERFACES)[number];
+import { GOVI_INTERFACES, type GoviInterface } from '@/lib/goviInterface';
 
 const preferencesSchema = z.object({
   goviInterface: z.enum(GOVI_INTERFACES).optional(),
