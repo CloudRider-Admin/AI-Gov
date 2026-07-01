@@ -63,18 +63,7 @@ export function SovereignConsole({ session }: SovereignConsoleProps) {
     <div className="flex h-[calc(100vh-4rem)] w-full flex-col bg-white lg:flex-row">
       {/* ── Main column ── */}
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Slim identity header — no action buttons; everything lives in the composer's "+" menu */}
-        <div className="flex items-center gap-3 border-b border-slate-200/80 bg-white/90 px-6 py-3.5 backdrop-blur">
-          <span className="h-2 w-2 rounded-full bg-emerald-500 shadow-[0_0_0_3px_rgba(16,185,129,0.15)]" />
-          <div className="min-w-0">
-            <h1 className="text-[15px] font-semibold leading-tight text-slate-900">
-              Govi — AI Governance Advisor
-            </h1>
-            <p className="text-[11px] font-mono uppercase tracking-wide text-slate-400">
-              Anchored by the GovSecure Governance Library
-            </p>
-          </div>
-        </div>
+        {/* Identity now lives at the top of the left sidebar (see Sidebar.tsx). */}
 
         {/* Scrollable conversation body */}
         <div className="flex-1 space-y-8 overflow-y-auto px-6 py-8">

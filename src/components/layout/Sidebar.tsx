@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { authedNav } from "./nav";
+import { useTheme } from "@/context/ThemeContext";
 
 /**
  * Left-hand dashboard sidebar shown to authenticated users on desktop.
@@ -19,6 +20,10 @@ export function Sidebar({
   onToggle: () => void;
 }) {
   const pathname = usePathname();
+  const { theme, mounted } = useTheme();
+  // Show Govi's identity at the top of the sidebar only on the new console UI
+  // (the light-theme Govi skin), where the console's own header has been removed.
+  const showGoviBrand = mounted && theme === "light" && pathname.startsWith("/govi");
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
@@ -31,6 +36,34 @@ export function Sidebar({
         collapsed ? "w-16" : "w-60"
       }`}
     >
+      {/* Govi identity — moved here from the console header (new UI only) */}
+      {showGoviBrand && (
+        <div
+          className={`border-b border-terminal-border ${
+            collapsed ? "flex justify-center py-3" : "px-3 pt-3 pb-2.5"
+          }`}
+        >
+          {collapsed ? (
+            <span className="h-2 w-2 rounded-full bg-terminal-green" aria-hidden="true" />
+          ) : (
+            <div className="flex items-start gap-2">
+              <span
+                className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-terminal-green"
+                aria-hidden="true"
+              />
+              <div className="min-w-0">
+                <p className="font-mono text-[11px] font-bold leading-tight text-terminal-green">
+                  Govi — AI Governance Advisor
+                </p>
+                <p className="mt-0.5 font-mono text-[9px] uppercase leading-snug tracking-[0.12em] text-terminal-muted">
+                  Anchored by the GovSecure Governance Library
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Header row: section label + collapse toggle */}
       <div
         className={`flex items-center h-11 px-3 ${
