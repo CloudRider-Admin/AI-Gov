@@ -285,12 +285,14 @@ model AnalyticsEvent {
 
 // ─── AAA governance foundation (Tiers 1–3) ──────────────────────────────────
 
-/// Tier 1a — AI System Inventory / Register. One row per AI use case an org runs.
+/// Tier 1a — AI System Inventory / Register. One row per registered entity: a
+/// use case, an agent, or a model. All three flow through the same three gates.
 model AiSystem {
   id             String    @id @default(cuid())
   userId         String    // creator / owner in personal scope
   organizationId String?   // when set, shared across the org (Tier 2)
   name           String
+  entityKind     String    @default("use-case")  // use-case | agent | model
   description    String?   @db.Text
   purpose        String?   @db.Text
   businessOwner  String?
@@ -303,13 +305,29 @@ model AiSystem {
   deployedAt     DateTime?
   lastReviewedAt DateTime?
   nextReviewAt   DateTime?
+
+  // ── Gate 3 — Approval & Registry ──
+  // Only entities whose risk severity is medium or above require an approval
+  // decision; the rest carry "not-required". See src/lib/gates/approvals.ts.
+  approvalStatus String    @default("not-required") // not-required | pending | approved | rejected
+  approvedById   String?   // user id of the approver
+  approvedByName String?   // denormalized so the register stays readable if the user is removed
+  approvedAt     DateTime?
+  approvalNote   String?   @db.Text
+  approvalExpiresAt DateTime?  // re-approval cadence for high-risk entities
+
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  gateRecords    GateRecord[]
+  evaluationRuns EvaluationRun[]
 
   @@index([userId, status])
   @@index([organizationId])
   @@index([riskCategory])
   @@index([nextReviewAt])
+  @@index([userId, entityKind, status])
+  @@index([approvalStatus])
 }
 
 /// Tier 1b — per-control implementation status for a compliance framework.
@@ -446,4 +464,126 @@ model RegulatoryUpdate {
 
   @@index([isActive, publishedAt])
   @@index([jurisdiction])
+}
+
+// ─── Governance gates (Gate 1 Intake · Gate 2 Evaluation · Gate 3 Approval) ──
+
+/// One row per (entity, gate). The register's state machine: an entity may not
+/// enter gate N+1 until gate N is "passed". Kept as rows rather than columns on
+/// AiSystem so each gate carries its own decision, decider, and timestamps.
+model GateRecord {
+  id             String    @id @default(cuid())
+  aiSystemId     String
+  userId         String
+  organizationId String?
+  gate           Int       // 1 = intake & risk tiering | 2 = evaluation & review | 3 = approval & registry
+  status         String    @default("not-started") // not-started | in-progress | passed | failed | waived
+  summary        String?   @db.Text  // why it passed / what is blocking
+  blockers       String[]  @default([])
+  decidedById    String?
+  decidedByName  String?
+  decidedAt      DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  aiSystem       AiSystem  @relation(fields: [aiSystemId], references: [id], onDelete: Cascade)
+
+  @@unique([aiSystemId, gate])
+  @@index([userId, status])
+  @@index([organizationId, gate])
+}
+
+/// Gate 2 — a single evaluation campaign whose results were curated out of the
+/// AI platform in use (data science, engineering, or red team) into GovSecure.
+model EvaluationRun {
+  id             String    @id @default(cuid())
+  aiSystemId     String
+  userId         String
+  organizationId String?
+  runLabel       String    // e.g. "redteam-2026-07-30" or "pre-prod eval v3"
+  source         String    @default("manual")  // upload | manual | api
+  sourceRef      String?   // original filename or the harness's own run id
+  evaluatorTeam  String?   // data-science | engineering | red-team | vendor | other
+  evaluatorName  String?
+  platform       String?   // AI platform the evaluation was run on
+  evaluatedAt    DateTime?
+  status         String    @default("draft")   // draft | ingested | reviewed
+  overallVerdict String?   // pass | conditional-pass | fail
+  reviewSummary  String?   @db.Text
+  reportMarkdown String?   @db.Text  // the evidence report Govi produces
+  reviewedAt     DateTime?
+  reviewedBy     String    @default("govi")    // govi | human
+  coverageRatio  Float?    // share of the 12 core review areas with evidence
+  rawPayload     String?   @db.Text  // original ingested payload, for audit
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  aiSystem       AiSystem           @relation(fields: [aiSystemId], references: [id], onDelete: Cascade)
+  results        EvaluationResult[]
+
+  @@index([aiSystemId, createdAt])
+  @@index([userId, status])
+  @@index([organizationId, createdAt])
+  @@unique([aiSystemId, runLabel])
+}
+
+/// One measured parameter within an evaluation run, mapped onto a core review
+/// area. Multiple rows per area are expected (e.g. Safety has several metrics).
+model EvaluationResult {
+  id           String   @id @default(cuid())
+  runId        String
+  area         String   // one of CORE_EVALUATION_AREAS (business-effectiveness, safety, …)
+  parameter    String   // the specific parameter examined, e.g. "hallucination rate"
+  metricValue  Float?   // numeric result when one exists
+  unit         String?  // percent | score-5 | count | ms | ratio
+  textValue    String?  // non-numeric result, e.g. "no severe violations observed"
+  method       String?  // how it was measured
+  sampleSize   Int?
+  evidenceUrl  String?
+  verdict      String   @default("not-assessed") // pass | fail | partial | not-assessed
+  baselineNote String?  @db.Text  // the baseline this was judged against
+  gap          String?  @db.Text  // what falls short, when it does
+  severity     String   @default("none") // none | low | medium | high | critical
+  createdAt    DateTime @default(now())
+
+  run          EvaluationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, area])
+  @@index([verdict])
+}
+
+/// Bearer token that lets an evaluation harness or CI pipeline POST results
+/// into Gate 2 unattended. Only the hash is stored; the plaintext is shown once
+/// at creation and never again.
+model IngestToken {
+  id             String    @id @default(cuid())
+  userId         String
+  organizationId String?
+  name           String    // e.g. "nightly red-team pipeline"
+  tokenHash      String    @unique
+  prefix         String    // first 8 chars, so a token can be identified in the UI
+  lastUsedAt     DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([userId, revokedAt])
+}
+
+/// Per-org override of a default governance baseline for a core review area.
+/// Absent a row, the code-defined default in coreEvaluationParameters.ts applies.
+model EvaluationBaseline {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  area           String   // one of CORE_EVALUATION_AREAS
+  comparator     String   @default("gte") // gte | lte | eq | qualitative
+  threshold      Float?
+  unit           String?
+  expectation    String   @db.Text  // human-readable baseline shown in the report
+  appliesToRisk  String[] @default([]) // empty = all risk categories
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, area])
+  @@index([organizationId, area])
 }

@@ -19,6 +19,7 @@ import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
 import { unverifiedCitations, validateCitations } from '@/lib/ai/citationValidator';
 import { claudeStream, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
+import { buildGatePostureContext } from '@/lib/gates/goviContext';
 
 const SSE_HEADERS = {
   'Content-Type': 'text/event-stream',
@@ -159,6 +160,10 @@ export async function POST(request: NextRequest) {
     const hasConversationHistory = !!context;
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;
     if (ragResult.context) contextualQuery = `${ragResult.context}\n\n${contextualQuery}`;
+
+    // ── Gate posture, so Govi answers about this register, not in general ──
+    const gateContext = await buildGatePostureContext(session.user.id).catch(() => '');
+    if (gateContext) contextualQuery = `${gateContext}\n\n${contextualQuery}`;
 
     // ── Tiered model selection (Phase 7.2) ──
     const deterministicIntent = classifyIntent(query, hasConversationHistory);

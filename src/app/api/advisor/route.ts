@@ -17,6 +17,7 @@ import { buildRateLimitHeaders } from '@/lib/rateLimitHeaders';
 import { guardInput, PromptInjectionError } from '@/lib/security/promptGuard';
 import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
+import { buildGatePostureContext } from '@/lib/gates/goviContext';
 import { prisma } from '@/lib/prisma';
 import { roleLabel } from '@/lib/occupationalRoles';
 import { claudeComplete, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
@@ -117,6 +118,10 @@ export async function POST(request: NextRequest) {
         .catch(() => null);
       const requestorRole = roleLabel(dbUser?.occupationalRole);
       if (requestorRole) contextualQuery = `Requestor role: ${requestorRole}\n\n${contextualQuery}`;
+
+      // ── Gate posture, so Govi answers about this register, not in general ──
+      const gateContext = await buildGatePostureContext(session.user.id).catch(() => '');
+      if (gateContext) contextualQuery = `${gateContext}\n\n${contextualQuery}`;
     }
 
     // ── Tiered model selection (Phase 7.2) ──

@@ -22,8 +22,11 @@ export default async function InventoryPage() {
     deployedAt: s.deployedAt?.toISOString() ?? null,
     lastReviewedAt: s.lastReviewedAt?.toISOString() ?? null,
     nextReviewAt: s.nextReviewAt?.toISOString() ?? null,
+    approvedAt: s.approvedAt?.toISOString() ?? null,
+    approvalExpiresAt: s.approvalExpiresAt?.toISOString() ?? null,
     createdAt: s.createdAt.toISOString(),
     updatedAt: s.updatedAt.toISOString(),
+    gateRecords: s.gateRecords.map((g) => ({ gate: g.gate, status: g.status })),
   }));
 
   return <InventoryClient initialSystems={initialSystems} summary={summary} />;

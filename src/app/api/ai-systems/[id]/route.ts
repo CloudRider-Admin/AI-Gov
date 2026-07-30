@@ -6,6 +6,7 @@ import {
   archiveAiSystem,
   RISK_CATEGORIES,
   LIFECYCLE_STAGES,
+  ENTITY_KINDS,
 } from '@/lib/aiSystems';
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -30,6 +31,9 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
   if (body.lifecycleStage && !LIFECYCLE_STAGES.includes(body.lifecycleStage)) {
     return NextResponse.json({ error: 'Invalid lifecycle stage' }, { status: 400 });
+  }
+  if (body.entityKind && !ENTITY_KINDS.includes(body.entityKind)) {
+    return NextResponse.json({ error: 'Invalid entity kind' }, { status: 400 });
   }
 
   const system = await updateAiSystem(session.user.id, id, body);
