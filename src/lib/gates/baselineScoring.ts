@@ -25,6 +25,10 @@ import { riskSeverity, severityAtLeast, type EntityKind } from './gateEnums';
 
 /** A single measured parameter, as ingested from an eval export or a form. */
 export interface ScoreableResult {
+  /** Present when the result is already persisted; carried through scoring so
+   *  verdicts can be written back by row rather than by (area, parameter),
+   *  which is not unique — a run may measure the same parameter twice. */
+  id?: string;
   area: string;
   parameter: string;
   metricValue?: number | null;
