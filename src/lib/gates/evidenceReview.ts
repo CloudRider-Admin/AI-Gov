@@ -537,10 +537,12 @@ export async function reviewEvaluationRun(params: {
     });
 
     // Persist the per-result verdicts so the UI and any export show the same
-    // judgement the report was written against.
+    // judgement the report was written against. Keyed by row id: a run may
+    // measure the same parameter more than once with different results.
     for (const result of score.results) {
-      await tx.evaluationResult.updateMany({
-        where: { runId: run.id, area: result.area, parameter: result.parameter },
+      if (!result.id) continue;
+      await tx.evaluationResult.update({
+        where: { id: result.id },
         data: {
           verdict: result.verdict,
           severity: result.severity,

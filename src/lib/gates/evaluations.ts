@@ -234,6 +234,7 @@ export async function scoreStoredRun(userId: string, runId: string) {
   };
 
   const scoreable: ScoreableResult[] = run.results.map((r) => ({
+    id: r.id,
     area: r.area,
     parameter: r.parameter,
     metricValue: r.metricValue,
