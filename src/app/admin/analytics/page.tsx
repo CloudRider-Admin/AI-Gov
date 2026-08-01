@@ -285,38 +285,38 @@ export default function AdminAnalyticsPage() {
           <div className="w-full h-60 min-w-0">
             {tokenChartData.every((b) => b.input === 0 && b.output === 0) ? (
               <div className="h-full flex items-center justify-center text-xs text-terminal-muted">
-                No token activity in the last 24 hours.
+                No token activity in the last 24 hours+.
               </div>
             ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <BarChart data={tokenChartData} barCategoryGap="20%">
-                <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
-                <XAxis
-                  dataKey="label"
-                  tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
-                  interval={Math.floor(tokenChartData.length / 6) || 0}
-                  stroke="currentColor"
-                  className="text-terminal-muted"
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
-                  tickFormatter={(v: number) => formatNumber(v)}
-                  stroke="currentColor"
-                  className="text-terminal-muted"
-                />
-                <Tooltip
-                  cursor={{ fill: 'rgba(0,0,0,0.04)' }}
-                  contentStyle={{
-                    fontFamily: 'var(--font-space-mono)',
-                    fontSize: 11,
-                    borderRadius: 8,
-                  }}
-                  formatter={(v: number) => formatNumber(Number(v))}
-                />
-                <Bar dataKey="input" stackId="a" fill="#00cc66" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="output" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                <BarChart data={tokenChartData} barCategoryGap="20%">
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
+                    interval={Math.floor(tokenChartData.length / 6) || 0}
+                    stroke="currentColor"
+                    className="text-terminal-muted"
+                  />
+                  <YAxis
+                    tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
+                    tickFormatter={(v: number) => formatNumber(v)}
+                    stroke="currentColor"
+                    className="text-terminal-muted"
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(0,0,0,0.04)' }}
+                    contentStyle={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: 11,
+                      borderRadius: 8,
+                    }}
+                    formatter={(v: number) => formatNumber(Number(v))}
+                  />
+                  <Bar dataKey="input" stackId="a" fill="#00cc66" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="output" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             )}
           </div>
         </Card>
@@ -395,18 +395,16 @@ export default function AdminAnalyticsPage() {
               return (
                 <div key={d.day} className="flex flex-col items-center gap-2 flex-1">
                   <span
-                    className={`text-[10px] uppercase tracking-[0.18em] ${
-                      isPeak ? 'text-terminal-green font-bold' : 'text-terminal-muted'
-                    }`}
+                    className={`text-[10px] uppercase tracking-[0.18em] ${isPeak ? 'text-terminal-green font-bold' : 'text-terminal-muted'
+                      }`}
                   >
                     {d.day}
                   </span>
                   <div
-                    className={`w-10 md:w-12 rounded-t-md transition-all ${
-                      isPeak
+                    className={`w-10 md:w-12 rounded-t-md transition-all ${isPeak
                         ? 'bg-terminal-green'
                         : 'bg-terminal-gray border border-terminal-border'
-                    }`}
+                      }`}
                     style={{ height: `${h}px` }}
                     title={`${d.queries} queries`}
                   />
@@ -431,13 +429,12 @@ export default function AdminAnalyticsPage() {
             value={`${stats.systemHealth.latencyP99Ms}ms`}
             right={
               <span
-                className={`text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md border ${
-                  stats.systemHealth.verdict === 'Optimal'
+                className={`text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md border ${stats.systemHealth.verdict === 'Optimal'
                     ? 'border-terminal-green/50 text-terminal-green'
                     : stats.systemHealth.verdict === 'Degraded'
-                    ? 'border-terminal-amber/50 text-terminal-amber'
-                    : 'border-terminal-red/50 text-terminal-red'
-                }`}
+                      ? 'border-terminal-amber/50 text-terminal-amber'
+                      : 'border-terminal-red/50 text-terminal-red'
+                  }`}
               >
                 {stats.systemHealth.verdict}
               </span>
@@ -636,18 +633,17 @@ function StatDetailDrawer({
   const title =
     openStat === 'queries' ? 'Total Queries'
       : openStat === 'artifacts' ? 'Artifacts'
-      : openStat === 'users' ? 'Total Users'
-      : openStat === 'active' ? 'Active Today'
-      : '';
+        : openStat === 'users' ? 'Total Users'
+          : openStat === 'active' ? 'Active Today'
+            : '';
 
   if (!mounted) return null;
 
   const content = (
     <>
       <div
-        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity ${
-          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -655,9 +651,8 @@ function StatDetailDrawer({
         role="dialog"
         aria-modal="true"
         aria-label={`${title} breakdown`}
-        className={`fixed inset-y-0 right-0 z-[70] flex flex-col w-full sm:w-[420px] md:w-[460px] lg:w-[500px] max-w-full bg-terminal-black border-l border-terminal-border shadow-2xl transition-transform duration-200 ease-out ${
-          open ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className={`fixed inset-y-0 right-0 z-[70] flex flex-col w-full sm:w-[420px] md:w-[460px] lg:w-[500px] max-w-full bg-terminal-black border-l border-terminal-border shadow-2xl transition-transform duration-200 ease-out ${open ? 'translate-x-0' : 'translate-x-full'
+          }`}
       >
         <div className="flex items-center justify-between gap-3 px-5 md:px-6 py-4 border-b border-terminal-border shrink-0">
           <div className="min-w-0">
