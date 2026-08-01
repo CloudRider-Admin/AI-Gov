@@ -309,10 +309,17 @@ model AiSystem {
   businessOwner  String?
   vendor         String?
   model          String?
+  entityType     String    @default("system")   // system | model | agent | use-case
   lifecycleStage String    @default("idea")     // idea | piloting | production | retired
   riskCategory   String    @default("moderate")  // high | moderate | low (NIST/US impact tiers)
   status         String    @default("active")   // active | archived
   dataTypes      String[]  @default([])
+  // Gate 3 — Approval & Registry. Only medium/high risk requires approval;
+  // null means approval is not required (low risk).
+  approvalStatus String?   // pending | approved | rejected
+  approvedBy     String?   // who made the approve/reject decision
+  approvedAt     DateTime?
+  approvalNote   String?   @db.Text
   deployedAt     DateTime?
   lastReviewedAt DateTime?
   nextReviewAt   DateTime?
@@ -322,7 +329,49 @@ model AiSystem {
   @@index([userId, status])
   @@index([organizationId])
   @@index([riskCategory])
+  @@index([approvalStatus])
   @@index([nextReviewAt])
+}
+
+/// Gate 2 — Evaluation & Review. One row per evaluation result collected from
+/// data science / engineering / red-team (curated from the AI platform in use),
+/// mapped to a Core Evaluation Parameters review area.
+model EvaluationEvidence {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  reviewArea     String   // CORE_EVALUATION_PARAMETERS id, e.g. "factual-reliability"
+  source         String   @default("data-science") // data-science | engineering | red-team | platform
+  metric         String?  // e.g. "hallucination rate", "attack success rate"
+  result         String   @db.Text // observed evaluation result
+  meetsBaseline  Boolean? // reviewed against the governance baseline; null = not yet judged
+  notes          String?  @db.Text
+  evaluatedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([aiSystemId, reviewArea])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+/// Gate 2 — evidence report produced by reviewing the collected evaluation
+/// evidence against the Core Evaluation Parameters baselines.
+model EvidenceReport {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  verdict        String   // pass | conditional-pass | fail
+  summary        String   @db.Text
+  areaFindings   Json     // per review area: { id, reviewArea, status, evidenceCount, baseline }
+  evidenceCount  Int      @default(0)
+  generatedBy    String?
+  createdAt      DateTime @default(now())
+
+  @@index([aiSystemId, createdAt])
+  @@index([userId])
 }
 
 /// Tier 1b — per-control implementation status for a compliance framework.

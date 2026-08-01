@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOptionalSession } from '@/lib/auth-guard';
-import { listAiSystems, createAiSystem, RISK_CATEGORIES, LIFECYCLE_STAGES } from '@/lib/aiSystems';
+import {
+  listAiSystems,
+  createAiSystem,
+  RISK_CATEGORIES,
+  LIFECYCLE_STAGES,
+  ENTITY_TYPES,
+} from '@/lib/aiSystems';
 
 export async function GET() {
   const session = await getOptionalSession();
@@ -23,6 +29,9 @@ export async function POST(request: NextRequest) {
   }
   if (body.lifecycleStage && !LIFECYCLE_STAGES.includes(body.lifecycleStage)) {
     return NextResponse.json({ error: 'Invalid lifecycle stage' }, { status: 400 });
+  }
+  if (body.entityType && !ENTITY_TYPES.includes(body.entityType)) {
+    return NextResponse.json({ error: 'Invalid entity type' }, { status: 400 });
   }
 
   const system = await createAiSystem(session.user.id, body);
