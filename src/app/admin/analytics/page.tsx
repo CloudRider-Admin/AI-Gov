@@ -285,7 +285,7 @@ export default function AdminAnalyticsPage() {
           <div className="w-full h-60 min-w-0">
             {tokenChartData.every((b) => b.input === 0 && b.output === 0) ? (
               <div className="h-full flex items-center justify-center text-xs text-terminal-muted">
-                No token activity in the last 24 hours+.
+                No token activity in the last 24 hours.
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%" minWidth={0}>
@@ -402,8 +402,8 @@ export default function AdminAnalyticsPage() {
                   </span>
                   <div
                     className={`w-10 md:w-12 rounded-t-md transition-all ${isPeak
-                        ? 'bg-terminal-green'
-                        : 'bg-terminal-gray border border-terminal-border'
+                      ? 'bg-terminal-green'
+                      : 'bg-terminal-gray border border-terminal-border'
                       }`}
                     style={{ height: `${h}px` }}
                     title={`${d.queries} queries`}
@@ -430,10 +430,10 @@ export default function AdminAnalyticsPage() {
             right={
               <span
                 className={`text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md border ${stats.systemHealth.verdict === 'Optimal'
-                    ? 'border-terminal-green/50 text-terminal-green'
-                    : stats.systemHealth.verdict === 'Degraded'
-                      ? 'border-terminal-amber/50 text-terminal-amber'
-                      : 'border-terminal-red/50 text-terminal-red'
+                  ? 'border-terminal-green/50 text-terminal-green'
+                  : stats.systemHealth.verdict === 'Degraded'
+                    ? 'border-terminal-amber/50 text-terminal-amber'
+                    : 'border-terminal-red/50 text-terminal-red'
                   }`}
               >
                 {stats.systemHealth.verdict}
