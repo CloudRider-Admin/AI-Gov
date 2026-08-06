@@ -46,7 +46,7 @@ export async function buildGatePostureContext(userId: string): Promise<string> {
     const parts = [
       `- "${entry.name}" (${kind}, ${entry.riskCategory} risk) is at Gate ${entry.currentGate} — ${gateName}, status ${current?.status ?? 'not-started'}`,
     ];
-    if (entry.approvalStatus !== 'not-required') parts.push(`approval ${entry.approvalStatus}`);
+    if (entry.approvalStatus != null) parts.push(`approval ${entry.approvalStatus}`);
     if (entry.latestRunVerdict) parts.push(`latest evaluation verdict ${entry.latestRunVerdict}`);
     if (entry.openRemediation > 0) parts.push(`${entry.openRemediation} open remediation task(s)`);
     lines.push(`${parts.join('; ')}.`);

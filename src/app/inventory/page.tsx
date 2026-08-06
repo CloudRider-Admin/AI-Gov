@@ -19,10 +19,10 @@ export default async function InventoryPage() {
   // client plain ISO strings.
   const initialSystems = systems.map((s) => ({
     ...s,
+    approvedAt: s.approvedAt?.toISOString() ?? null,
     deployedAt: s.deployedAt?.toISOString() ?? null,
     lastReviewedAt: s.lastReviewedAt?.toISOString() ?? null,
     nextReviewAt: s.nextReviewAt?.toISOString() ?? null,
-    approvedAt: s.approvedAt?.toISOString() ?? null,
     approvalExpiresAt: s.approvalExpiresAt?.toISOString() ?? null,
     createdAt: s.createdAt.toISOString(),
     updatedAt: s.updatedAt.toISOString(),

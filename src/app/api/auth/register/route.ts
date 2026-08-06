@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { randomBytes } from 'crypto';
 import { Resend } from 'resend';
 import { prisma } from '@/lib/prisma';
+import { checkIpRateLimit } from '@/lib/rate-limit';
 
 const registerSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -26,6 +27,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid request origin' },
         { status: 403 }
+      );
+    }
+
+    // Abuse / enumeration throttle: 5 registrations per IP per hour
+    const rate = await checkIpRateLimit(request, 'auth:register', 5, 60);
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: 'Too many attempts. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(rate.retryAfter ?? 3600) } },
       );
     }
 

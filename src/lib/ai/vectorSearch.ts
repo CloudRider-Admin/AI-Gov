@@ -82,19 +82,28 @@ export async function semanticSearch(
     const queryEmbedding = await generateEmbedding(query);
     const vectorStr = `[${queryEmbedding.join(',')}]`;
 
-    // Build dynamic WHERE clause parts
+    // Build dynamic WHERE clause with bound parameters ($1 = vector).
+    // category / sourceTypes are user-influenced, so they are passed as query
+    // parameters rather than interpolated into the SQL string.
+    const params: unknown[] = [vectorStr];
     const conditions: string[] = [
       '"isActive" = true',
       'embedding IS NOT NULL',
     ];
     if (category) {
-      conditions.push(`category = '${category.replace(/'/g, "''")}'`);
+      params.push(category);
+      conditions.push(`category = $${params.length}`);
     }
     if (sourceTypes?.length) {
-      const escaped = sourceTypes.map((s) => `'${s.replace(/'/g, "''")}'`).join(',');
-      conditions.push(`"sourceType" IN (${escaped})`);
+      const placeholders = sourceTypes.map((s) => {
+        params.push(s);
+        return `$${params.length}`;
+      });
+      conditions.push(`"sourceType" IN (${placeholders.join(',')})`);
     }
 
+    params.push(limit);
+    const limitPlaceholder = `$${params.length}`;
     const whereClause = conditions.join(' AND ');
 
     // Cosine similarity query: 1 - cosine_distance
@@ -104,9 +113,8 @@ export async function semanticSearch(
        FROM "KnowledgeEntry"
        WHERE ${whereClause}
        ORDER BY embedding <=> $1::vector
-       LIMIT $2`,
-      vectorStr,
-      limit,
+       LIMIT ${limitPlaceholder}`,
+      ...params,
     );
 
     // Phase 4: optionally boost GovSecure-tagged rows for queries that

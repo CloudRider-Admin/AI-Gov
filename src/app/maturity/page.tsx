@@ -4,6 +4,7 @@ import { requireSession } from '@/lib/auth-guard';
 import { computeMaturity, getMaturityTrend, type MaturityDimensions } from '@/lib/maturity';
 import { getRegulatoryFeed } from '@/lib/regulatory';
 import { Lightbulb, Radar, ArrowRight } from 'lucide-react';
+import { AppPage, PageHeader } from '@/components/app';
 
 export const metadata: Metadata = {
   title: 'Governance Maturity',
@@ -43,24 +44,16 @@ export default async function MaturityPage() {
   const color = scoreColor(score);
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-            Governance / Maturity
-          </span>
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-            AI Governance Maturity
-          </h1>
-          <p className="text-terminal-muted font-sans max-w-2xl">
-            A single, trending measure of how well-governed your AI footprint is — computed live from
-            your inventory, controls, review cadence, and open work.
-          </p>
-        </header>
+    <AppPage>
+      <PageHeader
+        eyebrow="Governance / Maturity"
+        title="AI Governance Maturity"
+        description="A single, trending measure of how well-governed your AI footprint is — computed live from your inventory, controls, review cadence, and open work."
+      />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Score gauge */}
-          <div className="glass-card rounded-xl p-6 flex flex-col items-center justify-center">
+          <div className="glass rounded-xl p-6 flex flex-col items-center justify-center">
             <div className="relative w-40 h-40">
               <svg className="w-40 h-40 -rotate-90" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="52" fill="none" stroke="rgb(var(--color-border-rgb))" strokeWidth="10" />
@@ -77,7 +70,7 @@ export default async function MaturityPage() {
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-mono text-4xl font-bold text-terminal-text">{score}</span>
-                <span className="font-mono text-[11px] uppercase tracking-wider text-terminal-muted">/ 100</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-terminal-muted">/ 100</span>
               </div>
             </div>
             <p className="font-mono text-xs text-terminal-muted mt-3">
@@ -91,7 +84,7 @@ export default async function MaturityPage() {
           </div>
 
           {/* Dimensions */}
-          <div className="glass-card rounded-xl p-6 lg:col-span-2">
+          <div className="glass rounded-xl p-6 lg:col-span-2">
             <h2 className="font-mono text-sm text-terminal-text mb-4">Score breakdown</h2>
             <div className="space-y-4">
               {(Object.keys(dimensions) as (keyof MaturityDimensions)[]).map((key) => (
@@ -114,7 +107,7 @@ export default async function MaturityPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Proactive nudges */}
-          <div className="glass-card rounded-xl p-6">
+          <div className="glass rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
               <Lightbulb className="w-4 h-4 text-terminal-green" />
               <h2 className="font-mono text-sm text-terminal-text">Recommended next steps</h2>
@@ -141,7 +134,7 @@ export default async function MaturityPage() {
           </div>
 
           {/* Regulatory radar */}
-          <div className="glass-card rounded-xl p-6">
+          <div className="glass rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
               <Radar className="w-4 h-4 text-terminal-green" />
               <h2 className="font-mono text-sm text-terminal-text">Regulatory radar</h2>
@@ -151,13 +144,13 @@ export default async function MaturityPage() {
                 <li key={item.id} className="border-b border-terminal-border/50 last:border-0 pb-3 last:pb-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <span
-                      className={`text-[10px] uppercase tracking-wider border rounded px-1.5 py-0.5 font-mono ${
+                      className={`text-xs uppercase tracking-wider border rounded-md px-1.5 py-0.5 font-mono ${
                         SEVERITY_STYLES[item.severity] ?? SEVERITY_STYLES.info
                       }`}
                     >
                       {item.jurisdiction}
                     </span>
-                    <time className="font-mono text-[11px] text-terminal-muted">
+                    <time className="font-mono text-xs text-terminal-muted">
                       {new Date(item.publishedAt).toLocaleDateString()}
                     </time>
                   </div>
@@ -179,7 +172,6 @@ export default async function MaturityPage() {
             </ul>
           </div>
         </div>
-      </div>
-    </div>
+    </AppPage>
   );
 }

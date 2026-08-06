@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FileText, Download, CheckCircle2, Send, RotateCcw, Clock, BrainCircuit, Trash2 } from "lucide-react";
 import { REVIEW_STATUSES, type ReviewStatus } from "@/lib/governanceEnums";
+import { AppPage, PageHeader, Panel } from "@/components/app";
 
 interface UserDocView {
   id: string;
@@ -82,37 +83,32 @@ export function LibraryClient({
   const visible = filter === "all" ? artifacts : artifacts.filter((a) => a.reviewStatus === filter);
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-5xl mx-auto">
-        <header className="mb-8">
-          <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-            Governance / Documents
-          </span>
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-            Document Library
-          </h1>
-          <p className="text-terminal-muted font-sans max-w-2xl">
-            Every governance document you&apos;ve generated, with a sign-off workflow so policies
-            move from draft to approved with an auditable trail.
-          </p>
-        </header>
+    <AppPage width="max-w-5xl">
+      <PageHeader
+        eyebrow="Governance / Documents"
+        title="Document Library"
+        description="Every governance document you've generated, with a sign-off workflow so policies move from draft to approved with an auditable trail."
+      />
 
         {/* Knowledge base — uploaded documents the advisor retrieves from (RAG) */}
         {userDocs.length > 0 && (
-          <div className="glass-card rounded-xl p-4 mb-8">
-            <div className="flex items-center gap-2 mb-3">
-              <BrainCircuit className="w-4 h-4 text-terminal-green" />
-              <h2 className="font-mono text-sm text-terminal-text">Your knowledge base</h2>
-              <span className="font-mono text-xs text-terminal-muted">
-                — Govi cites these in its answers
+          <Panel
+            title={
+              <span className="flex items-center gap-2">
+                <BrainCircuit className="w-4 h-4 text-terminal-green" />
+                Your knowledge base
               </span>
-            </div>
+            }
+            action={
+              <span className="font-normal text-terminal-muted">Govi cites these in its answers</span>
+            }
+          >
             <ul className="divide-y divide-terminal-border/50">
               {userDocs.map((d) => (
-                <li key={d.id} className="flex items-center justify-between py-2.5">
+                <li key={d.id} className="flex items-center justify-between px-4 py-2.5">
                   <div className="min-w-0">
-                    <div className="font-mono text-sm text-terminal-text truncate">{d.fileName}</div>
-                    <div className="text-xs text-terminal-muted mt-0.5">
+                    <div className="truncate text-sm font-medium text-terminal-text">{d.fileName}</div>
+                    <div className="mt-0.5 font-mono text-xs text-terminal-muted">
                       {d.chunkCount} chunk{d.chunkCount === 1 ? "" : "s"}
                       {d.framework && d.framework !== "Combined" ? ` · ${d.framework}` : ""} ·{" "}
                       {new Date(d.createdAt).toLocaleDateString()}
@@ -128,16 +124,17 @@ export function LibraryClient({
                 </li>
               ))}
             </ul>
-          </div>
+          </Panel>
         )}
 
         {/* Filter tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
               key={f}
               onClick={() => setFilter(f)}
-              className={`px-3 py-1.5 rounded-md font-mono text-xs uppercase tracking-wider border transition-colors ${
+              aria-pressed={filter === f}
+              className={`rounded-full border px-3 py-1.5 font-mono text-xs uppercase tracking-wider transition-colors duration-300 ${
                 filter === f
                   ? "border-terminal-green/50 text-terminal-green bg-terminal-green/10"
                   : "border-terminal-border text-terminal-muted hover:text-terminal-text"
@@ -149,7 +146,7 @@ export function LibraryClient({
         </div>
 
         {visible.length === 0 ? (
-          <div className="glass-card rounded-xl p-12 text-center">
+          <div className="glass rounded-xl p-12 text-center">
             <FileText className="w-10 h-10 text-terminal-muted mx-auto mb-4" />
             <p className="font-mono text-terminal-text mb-1">No documents here</p>
             <p className="text-terminal-muted text-sm">
@@ -163,10 +160,10 @@ export function LibraryClient({
               const action = NEXT_ACTION[status];
               const ActionIcon = action?.icon;
               return (
-                <div key={a.id} className="glass-card rounded-xl p-4 flex flex-wrap items-center gap-3">
+                <div key={a.id} className="glass rounded-xl p-4 flex flex-wrap items-center gap-3">
                   <FileText className="w-5 h-5 text-terminal-green shrink-0" />
                   <div className="min-w-0 flex-1">
-                    <div className="font-mono text-sm text-terminal-text truncate">{a.title}</div>
+                    <div className="truncate text-sm font-medium text-terminal-text">{a.title}</div>
                     <div className="flex items-center gap-2 text-xs text-terminal-muted mt-0.5">
                       <span className="uppercase">{a.subType || a.type}</span>
                       {a.riskTier && <span>· {a.riskTier} risk</span>}
@@ -179,7 +176,7 @@ export function LibraryClient({
                   </div>
 
                   <span
-                    className={`inline-block px-2 py-0.5 rounded-md border font-mono text-[11px] uppercase ${STATUS_META[status].className}`}
+                    className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-xs font-semibold uppercase ${STATUS_META[status].className}`}
                   >
                     {STATUS_META[status].label}
                   </span>
@@ -219,7 +216,6 @@ export function LibraryClient({
             })}
           </div>
         )}
-      </div>
-    </div>
+    </AppPage>
   );
 }

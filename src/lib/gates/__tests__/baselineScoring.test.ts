@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest';
 import { scoreResult, scoreRun, describeBaseline, type ScoringContext } from '../baselineScoring';
 import { getAreaSpec } from '../coreEvaluationParameters';
 
-const mediumRiskUseCase: ScoringContext = { riskCategory: 'limited', entityKind: 'use-case' };
+const mediumRiskUseCase: ScoringContext = { riskCategory: 'moderate', entityKind: 'use-case' };
 const highRiskUseCase: ScoringContext = { riskCategory: 'high', entityKind: 'use-case' };
-const lowRiskUseCase: ScoringContext = { riskCategory: 'minimal', entityKind: 'use-case' };
-const mediumRiskAgent: ScoringContext = { riskCategory: 'limited', entityKind: 'agent' };
+const lowRiskUseCase: ScoringContext = { riskCategory: 'low', entityKind: 'use-case' };
+const mediumRiskAgent: ScoringContext = { riskCategory: 'moderate', entityKind: 'agent' };
 
 describe('scoreResult — numeric thresholds', () => {
   it('passes a business effectiveness result at the 90% baseline', () => {

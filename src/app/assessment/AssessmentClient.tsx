@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, X, Sparkles, ClipboardList } from "lucide-react";
 import { ASSESSMENT_QUESTIONS } from "@/lib/assessmentQuestions";
+import { AppPage, PageHeader } from "@/components/app";
 
 export function AssessmentClient() {
   const router = useRouter();
@@ -31,8 +32,8 @@ export function AssessmentClient() {
 
   if (result) {
     return (
-      <div className="section min-h-screen flex items-center justify-center">
-        <div className="glass-card rounded-xl p-8 max-w-md w-full text-center">
+      <div className="flex min-h-screen items-center justify-center px-4 py-8">
+        <div className="glass rounded-xl p-8 max-w-md w-full text-center">
           <Sparkles className="w-10 h-10 text-terminal-green mx-auto mb-4" />
           <h1 className="font-mono text-2xl font-bold text-terminal-text mb-2">
             Your baseline: {result.score}/100
@@ -58,24 +59,16 @@ export function AssessmentClient() {
   }
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-2xl mx-auto">
-        <header className="mb-8">
-          <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-            Onboarding / Assessment
-          </span>
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-            Governance quick-start
-          </h1>
-          <p className="text-terminal-muted font-sans">
-            Six quick questions. We&apos;ll set your maturity baseline and generate a tailored
-            to-do list to close your biggest gaps.
-          </p>
-        </header>
+    <AppPage width="max-w-2xl">
+      <PageHeader
+        eyebrow="Onboarding / Assessment"
+        title="Governance quick-start"
+        description="Six quick questions. We'll set your maturity baseline and generate a tailored to-do list to close your biggest gaps."
+      />
 
-        <div className="space-y-3 mb-6">
+        <div className="space-y-3">
           {ASSESSMENT_QUESTIONS.map((q, i) => (
-            <div key={q.id} className="glass-card rounded-xl p-4">
+            <div key={q.id} className="glass rounded-xl p-4">
               <div className="flex items-start gap-3">
                 <span className="font-mono text-xs text-terminal-muted mt-0.5">{i + 1}</span>
                 <div className="flex-1">
@@ -108,7 +101,7 @@ export function AssessmentClient() {
           ))}
         </div>
 
-        <div className="glass-card rounded-xl p-4 flex items-center justify-between sticky bottom-4">
+        <div className="glass rounded-xl p-4 flex items-center justify-between sticky bottom-4">
           <span className="font-mono text-xs text-terminal-muted flex items-center gap-2">
             <ClipboardList className="w-4 h-4" /> {answered}/{total} answered
           </span>
@@ -120,7 +113,6 @@ export function AssessmentClient() {
             {submitting ? "Analyzing…" : "Get my roadmap"}
           </button>
         </div>
-      </div>
-    </div>
+    </AppPage>
   );
 }

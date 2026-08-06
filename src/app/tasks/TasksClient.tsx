@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus, X, Trash2, Calendar, AlertTriangle } from "lucide-react";
 import { TASK_STATUSES, TASK_PRIORITIES, type TaskStatus, type TaskPriority } from "@/lib/governanceEnums";
+import { AppPage, PageHeader } from "@/components/app";
 
 export interface TaskView {
   id: string;
@@ -95,28 +96,20 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
   };
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-              Governance / Remediation
-            </span>
-            <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-              Remediation Tasks
-            </h1>
-            <p className="text-terminal-muted font-sans max-w-2xl">
-              Turn compliance gaps into tracked, assignable work. Move tasks across the board as you
-              close them.
-            </p>
-          </div>
+    <AppPage>
+      <PageHeader
+        eyebrow="Governance / Remediation"
+        title="Remediation Tasks"
+        description="Turn compliance gaps into tracked, assignable work. Move tasks across the board as you close them."
+        actions={
           <button onClick={() => setCreating(true)} className="btn-primary text-sm py-2">
             <Plus className="w-4 h-4" /> New task
           </button>
-        </header>
+        }
+      />
 
         {creating && (
-          <div className="glass-card rounded-xl p-4 mb-6">
+          <div className="glass rounded-xl p-4">
             <div className="flex items-center justify-between mb-3">
               <h2 className="font-mono text-sm text-terminal-text">New remediation task</h2>
               <button onClick={() => setCreating(false)} aria-label="Close" className="text-terminal-muted hover:text-terminal-text">
@@ -172,7 +165,7 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
           {columns.map((col) => {
             const colTasks = tasks.filter((t) => t.status === col);
             return (
-              <div key={col} className="glass-card rounded-xl p-3">
+              <div key={col} className="glass rounded-xl p-3">
                 <div className="flex items-center justify-between px-1 mb-3">
                   <span className="font-mono text-xs uppercase tracking-wider text-terminal-muted">
                     {STATUS_LABELS[col]}
@@ -188,9 +181,9 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
                     const back = prevStatus(t.status);
                     const fwd = nextStatus(t.status);
                     return (
-                      <div key={t.id} className="rounded-lg border border-terminal-border bg-terminal-black/40 p-3">
+                      <div key={t.id} className="rounded-md border border-terminal-border bg-terminal-black/40 p-3">
                         <div className="flex items-start justify-between gap-2">
-                          <span className="font-mono text-sm text-terminal-text">{t.title}</span>
+                          <span className="text-sm font-medium text-terminal-text">{t.title}</span>
                           <button
                             onClick={() => remove(t)}
                             aria-label="Delete task"
@@ -200,7 +193,7 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
                           </button>
                         </div>
                         {t.description && <p className="text-xs text-terminal-muted mt-1">{t.description}</p>}
-                        <div className="flex items-center gap-3 mt-2 text-[11px] font-mono">
+                        <div className="flex items-center gap-3 mt-2 text-xs font-mono">
                           <span className={PRIORITY_STYLES[t.priority] ?? ""}>{t.priority}</span>
                           {t.dueDate && (
                             <span className={`flex items-center gap-1 ${overdue ? "text-terminal-amber" : "text-terminal-muted"}`}>
@@ -213,7 +206,7 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
                           {back && (
                             <button
                               onClick={() => move(t, back)}
-                              className="flex-1 py-1 rounded border border-terminal-border text-[11px] font-mono text-terminal-muted hover:text-terminal-text hover:bg-terminal-gray"
+                              className="flex-1 py-1 rounded-md border border-terminal-border text-xs font-mono text-terminal-muted hover:text-terminal-text hover:bg-terminal-gray"
                             >
                               ← {STATUS_LABELS[back]}
                             </button>
@@ -221,7 +214,7 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
                           {fwd && (
                             <button
                               onClick={() => move(t, fwd)}
-                              className="flex-1 py-1 rounded border border-terminal-green/40 text-[11px] font-mono text-terminal-green hover:bg-terminal-green/10"
+                              className="flex-1 py-1 rounded-md border border-terminal-green/40 text-xs font-mono text-terminal-green hover:bg-terminal-green/10"
                             >
                               {STATUS_LABELS[fwd]} →
                             </button>
@@ -235,7 +228,6 @@ export function TasksClient({ initialTasks }: { initialTasks: TaskView[] }) {
             );
           })}
         </div>
-      </div>
-    </div>
+    </AppPage>
   );
 }

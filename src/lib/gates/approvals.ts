@@ -187,16 +187,18 @@ export async function reconcileApprovalForRisk(
     severityOrder.indexOf(riskSeverity(nextRiskCategory)) >
     severityOrder.indexOf(riskSeverity(previousRiskCategory));
 
-  let nextStatus: string | null = null;
+  // `undefined` means nothing to change; `null` clears the approval requirement,
+  // which is a real column value and so cannot double as the no-op sentinel.
+  let nextStatus: string | null | undefined;
   if (!nowRequires) {
-    nextStatus = 'not-required';
-  } else if (system.approvalStatus === 'not-required') {
+    nextStatus = null;
+  } else if (system.approvalStatus === null) {
     nextStatus = 'pending';
   } else if (system.approvalStatus === 'approved' && rose) {
     nextStatus = 'pending';
   }
 
-  if (!nextStatus || nextStatus === system.approvalStatus) return;
+  if (nextStatus === undefined || nextStatus === system.approvalStatus) return;
 
   await prisma.aiSystem.update({
     where: { id: aiSystemId },
@@ -214,7 +216,7 @@ export async function reconcileApprovalForRisk(
     action: 'ai_system.approval_reset',
     entityType: 'ai_system',
     entityId: aiSystemId,
-    summary: `Approval status moved to "${nextStatus}" for "${system.name}" after the risk tier changed ${previousRiskCategory} → ${nextRiskCategory}`,
+    summary: `Approval status moved to "${nextStatus ?? 'not required'}" for "${system.name}" after the risk tier changed ${previousRiskCategory} → ${nextRiskCategory}`,
     metadata: { previousRiskCategory, nextRiskCategory, approvalStatus: nextStatus },
   });
 }

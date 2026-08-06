@@ -105,11 +105,11 @@ export function GateDetailClient({
             <p className="text-terminal-muted font-sans max-w-3xl mb-4">{system.purpose}</p>
           )}
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className={RISK_STYLES[system.riskCategory] ?? RISK_STYLES.minimal}>
+            <Badge className={RISK_STYLES[system.riskCategory] ?? RISK_STYLES.low}>
               {system.riskCategory} risk
             </Badge>
-            <Badge className={APPROVAL_STYLES[system.approvalStatus]}>
-              {APPROVAL_LABELS[system.approvalStatus]}
+            <Badge className={APPROVAL_STYLES[system.approvalStatus ?? 'not-required']}>
+              {APPROVAL_LABELS[system.approvalStatus ?? 'not-required']}
             </Badge>
             <span className="font-mono text-xs text-terminal-muted">
               {STAGE_LABELS[system.lifecycleStage] ?? system.lifecycleStage}

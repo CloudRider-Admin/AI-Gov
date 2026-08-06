@@ -36,10 +36,14 @@ export const APPROVAL_LABELS: Record<string, string> = {
   rejected: 'Rejected',
 };
 
+// NIST/US impact tiers. The EU AI Act keys are retained so rows written before
+// 20260704_risk_tiers_nist still render if the rewrite ever misses one.
 export const RISK_STYLES: Record<string, string> = {
+  high: 'bg-terminal-red/15 text-terminal-red border-terminal-red/40',
+  moderate: 'bg-terminal-amber/15 text-terminal-amber border-terminal-amber/40',
+  low: 'bg-terminal-green/15 text-terminal-green border-terminal-green/40',
   prohibited: 'bg-terminal-red/15 text-terminal-red border-terminal-red/40',
-  high: 'bg-terminal-amber/15 text-terminal-amber border-terminal-amber/40',
-  limited: 'bg-terminal-green/15 text-terminal-green border-terminal-green/40',
+  limited: 'bg-terminal-amber/15 text-terminal-amber border-terminal-amber/40',
   minimal: 'bg-terminal-muted/15 text-terminal-muted border-terminal-border',
 };
 

@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getOptionalSession } from '@/lib/auth-guard';
+import { listAiSystems } from '@/lib/aiSystems';
+import { getAllPostures } from '@/lib/compliance';
+import { computeMaturity } from '@/lib/maturity';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -29,6 +32,36 @@ export interface FrameworkUsage {
   tone: 'green' | 'amber' | 'cyan';
 }
 
+export interface SystemPreview {
+  id: string;
+  name: string;
+  vendor: string | null;
+  model: string | null;
+  riskCategory: string;
+  lifecycleStage: string;
+  nextReviewAt: string | null;
+}
+
+export interface FrameworkCoverage {
+  id: string;
+  name: string;
+  coverage: number; // 0-100
+}
+
+/** Governance snapshot backing the AAA dashboard (inventory / compliance / maturity). */
+export interface GovernanceSnapshot {
+  inventory: { total: number; high: number; overdue: number };
+  deltas: { systems7d: number; high7d: number };
+  systemsTrend: number[]; // cumulative registered systems, last 7 days
+  highTrend: number[];
+  overdueTrend: number[];
+  systems: SystemPreview[]; // top of the register, for the dashboard preview table
+  frameworks: FrameworkCoverage[]; // NIST first — catalog order
+  averageCoverage: number;
+  maturityScore: number;
+  auditEventsToday: number;
+}
+
 export interface DashboardPayload {
   stats: {
     conversations: number;
@@ -50,6 +83,7 @@ export interface DashboardPayload {
   riskBreakdown: { high: number; medium: number; low: number };
   recentEvents: AuditEvent[];
   frameworkStatus: FrameworkUsage[];
+  governance: GovernanceSnapshot;
 }
 
 function toneForEvent(event: string): AuditEvent['tone'] {
@@ -83,6 +117,7 @@ export async function GET() {
   const userId = session.user.id;
   const now = new Date();
   const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+  const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
   // DB ping to decide system status
   const dbStart = Date.now();
@@ -100,6 +135,10 @@ export async function GET() {
     messagesRaw,
     recentEventsRaw,
     userArtifacts,
+    aiSystems,
+    postures,
+    maturity,
+    auditEventsToday,
   ] = await Promise.all([
     prisma.conversation.count({ where: { userId } }),
 
@@ -173,10 +212,16 @@ export async function GET() {
       where: { userId },
       select: { subType: true },
     }),
+
+    listAiSystems(userId),
+    getAllPostures(userId),
+    computeMaturity(userId),
+    prisma.auditLogEntry.count({
+      where: { actorId: userId, createdAt: { gte: todayStart } },
+    }),
   ]);
 
   // Build sparkline arrays — last 7 and prior 7
-  const todayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   const sessionsLast7Days: number[] = [];
   const sessionsPrev7Days: number[] = [];
   const messagesLast7Days: number[] = [];
@@ -243,6 +288,58 @@ export async function GET() {
     summary: summarize(e.event, e.category),
   }));
 
+  // Governance snapshot — real inventory / compliance / maturity numbers.
+  // Trends are reconstructed from current records (createdAt / nextReviewAt),
+  // one point per day for the last 7 days.
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const dayEnds = Array.from({ length: 7 }, (_, i) =>
+    new Date(todayStart.getTime() - (6 - i - 1) * 24 * 60 * 60 * 1000),
+  );
+  const systemsTrend = dayEnds.map(
+    (end) => aiSystems.filter((s) => s.createdAt < end).length,
+  );
+  const highTrend = dayEnds.map(
+    (end) => aiSystems.filter((s) => s.riskCategory === 'high' && s.createdAt < end).length,
+  );
+  const overdueTrend = dayEnds.map(
+    (end) => aiSystems.filter((s) => s.nextReviewAt && s.nextReviewAt < end).length,
+  );
+
+  const highCount = aiSystems.filter((s) => s.riskCategory === 'high').length;
+  const overdueCount = aiSystems.filter((s) => s.nextReviewAt && s.nextReviewAt < now).length;
+  const frameworks: FrameworkCoverage[] = postures.map((p) => ({
+    id: p.id,
+    name: p.name,
+    coverage: p.coverage,
+  }));
+  const averageCoverage = frameworks.length
+    ? Math.round(frameworks.reduce((sum, f) => sum + f.coverage, 0) / frameworks.length)
+    : 0;
+
+  const governance: GovernanceSnapshot = {
+    inventory: { total: aiSystems.length, high: highCount, overdue: overdueCount },
+    deltas: {
+      systems7d: aiSystems.filter((s) => s.createdAt >= sevenDaysAgo).length,
+      high7d: aiSystems.filter((s) => s.riskCategory === 'high' && s.createdAt >= sevenDaysAgo).length,
+    },
+    systemsTrend,
+    highTrend,
+    overdueTrend,
+    systems: aiSystems.slice(0, 6).map((s) => ({
+      id: s.id,
+      name: s.name,
+      vendor: s.vendor,
+      model: s.model,
+      riskCategory: s.riskCategory,
+      lifecycleStage: s.lifecycleStage,
+      nextReviewAt: s.nextReviewAt?.toISOString() ?? null,
+    })),
+    frameworks,
+    averageCoverage,
+    maturityScore: maturity.score,
+    auditEventsToday,
+  };
+
   const systemStatus: DashboardPayload['systemStatus'] = !dbOk
     ? 'offline'
     : dbMs > 400
@@ -276,6 +373,7 @@ export async function GET() {
     riskBreakdown,
     recentEvents,
     frameworkStatus,
+    governance,
   };
 
   return NextResponse.json(payload, { headers: { 'Cache-Control': 'no-store' } });

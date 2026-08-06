@@ -1,12 +1,22 @@
 import { prisma } from './prisma';
 import { writeAuditLog } from './audit';
-import { RISK_CATEGORIES, LIFECYCLE_STAGES, type RiskCategory, type LifecycleStage } from './governanceEnums';
-import { ENTITY_KINDS, requiresApproval, type EntityKind } from './gates/gateEnums';
+import {
+  RISK_CATEGORIES,
+  LIFECYCLE_STAGES,
+  ENTITY_TYPES,
+  APPROVAL_STATUSES,
+  requiresApproval,
+  type RiskCategory,
+  type LifecycleStage,
+  type EntityType,
+  type ApprovalStatus,
+} from './governanceEnums';
+import { ENTITY_KINDS, type EntityKind } from './gates/gateEnums';
 import { initializeGates, refreshGates } from './gates/gates';
 import { reconcileApprovalForRisk } from './gates/approvals';
 
-export { RISK_CATEGORIES, LIFECYCLE_STAGES, ENTITY_KINDS };
-export type { RiskCategory, LifecycleStage, EntityKind };
+export { RISK_CATEGORIES, LIFECYCLE_STAGES, ENTITY_TYPES, ENTITY_KINDS, APPROVAL_STATUSES, requiresApproval };
+export type { RiskCategory, LifecycleStage, EntityType, EntityKind, ApprovalStatus };
 
 export interface AiSystemInput {
   name: string;
@@ -16,6 +26,7 @@ export interface AiSystemInput {
   businessOwner?: string | null;
   vendor?: string | null;
   model?: string | null;
+  entityType?: EntityType;
   lifecycleStage?: LifecycleStage;
   riskCategory?: RiskCategory;
   dataTypes?: string[];
@@ -50,7 +61,7 @@ export async function getAiSystem(userId: string, id: string) {
 }
 
 export async function createAiSystem(userId: string, input: AiSystemInput) {
-  const riskCategory = input.riskCategory ?? 'limited';
+  const riskCategory = input.riskCategory ?? 'moderate';
   const entityKind = input.entityKind ?? 'use-case';
 
   const system = await prisma.aiSystem.create({
@@ -63,14 +74,15 @@ export async function createAiSystem(userId: string, input: AiSystemInput) {
       businessOwner: input.businessOwner ?? null,
       vendor: input.vendor ?? null,
       model: input.model ?? null,
+      entityType: input.entityType ?? 'system',
       lifecycleStage: input.lifecycleStage ?? 'idea',
       riskCategory,
       dataTypes: input.dataTypes ?? [],
+      // Gate 3: medium/high risk entries require an approval decision and
+      // start out pending; low risk needs no approval, recorded as null.
+      approvalStatus: requiresApproval(riskCategory) ? 'pending' : null,
       deployedAt: parseDate(input.deployedAt),
       nextReviewAt: parseDate(input.nextReviewAt),
-      // Medium risk and above needs a named approval decision at Gate 3;
-      // anything below is registered without one.
-      approvalStatus: requiresApproval(riskCategory) ? 'pending' : 'not-required',
     },
   });
 
@@ -80,7 +92,7 @@ export async function createAiSystem(userId: string, input: AiSystemInput) {
     entityType: 'ai_system',
     entityId: system.id,
     summary: `Registered ${entityKind} "${system.name}" (${system.riskCategory} risk)`,
-    metadata: { entityKind, riskCategory },
+    metadata: { entityKind, entityType: system.entityType, riskCategory },
   });
 
   // Gate 1 is evaluated the moment an entity is registered, so the board never
@@ -94,6 +106,16 @@ export async function updateAiSystem(userId: string, id: string, input: Partial<
   const existing = await getAiSystem(userId, id);
   if (!existing) return null;
 
+  // Gate 3: keep approval consistent when the risk tier changes. Dropping to
+  // low clears the approval requirement; entering medium/high re-opens it as
+  // pending so the decision is made against the new tier.
+  const riskChanged = input.riskCategory !== undefined && input.riskCategory !== existing.riskCategory;
+  const approvalTransition = riskChanged
+    ? requiresApproval(input.riskCategory as string)
+      ? { approvalStatus: 'pending', approvedBy: null, approvedAt: null, approvalNote: null }
+      : { approvalStatus: null, approvedBy: null, approvedAt: null, approvalNote: null }
+    : {};
+
   const system = await prisma.aiSystem.update({
     where: { id },
     data: {
@@ -104,11 +126,13 @@ export async function updateAiSystem(userId: string, id: string, input: Partial<
       ...(input.businessOwner !== undefined ? { businessOwner: input.businessOwner } : {}),
       ...(input.vendor !== undefined ? { vendor: input.vendor } : {}),
       ...(input.model !== undefined ? { model: input.model } : {}),
+      ...(input.entityType !== undefined ? { entityType: input.entityType } : {}),
       ...(input.lifecycleStage !== undefined ? { lifecycleStage: input.lifecycleStage } : {}),
       ...(input.riskCategory !== undefined ? { riskCategory: input.riskCategory } : {}),
       ...(input.dataTypes !== undefined ? { dataTypes: input.dataTypes } : {}),
       ...(input.deployedAt !== undefined ? { deployedAt: parseDate(input.deployedAt) } : {}),
       ...(input.nextReviewAt !== undefined ? { nextReviewAt: parseDate(input.nextReviewAt) } : {}),
+      ...approvalTransition,
     },
   });
 
@@ -130,6 +154,48 @@ export async function updateAiSystem(userId: string, id: string, input: Partial<
   await refreshGates(id, userId);
 
   return system;
+}
+
+/**
+ * Gate 3 — record an approval decision (Approved / Pending / Rejected) for a
+ * medium/high risk agent, model, or use-case after remediation is complete.
+ * `approverName` is the display identity of the session user making the call.
+ */
+export async function setApprovalStatus(
+  userId: string,
+  id: string,
+  status: ApprovalStatus,
+  approverName: string,
+  note?: string | null,
+) {
+  const existing = await getAiSystem(userId, id);
+  if (!existing) return null;
+  if (!requiresApproval(existing.riskCategory)) {
+    return { error: 'Approval only applies to medium and high risk entries' } as const;
+  }
+
+  const decided = status === 'approved' || status === 'rejected';
+  const system = await prisma.aiSystem.update({
+    where: { id },
+    data: {
+      approvalStatus: status,
+      approvedBy: decided ? approverName : null,
+      approvedAt: decided ? new Date() : null,
+      approvalNote: note ?? null,
+    },
+  });
+
+  writeAuditLog({
+    actorId: userId,
+    action: `ai_system.approval.${status}`,
+    entityType: 'ai_system',
+    entityId: id,
+    summary: decided
+      ? `${status === 'approved' ? 'Approved' : 'Rejected'} AI ${existing.entityType} "${existing.name}" (${existing.riskCategory} risk) by ${approverName}`
+      : `Reset approval of AI ${existing.entityType} "${existing.name}" to pending`,
+  });
+
+  return { system } as const;
 }
 
 /** Soft-delete (archive) so the audit trail and linked records survive. */
@@ -157,19 +223,23 @@ export async function archiveAiSystem(userId: string, id: string) {
 export async function getInventorySummary(userId: string) {
   const systems = await listAiSystems(userId);
   const now = Date.now();
-  const byRisk = { prohibited: 0, high: 0, limited: 0, minimal: 0 } as Record<RiskCategory, number>;
+  const byRisk = { high: 0, moderate: 0, low: 0 } as Record<RiskCategory, number>;
   const byKind = { 'use-case': 0, agent: 0, model: 0 } as Record<EntityKind, number>;
   const byApproval = { 'not-required': 0, pending: 0, approved: 0, rejected: 0 } as Record<string, number>;
   let reviewOverdue = 0;
   let neverReviewed = 0;
   let approvalExpired = 0;
+  let pendingApproval = 0;
 
   for (const s of systems) {
     byRisk[s.riskCategory as RiskCategory] = (byRisk[s.riskCategory as RiskCategory] ?? 0) + 1;
     byKind[s.entityKind as EntityKind] = (byKind[s.entityKind as EntityKind] ?? 0) + 1;
-    byApproval[s.approvalStatus] = (byApproval[s.approvalStatus] ?? 0) + 1;
+    // A null approvalStatus means approval was never required.
+    const approvalKey = s.approvalStatus ?? 'not-required';
+    byApproval[approvalKey] = (byApproval[approvalKey] ?? 0) + 1;
     if (!s.lastReviewedAt) neverReviewed += 1;
     if (s.nextReviewAt && s.nextReviewAt.getTime() < now) reviewOverdue += 1;
+    if (s.approvalStatus === 'pending') pendingApproval += 1;
     if (s.approvalStatus === 'approved' && s.approvalExpiresAt && s.approvalExpiresAt.getTime() < now) {
       approvalExpired += 1;
     }
@@ -183,5 +253,6 @@ export async function getInventorySummary(userId: string) {
     reviewOverdue,
     neverReviewed,
     approvalExpired,
+    pendingApproval,
   };
 }

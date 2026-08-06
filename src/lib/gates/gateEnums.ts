@@ -83,7 +83,9 @@ export function gateSpec(gate: number): GateSpec | undefined {
 }
 
 // ─── Approval ───────────────────────────────────────────────────────────────
-export const APPROVAL_STATUSES = ['not-required', 'pending', 'approved', 'rejected'] as const;
+// AiSystem.approvalStatus is NULL when approval is not required, so the states
+// below are only the ones ever written to the column.
+export const APPROVAL_STATUSES = ['pending', 'approved', 'rejected'] as const;
 export type ApprovalStatus = (typeof APPROVAL_STATUSES)[number];
 
 /** The decisions an approver can actually record (excludes the derived states). */
@@ -96,17 +98,21 @@ export function isApprovalDecision(value: string): value is ApprovalDecision {
 
 // ─── Risk severity ──────────────────────────────────────────────────────────
 /**
- * The register tiers entities with the EU AI Act's four categories, while the
+ * The register tiers entities with the NIST/US impact categories, while the
  * approval policy is written in coarse severity bands (approval is required for
  * medium and high risk). This is the single place the two vocabularies meet.
+ *
+ * These were the EU AI Act's four categories until 20260704_risk_tiers_nist
+ * rewrote every riskCategory to the three NIST tiers. 'critical' is retained in
+ * the band vocabulary but is no longer reachable, because the EU 'prohibited'
+ * tier that mapped to it was collapsed into 'high' by that migration.
  */
 export type RiskSeverity = 'low' | 'medium' | 'high' | 'critical';
 
 export const RISK_SEVERITY: Record<RiskCategory, RiskSeverity> = {
-  minimal: 'low',
-  limited: 'medium',
+  low: 'low',
+  moderate: 'medium',
   high: 'high',
-  prohibited: 'critical',
 };
 
 const SEVERITY_ORDER: RiskSeverity[] = ['low', 'medium', 'high', 'critical'];
@@ -121,8 +127,8 @@ export function severityAtLeast(severity: RiskSeverity, floor: RiskSeverity): bo
 }
 
 /**
- * Approval is required for medium risk and above. Minimal-risk entities
- * (severity low) are registered without an approval decision.
+ * Approval is required for medium risk and above. Low-risk entities are
+ * registered without an approval decision.
  */
 export function requiresApproval(riskCategory: string): boolean {
   return severityAtLeast(riskSeverity(riskCategory), 'medium');

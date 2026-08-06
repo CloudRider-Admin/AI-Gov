@@ -20,6 +20,7 @@ model User {
   aiTools                  String[]             @default([])
   primaryConcern           String?
   occupationalRole         String?
+  goviInterface            String               @default("terminal") // terminal | sovereign — chosen Govi UI skin
   stripeCustomerId         String?              @unique
   stripeSubscriptionId     String?              @unique
   stripePriceId            String?
@@ -128,6 +129,18 @@ model NewsletterSubscriber {
   id        String   @id @default(cuid())
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+/// Idempotency ledger for external webhook deliveries (e.g. Stripe).
+/// The provider's event id is the primary key so a redelivered event is a
+/// no-op instead of being processed twice.
+model ProcessedWebhookEvent {
+  id          String   @id // provider event id (e.g. Stripe evt_...)
+  provider    String
+  eventType   String
+  processedAt DateTime @default(now())
+
+  @@index([provider, processedAt])
 }
 
 model KnowledgeEntry {
@@ -298,23 +311,25 @@ model AiSystem {
   businessOwner  String?
   vendor         String?
   model          String?
+  entityType     String    @default("system")   // system | model | agent | use-case
   lifecycleStage String    @default("idea")     // idea | piloting | production | retired
-  riskCategory   String    @default("limited")  // prohibited | high | limited | minimal (EU AI Act)
+  riskCategory   String    @default("moderate")  // high | moderate | low (NIST/US impact tiers)
   status         String    @default("active")   // active | archived
   dataTypes      String[]  @default([])
-  deployedAt     DateTime?
-  lastReviewedAt DateTime?
-  nextReviewAt   DateTime?
-
   // ── Gate 3 — Approval & Registry ──
-  // Only entities whose risk severity is medium or above require an approval
-  // decision; the rest carry "not-required". See src/lib/gates/approvals.ts.
-  approvalStatus String    @default("not-required") // not-required | pending | approved | rejected
-  approvedById   String?   // user id of the approver
+  // Only high/moderate risk requires an approval decision; NULL means approval
+  // is not required. Both the /gates board and the inventory drawer read this
+  // column, so the null-means-not-required convention is shared.
+  approvalStatus String?   // pending | approved | rejected
+  approvedBy     String?   // approver name, recorded by the inventory drawer
+  approvedById   String?   // approver user id, recorded by the /gates board
   approvedByName String?   // denormalized so the register stays readable if the user is removed
   approvedAt     DateTime?
   approvalNote   String?   @db.Text
   approvalExpiresAt DateTime?  // re-approval cadence for high-risk entities
+  deployedAt     DateTime?
+  lastReviewedAt DateTime?
+  nextReviewAt   DateTime?
 
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -325,9 +340,50 @@ model AiSystem {
   @@index([userId, status])
   @@index([organizationId])
   @@index([riskCategory])
+  @@index([approvalStatus])
   @@index([nextReviewAt])
   @@index([userId, entityKind, status])
-  @@index([approvalStatus])
+}
+
+/// Gate 2 — Evaluation & Review. One row per evaluation result collected from
+/// data science / engineering / red-team (curated from the AI platform in use),
+/// mapped to a Core Evaluation Parameters review area.
+model EvaluationEvidence {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  reviewArea     String   // CORE_EVALUATION_PARAMETERS id, e.g. "factual-reliability"
+  source         String   @default("data-science") // data-science | engineering | red-team | platform
+  metric         String?  // e.g. "hallucination rate", "attack success rate"
+  result         String   @db.Text // observed evaluation result
+  meetsBaseline  Boolean? // reviewed against the governance baseline; null = not yet judged
+  notes          String?  @db.Text
+  evaluatedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([aiSystemId, reviewArea])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+/// Gate 2 — evidence report produced by reviewing the collected evaluation
+/// evidence against the Core Evaluation Parameters baselines.
+model EvidenceReport {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  verdict        String   // pass | conditional-pass | fail
+  summary        String   @db.Text
+  areaFindings   Json     // per review area: { id, reviewArea, status, evidenceCount, baseline }
+  evidenceCount  Int      @default(0)
+  generatedBy    String?
+  createdAt      DateTime @default(now())
+
+  @@index([aiSystemId, createdAt])
+  @@index([userId])
 }
 
 /// Tier 1b — per-control implementation status for a compliance framework.

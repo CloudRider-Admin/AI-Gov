@@ -64,3 +64,9 @@ prisma/*.db-journal
 prisma/migrations/dev.db*
 .vercel
 .env*
+
+# ─── Build artifacts ─────────────────────────────────────────
+*.tsbuildinfo
+
+# ─── Source-material document exports (keep in object storage, not git) ──
+GovSecure Project-*/

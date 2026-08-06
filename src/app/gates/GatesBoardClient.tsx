@@ -184,7 +184,7 @@ function BoardCard({ entry }: { entry: GateBoardEntry }) {
         <Badge className={RISK_STYLES[entry.riskCategory] ?? RISK_STYLES.minimal}>
           {entry.riskCategory}
         </Badge>
-        {entry.approvalStatus !== "not-required" && (
+        {entry.approvalStatus != null && (
           <Badge className={APPROVAL_STYLES[entry.approvalStatus]}>
             {APPROVAL_LABELS[entry.approvalStatus]}
           </Badge>
