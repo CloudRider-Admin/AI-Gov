@@ -3,7 +3,10 @@ import { prisma } from '@/lib/prisma';
 import { getOptionalSession } from '@/lib/auth-guard';
 import { listAiSystems } from '@/lib/aiSystems';
 import { getAllPostures } from '@/lib/compliance';
-import { computeMaturity } from '@/lib/maturity';
+import { computeMaturity, getMaturityTrend } from '@/lib/maturity';
+import { getGateBoard } from '@/lib/gates/gates';
+import { getRegulatoryFeed, type RegulatoryItem } from '@/lib/regulatory';
+import { checkTokenBudget } from '@/lib/tokenBudget';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -62,6 +65,68 @@ export interface GovernanceSnapshot {
   auditEventsToday: number;
 }
 
+/** One entity stuck at a gate, with the concrete reasons it can't advance. */
+export interface GateBlocker {
+  id: string;
+  name: string;
+  gate: number;
+  riskCategory: string;
+  blockers: string[];
+}
+
+/**
+ * Gate 1 intake → Gate 2 evaluation → Gate 3 approval. The register's state
+ * machine, which the dashboard previously didn't show at all.
+ */
+export interface GatePipeline {
+  total: number;
+  atGate1: number;
+  atGate2: number;
+  atGate3: number;
+  cleared: number;
+  blocked: number;
+  awaitingApproval: number;
+  /** Entities carrying at least one failed gate — the actionable subset. */
+  blockedEntities: GateBlocker[];
+}
+
+export interface TaskItem {
+  id: string;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate: string | null;
+  framework: string | null;
+  aiSystemId: string | null;
+}
+
+export interface RemediationQueue {
+  open: number;
+  overdue: number;
+  /** Open and due within the next 7 days (excludes already-overdue). */
+  dueSoon: number;
+  byPriority: { critical: number; high: number; medium: number; low: number };
+  items: TaskItem[];
+}
+
+/**
+ * Share of high-risk systems carrying a passing evaluation. The number that
+ * says whether the register is actually covered rather than merely populated.
+ */
+export interface EvaluationCoverage {
+  highRiskTotal: number;
+  highRiskCovered: number;
+  percent: number;
+}
+
+export interface TokenBudgetSnapshot {
+  used: number;
+  /** null means the plan carries no cap (the lib returns Infinity, which is not JSON). */
+  limit: number | null;
+  remaining: number | null;
+  percent: number;
+}
+
 export interface DashboardPayload {
   stats: {
     conversations: number;
@@ -84,6 +149,12 @@ export interface DashboardPayload {
   recentEvents: AuditEvent[];
   frameworkStatus: FrameworkUsage[];
   governance: GovernanceSnapshot;
+  gates: GatePipeline;
+  remediation: RemediationQueue;
+  regulatory: RegulatoryItem[];
+  maturityTrend: number[];
+  evaluationCoverage: EvaluationCoverage;
+  tokenBudget: TokenBudgetSnapshot;
 }
 
 function toneForEvent(event: string): AuditEvent['tone'] {
@@ -139,6 +210,12 @@ export async function GET() {
     postures,
     maturity,
     auditEventsToday,
+    gateBoard,
+    openTasks,
+    regulatory,
+    maturityTrendRows,
+    passingRuns,
+    budget,
   ] = await Promise.all([
     prisma.conversation.count({ where: { userId } }),
 
@@ -219,6 +296,40 @@ export async function GET() {
     prisma.auditLogEntry.count({
       where: { actorId: userId, createdAt: { gte: todayStart } },
     }),
+
+    // Gate posture for every active entity, in one query pass (not N+1).
+    getGateBoard(userId),
+
+    // Remediation work owned by this user — created by or assigned to them.
+    prisma.remediationTask.findMany({
+      where: {
+        status: { not: 'done' },
+        OR: [{ userId }, { assigneeId: userId }],
+      },
+      orderBy: [{ dueDate: 'asc' }, { createdAt: 'desc' }],
+      select: {
+        id: true,
+        title: true,
+        status: true,
+        priority: true,
+        dueDate: true,
+        framework: true,
+        aiSystemId: true,
+      },
+    }),
+
+    getRegulatoryFeed(6),
+
+    getMaturityTrend(userId, 14),
+
+    // Distinct systems with at least one passing run — drives evaluation coverage.
+    prisma.evaluationRun.findMany({
+      where: { userId, overallVerdict: { in: ['pass', 'conditional-pass'] } },
+      select: { aiSystemId: true },
+      distinct: ['aiSystemId'],
+    }),
+
+    checkTokenBudget(userId, session.user.role ?? 'FREE'),
   ]);
 
   // Build sparkline arrays — last 7 and prior 7
@@ -340,6 +451,77 @@ export async function GET() {
     auditEventsToday,
   };
 
+  // ── Gate pipeline ──────────────────────────────────────────────────────
+  const gates: GatePipeline = {
+    total: gateBoard.length,
+    atGate1: gateBoard.filter((e) => e.currentGate === 1).length,
+    atGate2: gateBoard.filter((e) => e.currentGate === 2).length,
+    atGate3: gateBoard.filter((e) => e.currentGate === 3).length,
+    cleared: gateBoard.filter((e) => e.currentGate > 3).length,
+    blocked: gateBoard.filter((e) => e.gates.some((g) => g.status === 'failed')).length,
+    awaitingApproval: gateBoard.filter((e) => e.approvalStatus === 'pending').length,
+    blockedEntities: gateBoard
+      .filter((e) => e.gates.some((g) => g.status === 'failed'))
+      .slice(0, 6)
+      .map((e) => {
+        const failed = e.gates.find((g) => g.status === 'failed');
+        return {
+          id: e.id,
+          name: e.name,
+          gate: failed?.gate ?? e.currentGate,
+          riskCategory: e.riskCategory,
+          blockers: failed?.blockers ?? [],
+        };
+      }),
+  };
+
+  // ── Remediation queue ──────────────────────────────────────────────────
+  const sevenDaysOut = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+  const countPriority = (p: string) => openTasks.filter((t) => t.priority === p).length;
+  const remediation: RemediationQueue = {
+    open: openTasks.length,
+    overdue: openTasks.filter((t) => t.dueDate && t.dueDate < now).length,
+    dueSoon: openTasks.filter((t) => t.dueDate && t.dueDate >= now && t.dueDate <= sevenDaysOut).length,
+    byPriority: {
+      critical: countPriority('critical'),
+      high: countPriority('high'),
+      medium: countPriority('medium'),
+      low: countPriority('low'),
+    },
+    items: openTasks.slice(0, 6).map((t) => ({
+      id: t.id,
+      title: t.title,
+      status: t.status,
+      priority: t.priority,
+      dueDate: t.dueDate?.toISOString() ?? null,
+      framework: t.framework,
+      aiSystemId: t.aiSystemId,
+    })),
+  };
+
+  // ── Evaluation coverage ────────────────────────────────────────────────
+  const coveredIds = new Set(passingRuns.map((r) => r.aiSystemId));
+  const highRiskSystems = aiSystems.filter((s) => s.riskCategory === 'high');
+  const highRiskCovered = highRiskSystems.filter((s) => coveredIds.has(s.id)).length;
+  const evaluationCoverage: EvaluationCoverage = {
+    highRiskTotal: highRiskSystems.length,
+    highRiskCovered,
+    percent: highRiskSystems.length
+      ? Math.round((highRiskCovered / highRiskSystems.length) * 100)
+      : 0,
+  };
+
+  // ── Token budget ───────────────────────────────────────────────────────
+  // `checkTokenBudget` returns Infinity for uncapped plans, which JSON.stringify
+  // turns into null — normalize to an explicit null so the client can branch.
+  const capped = Number.isFinite(budget.limit);
+  const tokenBudget: TokenBudgetSnapshot = {
+    used: budget.used,
+    limit: capped ? budget.limit : null,
+    remaining: capped ? budget.remaining : null,
+    percent: capped && budget.limit > 0 ? Math.round((budget.used / budget.limit) * 100) : 0,
+  };
+
   const systemStatus: DashboardPayload['systemStatus'] = !dbOk
     ? 'offline'
     : dbMs > 400
@@ -374,6 +556,12 @@ export async function GET() {
     recentEvents,
     frameworkStatus,
     governance,
+    gates,
+    remediation,
+    regulatory,
+    maturityTrend: maturityTrendRows.map((r) => r.score),
+    evaluationCoverage,
+    tokenBudget,
   };
 
   return NextResponse.json(payload, { headers: { 'Cache-Control': 'no-store' } });

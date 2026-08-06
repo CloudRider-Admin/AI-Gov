@@ -44,7 +44,7 @@ interface KnowledgeEntryFull extends KnowledgeEntry {
 
 interface AdminOverview {
   systemStatus: 'operational' | 'degraded' | 'down';
-  compliance: { score: number };
+  embeddingCoverage: { score: number };
 }
 
 const CATEGORIES = ['framework', 'regulation', 'best-practice', 'template', 'case-study', 'other'];
@@ -372,7 +372,7 @@ export default function AdminKnowledgePage() {
     }
   };
 
-  const complianceScore = overview?.compliance.score ?? null;
+  const embeddingScore = overview?.embeddingCoverage.score ?? null;
 
   return (
     <AppPage>
@@ -534,7 +534,7 @@ export default function AdminKnowledgePage() {
                   Embedding coverage
                 </div>
                 <div className="font-mono text-2xl font-bold tabular-nums text-terminal-green">
-                  {complianceScore !== null ? `${complianceScore.toFixed(1)}%` : '—'}
+                  {embeddingScore !== null ? `${embeddingScore.toFixed(1)}%` : '—'}
                 </div>
               </div>
               <Database className="h-16 w-16 text-terminal-muted/40" aria-hidden="true" />

@@ -19,7 +19,12 @@ export interface AdminOverview {
     activeToday: number;
     contributorsLast7Days: number;
   };
-  compliance: {
+  /**
+   * Share of active KB entries that carry an embedding. Named for what it
+   * measures — it was previously called `compliance`, which invited callers to
+   * read it as a governance-compliance score. It is not one.
+   */
+  embeddingCoverage: {
     score: number;     // % of active KB entries embedded
     deltaPct: number;  // change vs 24h ago
   };
@@ -147,7 +152,7 @@ export async function GET() {
         activeToday: activeTodayConvs.length,
         contributorsLast7Days: contributorGroups.length,
       },
-      compliance: { score, deltaPct },
+      embeddingCoverage: { score, deltaPct },
       latency: { dbMs: Math.max(0, dbMs), verdict },
       sessions: { activeNow: activeNowGroups.length },
       errorRate24h,
