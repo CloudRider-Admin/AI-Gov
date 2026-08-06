@@ -10,7 +10,7 @@ export interface GateSystemView {
   riskCategory: string;
   lifecycleStage: string;
   dataTypes: string[];
-  approvalStatus: string;
+  approvalStatus: string | null;
   approvedByName: string | null;
   approvedAt: string | null;
   approvalNote: string | null;

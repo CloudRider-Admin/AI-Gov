@@ -40,8 +40,13 @@ const config: Config = {
         "fade-in": "fadeIn 0.5s ease-out",
         "slide-up": "slideUp 0.5s ease-out",
         glow: "glow 2s ease-in-out infinite alternate",
+        shimmer: "shimmer 4s ease-in-out infinite",
       },
       keyframes: {
+        shimmer: {
+          "0%": { transform: "translateX(-130%)" },
+          "100%": { transform: "translateX(430%)" },
+        },
         blink: {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0" },

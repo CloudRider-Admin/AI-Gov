@@ -24,7 +24,7 @@ interface ActionCardsPanelProps {
   onAction: (action: ActionCardAction) => void;
 }
 
-interface CardDef {
+export interface CardDef {
   id: string;
   label: string;
   description: string;
@@ -51,7 +51,7 @@ function docCard(
   };
 }
 
-function buildCards(query: string, response: AdvisorResponse): CardDef[] {
+export function buildCards(query: string, response: AdvisorResponse): CardDef[] {
   const desc = query;
   const regs = response.regulationCheck ?? [];
   const riskLevel = response.riskProfile.level;

@@ -1,4 +1,4 @@
-export type LogEvent = 'request.received' | 'openai.completed' | 'claude.completed' | 'fallback.claude' | 'response.validated' | 'response.fallback' | 'request.failed' | 'artifact.generated' | 'artifact.cache_hit' | 'cache.hit' | 'circuit.open' | 'token.budget_exceeded' | 'orchestrator.error' | 'security.injection_detected' | 'citation.unverified' | 'advisor.parse.fallback';
+export type LogEvent = 'request.received' | 'openai.completed' | 'claude.completed' | 'fallback.claude' | 'response.validated' | 'response.fallback' | 'request.failed' | 'artifact.generated' | 'artifact.cache_hit' | 'cache.hit' | 'circuit.open' | 'token.budget_exceeded' | 'orchestrator.error' | 'security.injection_detected' | 'citation.unverified' | 'advisor.parse.fallback' | 'cron.cleanup';
 
 interface LogOptions {
   event: LogEvent;

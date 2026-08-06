@@ -5,16 +5,24 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import {
   MessageSquare,
-  BarChart3,
   AlertTriangle,
-  BookOpen,
   ArrowRight,
   Loader2,
-  Globe,
   Download,
-  Layers,
+  Plus,
+  Server,
 } from "lucide-react";
 import { OnboardingWizard } from "@/components/OnboardingWizard";
+import {
+  AppPage,
+  PageHeader,
+  Panel,
+  PanelLink,
+  KpiCard,
+  RiskPill,
+  StagePill,
+  formatReview,
+} from "@/components/app";
 import { RolePriorities } from "./RolePriorities";
 
 interface RecentConversation {
@@ -34,11 +42,27 @@ interface AuditEvent {
   summary: string;
 }
 
-interface FrameworkUsage {
+interface SystemPreview {
+  id: string;
   name: string;
-  percent: number;
-  count: number;
-  tone: "green" | "amber" | "cyan";
+  vendor: string | null;
+  model: string | null;
+  riskCategory: string;
+  lifecycleStage: string;
+  nextReviewAt: string | null;
+}
+
+interface GovernanceSnapshot {
+  inventory: { total: number; high: number; overdue: number };
+  deltas: { systems7d: number; high7d: number };
+  systemsTrend: number[];
+  highTrend: number[];
+  overdueTrend: number[];
+  systems: SystemPreview[];
+  frameworks: { id: string; name: string; coverage: number }[];
+  averageCoverage: number;
+  maturityScore: number;
+  auditEventsToday: number;
 }
 
 interface DashboardData {
@@ -53,15 +77,18 @@ interface DashboardData {
   occupationalRole: string | null;
   recentConversations: RecentConversation[];
   systemStatus: "nominal" | "degraded" | "offline";
-  sessionsLast7Days: number[];
-  messagesLast7Days: number[];
-  deltas: { sessionsPct: number; messagesPct: number };
-  riskBreakdown: { high: number; medium: number; low: number };
   recentEvents: AuditEvent[];
-  frameworkStatus: FrameworkUsage[];
+  governance: GovernanceSnapshot;
 }
 
 const POLL_MS = 30_000;
+
+// Display metadata for the compliance posture rows — NIST first, by design.
+const FRAMEWORK_META: Record<string, { short: string; hint: string; text: string; bar: string }> = {
+  "NIST-AI-RMF": { short: "NIST AI RMF", hint: "US · default", text: "text-terminal-green", bar: "bg-terminal-green" },
+  "ISO-42001": { short: "ISO/IEC 42001", hint: "international", text: "text-terminal-cyan", bar: "bg-terminal-cyan" },
+  "EU-AI-Act": { short: "EU AI Act", hint: "if you operate in the EU", text: "text-terminal-muted", bar: "bg-terminal-muted" },
+};
 
 function timeAgo(iso: string): string {
   const diff = Date.now() - new Date(iso).getTime();
@@ -83,17 +110,6 @@ function formatClock(iso: string): string {
     .padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
 }
 
-function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}k`;
-  return n.toLocaleString();
-}
-
-function formatDelta(n: number): string {
-  if (n === 0) return "Stable —";
-  return `${n > 0 ? "+" : ""}${n.toFixed(0)}% ${n > 0 ? "↑" : "↓"}`;
-}
-
 function riskRating(level: string | null): { label: string; tone: string } {
   const v = (level ?? "").toLowerCase();
   if (v === "high" || v === "critical") return { label: "CRITICAL", tone: "bg-terminal-red/15 text-terminal-red" };
@@ -111,11 +127,9 @@ export function DashboardContent() {
   // Once the wizard is completed/skipped this session, stale poll responses
   // (fetched before the POST committed) must not re-open it.
   const wizardDismissedRef = useRef(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchDashboard = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
-    setRefreshing(true);
     setError(null);
     try {
       const r = await fetch("/api/dashboard", { cache: "no-store" });
@@ -127,7 +141,6 @@ export function DashboardContent() {
       setError(err instanceof Error ? err.message : "Failed to load dashboard data.");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
@@ -145,11 +158,9 @@ export function DashboardContent() {
   }, [data?.systemStatus]);
 
   const firstName = session?.user?.name?.split(" ")[0] ?? "there";
-
-  const riskTotal =
-    (data?.riskBreakdown.high ?? 0) +
-    (data?.riskBreakdown.medium ?? 0) +
-    (data?.riskBreakdown.low ?? 0);
+  const gov = data?.governance;
+  const nistCoverage = gov?.frameworks.find((f) => f.id === "NIST-AI-RMF")?.coverage ?? null;
+  const pending = loading && !data;
 
   const exportCsv = () => {
     if (!data) return;
@@ -174,7 +185,7 @@ export function DashboardContent() {
   };
 
   return (
-    <div className="min-h-screen px-4 py-20 font-mono">
+    <AppPage>
       {showWizard && (
         <OnboardingWizard
           onComplete={() => {
@@ -185,461 +196,324 @@ export function DashboardContent() {
         />
       )}
 
-      <div className="max-w-7xl mx-auto space-y-6">
-        {/* ── Header ──────────────────────────────────────────────── */}
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
-            <div className={`text-[11px] uppercase tracking-[0.22em] ${statusCopy.tone} mb-3`}>
-              System Status: {statusCopy.label}
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-terminal-text tracking-tight mb-2">
-              Welcome back, <span className="text-terminal-green">{firstName}</span>
-            </h1>
-            <p className="text-sm text-terminal-muted max-w-2xl leading-relaxed">
-              Real-time governance oversight for enterprise AI deployment and legislative
-              compliance auditing.
-            </p>
+      <PageHeader
+        eyebrow="AI Governance / Overview"
+        title="Dashboard"
+        description="Your governance program at a glance — coverage, risk exposure, and what needs attention this week."
+        actions={
+          <>
+            <Link href="/inventory" className="btn-secondary text-sm py-2">
+              <Plus className="w-4 h-4" /> New AI system
+            </Link>
+            <Link href="/govi" className="btn-primary text-sm py-2">
+              <MessageSquare className="w-4 h-4" /> Ask Govi
+            </Link>
+          </>
+        }
+      />
+
+      {error && (
+        <div className="flex items-center justify-between rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-4 py-3 text-sm text-terminal-red">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4" /> {error}
           </div>
-          <div className="flex items-center gap-3">
-            <TeamAvatars name={firstName} />
-            <button
-              onClick={() => fetchDashboard()}
-              disabled={refreshing}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs border border-terminal-border rounded-xl text-terminal-text hover:border-terminal-green/40 transition-colors disabled:opacity-50"
-            >
-              {refreshing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Layers className="w-3.5 h-3.5" />}
-              Manage Teams
-            </button>
-          </div>
+          <button onClick={() => fetchDashboard()} className="text-xs underline">
+            Retry
+          </button>
         </div>
+      )}
 
-        {/* ── Role-tailored priorities (Tier 5) ─────────────────────── */}
-        <RolePriorities role={data?.occupationalRole ?? null} />
-
-        {error && (
-          <div className="flex items-center justify-between rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-4 py-3 text-sm text-terminal-red">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4" /> {error}
-            </div>
-            <button
-              onClick={() => fetchDashboard()}
-              className="text-xs underline"
-            >
-              Retry
-            </button>
-          </div>
-        )}
-
-        {/* ── Top stat cards ─────────────────────────────────────── */}
-        <div className="grid md:grid-cols-3 gap-4">
-          <SparkStatCard
-            icon={<MessageSquare className="w-5 h-5 text-terminal-green" />}
-            tint="green"
-            label="AI Sessions Active"
-            value={loading && !data ? "—" : formatNumber(data?.stats.conversations ?? 0)}
-            delta={formatDelta(data?.deltas.sessionsPct ?? 0)}
-            deltaTone={
-              !data
-                ? "text-terminal-muted"
-                : (data?.deltas.sessionsPct ?? 0) > 0
-                ? "text-terminal-green"
-                : (data?.deltas.sessionsPct ?? 0) < 0
-                ? "text-terminal-amber"
-                : "text-terminal-muted"
-            }
-            sparkline={data?.sessionsLast7Days ?? []}
-            sparkTone="green"
-          />
-
-          <SparkStatCard
-            icon={<BarChart3 className="w-5 h-5 text-terminal-amber" />}
-            tint="amber"
-            label="Messages Analyzed"
-            value={loading && !data ? "—" : formatNumber(data?.stats.messagesAnalyzed ?? 0)}
-            delta={formatDelta(data?.deltas.messagesPct ?? 0)}
-            deltaTone={
-              !data
-                ? "text-terminal-muted"
-                : (data?.deltas.messagesPct ?? 0) > 0
-                ? "text-terminal-green"
-                : (data?.deltas.messagesPct ?? 0) < 0
-                ? "text-terminal-amber"
-                : "text-terminal-muted"
-            }
-            sparkline={data?.messagesLast7Days ?? []}
-            sparkTone="amber"
-          />
-
-          {/* Risk flags dark card */}
-          <div className="rounded-xl p-5" style={{ backgroundColor: "#0f1012" }}>
-            <div className="flex items-center justify-between mb-5">
-              <div className="w-10 h-10 rounded-xl bg-terminal-red/20 flex items-center justify-center">
-                <AlertTriangle className="w-5 h-5 text-terminal-red" />
-              </div>
-              {riskTotal > 0 && (
-                <span className="text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md bg-terminal-red/20 text-terminal-red font-semibold">
-                  Action Required
-                </span>
-              )}
-            </div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1">
-              Risk Flags Detected
-            </div>
-            <div className="text-3xl font-bold text-white mb-3">
-              {loading && !data ? "—" : riskTotal.toLocaleString()}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {(data?.riskBreakdown.high ?? 0) > 0 && (
-                <RiskChip label="HALLUCINATION" value={data!.riskBreakdown.high} />
-              )}
-              {(data?.riskBreakdown.medium ?? 0) > 0 && (
-                <RiskChip label="LEAKAGE" value={data!.riskBreakdown.medium} />
-              )}
-              {(data?.riskBreakdown.low ?? 0) > 0 && (
-                <RiskChip label="ANOMALY" value={data!.riskBreakdown.low} />
-              )}
-              {riskTotal === 0 && (
-                <span className="text-xs text-white/60">No risk events detected.</span>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Recent sessions + sidebar ──────────────────────────── */}
-        <div className="grid lg:grid-cols-3 gap-4">
-          {/* Recent AI Sessions */}
-          <div className="lg:col-span-2 rounded-xl border border-terminal-border bg-terminal-black p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-terminal-text">Recent AI Sessions</h2>
-              <button
-                onClick={exportCsv}
-                disabled={!data?.recentConversations.length}
-                className="inline-flex items-center gap-1 text-xs text-terminal-green hover:underline disabled:opacity-50"
-              >
-                <Download className="w-3 h-3" /> Export CSV
-              </button>
-            </div>
-
-            {loading && !data ? (
-              <div className="py-12 flex items-center justify-center">
-                <Loader2 className="w-5 h-5 animate-spin text-terminal-muted" />
-              </div>
-            ) : data?.recentConversations.length === 0 ? (
-              <div className="py-12 text-center">
-                <MessageSquare className="w-10 h-10 text-terminal-muted mx-auto mb-3" />
-                <p className="text-sm text-terminal-muted mb-4">
-                  No sessions yet. Start a conversation with the AI Advisor.
-                </p>
-                <Link
-                  href="/govi"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-terminal-green text-terminal-black text-sm rounded-xl"
-                >
-                  Start your first session <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+      {/* ── KPI row ────────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <KpiCard
+          tone="green"
+          label="AI systems"
+          value={pending ? "—" : gov?.inventory.total ?? 0}
+          delta={gov && gov.deltas.systems7d > 0 ? `+${gov.deltas.systems7d}` : undefined}
+          trend={gov?.systemsTrend}
+        />
+        <KpiCard
+          tone="red"
+          label="High impact"
+          value={pending ? "—" : gov?.inventory.high ?? 0}
+          delta={gov && gov.deltas.high7d > 0 ? `+${gov.deltas.high7d}` : undefined}
+          trend={gov?.highTrend}
+        />
+        <KpiCard
+          tone="cyan"
+          label="Control coverage"
+          value={
+            pending ? (
+              "—"
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted border-b border-terminal-border">
-                      <th className="text-left font-normal py-3 pr-4">Session ID</th>
-                      <th className="text-left font-normal py-3 pr-4">Entity</th>
-                      <th className="text-left font-normal py-3 pr-4">Risk Rating</th>
-                      <th className="text-left font-normal py-3 pr-4">Timestamp</th>
-                      <th className="text-right font-normal py-3 w-8" />
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-terminal-border">
-                    {data?.recentConversations.map((c) => {
-                      const risk = riskRating(c.riskLevel);
-                      const initials = c.title
-                        .split(" ")
-                        .slice(0, 2)
-                        .map((w) => w[0]?.toUpperCase() ?? "")
-                        .join("");
-                      return (
-                        <tr key={c.id} className="hover:bg-terminal-gray/30 transition-colors">
-                          <td className="py-4 pr-4 text-terminal-muted text-xs">
-                            #S-{c.id.slice(0, 4).toUpperCase()}-
-                            {c.id.slice(4, 5).toUpperCase()}
-                          </td>
-                          <td className="py-4 pr-4">
-                            <div className="flex items-center gap-2">
-                              <span className="w-7 h-7 rounded-full bg-terminal-gray text-terminal-text flex items-center justify-center text-[10px] font-bold">
-                                {initials || "AI"}
-                              </span>
-                              <span className="text-terminal-text truncate max-w-[180px]">
-                                {c.title}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-4 pr-4">
-                            <span
-                              className={`inline-block text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md font-semibold ${risk.tone}`}
-                            >
-                              {risk.label}
-                            </span>
-                          </td>
-                          <td className="py-4 pr-4 text-terminal-muted text-xs">
-                            {timeAgo(c.updatedAt)}
-                          </td>
-                          <td className="py-4 text-right">
-                            <Link
-                              href={`/govi?c=${c.id}`}
-                              className="text-terminal-muted hover:text-terminal-green"
-                              aria-label="Open session"
-                            >
-                              <ArrowRight className="w-4 h-4 inline" />
-                            </Link>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+              <>
+                {gov?.averageCoverage ?? 0}
+                <span className="text-base text-terminal-muted">%</span>
+              </>
+            )
+          }
+          barPercent={gov?.averageCoverage ?? 0}
+        />
+        <KpiCard
+          tone="amber"
+          label="Overdue reviews"
+          value={pending ? "—" : gov?.inventory.overdue ?? 0}
+          delta={gov && gov.inventory.overdue > 0 ? "due" : undefined}
+          trend={gov?.overdueTrend}
+        />
+      </div>
 
-          {/* Sidebar: Quick Actions + Framework Status + Live Stream */}
-          <div className="space-y-4">
-            <div className="rounded-xl border border-terminal-border bg-terminal-black p-5">
-              <h3 className="text-sm font-bold text-terminal-text mb-4">Quick Actions</h3>
-              <div className="space-y-2">
-                <QuickActionLink
-                  href="/govi"
-                  icon={<MessageSquare className="w-4 h-4 text-terminal-green" />}
-                  title="Ask AI Advisor"
-                  sub="Policy clarification & reasoning"
-                />
-                <QuickActionLink
-                  href="/playbooks"
-                  icon={<BookOpen className="w-4 h-4 text-terminal-green" />}
-                  title="Browse Playbooks"
-                  sub="Response protocols & mitigation"
-                />
-              </div>
+      {/* ── Inventory preview + compliance / priorities ────────── */}
+      <div className="grid items-start gap-4 lg:grid-cols-[1.9fr_1fr]">
+        <Panel
+          title="AI system inventory"
+          action={<PanelLink href="/inventory">View all {gov?.inventory.total ?? 0}</PanelLink>}
+        >
+          {pending ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-5 h-5 animate-spin text-terminal-muted" />
             </div>
-
-            <div className="rounded-xl border border-terminal-border bg-terminal-black p-5">
-              <h3 className="text-sm font-bold text-terminal-text mb-4">Framework Status</h3>
-              <div className="space-y-3">
-                {(data?.frameworkStatus ?? []).map((fw) => (
-                  <FrameworkRow key={fw.name} usage={fw} />
-                ))}
-                {!data?.frameworkStatus.length && (
-                  <p className="text-xs text-terminal-muted">No framework activity yet.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ── Global data flow + live audit ──────────────────────── */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          <div className="rounded-xl border border-terminal-border bg-terminal-black p-6 flex flex-col md:flex-row gap-6">
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-terminal-text mb-2">Global Data Flow</h3>
-              <p className="text-xs text-terminal-muted mb-5 leading-relaxed">
-                Visualizing cross-border compliance and server residency monitoring.
+          ) : !gov || gov.systems.length === 0 ? (
+            <div className="px-6 py-12 text-center">
+              <Server className="mx-auto mb-4 h-10 w-10 text-terminal-muted" />
+              <p className="mb-2 font-mono text-terminal-text">No AI systems registered yet</p>
+              <p className="mb-6 text-sm text-terminal-muted">
+                Start your register by adding the AI tools and models your team uses.
               </p>
-              <FlowRow
-                dotColor="bg-terminal-green"
-                title="US-East Resilience"
-                detail="All nodes reported nominal latency."
-              />
-              <FlowRow
-                dotColor="bg-terminal-amber"
-                title="EU-Central Policy Sync"
-                detail="Syncing GDPR local overrides (82%)."
-              />
+              <Link href="/inventory" className="btn-primary text-sm py-2">
+                <Plus className="w-4 h-4" /> Register your first system
+              </Link>
             </div>
-            <div className="relative md:w-64 aspect-square md:aspect-auto rounded-xl bg-terminal-gray flex items-center justify-center overflow-hidden">
-              <div className="absolute inset-6 bg-dot-pattern bg-dots opacity-40" />
-              <Globe className="w-20 h-20 text-terminal-muted/40" />
-              <span className="absolute top-3 right-3 text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md bg-terminal-black/60 text-terminal-text">
-                Live Monitor
-              </span>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-terminal-border bg-terminal-gray/30 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                    <th className="px-4 py-2.5 font-semibold">System</th>
+                    <th className="px-4 py-2.5 font-semibold hidden md:table-cell">Vendor</th>
+                    <th className="px-4 py-2.5 font-semibold">Risk</th>
+                    <th className="px-4 py-2.5 font-semibold hidden sm:table-cell">Lifecycle</th>
+                    <th className="px-4 py-2.5 font-semibold hidden lg:table-cell">Next review</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gov.systems.map((s) => {
+                    const review = formatReview(s.nextReviewAt);
+                    return (
+                      <tr
+                        key={s.id}
+                        className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
+                      >
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-terminal-text">{s.name}</div>
+                          {s.model && (
+                            <div className="font-mono text-xs text-terminal-muted">{s.model}</div>
+                          )}
+                        </td>
+                        <td className="hidden px-4 py-3 font-mono text-xs text-terminal-muted md:table-cell">
+                          {s.vendor || "—"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <RiskPill risk={s.riskCategory} />
+                        </td>
+                        <td className="hidden px-4 py-3 sm:table-cell">
+                          <StagePill stage={s.lifecycleStage} />
+                        </td>
+                        <td
+                          className={`hidden px-4 py-3 font-mono text-xs tabular-nums lg:table-cell ${
+                            review.overdue ? "text-terminal-amber" : "text-terminal-muted"
+                          }`}
+                        >
+                          {review.text}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          </div>
+          )}
+        </Panel>
 
-          {/* LIVE AUDIT STREAM */}
-          <div className="rounded-xl p-5 font-mono" style={{ backgroundColor: "#0f1012" }}>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse" />
-              <span className="text-[10px] uppercase tracking-[0.22em] text-terminal-green">
-                Live Audit Stream
-              </span>
-            </div>
-            <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
-              {data?.recentEvents.length ? (
-                data.recentEvents.map((e) => (
-                  <AuditLine key={e.id} event={e} />
-                ))
-              ) : (
-                <p className="text-xs text-white/60">No audit events yet. Activity will appear here.</p>
+        <div className="flex flex-col gap-4">
+          <Panel title="Compliance posture" action={<PanelLink href="/compliance">Open</PanelLink>} padded>
+            <div className="flex flex-col gap-4">
+              {(gov?.frameworks ?? Object.keys(FRAMEWORK_META).map((id) => ({ id, name: id, coverage: 0 }))).map(
+                (fw) => {
+                  const meta = FRAMEWORK_META[fw.id] ?? {
+                    short: fw.name,
+                    hint: "",
+                    text: "text-terminal-muted",
+                    bar: "bg-terminal-muted",
+                  };
+                  return (
+                    <div key={fw.id}>
+                      <div className="mb-2 flex items-baseline justify-between gap-2">
+                        <span className="text-sm font-medium text-terminal-text">
+                          {meta.short}
+                          {meta.hint && (
+                            <span className="ml-2 font-mono text-xs font-normal text-terminal-muted">
+                              {meta.hint}
+                            </span>
+                          )}
+                        </span>
+                        <span className={`font-mono text-sm font-bold tabular-nums ${meta.text}`}>
+                          {pending ? "—" : `${fw.coverage}%`}
+                        </span>
+                      </div>
+                      <div className="h-1.5 overflow-hidden rounded-full bg-terminal-gray/30">
+                        <div
+                          className={`h-full rounded-full ${meta.bar}`}
+                          style={{ width: `${Math.min(100, Math.max(0, fw.coverage))}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                },
               )}
             </div>
-          </div>
-        </div>
+          </Panel>
 
-        {/* ── Footer: plan + member since ──────────────────────── */}
-        {data && (
-          <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.18em] text-terminal-muted pt-2">
-            <span>Welcome back, {firstName} · Plan {data.stats.plan}</span>
-            {data.memberSince && (
-              <span>
-                Member since{" "}
-                {new Date(data.memberSince).toLocaleDateString("en-US", {
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
+          <RolePriorities
+            role={data?.occupationalRole ?? null}
+            stats={{
+              maturityScore: gov?.maturityScore ?? null,
+              nistCoverage,
+              auditEventsToday: gov?.auditEventsToday ?? null,
+              inventoryTotal: gov?.inventory.total ?? null,
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ── Recent Govi sessions + live audit trail ────────────── */}
+      <div className="grid items-start gap-4 lg:grid-cols-[1.9fr_1fr]">
+        <Panel
+          title="Recent Govi sessions"
+          action={
+            <button
+              onClick={exportCsv}
+              disabled={!data?.recentConversations.length}
+              className="inline-flex items-center gap-1 text-terminal-green hover:underline disabled:opacity-50"
+            >
+              <Download className="w-3 h-3" /> Export CSV
+            </button>
+          }
+        >
+          {pending ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="w-5 h-5 animate-spin text-terminal-muted" />
+            </div>
+          ) : data?.recentConversations.length === 0 ? (
+            <div className="px-6 py-12 text-center">
+              <MessageSquare className="mx-auto mb-3 h-10 w-10 text-terminal-muted" />
+              <p className="mb-4 text-sm text-terminal-muted">
+                No sessions yet. Start a conversation with the AI Advisor.
+              </p>
+              <Link href="/govi" className="btn-primary text-sm py-2">
+                Start your first session <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-terminal-border bg-terminal-gray/30 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                    <th className="px-4 py-2.5 font-semibold">Session</th>
+                    <th className="px-4 py-2.5 font-semibold">Risk rating</th>
+                    <th className="px-4 py-2.5 font-semibold hidden sm:table-cell">Updated</th>
+                    <th className="w-8 px-4 py-2.5" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.recentConversations.map((c) => {
+                    const risk = riskRating(c.riskLevel);
+                    return (
+                      <tr
+                        key={c.id}
+                        className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
+                      >
+                        <td className="px-4 py-3">
+                          <div className="max-w-[260px] truncate font-medium text-terminal-text">
+                            {c.title}
+                          </div>
+                          <div className="font-mono text-xs text-terminal-muted">
+                            #{c.id.slice(0, 8)} · {c.messageCount} messages
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={`inline-block rounded-full px-2.5 py-0.5 font-mono text-xs font-semibold ${risk.tone}`}
+                          >
+                            {risk.label}
+                          </span>
+                        </td>
+                        <td className="hidden px-4 py-3 font-mono text-xs text-terminal-muted sm:table-cell">
+                          {timeAgo(c.updatedAt)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <Link
+                            href={`/govi?c=${c.id}`}
+                            className="text-terminal-muted hover:text-terminal-green"
+                            aria-label={`Open session ${c.title}`}
+                          >
+                            <ArrowRight className="inline h-4 w-4" />
+                          </Link>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </Panel>
+
+        <Panel
+          title={
+            <span className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-terminal-green" aria-hidden="true" />
+              Live audit trail
+            </span>
+          }
+          action={<PanelLink href="/audit">Open</PanelLink>}
+          padded
+        >
+          <div className="max-h-72 space-y-3 overflow-y-auto pr-1">
+            {data?.recentEvents?.length ? (
+              data.recentEvents.map((e) => <AuditLine key={e.id} event={e} />)
+            ) : (
+              <p className="text-xs text-terminal-muted">
+                No audit events yet. Activity will appear here.
+              </p>
             )}
           </div>
-        )}
+        </Panel>
       </div>
-    </div>
+
+      {/* ── Footer strip ───────────────────────────────────────── */}
+      {data && (
+        <div className="flex flex-wrap items-center justify-between gap-2 pt-2 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+          <span>
+            Welcome back, {firstName} · Plan {data.stats.plan} ·{" "}
+            <span className={statusCopy.tone}>System {statusCopy.label}</span>
+          </span>
+          {data.memberSince && (
+            <span>
+              Member since{" "}
+              {new Date(data.memberSince).toLocaleDateString("en-US", {
+                month: "short",
+                year: "numeric",
+              })}
+            </span>
+          )}
+        </div>
+      )}
+    </AppPage>
   );
 }
 
 // ── Sub-components ──────────────────────────────────────────────────
-
-function TeamAvatars({ name }: { name: string }) {
-  const initial = name[0]?.toUpperCase() ?? "A";
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex -space-x-2">
-        <span className="w-7 h-7 rounded-full bg-terminal-green text-terminal-black flex items-center justify-center text-[11px] font-bold border-2 border-terminal-black">
-          {initial}
-        </span>
-        <span className="w-7 h-7 rounded-full bg-terminal-amber text-terminal-black flex items-center justify-center text-[11px] font-bold border-2 border-terminal-black">
-          A
-        </span>
-      </div>
-      <span className="text-[11px] text-terminal-muted">+4</span>
-    </div>
-  );
-}
-
-function SparkStatCard({
-  icon,
-  tint,
-  label,
-  value,
-  delta,
-  deltaTone,
-  sparkline,
-  sparkTone,
-}: {
-  icon: React.ReactNode;
-  tint: "green" | "amber";
-  label: string;
-  value: string;
-  delta: string;
-  deltaTone: string;
-  sparkline: number[];
-  sparkTone: "green" | "amber";
-}) {
-  const tintBg = tint === "green" ? "bg-terminal-green/15" : "bg-terminal-amber/15";
-  return (
-    <div className="rounded-xl border border-terminal-border bg-terminal-black p-5">
-      <div className="flex items-center justify-between mb-5">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${tintBg}`}>{icon}</div>
-        <span className={`text-[10px] uppercase tracking-[0.18em] ${deltaTone}`}>{delta}</span>
-      </div>
-      <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mb-1">{label}</div>
-      <div className="text-3xl font-bold text-terminal-text mb-4">{value}</div>
-      <Sparkline data={sparkline} tone={sparkTone} />
-    </div>
-  );
-}
-
-function Sparkline({ data, tone }: { data: number[]; tone: "green" | "amber" }) {
-  if (!data.length) {
-    return <div className="h-10 rounded-md bg-terminal-gray/50" />;
-  }
-  const max = Math.max(1, ...data);
-  const fill = tone === "green" ? "rgba(0, 204, 102, 0.2)" : "rgba(245, 158, 11, 0.2)";
-  const stroke = tone === "green" ? "#00cc66" : "#f59e0b";
-  const pts = data
-    .map((v, i) => `${(i / (data.length - 1)) * 100},${100 - (v / max) * 100}`)
-    .join(" ");
-  return (
-    <div className="h-10">
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-full h-full">
-        <polyline points={pts} fill="none" stroke={stroke} strokeWidth={2} vectorEffect="non-scaling-stroke" />
-        <polygon points={`0,100 ${pts} 100,100`} fill={fill} />
-      </svg>
-    </div>
-  );
-}
-
-function RiskChip({ label, value }: { label: string; value: number }) {
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-terminal-green/15 text-terminal-green text-[10px] uppercase tracking-[0.18em] font-semibold">
-      {label} ({value})
-    </span>
-  );
-}
-
-function QuickActionLink({
-  href,
-  icon,
-  title,
-  sub,
-}: {
-  href: string;
-  icon: React.ReactNode;
-  title: string;
-  sub: string;
-}) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-3 p-3 rounded-xl border border-terminal-border hover:border-terminal-green/40 transition-colors group"
-    >
-      <div className="w-9 h-9 rounded-xl bg-terminal-green/10 flex items-center justify-center">{icon}</div>
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-terminal-text">{title}</div>
-        <div className="text-[11px] text-terminal-muted truncate">{sub}</div>
-      </div>
-      <ArrowRight className="w-4 h-4 text-terminal-muted group-hover:text-terminal-green" />
-    </Link>
-  );
-}
-
-function FrameworkRow({ usage }: { usage: FrameworkUsage }) {
-  const barColor =
-    usage.tone === "green"
-      ? "bg-terminal-green"
-      : usage.tone === "amber"
-      ? "bg-terminal-amber"
-      : "bg-terminal-cyan";
-  return (
-    <div>
-      <div className="flex justify-between mb-1">
-        <span className="text-xs text-terminal-text">{usage.name}</span>
-        <span className="text-xs text-terminal-muted">{usage.percent}%</span>
-      </div>
-      <div className="h-1.5 rounded-full bg-terminal-gray overflow-hidden">
-        <div className={`h-full ${barColor}`} style={{ width: `${Math.max(2, usage.percent)}%` }} />
-      </div>
-    </div>
-  );
-}
-
-function FlowRow({ dotColor, title, detail }: { dotColor: string; title: string; detail: string }) {
-  return (
-    <div className="flex items-start gap-2.5 mb-4">
-      <span className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${dotColor}`} />
-      <div>
-        <div className="text-sm text-terminal-text">{title}</div>
-        <div className="text-[11px] text-terminal-muted mt-0.5">{detail}</div>
-      </div>
-    </div>
-  );
-}
 
 function AuditLine({ event }: { event: AuditEvent }) {
   const tone =
@@ -649,13 +523,11 @@ function AuditLine({ event }: { event: AuditEvent }) {
       ? "text-terminal-amber"
       : event.tone === "success"
       ? "text-terminal-green"
-      : "text-white/80";
+      : "text-terminal-text";
   return (
-    <div className="text-[11px] leading-relaxed flex gap-2">
-      <span className="text-white/40 shrink-0">[{formatClock(event.createdAt)}]</span>
-      <span className={tone}>
-        <span className="text-white/80">{event.category}</span>: {event.summary}
-      </span>
+    <div className="flex gap-2 font-mono text-xs leading-relaxed">
+      <span className="shrink-0 text-terminal-muted">[{formatClock(event.createdAt)}]</span>
+      <span className={tone}>{event.summary}</span>
     </div>
   );
 }

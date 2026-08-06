@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Users, Plus, Mail, Copy, Check, Trash2, Building2 } from "lucide-react";
 import { INVITE_ROLES, type InviteRole } from "@/lib/governanceEnums";
+import { AppPage, PageHeader } from "@/components/app";
 
 interface Org {
   id: string;
@@ -142,24 +143,17 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
   };
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-5xl mx-auto">
-        <header className="mb-8">
-          <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-            Workspace / Team
-          </span>
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-            Team & Workspaces
-          </h1>
-          <p className="text-terminal-muted font-sans max-w-2xl">
-            Invite colleagues to collaborate on your AI governance program with role-based access.
-          </p>
-        </header>
+    <AppPage width="max-w-5xl">
+      <PageHeader
+        eyebrow="Workspace / Team"
+        title="Team & Workspaces"
+        description="Invite colleagues to collaborate on your AI governance program with role-based access."
+      />
 
         {loading ? (
           <p className="font-mono text-sm text-terminal-muted">Loading…</p>
         ) : orgs.length === 0 ? (
-          <div className="glass-card rounded-xl p-8 max-w-lg">
+          <div className="glass rounded-xl p-8 max-w-lg">
             <Building2 className="w-8 h-8 text-terminal-green mb-3" />
             <h2 className="font-mono text-lg text-terminal-text mb-2">Create your workspace</h2>
             {canCreateOrg ? (
@@ -200,13 +194,14 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
                 <button
                   key={o.id}
                   onClick={() => setActiveId(o.id)}
-                  className={`w-full glass-card rounded-xl p-3 text-left transition-colors ${
-                    o.id === activeId ? "border-terminal-green/50" : ""
+                  aria-pressed={o.id === activeId}
+                  className={`w-full glass rounded-xl p-3 text-left transition-colors duration-300 ${
+                    o.id === activeId ? "border-terminal-green/50" : "hover:border-terminal-border"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-sm text-terminal-text">{o.name}</span>
-                    <span className="text-[10px] uppercase tracking-wider text-terminal-green">{o.role}</span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-terminal-green">{o.role}</span>
                   </div>
                   <div className="flex items-center gap-1 text-xs text-terminal-muted mt-1">
                     <Users className="w-3 h-3" /> {o.memberCount} · {o.plan}
@@ -218,7 +213,7 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
             {/* Members + invitations */}
             <div className="lg:col-span-2 space-y-4">
               {canManage && (
-                <div className="glass-card rounded-xl p-4">
+                <div className="glass rounded-xl p-4">
                   <div className="flex items-center gap-2 mb-3">
                     <Mail className="w-4 h-4 text-terminal-green" />
                     <h2 className="font-mono text-sm text-terminal-text">Invite a colleague</h2>
@@ -258,7 +253,7 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
 
               {/* Pending invitations */}
               {canManage && invites.length > 0 && (
-                <div className="glass-card rounded-xl p-4">
+                <div className="glass rounded-xl p-4">
                   <h2 className="font-mono text-xs uppercase tracking-wider text-terminal-muted mb-3">
                     Pending invitations
                   </h2>
@@ -267,7 +262,7 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
                       <li key={i.id} className="flex items-center justify-between text-sm">
                         <span className="font-mono text-terminal-text">{i.email}</span>
                         <div className="flex items-center gap-3">
-                          <span className="text-[10px] uppercase tracking-wider text-terminal-muted">{i.role}</span>
+                          <span className="font-mono text-xs uppercase tracking-wider text-terminal-muted">{i.role}</span>
                           <button onClick={() => revoke(i.id)} className="text-terminal-muted hover:text-terminal-red" aria-label="Revoke">
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -279,7 +274,7 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
               )}
 
               {/* Members */}
-              <div className="glass-card rounded-xl p-4">
+              <div className="glass rounded-xl p-4">
                 <h2 className="font-mono text-xs uppercase tracking-wider text-terminal-muted mb-3">
                   Members ({members.length})
                 </h2>
@@ -292,7 +287,7 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
                         </div>
                         {m.user.name && <div className="text-xs text-terminal-muted">{m.user.email}</div>}
                       </div>
-                      <span className="text-[10px] uppercase tracking-wider text-terminal-green">{m.role}</span>
+                      <span className="font-mono text-xs uppercase tracking-wider text-terminal-green">{m.role}</span>
                     </li>
                   ))}
                 </ul>
@@ -300,7 +295,6 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
             </div>
           </div>
         )}
-      </div>
-    </div>
+    </AppPage>
   );
 }

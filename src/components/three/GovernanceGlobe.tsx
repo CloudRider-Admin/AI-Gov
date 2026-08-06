@@ -10,6 +10,10 @@
  * jurisdiction facing the viewer drives the spotlight card, and the quick-jump
  * dots smoothly fly the globe to a jurisdiction.
  *
+ * The globe auto-rotates so each jurisdiction's spotlight card cycles into view.
+ * Rotation pauses on any user interaction (drag / quick-jump) and resumes after
+ * a short grace period. Honours `prefers-reduced-motion` and pauses off-screen.
+ *
  * Themed to the GovSecure dark/neon palette.
  *
  * Geo data: /public/geo/{countries-110m,states-10m}.json (world-atlas / us-atlas).
@@ -47,6 +51,11 @@ import {
 // ─── Geometry helpers ───────────────────────────────────────────────────────
 
 const SPHERE = { type: "Sphere" } as const;
+
+/** Auto-rotation speed (degrees of longitude per second) — gentle editorial spin. */
+const AUTO_ROTATE_DEG_PER_SEC = 6;
+/** Pause auto-rotation for this long after the user interacts, then resume. */
+const INTERACTION_RESUME_MS = 1500;
 
 interface Dot {
   lon: number;
@@ -119,6 +128,9 @@ function GlobeCanvas({
   const activeRef = useRef(0);
   const lastFrontRef = useRef(-1);
   const animRef = useRef<number | null>(null);
+  const spinRef = useRef<number | null>(null);
+  const seekingRef = useRef(false);
+  const onScreenRef = useRef(true);
 
   seekRef.current = seek;
 
@@ -309,6 +321,12 @@ function GlobeCanvas({
       }
     }
 
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Timestamp (performance.now clock) before which auto-rotation stays paused.
+    let interactionResumeAt = 0;
+
     // ── versor trackball drag ──
     let v0: [number, number, number];
     let q0: [number, number, number, number];
@@ -322,6 +340,7 @@ function GlobeCanvas({
     const onPointerDown = (e: PointerEvent) => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
       seekRef.current = { ...seekRef.current, nonce: -1 }; // cancel any seek
+      seekingRef.current = false;
       draggingRef.current = true;
       const p = projection.invert!(toPoint(e));
       if (!p) return;
@@ -341,6 +360,7 @@ function GlobeCanvas({
     };
     const onPointerUp = (e: PointerEvent) => {
       draggingRef.current = false;
+      interactionResumeAt = performance.now() + INTERACTION_RESUME_MS;
       try {
         canvas!.releasePointerCapture(e.pointerId);
       } catch {
@@ -372,11 +392,51 @@ function GlobeCanvas({
         const e = t * (2 - t); // ease-out
         projection.rotate(interp(e));
         render();
-        if (t < 1 && !draggingRef.current) animRef.current = requestAnimationFrame(step);
+        if (t < 1 && !draggingRef.current) {
+          animRef.current = requestAnimationFrame(step);
+        } else {
+          // Seek finished (or was interrupted) — hold, then resume auto-spin.
+          seekingRef.current = false;
+          interactionResumeAt = performance.now() + INTERACTION_RESUME_MS;
+        }
       };
+      seekingRef.current = true;
       if (animRef.current) cancelAnimationFrame(animRef.current);
       animRef.current = requestAnimationFrame(step);
     }, 80);
+
+    // ── Auto-rotation loop ──
+    // Runs continuously; skips the work while the user is interacting, during a
+    // quick-jump seek, within the post-interaction grace period, or off-screen.
+    let spinLast = 0;
+    const spinFrame = (ts: number) => {
+      spinRef.current = requestAnimationFrame(spinFrame);
+      const dt = Math.min(ts - spinLast, 64); // clamp first frame / tab-return jumps
+      spinLast = ts;
+      if (
+        draggingRef.current ||
+        seekingRef.current ||
+        !onScreenRef.current ||
+        ts < interactionResumeAt
+      ) {
+        return;
+      }
+      const r = projection.rotate();
+      projection.rotate([r[0] + (AUTO_ROTATE_DEG_PER_SEC * dt) / 1000, r[1], r[2] ?? 0]);
+      render();
+    };
+    if (!prefersReducedMotion) {
+      spinRef.current = requestAnimationFrame(spinFrame);
+    }
+
+    // Pause the spin (skip render work) whenever the globe is scrolled off-screen.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreenRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.05 },
+    );
+    io.observe(canvas);
 
     return () => {
       canvas.removeEventListener("pointerdown", onPointerDown);
@@ -385,7 +445,9 @@ function GlobeCanvas({
       canvas.removeEventListener("pointercancel", onPointerUp);
       window.removeEventListener("resize", resize);
       clearInterval(seekPoll);
+      io.disconnect();
       if (animRef.current) cancelAnimationFrame(animRef.current);
+      if (spinRef.current) cancelAnimationFrame(spinRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);

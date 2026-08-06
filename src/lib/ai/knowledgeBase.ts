@@ -23,6 +23,7 @@ import {
   GOVSECURE_90_DAY_PHASES,
   GOVSECURE_POLICY_SUITE,
 } from '@/data/govsecureKnowledge';
+import { CORE_EVALUATION_PARAMETERS, GOVERNANCE_GATES } from '@/data/coreEvaluationParameters';
 
 // Generate KnowledgeDocuments from sector guidance
 const SECTOR_DOCUMENTS: KnowledgeDocument[] = SECTOR_GUIDANCE.map(sector => ({
@@ -349,12 +350,70 @@ const GOVSECURE_FALLBACK_DOCUMENTS: KnowledgeDocument[] = [
   },
 ];
 
-/** All knowledge documents: static governance + sector guidance + emerging regulations + GovSecure fallbacks */
+// GovSecure governance gates + Core Evaluation Parameters (Gates 1–3), so Govi
+// can walk users through intake, evaluation & review, and approval & registry.
+const GATE_DOCUMENTS: KnowledgeDocument[] = [
+  {
+    id: 'govsecure-governance-gates',
+    title: 'GovSecure Governance Gates — Intake, Evaluation & Review, Approval & Registry',
+    content:
+      'GovSecure moves every AI system, model, agent, and use-case through three governance gates:\n\n' +
+      GOVERNANCE_GATES.map(
+        (g) =>
+          `GATE ${g.gate} — ${g.name}\n${g.description}\nExit criteria:\n` +
+          g.exitCriteria.map((c) => `- ${c}`).join('\n'),
+      ).join('\n\n') +
+      '\n\nApproval statuses at Gate 3 are Approved, Pending, or Rejected, recorded with the ' +
+      'approver and date. Approval only applies to medium (moderate) and high risk entries; ' +
+      'low-risk entries do not require approval. The gates are operated from the AI System ' +
+      'Register (Inventory page), where each entry has a Governance Gates panel.',
+    category: 'framework',
+    tags: ['GovSecure', 'gates', 'intake', 'evaluation', 'review', 'approval', 'registry', 'evidence report'],
+    source: 'GovSecure Governance Gates v1.0',
+    lastUpdated: '2026-08-01',
+  },
+  {
+    id: 'govsecure-core-evaluation-parameters',
+    title: 'GovSecure Core Evaluation Parameters — Gate 2 Baseline Standard',
+    content:
+      'The Core Evaluation Parameters are the defined baseline standard of what is expected of a ' +
+      'standard model. At Gate 2 (Evaluation & Review), evaluation results collected from data ' +
+      'science, engineering, and red-team (curated from the AI platform in use) are reviewed ' +
+      'against these baselines and compiled into an evidence report:\n\n' +
+      CORE_EVALUATION_PARAMETERS.map(
+        (p) =>
+          `- ${p.reviewArea}${p.critical ? ' (critical)' : ''}\n  Parameters to examine: ${p.parameters}\n  Governance baseline: ${p.baseline}`,
+      ).join('\n') +
+      '\n\nA below-baseline result in a critical area (Safety, Security, Privacy, Agent behavior) ' +
+      'fails the evidence report; other gaps produce a conditional pass until remediated. A pass ' +
+      'across all areas clears the entry for Gate 3 approval.',
+    category: 'framework',
+    tags: [
+      'GovSecure',
+      'core evaluation parameters',
+      'baseline',
+      'red team',
+      'hallucination',
+      'groundedness',
+      'prompt injection',
+      'fairness',
+      'privacy',
+      'robustness',
+      'agent behavior',
+      'human oversight',
+    ],
+    source: 'GovSecure Core Evaluation Parameters v1.0',
+    lastUpdated: '2026-08-01',
+  },
+];
+
+/** All knowledge documents: static governance + sector guidance + emerging regulations + GovSecure fallbacks + governance gates */
 export const ALL_KNOWLEDGE_DOCUMENTS: KnowledgeDocument[] = [
   ...GOVERNANCE_KNOWLEDGE_BASE,
   ...SECTOR_DOCUMENTS,
   ...REGULATION_DOCUMENTS,
   ...GOVSECURE_FALLBACK_DOCUMENTS,
+  ...GATE_DOCUMENTS,
 ];
 
 export { GOVSECURE_FALLBACK_DOCUMENTS };

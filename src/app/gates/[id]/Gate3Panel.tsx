@@ -105,8 +105,8 @@ export function Gate3Panel({
             Approval status
           </dt>
           <dd>
-            <Badge className={APPROVAL_STYLES[system.approvalStatus]}>
-              {APPROVAL_LABELS[system.approvalStatus]}
+            <Badge className={APPROVAL_STYLES[system.approvalStatus ?? 'not-required']}>
+              {APPROVAL_LABELS[system.approvalStatus ?? 'not-required']}
             </Badge>
           </dd>
         </div>

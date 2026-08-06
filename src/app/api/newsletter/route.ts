@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { Resend } from 'resend';
 import { prisma } from '@/lib/prisma';
+import { checkIpRateLimit } from '@/lib/rate-limit';
 
 const schema = z.object({
   email: z.string().email(),
@@ -9,6 +10,15 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
+    // Abuse throttle: 10 subscribe attempts per IP per hour
+    const rate = await checkIpRateLimit(request, 'newsletter', 10, 60);
+    if (!rate.allowed) {
+      return NextResponse.json(
+        { error: 'Too many attempts. Please try again later.' },
+        { status: 429, headers: { 'Retry-After': String(rate.retryAfter ?? 3600) } },
+      );
+    }
+
     const body = await request.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) {

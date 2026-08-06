@@ -4,5 +4,11 @@
     "env": {
       "NODE_OPTIONS": "--max-old-space-size=8192"
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/cleanup",
+      "schedule": "0 3 * * *"
+    }
+  ]
 }

@@ -12,11 +12,18 @@ import {
 import { evaluateGate1, evaluateGate2, evaluateGate3 } from '../gates';
 
 describe('risk severity mapping', () => {
-  it('maps the EU AI Act categories onto severity bands', () => {
-    expect(riskSeverity('minimal')).toBe('low');
-    expect(riskSeverity('limited')).toBe('medium');
+  it('maps the NIST impact tiers onto severity bands', () => {
+    expect(riskSeverity('low')).toBe('low');
+    expect(riskSeverity('moderate')).toBe('medium');
     expect(riskSeverity('high')).toBe('high');
-    expect(riskSeverity('prohibited')).toBe('critical');
+  });
+
+  // 20260704_risk_tiers_nist rewrote every riskCategory from the EU AI Act
+  // tiers to the three NIST tiers, collapsing 'prohibited' into 'high'. Rows
+  // written before it should still be tiered sensibly rather than crash.
+  it('treats retired EU AI Act categories as unrecognized', () => {
+    expect(riskSeverity('prohibited')).toBe('medium');
+    expect(riskSeverity('minimal')).toBe('medium');
   });
 
   it('defaults an unrecognized category to medium rather than waving it through', () => {
@@ -32,25 +39,23 @@ describe('risk severity mapping', () => {
 
 describe('requiresApproval', () => {
   it('requires approval at medium risk and above', () => {
-    expect(requiresApproval('limited')).toBe(true);
+    expect(requiresApproval('moderate')).toBe(true);
     expect(requiresApproval('high')).toBe(true);
-    expect(requiresApproval('prohibited')).toBe(true);
   });
 
   it('does not require approval below medium risk', () => {
-    expect(requiresApproval('minimal')).toBe(false);
+    expect(requiresApproval('low')).toBe(false);
   });
 });
 
 describe('approvalValidityDays', () => {
   it('shortens the leash as risk rises', () => {
-    expect(approvalValidityDays('prohibited')).toBe(90);
     expect(approvalValidityDays('high')).toBe(180);
-    expect(approvalValidityDays('limited')).toBe(365);
+    expect(approvalValidityDays('moderate')).toBe(365);
   });
 
   it('has no expiry where no approval was required', () => {
-    expect(approvalValidityDays('minimal')).toBeNull();
+    expect(approvalValidityDays('low')).toBeNull();
   });
 });
 
@@ -87,7 +92,7 @@ const baseSystem = {
   entityKind: 'use-case',
   purpose: 'Answer customer questions',
   businessOwner: 'A. Owner',
-  riskCategory: 'limited',
+  riskCategory: 'moderate',
   dataTypes: ['PII'],
   approvalStatus: 'pending',
   approvedByName: null,
@@ -174,7 +179,7 @@ describe('evaluateGate2', () => {
 
 describe('evaluateGate3', () => {
   it('passes without a decision below the approval threshold', () => {
-    const result = evaluateGate3({ ...baseSystem, riskCategory: 'minimal' }, true, 0);
+    const result = evaluateGate3({ ...baseSystem, riskCategory: 'low' }, true, 0);
     expect(result.status).toBe('passed');
     expect(result.summary).toContain('No approval decision required');
   });

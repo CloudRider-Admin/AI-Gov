@@ -35,7 +35,7 @@ type SystemRow = {
   businessOwner: string | null;
   riskCategory: string;
   dataTypes: string[];
-  approvalStatus: string;
+  approvalStatus: string | null;
   approvedByName: string | null;
   approvedAt: Date | null;
 };
@@ -365,7 +365,7 @@ export interface GateBoardEntry {
   entityKind: string;
   riskCategory: string;
   lifecycleStage: string;
-  approvalStatus: string;
+  approvalStatus: string | null;
   approvedByName: string | null;
   approvedAt: string | null;
   /** The gate the entity is currently sitting at (1–3), or 4 once all have passed. */

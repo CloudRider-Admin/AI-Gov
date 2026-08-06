@@ -6,6 +6,7 @@ import {
   RISK_CATEGORIES,
   LIFECYCLE_STAGES,
   ENTITY_KINDS,
+  ENTITY_TYPES,
   type EntityKind,
 } from '@/lib/aiSystems';
 
@@ -39,6 +40,9 @@ export async function POST(request: NextRequest) {
   }
   if (body.entityKind && !ENTITY_KINDS.includes(body.entityKind)) {
     return NextResponse.json({ error: 'Invalid entity kind' }, { status: 400 });
+  }
+  if (body.entityType && !ENTITY_TYPES.includes(body.entityType)) {
+    return NextResponse.json({ error: 'Invalid entity type' }, { status: 400 });
   }
 
   const system = await createAiSystem(session.user.id, body);

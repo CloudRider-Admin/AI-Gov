@@ -11,6 +11,7 @@ interface StreamEntry {
   content: string;
   complete: boolean;
   conversationId?: string;
+  userId?: string;
   sources?: string[];
   createdAt: number;
 }
@@ -28,7 +29,7 @@ export class StreamBuffer {
   /**
    * Create a new stream entry.
    */
-  create(streamId: string, conversationId?: string): void {
+  create(streamId: string, conversationId?: string, userId?: string): void {
     this.evictExpired();
 
     // LRU eviction if at capacity
@@ -43,6 +44,7 @@ export class StreamBuffer {
       content: '',
       complete: false,
       conversationId,
+      userId,
       createdAt: Date.now(),
     });
   }
@@ -110,6 +112,14 @@ export class StreamBuffer {
    */
   getConversationId(streamId: string): string | undefined {
     return this.buffer.get(streamId)?.conversationId;
+  }
+
+  /**
+   * Get the owning user ID for a stream. Used to enforce that only the user
+   * who created a stream may resume it.
+   */
+  getUserId(streamId: string): string | undefined {
+    return this.buffer.get(streamId)?.userId;
   }
 
   /**

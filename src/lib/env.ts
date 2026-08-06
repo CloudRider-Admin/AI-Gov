@@ -35,6 +35,9 @@ const envSchema = z.object({
     STRIPE_TEAM_MONTHLY_PRICE_ID: z.string().optional(),
     STRIPE_TEAM_ANNUAL_PRICE_ID: z.string().optional(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+
+    // Cron (optional — scheduled cleanup endpoint is unreachable without it)
+    CRON_SECRET: z.string().optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

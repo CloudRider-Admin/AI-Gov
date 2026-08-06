@@ -23,6 +23,7 @@ import {
   getAllPolicies,
   getDocumentBySubType,
 } from '@/data/govsecureKnowledge';
+import { CORE_EVALUATION_PARAMETERS, GOVERNANCE_GATES } from '@/data/coreEvaluationParameters';
 import type { ExtractedDocument } from '@/types/govsecure';
 
 interface SeedEntry {
@@ -704,6 +705,45 @@ function buildGovSecureFrameworkEntries(): SeedEntry[] {
   return entries;
 }
 
+// ─── GovSecure Governance Gates (Gates 1–3 + Core Evaluation Parameters) ────
+
+function buildGovernanceGateEntries(): SeedEntry[] {
+  const entries: SeedEntry[] = [];
+
+  entries.push({
+    title: 'GovSecure Governance Gates — Intake, Evaluation & Review, Approval & Registry',
+    content:
+      'GovSecure moves every AI system, model, agent, and use-case through three governance gates operated from the AI System Register:\n\n' +
+      GOVERNANCE_GATES.map(
+        (g) =>
+          `Gate ${g.gate} — ${g.name}: ${g.description}\nExit criteria: ${g.exitCriteria.join('; ')}`,
+      ).join('\n\n') +
+      '\n\nGate 3 approval statuses are Approved, Pending, or Rejected, recorded with approver and date. Approval only applies to medium (moderate) and high risk entries.',
+    category: 'framework',
+    tags: ['govsecure', 'governance gates', 'intake', 'evaluation', 'approval', 'registry'],
+    source: 'GovSecure Governance Gates v1.0',
+    sourceType: 'govsecure',
+  });
+
+  for (const p of CORE_EVALUATION_PARAMETERS) {
+    entries.push({
+      title: `Core Evaluation Parameters — ${p.reviewArea}`,
+      content:
+        `${p.reviewArea} is one of the twelve Core Evaluation Parameters review areas — the defined baseline standard of what is expected of a standard model, applied at Gate 2 (Evaluation & Review).\n\n` +
+        `Parameters to examine: ${p.parameters}\n` +
+        `Example governance baseline: ${p.baseline}\n` +
+        `Critical area: ${p.critical ? 'yes — a below-baseline result fails the evidence report and blocks Gate 3 approval until remediated' : 'no — a below-baseline result produces a conditional pass pending remediation'}.\n\n` +
+        'Evaluation evidence for this area is collected from data science, engineering, and red-team results curated from the AI platform in use, then reviewed into an evidence report.',
+      category: 'framework',
+      tags: ['govsecure', 'core evaluation parameters', 'gate 2', 'evaluation', p.id],
+      source: 'GovSecure Core Evaluation Parameters v1.0',
+      sourceType: 'govsecure',
+    });
+  }
+
+  return entries;
+}
+
 // ─── Export All Seed Data ────────────────────────────────────────────────────
 
 export async function getAllSeedEntries(): Promise<SeedEntry[]> {
@@ -721,6 +761,8 @@ export async function getAllSeedEntries(): Promise<SeedEntry[]> {
     ...buildGovSecurePolicyEntries(),
     ...buildGovSecureChecklistEntries(),
     ...buildGovSecureFrameworkEntries(),
+    // Governance gates + Core Evaluation Parameters (Gates 1–3).
+    ...buildGovernanceGateEntries(),
   ];
 
   return entries;
