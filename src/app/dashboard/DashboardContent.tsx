@@ -21,7 +21,10 @@ import {
   KpiCard,
   RiskPill,
   StagePill,
+  SeverityPill,
+  severityLabel,
   formatReview,
+  timeAgo,
 } from "@/components/app";
 import { RolePriorities } from "./RolePriorities";
 
@@ -90,32 +93,12 @@ const FRAMEWORK_META: Record<string, { short: string; hint: string; text: string
   "EU-AI-Act": { short: "EU AI Act", hint: "if you operate in the EU", text: "text-terminal-muted", bar: "bg-terminal-muted" },
 };
 
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const secs = Math.floor(diff / 1000);
-  if (secs < 45) return "just now";
-  const mins = Math.floor(secs / 60);
-  if (mins < 60) return `${mins} min ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs} hour${hrs === 1 ? "" : "s"} ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
-}
-
 function formatClock(iso: string): string {
   const d = new Date(iso);
   return `${d.getHours().toString().padStart(2, "0")}:${d
     .getMinutes()
     .toString()
     .padStart(2, "0")}:${d.getSeconds().toString().padStart(2, "0")}`;
-}
-
-function riskRating(level: string | null): { label: string; tone: string } {
-  const v = (level ?? "").toLowerCase();
-  if (v === "high" || v === "critical") return { label: "CRITICAL", tone: "bg-terminal-red/15 text-terminal-red" };
-  if (v === "medium" || v === "moderate") return { label: "MEDIUM", tone: "bg-terminal-amber/15 text-terminal-amber" };
-  if (v) return { label: "LOW", tone: "bg-terminal-green/15 text-terminal-green" };
-  return { label: "NOMINAL", tone: "bg-terminal-gray text-terminal-muted" };
 }
 
 export function DashboardContent() {
@@ -170,7 +153,7 @@ export function DashboardContent() {
         c.id.slice(0, 8),
         c.title.replace(/"/g, '""'),
         String(c.messageCount),
-        riskRating(c.riskLevel).label,
+        severityLabel(c.riskLevel),
         c.updatedAt,
       ]),
     ];
@@ -426,43 +409,36 @@ export function DashboardContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.recentConversations.map((c) => {
-                    const risk = riskRating(c.riskLevel);
-                    return (
-                      <tr
-                        key={c.id}
-                        className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
-                      >
-                        <td className="px-4 py-3">
-                          <div className="max-w-[260px] truncate font-medium text-terminal-text">
-                            {c.title}
-                          </div>
-                          <div className="font-mono text-xs text-terminal-muted">
-                            #{c.id.slice(0, 8)} · {c.messageCount} messages
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <span
-                            className={`inline-block rounded-full px-2.5 py-0.5 font-mono text-xs font-semibold ${risk.tone}`}
-                          >
-                            {risk.label}
-                          </span>
-                        </td>
-                        <td className="hidden px-4 py-3 font-mono text-xs text-terminal-muted sm:table-cell">
-                          {timeAgo(c.updatedAt)}
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          <Link
-                            href={`/govi?c=${c.id}`}
-                            className="text-terminal-muted hover:text-terminal-green"
-                            aria-label={`Open session ${c.title}`}
-                          >
-                            <ArrowRight className="inline h-4 w-4" />
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {data?.recentConversations.map((c) => (
+                    <tr
+                      key={c.id}
+                      className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
+                    >
+                      <td className="px-4 py-3">
+                        <div className="max-w-[260px] truncate font-medium text-terminal-text">
+                          {c.title}
+                        </div>
+                        <div className="font-mono text-xs text-terminal-muted">
+                          #{c.id.slice(0, 8)} · {c.messageCount} messages
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <SeverityPill level={c.riskLevel} />
+                      </td>
+                      <td className="hidden px-4 py-3 font-mono text-xs text-terminal-muted sm:table-cell">
+                        {timeAgo(c.updatedAt)}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <Link
+                          href={`/govi?c=${c.id}`}
+                          className="text-terminal-muted hover:text-terminal-green"
+                          aria-label={`Open session ${c.title}`}
+                        >
+                          <ArrowRight className="inline h-4 w-4" />
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>

@@ -6,12 +6,19 @@ import {
   BarChart3,
   BookOpen,
   ArrowRight,
-  ShieldCheck,
-  Zap,
-  Activity,
   RefreshCw,
   AlertTriangle,
 } from 'lucide-react';
+import {
+  AppPage,
+  PageHeader,
+  Panel,
+  KpiCard,
+  formatCompact,
+  formatDelta,
+  deltaTone,
+  timeAgo,
+} from '@/components/app';
 
 interface AdminOverview {
   systemStatus: 'operational' | 'degraded' | 'down';
@@ -35,27 +42,16 @@ interface AdminOverview {
 
 const POLL_INTERVAL_MS = 60_000;
 
-function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return String(n);
-}
-
-function timeAgo(iso: string | null): string {
-  if (!iso) return 'never';
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
-}
-
 const STATUS_COPY: Record<AdminOverview['systemStatus'], { label: string; tone: string; dot: string }> = {
-  operational: { label: 'SYSTEM ACTIVE', tone: 'bg-terminal-green/15 text-terminal-green', dot: 'bg-terminal-green' },
-  degraded:    { label: 'SYSTEM DEGRADED', tone: 'bg-terminal-amber/15 text-terminal-amber', dot: 'bg-terminal-amber' },
-  down:        { label: 'SYSTEM DOWN', tone: 'bg-terminal-red/15 text-terminal-red', dot: 'bg-terminal-red' },
+  operational: { label: 'System active', tone: 'bg-terminal-green/15 text-terminal-green', dot: 'bg-terminal-green' },
+  degraded:    { label: 'System degraded', tone: 'bg-terminal-amber/15 text-terminal-amber', dot: 'bg-terminal-amber' },
+  down:        { label: 'System down', tone: 'bg-terminal-red/15 text-terminal-red', dot: 'bg-terminal-red' },
+};
+
+const LATENCY_TONE: Record<AdminOverview['latency']['verdict'], 'green' | 'amber' | 'red'> = {
+  Optimal: 'green',
+  Degraded: 'amber',
+  Slow: 'red',
 };
 
 export default function AdminIndexPage() {
@@ -88,307 +84,229 @@ export default function AdminIndexPage() {
   }, [fetchOverview]);
 
   const status = STATUS_COPY[overview?.systemStatus ?? 'operational'];
-  const lastRefreshed = overview?.generatedAt ? timeAgo(overview.generatedAt) : null;
+  const pending = loading && !overview;
+  const dash = (v: string) => (pending ? '—' : v);
 
   return (
-    <div className="p-6 md:p-10 lg:p-12 max-w-6xl mx-auto space-y-10">
-      {/* ── Status pill + refresh ──────────────────────────────────── */}
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div
-          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full font-mono text-xs ${status.tone}`}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-        >
-          <span
-            className={`w-1.5 h-1.5 rounded-full ${status.dot} ${
-              overview?.systemStatus === 'operational' ? 'animate-pulse' : ''
-            }`}
-          />
-          {status.label}
-        </div>
-
-        <button
-          onClick={() => fetchOverview()}
-          disabled={refreshing}
-          className="inline-flex items-center gap-2 rounded-md border border-terminal-border px-3 py-1.5 font-mono text-xs text-terminal-muted hover:text-terminal-text hover:border-terminal-green/50 transition-colors disabled:opacity-50"
-          aria-label="Refresh overview"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-          {lastRefreshed ? `Updated ${lastRefreshed}` : 'Refresh'}
-        </button>
-      </div>
+    <AppPage>
+      <PageHeader
+        eyebrow="Platform / Admin"
+        title="Admin panel"
+        description="Platform health, knowledge-base state, and usage telemetry for the GovSecure deployment."
+        actions={
+          <>
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-mono text-xs ${status.tone}`}
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${status.dot} ${
+                  overview?.systemStatus === 'operational' ? 'animate-pulse' : ''
+                }`}
+                aria-hidden="true"
+              />
+              {status.label}
+            </span>
+            <button
+              onClick={() => fetchOverview()}
+              disabled={refreshing}
+              className="btn-secondary py-2 text-sm disabled:opacity-50"
+              aria-label="Refresh overview"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              {overview ? `Updated ${timeAgo(overview.generatedAt)}` : 'Refresh'}
+            </button>
+          </>
+        }
+      />
 
       {error && (
-        <div className="flex items-center gap-2 rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-3 py-2 text-xs text-terminal-red">
-          <AlertTriangle className="h-3.5 w-3.5" />
-          {error}
-          <button onClick={() => fetchOverview()} className="ml-auto underline">
+        <div className="flex items-center justify-between rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-4 py-3 text-sm text-terminal-red">
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" /> {error}
+          </span>
+          <button onClick={() => fetchOverview()} className="text-xs underline">
             Retry
           </button>
         </div>
       )}
 
-      {/* ── Title + subtitle ───────────────────────────────────────── */}
-      <div className="max-w-2xl">
-        <h1 className="font-mono text-4xl md:text-5xl font-bold text-terminal-text tracking-tight mb-3">
-          Admin Panel
-        </h1>
-        <p className="font-sans text-base text-terminal-muted leading-relaxed">
-          Manage your GovSecure platform settings and monitor system health.
-          Centralized control for AI governance and analytics.
-        </p>
+      {/* ── KPI row ────────────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <KpiCard
+          tone="cyan"
+          label="Embedding coverage"
+          value={
+            pending ? (
+              '—'
+            ) : (
+              <>
+                {overview?.compliance.score ?? 0}
+                <span className="text-base text-terminal-muted">%</span>
+              </>
+            )
+          }
+          delta={overview ? formatDelta(overview.compliance.deltaPct) : undefined}
+          deltaTone={deltaTone(overview?.compliance.deltaPct)}
+          barPercent={overview?.compliance.score ?? 0}
+          hint="Active KB entries with embeddings"
+        />
+        <KpiCard
+          tone={overview && overview.knowledge.pending > 0 ? 'amber' : 'green'}
+          label="Awaiting embedding"
+          value={dash(String(overview?.knowledge.pending ?? 0))}
+          delta={overview ? `of ${formatCompact(overview.knowledge.total)}` : undefined}
+          deltaTone="muted"
+          hint="Entries Govi cannot retrieve yet"
+        />
+        <KpiCard
+          tone="green"
+          label="Active sessions"
+          value={dash(String(overview?.sessions.activeNow ?? 0))}
+          delta={overview && overview.sessions.activeNow > 0 ? 'live' : undefined}
+          hint="Distinct users in the last 15 min"
+        />
+        <KpiCard
+          tone={overview && overview.errorRate24h > 5 ? 'red' : 'muted'}
+          label="Error rate 24h"
+          value={
+            pending ? (
+              '—'
+            ) : (
+              <>
+                {overview?.errorRate24h ?? 0}
+                <span className="text-base text-terminal-muted">%</span>
+              </>
+            )
+          }
+          hint="Share of logged events that failed"
+        />
       </div>
 
-      {/* ── Feature cards ──────────────────────────────────────────── */}
-      <div className="grid md:grid-cols-2 gap-5">
-        <FeatureCard
+      {/* ── Section links ──────────────────────────────────────────── */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <SectionCard
           href="/admin/analytics"
           icon={BarChart3}
-          iconTint="green"
-          title="Analytics Dashboard"
-          description="Monitor platform usage metrics, user engagement patterns, and AI processing throughput across your organization."
-          footer={
-            <ContributorsRow
-              contributors={overview?.users.contributorsLast7Days}
-              activeToday={overview?.users.activeToday}
-              loading={loading}
-            />
-          }
+          title="Analytics"
+          description="Platform usage, AI throughput, and resource consumption across the deployment."
+          stats={[
+            { label: 'active today', value: dash(String(overview?.users.activeToday ?? 0)) },
+            { label: 'contributors 7d', value: dash(String(overview?.users.contributorsLast7Days ?? 0)) },
+            { label: 'total users', value: dash(formatCompact(overview?.users.total ?? 0)) },
+          ]}
         />
-        <FeatureCard
+        <SectionCard
           href="/admin/knowledge"
           icon={BookOpen}
-          iconTint="neutral"
-          title="Knowledge Base"
-          description="Manage governance knowledge entries, update regulatory frameworks, and curate documentation for system guidance."
-          footer={
-            <MetaRow
-              total={overview?.knowledge.total}
-              lastUpdatedAt={overview?.knowledge.lastUpdatedAt ?? null}
-              loading={loading}
-            />
-          }
+          title="Knowledge base"
+          description="Curate the governance entries and regulatory frameworks Govi retrieves from."
+          stats={[
+            { label: 'entries', value: dash(formatCompact(overview?.knowledge.total ?? 0)) },
+            { label: 'embedded', value: dash(formatCompact(overview?.knowledge.embedded ?? 0)) },
+            {
+              label: 'last change',
+              value: overview ? timeAgo(overview.knowledge.lastUpdatedAt) : '—',
+            },
+          ]}
         />
       </div>
 
-      {/* ── Stat strip ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <StatCard
-          icon={ShieldCheck}
-          label="Compliance Score"
-          value={overview ? overview.compliance.score.toFixed(1) : '—'}
-          accent={formatDelta(overview?.compliance.deltaPct)}
-          accentTone={deltaTone(overview?.compliance.deltaPct)}
-          loading={loading}
-        />
-        <StatCard
-          icon={Zap}
-          label="API Latency"
-          value={overview ? `${overview.latency.dbMs}ms` : '—'}
-          accent={overview?.latency.verdict ?? '—'}
-          accentTone={latencyTone(overview?.latency.verdict)}
-          loading={loading}
-        />
-        <StatCard
-          icon={Activity}
-          label="Active Sessions"
-          value={overview ? String(overview.sessions.activeNow) : '—'}
-          accent={overview && overview.sessions.activeNow > 0 ? 'Live' : 'Idle'}
-          accentTone={
-            overview && overview.sessions.activeNow > 0 ? 'text-terminal-green' : 'text-terminal-muted'
-          }
-          loading={loading}
-          live
-        />
-      </div>
-    </div>
+      {/* ── Infrastructure readout ─────────────────────────────────── */}
+      <Panel title="Infrastructure" padded>
+        <dl className="grid gap-4 sm:grid-cols-3">
+          <ReadoutRow
+            label="Database round-trip"
+            value={overview ? `${overview.latency.dbMs}ms` : '—'}
+            note={overview?.latency.verdict ?? '—'}
+            tone={overview ? LATENCY_TONE[overview.latency.verdict] : 'muted'}
+          />
+          <ReadoutRow
+            label="Registered users"
+            value={dash(formatCompact(overview?.users.total ?? 0))}
+            note={overview ? `${overview.users.activeToday} active today` : '—'}
+            tone="muted"
+          />
+          <ReadoutRow
+            label="KB entries"
+            value={dash(formatCompact(overview?.knowledge.total ?? 0))}
+            note={overview ? `${overview.knowledge.embedded} embedded` : '—'}
+            tone="muted"
+          />
+        </dl>
+      </Panel>
+    </AppPage>
   );
-}
-
-// ── Formatting helpers ─────────────────────────────────────────────
-
-function formatDelta(delta: number | undefined): string {
-  if (delta === undefined) return '—';
-  if (delta === 0) return 'Steady';
-  const sign = delta > 0 ? '+' : '';
-  return `${sign}${delta.toFixed(1)}%`;
-}
-
-function deltaTone(delta: number | undefined): string {
-  if (delta === undefined || delta === 0) return 'text-terminal-muted';
-  return delta > 0 ? 'text-terminal-green' : 'text-terminal-amber';
-}
-
-function latencyTone(verdict: AdminOverview['latency']['verdict'] | undefined): string {
-  if (verdict === 'Optimal') return 'text-terminal-green';
-  if (verdict === 'Degraded') return 'text-terminal-amber';
-  if (verdict === 'Slow') return 'text-terminal-red';
-  return 'text-terminal-muted';
 }
 
 // ── Sub-components ──────────────────────────────────────────────────
 
-function FeatureCard({
+function SectionCard({
   href,
   icon: Icon,
-  iconTint,
   title,
   description,
-  footer,
+  stats,
 }: {
   href: string;
   icon: typeof BarChart3;
-  iconTint: 'green' | 'neutral';
   title: string;
   description: string;
-  footer: React.ReactNode;
+  stats: Array<{ label: string; value: string }>;
 }) {
   return (
     <Link
       href={href}
-      className="group block rounded-xl border border-terminal-border bg-terminal-black p-6 hover:border-terminal-green/40 transition-colors"
+      className="glass group flex flex-col rounded-xl p-4 transition-all duration-300 hover:-translate-y-px hover:border-terminal-green/40"
     >
-      <div className="flex items-start justify-between mb-5">
-        <div
-          className={`w-12 h-12 flex items-center justify-center rounded-xl ${
-            iconTint === 'green' ? 'bg-terminal-green/15' : 'bg-terminal-gray'
-          }`}
-        >
-          <Icon
-            className={`w-5 h-5 ${
-              iconTint === 'green' ? 'text-terminal-green' : 'text-terminal-muted'
-            }`}
-          />
-        </div>
-        <ArrowRight className="w-5 h-5 text-terminal-muted group-hover:text-terminal-green group-hover:translate-x-0.5 transition-all" />
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <span className="flex items-center gap-2 font-mono text-xs font-bold tracking-wide text-terminal-text">
+          <Icon className="h-4 w-4 text-terminal-green" aria-hidden="true" />
+          {title}
+        </span>
+        <ArrowRight className="h-4 w-4 flex-none text-terminal-muted transition-transform group-hover:translate-x-0.5 group-hover:text-terminal-green" />
       </div>
-      <h2 className="font-mono text-xl font-bold text-terminal-text mb-2">{title}</h2>
-      <p className="font-sans text-sm text-terminal-muted leading-relaxed mb-5">{description}</p>
-      <div className="pt-4 border-t border-terminal-border">{footer}</div>
+      <p className="mb-4 flex-1 font-sans text-sm leading-relaxed text-terminal-muted">{description}</p>
+      <div className="flex flex-wrap gap-x-4 gap-y-1 border-t border-terminal-border pt-3 font-mono text-xs">
+        {stats.map((s) => (
+          <span key={s.label} className="inline-flex items-center gap-1.5 text-terminal-muted">
+            <span className="font-semibold tabular-nums text-terminal-text">{s.value}</span>
+            {s.label}
+          </span>
+        ))}
+      </div>
     </Link>
   );
 }
 
-function ContributorsRow({
-  contributors,
-  activeToday,
-  loading,
-}: {
-  contributors: number | undefined;
-  activeToday: number | undefined;
-  loading: boolean;
-}) {
-  // Legend-style chips — each dot + number tells a distinct story:
-  // 7-day contributor base, today's active subset, nothing fabricated.
-  // Skipped the avatar-stack approach because we don't actually have
-  // per-user identity for the contributor aggregate.
-  const isLoading = loading && contributors === undefined;
-
-  return (
-    <div className="flex items-center gap-4 font-mono text-xs">
-      <LegendChip
-        dot="bg-terminal-green"
-        label="7-day"
-        value={isLoading ? '—' : String(contributors ?? 0)}
-      />
-      <LegendChip
-        dot="bg-terminal-cyan"
-        label="today"
-        value={isLoading ? '—' : String(activeToday ?? 0)}
-      />
-    </div>
-  );
-}
-
-function LegendChip({
-  dot,
+function ReadoutRow({
   label,
   value,
+  note,
+  tone,
 }: {
-  dot: string;
   label: string;
   value: string;
+  note: string;
+  tone: 'green' | 'amber' | 'red' | 'muted';
 }) {
+  const toneClass =
+    tone === 'green'
+      ? 'text-terminal-green'
+      : tone === 'amber'
+      ? 'text-terminal-amber'
+      : tone === 'red'
+      ? 'text-terminal-red'
+      : 'text-terminal-muted';
   return (
-    <span className="inline-flex items-center gap-1.5 text-terminal-muted">
-      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} aria-hidden="true" />
-      <span className="text-terminal-text font-semibold">{value}</span>
-      <span>{label}</span>
-    </span>
-  );
-}
-
-function MetaRow({
-  total,
-  lastUpdatedAt,
-  loading,
-}: {
-  total: number | undefined;
-  lastUpdatedAt: string | null;
-  loading: boolean;
-}) {
-  return (
-    <div className="flex items-center gap-2 font-mono text-xs">
-      <span className="px-2.5 py-1 rounded-md bg-terminal-gray text-terminal-muted">
-        {loading && total === undefined ? '—' : formatNumber(total ?? 0)} Entries
-      </span>
-      <span className="px-2.5 py-1 rounded-md bg-terminal-gray text-terminal-muted">
-        Updated {timeAgo(lastUpdatedAt)}
-      </span>
-    </div>
-  );
-}
-
-function StatCard({
-  icon: Icon,
-  label,
-  value,
-  accent,
-  accentTone,
-  loading,
-  live = false,
-}: {
-  icon: typeof ShieldCheck;
-  label: string;
-  value: string;
-  accent: string;
-  accentTone: string;
-  loading: boolean;
-  /** Elevates the card visually — reserved for the single genuinely real-time metric. */
-  live?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-xl border p-5 transition-colors ${
-        live
-          ? 'bg-terminal-black border-terminal-green/30 shadow-sm'
-          : 'bg-terminal-gray border-terminal-border'
-      }`}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-terminal-muted">
-          <Icon className="w-3.5 h-3.5 text-terminal-green" />
-          {label}
-        </div>
-        {live && (
-          <span
-            className="w-1.5 h-1.5 rounded-full bg-terminal-green animate-pulse"
-            aria-hidden="true"
-          />
-        )}
-      </div>
-      <div className="flex items-baseline gap-2">
-        <span
-          className={`font-mono ${live ? 'text-4xl' : 'text-3xl'} font-bold text-terminal-text ${
-            loading && value === '—' ? 'opacity-50' : ''
-          }`}
-          aria-live={live ? 'polite' : undefined}
-        >
-          {value}
-        </span>
-        <span className={`font-mono text-xs ${accentTone}`}>{accent}</span>
-      </div>
+    <div>
+      <dt className="font-mono text-xs uppercase tracking-wider text-terminal-muted">{label}</dt>
+      <dd className="mt-1 flex items-baseline gap-2">
+        <span className="font-mono text-xl font-bold tabular-nums text-terminal-text">{value}</span>
+        <span className={`font-mono text-xs ${toneClass}`}>{note}</span>
+      </dd>
     </div>
   );
 }

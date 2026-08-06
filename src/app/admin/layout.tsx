@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <nav className="flex-1 overflow-y-auto p-5 space-y-8">
               {/* Core Management group */}
               <div>
-                <div className="px-3 mb-3 font-mono text-[10px] tracking-[0.22em] text-terminal-muted uppercase">
+                <div className="px-3 mb-3 font-mono text-xs tracking-[0.18em] text-terminal-muted uppercase">
                   Core Management
                 </div>
                 <div className="space-y-1">
@@ -111,9 +111,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Node status badge — live-polled from /api/admin/overview. */}
             <div className="p-4">
-              <div className="rounded-xl border border-terminal-border bg-terminal-black px-4 py-3">
+              <div className="glass rounded-xl px-4 py-3">
                 <div className="font-mono text-xs text-terminal-green">{VERSION}</div>
-                <div className="font-mono text-[11px] mt-1 flex items-center gap-1.5 text-terminal-muted">
+                <div className="font-mono text-xs mt-1 flex items-center gap-1.5 text-terminal-muted">
                   Node status:
                   <span className={`inline-flex items-center gap-1 ${badge.className}`}>
                     <span
@@ -145,7 +145,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex flex-col items-center gap-1 px-3 py-1 font-mono text-[11px] transition-colors ${
+                  className={`flex flex-col items-center gap-1 px-3 py-1 font-mono text-xs transition-colors ${
                     active ? 'text-terminal-green' : 'text-terminal-muted'
                   }`}
                   aria-current={active ? 'page' : undefined}
