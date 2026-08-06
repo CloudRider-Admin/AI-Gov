@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { MessageSquare, Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { ConversationSummary } from '@/types/advisor';
+// Imported from the module rather than the `@/components/app` barrel so the
+// Govi bundle doesn't pull in the app-page components alongside it.
+import { timeAgo } from '@/components/app/format';
 
 interface ConversationHistoryProps {
   conversations: ConversationSummary[];
@@ -12,16 +15,6 @@ interface ConversationHistoryProps {
   onSelect: (id: string) => void;
   onNew: () => void;
   onDelete: (id: string) => void;
-}
-
-function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
 }
 
 export function ConversationHistory({

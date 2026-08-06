@@ -29,6 +29,10 @@ const CHIP: Record<KpiTone, string> = {
 /**
  * Stat tile for app pages: colored-dot mono label, large tabular value, an
  * optional delta chip, and an optional sparkline or progress bar underneath.
+ *
+ * Pass `onClick` to make the tile a drill-down control (used by the admin
+ * analytics breakdown drawer); it then renders as a button with focus styles
+ * rather than a plain div.
  */
 export function KpiCard({
   tone,
@@ -38,6 +42,8 @@ export function KpiCard({
   deltaTone = tone,
   trend,
   barPercent,
+  hint,
+  onClick,
 }: {
   tone: KpiTone;
   label: string;
@@ -46,9 +52,12 @@ export function KpiCard({
   deltaTone?: KpiTone;
   trend?: number[];
   barPercent?: number;
+  /** Small caption under the value — say what the number actually measures. */
+  hint?: string;
+  onClick?: () => void;
 }) {
-  return (
-    <div className="glass rounded-xl p-4 transition-all duration-300 hover:-translate-y-px hover:border-terminal-border">
+  const body = (
+    <>
       <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-terminal-muted">
         <span className={`h-1.5 w-1.5 flex-none rounded-full ${DOT[tone]}`} aria-hidden="true" />
         {label}
@@ -63,6 +72,7 @@ export function KpiCard({
           </span>
         )}
       </div>
+      {hint != null && <p className="mt-1.5 font-sans text-xs text-terminal-muted">{hint}</p>}
       {trend != null && <Sparkline data={trend} className={`mt-2 ${TEXT[tone]}`} />}
       {barPercent != null && (
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-terminal-gray/30">
@@ -72,8 +82,25 @@ export function KpiCard({
           />
         </div>
       )}
-    </div>
+    </>
   );
+
+  const surface = "glass rounded-xl p-4 transition-all duration-300 hover:-translate-y-px hover:border-terminal-border";
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label={`View ${label} breakdown`}
+        className={`${surface} block w-full text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-terminal-green/50`}
+      >
+        {body}
+      </button>
+    );
+  }
+
+  return <div className={surface}>{body}</div>;
 }
 
 /** Filled line sparkline; inherits its color from the surrounding text color. */
