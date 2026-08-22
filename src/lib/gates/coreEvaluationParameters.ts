@@ -10,24 +10,16 @@
  *
  * Client-safe: no server-only imports, so both the review engine and the gate
  * UI read the same source of truth.
+ *
+ * The area ids themselves live in ./evaluationAreas — they are persisted as
+ * `EvaluationResult.area` and shared with the inventory drawer's prose spec, so
+ * they cannot be redeclared here without risking drift between the two.
  */
 
-export const CORE_EVALUATION_AREAS = [
-  'business-effectiveness',
-  'response-quality',
-  'factual-reliability',
-  'rag-performance',
-  'safety',
-  'security',
-  'fairness',
-  'privacy',
-  'robustness',
-  'agent-behavior',
-  'operational-performance',
-  'human-oversight',
-] as const;
+import { CORE_EVALUATION_AREAS, type EvaluationArea } from './evaluationAreas';
 
-export type EvaluationArea = (typeof CORE_EVALUATION_AREAS)[number];
+export { CORE_EVALUATION_AREAS };
+export type { EvaluationArea };
 
 /** How a measured value is compared against the baseline threshold. */
 export type Comparator = 'gte' | 'lte' | 'eq' | 'qualitative';

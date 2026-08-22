@@ -12,9 +12,15 @@
  * base (src/lib/ai/knowledgeBase.ts, src/lib/knowledge/seedData.ts).
  */
 
+import type { EvaluationArea } from '@/lib/gates/evaluationAreas';
+
 export interface CoreEvaluationParameter {
-  /** Stable key stored on EvaluationEvidence.reviewArea */
-  id: string;
+  /**
+   * Stable key stored on EvaluationEvidence.reviewArea. Typed against the
+   * canonical area list so this module cannot invent an id the scorer does not
+   * recognize, or drop one it expects.
+   */
+  id: EvaluationArea;
   reviewArea: string;
   /** What the evaluators examine */
   parameters: string;
