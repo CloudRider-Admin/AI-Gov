@@ -427,21 +427,29 @@ model RemediationTask {
   @@index([dueDate])
 }
 
-/// Tier 1d — immutable governance audit trail.
+/// Tier 1d — append-only governance audit trail.
 model AuditLogEntry {
   id             String   @id @default(cuid())
   organizationId String?
-  actorId        String   // user who performed the action
-  action         String   // "ai_system.created" | "control.updated" | "task.completed" | "artifact.approved"
-  entityType     String   // "ai_system" | "control" | "task" | "artifact"
+  actorId        String   // user who performed the action, or "unauthenticated"
+  action         String   // "ai_system.created" | "control.updated" | "task.completed" | "auth.signed_in"
+  entityType     String   // "ai_system" | "control" | "task" | "artifact" | "session"
   entityId       String?
   summary        String
   metadata       String?  @db.Text
+  /// NIST 800-53 AU-3 wants the source of the event and its outcome alongside
+  /// the what/when/who. Nullable because in-app mutations reached through a
+  /// server action do not always carry request headers.
+  actorIp        String?
+  actorUserAgent String?
+  outcome        String   @default("success") // success | failure | denied
   createdAt      DateTime @default(now())
 
   @@index([organizationId, createdAt])
   @@index([actorId, createdAt])
   @@index([entityType, entityId])
+  @@index([organizationId, action, createdAt])
+  @@index([outcome, createdAt])
 }
 
 /// Tier 2 — pending team invitation.
