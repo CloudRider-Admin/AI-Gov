@@ -169,14 +169,22 @@ function summarize(event: string, category: string): string {
   return parts.join(' ');
 }
 
-function bumpFrameworkCounts(counts: Map<string, number>, key: string | null | undefined) {
+/** `n` is how many artifacts carry this subType, since the rows arrive grouped. */
+function bumpFrameworkCounts(counts: Map<string, number>, key: string | null | undefined, n = 1) {
   if (!key) return;
   const norm = key.toUpperCase();
   // Bucket common framework tokens that show up in subType / framework metadata
-  if (norm.includes('NIST')) counts.set('NIST AI 1.0', (counts.get('NIST AI 1.0') ?? 0) + 1);
-  else if (norm.includes('42001') || norm.includes('ISO')) counts.set('ISO/IEC 42001', (counts.get('ISO/IEC 42001') ?? 0) + 1);
-  else if (norm.includes('EU') || norm.includes('AI ACT')) counts.set('EU AI ACT', (counts.get('EU AI ACT') ?? 0) + 1);
-  else if (norm.includes('GDPR')) counts.set('GDPR', (counts.get('GDPR') ?? 0) + 1);
+  const bucket = norm.includes('NIST')
+    ? 'NIST AI 1.0'
+    : norm.includes('42001') || norm.includes('ISO')
+      ? 'ISO/IEC 42001'
+      : norm.includes('EU') || norm.includes('AI ACT')
+        ? 'EU AI ACT'
+        : norm.includes('GDPR')
+          ? 'GDPR'
+          : null;
+  if (!bucket) return;
+  counts.set(bucket, (counts.get(bucket) ?? 0) + n);
 }
 
 export async function GET() {
@@ -285,9 +293,13 @@ export async function GET() {
       select: { id: true, createdAt: true, event: true, category: true },
     }),
 
-    prisma.generatedArtifact.findMany({
-      where: { userId },
-      select: { subType: true },
+    // Only the distinct subTypes and their counts are needed to fill four
+    // framework buckets, so aggregate in the database rather than pulling every
+    // artifact row the user owns across the wire to count them here.
+    prisma.generatedArtifact.groupBy({
+      by: ['subType'],
+      where: { userId, subType: { not: null } },
+      _count: { _all: true },
     }),
 
     listAiSystems(userId),
@@ -371,7 +383,7 @@ export async function GET() {
   // Framework usage from the user's artifacts' subType field
   const frameworkCounts = new Map<string, number>();
   for (const a of userArtifacts) {
-    bumpFrameworkCounts(frameworkCounts, a.subType);
+    bumpFrameworkCounts(frameworkCounts, a.subType, a._count._all);
   }
   const totalFrameworkHits = [...frameworkCounts.values()].reduce((a, b) => a + b, 0);
   const frameworkStatus: FrameworkUsage[] =
