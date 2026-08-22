@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
+import { checkIpRateLimit } from '@/lib/rate-limit';
 
 const schema = z.object({
   name: z.string().min(1).max(100),
@@ -9,6 +10,15 @@ const schema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  // Spam throttle: 5 messages per IP per hour
+  const rate = await checkIpRateLimit(request, 'contact', 5, 60);
+  if (!rate.allowed) {
+    return NextResponse.json(
+      { error: 'Too many messages. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': String(rate.retryAfter ?? 3600) } },
+    );
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = schema.safeParse(body);
 

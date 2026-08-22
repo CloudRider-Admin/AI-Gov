@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { Terminal, LayoutPanelLeft, Check, ExternalLink, Loader2 } from 'lucide-react';
-import { useGoviInterface, type GoviInterface } from '@/components/advisor/useGoviInterface';
+import { Terminal, LayoutPanelLeft, Check, ExternalLink } from 'lucide-react';
+import { type GoviInterface } from '@/components/advisor/useGoviInterface';
+import { useTheme } from '@/context/ThemeContext';
+import { AppPage, PageHeader } from '@/components/app';
 
 interface SettingsClientProps {
   initialInterface: GoviInterface;
@@ -20,40 +21,53 @@ interface SkinOption {
 
 const TerminalPreview = () => (
   <div className="h-full w-full bg-[#0a0a0a] p-3 font-mono text-[9px] leading-relaxed">
-    <div className="mb-2 flex items-center gap-1">
-      <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
-      <span className="h-1.5 w-1.5 rounded-full bg-yellow-500" />
-      <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-      <span className="ml-2 text-[#888]">Govi v1.0</span>
+    <div className="mb-2 flex items-center justify-between">
+      <span className="tracking-widest text-[#e0e0e0]">
+        GOV<span className="text-[#00ff88]">SECURE</span>
+      </span>
+      <span className="rounded-full bg-[#00ff88]/10 px-1.5 text-[#00ff88]">+3</span>
     </div>
-    <p className="text-[#00ff88]">{'>'} analyze data retention policy_</p>
-    <div className="mt-2 rounded border border-[#2a2a2a] p-1.5">
-      <p className="text-[#e0e0e0]">RISK: <span className="text-[#ffb800]">MEDIUM</span></p>
-      <p className="text-[#888]">EU AI Act · Article 12</p>
+    <div className="grid grid-cols-2 gap-1.5">
+      <div className="rounded border border-[#2a2a2a] bg-[#121212] p-1.5">
+        <p className="text-[#888]">AI SYSTEMS</p>
+        <p className="text-sm font-bold text-[#e0e0e0]">24</p>
+        <div className="mt-1 h-0.5 w-full rounded-full bg-[#1a1a1a]">
+          <div className="h-0.5 w-3/4 rounded-full bg-[#00ff88]" />
+        </div>
+      </div>
+      <div className="rounded border border-[#2a2a2a] bg-[#121212] p-1.5">
+        <p className="text-[#888]">COVERAGE</p>
+        <p className="text-sm font-bold text-[#e0e0e0]">68%</p>
+        <div className="mt-1 h-0.5 w-full rounded-full bg-[#1a1a1a]">
+          <div className="h-0.5 w-2/3 rounded-full bg-[#00d4ff]" />
+        </div>
+      </div>
     </div>
   </div>
 );
 
 const SovereignPreview = () => (
-  <div className="flex h-full w-full bg-white text-[9px]">
-    <div className="flex-1 p-3">
-      <p className="font-semibold text-slate-800">Compliance Analysis</p>
-      <div className="mt-2 ml-auto w-2/3 rounded-lg rounded-tr-sm bg-slate-100 p-1.5 text-slate-600">
-        Analyze retention policy…
-      </div>
-      <div className="mt-2 rounded-lg border border-slate-200 p-1.5">
-        <span className="font-semibold text-emerald-600">G</span>{' '}
-        <span className="text-slate-500">Sovereign Assistant</span>
-        <div className="mt-1 h-1 w-3/4 rounded-full bg-slate-100" />
-      </div>
+  <div className="h-full w-full bg-white p-3 font-mono text-[9px] leading-relaxed">
+    <div className="mb-2 flex items-center justify-between">
+      <span className="tracking-widest text-[#1a1a1a]">
+        GOV<span className="text-[#00aa55]">SECURE</span>
+      </span>
+      <span className="rounded-full bg-[#00aa55]/10 px-1.5 text-[#00aa55]">+3</span>
     </div>
-    <div className="w-1/3 border-l border-slate-100 p-2">
-      <p className="text-[7px] font-semibold uppercase text-slate-400">Readiness</p>
-      <div className="mt-1 h-1 w-full rounded-full bg-slate-200">
-        <div className="h-1 w-4/5 rounded-full bg-emerald-500" />
+    <div className="grid grid-cols-2 gap-1.5">
+      <div className="rounded border border-[#e0e0e0] bg-[#f8f9fa] p-1.5">
+        <p className="text-[#666]">AI SYSTEMS</p>
+        <p className="text-sm font-bold text-[#1a1a1a]">24</p>
+        <div className="mt-1 h-0.5 w-full rounded-full bg-[#f0f1f3]">
+          <div className="h-0.5 w-3/4 rounded-full bg-[#00aa55]" />
+        </div>
       </div>
-      <div className="mt-2 flex flex-wrap gap-1">
-        <span className="rounded border border-slate-200 px-1 text-slate-600">EU AI Act</span>
+      <div className="rounded border border-[#e0e0e0] bg-[#f8f9fa] p-1.5">
+        <p className="text-[#666]">COVERAGE</p>
+        <p className="text-sm font-bold text-[#1a1a1a]">68%</p>
+        <div className="mt-1 h-0.5 w-full rounded-full bg-[#f0f1f3]">
+          <div className="h-0.5 w-2/3 rounded-full bg-[#0099cc]" />
+        </div>
       </div>
     </div>
   </div>
@@ -62,68 +76,60 @@ const SovereignPreview = () => (
 const OPTIONS: SkinOption[] = [
   {
     id: 'terminal',
-    name: 'Terminal',
-    tagline: 'Classic',
+    name: 'Dark',
+    tagline: 'Default',
     description:
-      'The original Govi — a focused, retro terminal advisor with the GovSecure aesthetic.',
-    bullets: ['High-contrast terminal theme', 'Single-column, distraction-free', 'Familiar Govi v1 layout'],
+      'The GovSecure terminal aesthetic across the whole app — dark surfaces, neon-green accents, high contrast.',
+    bullets: ['High-contrast terminal theme', 'Best for low-light work', 'Matches the Govi console'],
     preview: <TerminalPreview />,
   },
   {
     id: 'sovereign',
-    name: 'Sovereign Audit Console',
-    tagline: 'New',
+    name: 'Light',
+    tagline: 'Daylight',
     description:
-      'A boardroom-grade audit workspace with a live intelligence panel: compliance readiness, risk exposure, detected regulatory entities and cited sources.',
+      'Brighter surfaces for daylight work across dashboards and documents. The Govi console itself stays in its dark command-center style.',
     bullets: [
-      'Live Audit Intelligence side panel',
-      'Readiness & risk-exposure gauges',
-      'Detected entities + reference documents',
-      'Exportable analysis session log',
+      'Light app surfaces, softer contrast',
+      'Same green accent language',
+      'Govi console unchanged',
     ],
     preview: <SovereignPreview />,
   },
 ];
 
 export function SettingsClient({ initialInterface }: SettingsClientProps) {
-  const { preference, setInterface } = useGoviInterface();
-  const [selected, setSelected] = useState<GoviInterface>(initialInterface);
-  const [saving, setSaving] = useState<GoviInterface | null>(null);
-  const [saved, setSaved] = useState(false);
+  const { theme, setTheme, mounted } = useTheme();
 
-  // The hook resolves the authoritative value; keep the local highlight in sync
-  // once it differs from what the server rendered.
-  const active = saved ? selected : preference || initialInterface;
+  // The Govi skin is driven by the app theme: dark → terminal, light → console
+  // (the header's light/dark toggle does the same thing). Until the theme
+  // resolves on the client we fall back to the server-rendered preference.
+  const active: GoviInterface = mounted
+    ? theme === 'light'
+      ? 'sovereign'
+      : 'terminal'
+    : initialInterface;
 
-  const choose = async (id: GoviInterface) => {
-    setSelected(id);
-    setSaving(id);
-    setSaved(false);
-    await setInterface(id);
-    setSaving(null);
-    setSaved(true);
+  const choose = (id: GoviInterface) => {
+    setTheme(id === 'sovereign' ? 'light' : 'dark');
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="mx-auto max-w-4xl px-6">
-        <div className="mb-2 font-mono text-xs uppercase tracking-[0.16em] text-terminal-green">
-          Settings
-        </div>
-        <h1 className="text-2xl font-bold text-terminal-text">Govi Interface</h1>
-        <p className="mt-2 max-w-2xl text-sm text-terminal-muted">
-          Choose how the Govi advisor looks and feels. Your choice is saved to
-          your account and applies across devices — you can switch back anytime.
-        </p>
+    <AppPage width="max-w-4xl">
+      <PageHeader
+        eyebrow="Workspace / Settings"
+        title="Appearance"
+        description="Choose the app's color theme — it applies instantly, and the header toggle does the same thing. The Govi console keeps its dark command-center look on both themes."
+      />
 
-        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           {OPTIONS.map((opt) => {
             const isActive = active === opt.id;
             return (
               <button
                 key={opt.id}
                 onClick={() => choose(opt.id)}
-                className={`group relative overflow-hidden rounded-2xl border text-left transition-all ${
+                className={`group relative overflow-hidden rounded-xl border text-left transition-all ${
                   isActive
                     ? 'border-terminal-green ring-2 ring-terminal-green/30'
                     : 'border-terminal-border hover:border-terminal-green/50'
@@ -150,7 +156,7 @@ export function SettingsClient({ initialInterface }: SettingsClientProps) {
                     <span className="font-mono text-sm font-bold text-terminal-text">
                       {opt.name}
                     </span>
-                    <span className="rounded-full bg-terminal-green/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wide text-terminal-green">
+                    <span className="rounded-full bg-terminal-green/10 px-2 py-0.5 text-xs font-mono uppercase tracking-wide text-terminal-green">
                       {opt.tagline}
                     </span>
                   </div>
@@ -166,22 +172,18 @@ export function SettingsClient({ initialInterface }: SettingsClientProps) {
 
                   <div className="mt-4 flex items-center gap-2">
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-mono font-semibold ${
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-mono font-semibold ${
                         isActive
                           ? 'bg-terminal-green/15 text-terminal-green'
                           : 'border border-terminal-border text-terminal-muted group-hover:text-terminal-text'
                       }`}
                     >
-                      {saving === opt.id ? (
-                        <>
-                          <Loader2 className="h-3 w-3 animate-spin" /> Saving…
-                        </>
-                      ) : isActive ? (
+                      {isActive ? (
                         <>
                           <Check className="h-3 w-3" /> Active
                         </>
                       ) : (
-                        'Use this interface'
+                        'Use this style'
                       )}
                     </span>
                   </div>
@@ -191,9 +193,9 @@ export function SettingsClient({ initialInterface }: SettingsClientProps) {
           })}
         </div>
 
-        <div className="mt-6 flex items-center justify-between rounded-xl border border-terminal-border bg-terminal-bg-secondary/40 px-4 py-3">
+        <div className="flex items-center justify-between rounded-xl border border-terminal-border bg-terminal-dark/40 px-4 py-3">
           <p className="text-xs text-terminal-muted">
-            {saved ? 'Preference saved.' : 'Changes apply the next time you open Govi.'}
+            Applies instantly across Govi.
           </p>
           <Link
             href="/govi"
@@ -202,7 +204,6 @@ export function SettingsClient({ initialInterface }: SettingsClientProps) {
             Open Govi <ExternalLink className="h-3 w-3" />
           </Link>
         </div>
-      </div>
-    </div>
+    </AppPage>
   );
 }

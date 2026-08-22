@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { randomBytes } from 'crypto';
 import OpenAI from 'openai';
 import { advisorRequestSchema } from '@/lib/ai/schemas';
 import { auditLog } from '@/lib/utils/logger';
@@ -19,6 +20,7 @@ import { trackEvent } from '@/lib/analytics';
 import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
 import { unverifiedCitations, validateCitations } from '@/lib/ai/citationValidator';
 import { claudeStream, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
+import { buildGatePostureContext } from '@/lib/gates/goviContext';
 
 const SSE_HEADERS = {
   'Content-Type': 'text/event-stream',
@@ -39,7 +41,9 @@ function sseErrorResponse(message: string, status: number, extra?: Record<string
 }
 
 function generateStreamId(): string {
-  return `stream_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+  // Unguessable ID — the resume endpoint is authorization-scoped by userId, but
+  // a high-entropy ID prevents cross-user stream discovery by brute force.
+  return `stream_${randomBytes(24).toString('hex')}`;
 }
 
 const HEARTBEAT_INTERVAL_MS = 15_000; // 15 seconds
@@ -59,6 +63,13 @@ export async function GET(request: NextRequest) {
 
   if (!streamId) {
     return sseErrorResponse('Missing resume parameter', 400);
+  }
+
+  // Ownership check: a stream may only be resumed by the user who created it.
+  // Return 404 (not 403) so a stream's existence isn't disclosed to other users.
+  const owner = streamBuffer.getUserId(streamId);
+  if (owner && owner !== session.user.id) {
+    return sseErrorResponse('Stream not found or expired', 404);
   }
 
   const buffered = streamBuffer.getFrom(streamId, offset);
@@ -148,7 +159,7 @@ export async function POST(request: NextRequest) {
 
     // ── Stream buffer for recovery ──
     const streamId = generateStreamId();
-    streamBuffer.create(streamId, dbConversationId);
+    streamBuffer.create(streamId, dbConversationId, session.user.id);
 
     // ── RAG context (includes the user's own uploaded documents) ──
     const ragResult = await buildEnhancedRAGContext(query, {
@@ -159,6 +170,10 @@ export async function POST(request: NextRequest) {
     const hasConversationHistory = !!context;
     if (context) contextualQuery = `${context}\n\nNew message from the user: ${query}`;
     if (ragResult.context) contextualQuery = `${ragResult.context}\n\n${contextualQuery}`;
+
+    // ── Gate posture, so Govi answers about this register, not in general ──
+    const gateContext = await buildGatePostureContext(session.user.id).catch(() => '');
+    if (gateContext) contextualQuery = `${gateContext}\n\n${contextualQuery}`;
 
     // ── Tiered model selection (Phase 7.2) ──
     const deterministicIntent = classifyIntent(query, hasConversationHistory);

@@ -32,6 +32,50 @@ const nextConfig = {
       },
     ],
   },
+  async headers() {
+    // Content-Security-Policy is intentionally permissive on script/style:
+    //   - 'unsafe-inline' + 'unsafe-eval' are required by the embedded Sanity
+    //     Studio (/studio) and Next.js's runtime.
+    //   - blob: workers/children are required by three.js (the 3D globe).
+    //   - styled-components emits inline <style> tags.
+    // Tighten with nonces once Studio and the globe are verified against a
+    // stricter policy.
+    const csp = [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://cdn.sanity.io",
+      "font-src 'self' data:",
+      "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.api.sanity.io",
+      "worker-src 'self' blob:",
+      "child-src 'self' blob:",
+      "frame-ancestors 'self'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "object-src 'none'",
+    ].join("; ");
+
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Content-Security-Policy", value: csp },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-DNS-Prefetch-Control", value: "on" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

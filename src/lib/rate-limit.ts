@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import type { PrismaClient } from '@prisma/client';
+import type { NextRequest } from 'next/server';
 
 // ─── Login Throttling ─────────────────────────────────────────────────────────
 
@@ -47,9 +48,11 @@ export async function recordFailedLogin(email: string): Promise<void> {
 /** Clear all failed login attempts on successful authentication. */
 export async function clearLoginAttempts(email: string): Promise<void> {
   const key = `login:${email.toLowerCase()}`;
-  prisma.rateLimit
-    .deleteMany({ where: { userId: key, endpoint: LOGIN_ENDPOINT } })
-    .catch((err: unknown) => console.error('[rate-limit] Failed to clear login attempts:', err));
+  try {
+    await prisma.rateLimit.deleteMany({ where: { userId: key, endpoint: LOGIN_ENDPOINT } });
+  } catch (err: unknown) {
+    console.error('[rate-limit] Failed to clear login attempts:', err);
+  }
 }
 
 // ─── API Rate Limiting ────────────────────────────────────────────────────────
@@ -118,6 +121,64 @@ export async function checkRateLimit(
   prisma.rateLimit
     .deleteMany({ where: { userId, endpoint, createdAt: { lt: windowStart } } })
     .catch((err: unknown) => console.error('[rate-limit] Cleanup failed:', err));
+
+  return result;
+}
+
+// ─── IP-Based Rate Limiting (unauthenticated endpoints) ─────────────────────────
+
+/** Extract the best-effort client IP from proxy headers. */
+export function getClientIp(request: NextRequest): string {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
+  );
+}
+
+/**
+ * Fixed-window, IP-keyed rate limit for public/unauthenticated endpoints
+ * (registration, contact, newsletter) where there is no userId to key on.
+ * Reuses the RateLimit table with an `ip:<addr>` synthetic key so it shares
+ * the same storage and cleanup path as the authenticated limiter.
+ */
+export async function checkIpRateLimit(
+  request: NextRequest,
+  endpoint: string,
+  maxRequests: number,
+  windowMinutes: number,
+): Promise<RateLimitResult> {
+  const ip = getClientIp(request);
+  const key = `ip:${ip}`;
+  const windowMs = windowMinutes * 60 * 1000;
+  const windowStart = new Date(Date.now() - windowMs);
+
+  const result = await prisma.$transaction(
+    async (tx: Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'>) => {
+      const count = await tx.rateLimit.count({
+        where: { userId: key, endpoint, createdAt: { gte: windowStart } },
+      });
+
+      if (count >= maxRequests) {
+        const oldest = await tx.rateLimit.findFirst({
+          where: { userId: key, endpoint, createdAt: { gte: windowStart } },
+          orderBy: { createdAt: 'asc' },
+        });
+        const retryAfter = oldest
+          ? Math.ceil((oldest.createdAt.getTime() + windowMs - Date.now()) / 1000)
+          : windowMinutes * 60;
+        return { allowed: false as const, remaining: 0, limit: maxRequests, retryAfter: Math.max(1, retryAfter) };
+      }
+
+      await tx.rateLimit.create({ data: { userId: key, endpoint } });
+      return { allowed: true as const, remaining: maxRequests - count - 1, limit: maxRequests };
+    },
+    { isolationLevel: 'Serializable' },
+  );
+
+  prisma.rateLimit
+    .deleteMany({ where: { userId: key, endpoint, createdAt: { lt: windowStart } } })
+    .catch((err: unknown) => console.error('[rate-limit] IP cleanup failed:', err));
 
   return result;
 }

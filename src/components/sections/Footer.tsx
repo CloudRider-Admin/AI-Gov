@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { trustBadges } from "@/data/content";
-import { Mail, ArrowRight, Github, Linkedin, Shield } from "lucide-react";
+import { Mail, ArrowRight, Linkedin, Shield } from "lucide-react";
 
 
 export function Footer() {
@@ -161,12 +161,6 @@ export function Footer() {
                 >
                   <Linkedin className="w-4 h-4" />
                 </a>
-                <a
-                  href="#"
-                  className="w-10 h-10 flex items-center justify-center border border-terminal-border rounded-md hover:border-terminal-green hover:text-terminal-green transition-colors"
-                >
-                  <Github className="w-4 h-4" />
-                </a>
               </div>
             </div>
 
@@ -279,24 +273,18 @@ export function Footer() {
             © {new Date().getFullYear()} CloudRider Nexus. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <a
-              href="#"
+            <Link
+              href="/privacy"
               className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              href="/terms"
               className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
             >
               Terms of Service
-            </a>
-            <a
-              href="#"
-              className="text-terminal-muted hover:text-terminal-green font-mono text-xs transition-colors"
-            >
-              Cookie Settings
-            </a>
+            </Link>
           </div>
         </div>
       </div>

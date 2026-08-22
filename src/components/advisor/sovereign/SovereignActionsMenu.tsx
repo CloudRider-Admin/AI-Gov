@@ -71,17 +71,17 @@ export function SovereignActionsMenu({
         aria-label="More actions"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className={`grid h-10 w-10 place-items-center rounded-xl transition-colors ${
+        className={`grid h-10 w-10 place-items-center rounded-md transition-colors duration-300 ${
           open
-            ? 'bg-emerald-50 text-emerald-600'
-            : 'text-slate-400 hover:bg-slate-100 hover:text-slate-600'
+            ? 'bg-terminal-green/10 text-terminal-green'
+            : 'text-terminal-muted hover:bg-terminal-gray/40 hover:text-terminal-text'
         }`}
       >
         <Plus className={`h-5 w-5 transition-transform ${open ? 'rotate-45' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 z-30 mb-3 w-72 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.16)]">
+        <div className="absolute bottom-full left-0 z-30 mb-3 w-72 overflow-hidden rounded-xl border border-terminal-border bg-terminal-dark shadow-[0_12px_40px_rgba(0,0,0,0.45)]">
           {/* Primary actions */}
           <div className="p-1.5">
             <button
@@ -90,7 +90,7 @@ export function SovereignActionsMenu({
                 onNewConversation();
                 close();
               }}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-emerald-700 transition-colors hover:bg-emerald-50"
+              className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-medium text-terminal-green transition-colors duration-300 hover:bg-terminal-green/10"
             >
               <MessageSquarePlus className="h-4 w-4" />
               New session
@@ -102,33 +102,33 @@ export function SovereignActionsMenu({
                 onExport();
                 close();
               }}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-medium text-terminal-text transition-colors duration-300 hover:bg-terminal-gray/40 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              <FileText className="h-4 w-4 text-slate-400" />
+              <FileText className="h-4 w-4 text-terminal-muted" />
               Export session log
             </button>
             <Link
               href="/govi/library"
               onClick={close}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
+              className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-medium text-terminal-text transition-colors duration-300 hover:bg-terminal-gray/40"
             >
-              <BookOpen className="h-4 w-4 text-slate-400" />
+              <BookOpen className="h-4 w-4 text-terminal-muted" />
               GovSecure Library
             </Link>
             <Link
               href="/settings"
               onClick={close}
-              className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50"
+              className="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-sm font-medium text-terminal-text transition-colors duration-300 hover:bg-terminal-gray/40"
             >
-              <SlidersHorizontal className="h-4 w-4 text-slate-400" />
+              <SlidersHorizontal className="h-4 w-4 text-terminal-muted" />
               Change interface
             </Link>
           </div>
 
           {/* Session history */}
           {isAuthenticated && conversations.length > 0 && (
-            <div className="border-t border-slate-100 p-1.5">
-              <p className="flex items-center gap-1.5 px-3 pb-1 pt-1.5 text-[10px] font-mono font-semibold uppercase tracking-[0.14em] text-slate-400">
+            <div className="border-t border-terminal-border p-1.5">
+              <p className="flex items-center gap-1.5 px-3 pb-1 pt-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-terminal-muted">
                 <History className="h-3 w-3" />
                 Recent sessions
               </p>
@@ -136,8 +136,8 @@ export function SovereignActionsMenu({
                 {conversations.map((c) => (
                   <div
                     key={c.id}
-                    className={`group flex items-center gap-1 rounded-lg px-1 ${
-                      activeConversationId === c.id ? 'bg-slate-100' : 'hover:bg-slate-50'
+                    className={`group flex items-center gap-1 rounded-md px-1 ${
+                      activeConversationId === c.id ? 'bg-terminal-gray/40' : 'hover:bg-terminal-gray/30'
                     }`}
                   >
                     <button
@@ -146,7 +146,7 @@ export function SovereignActionsMenu({
                         onSelectConversation(c.id);
                         close();
                       }}
-                      className="min-w-0 flex-1 truncate px-2 py-2 text-left text-[13px] text-slate-700"
+                      className="min-w-0 flex-1 truncate px-2 py-2 text-left text-sm text-terminal-text"
                     >
                       {c.title}
                     </button>
@@ -154,7 +154,7 @@ export function SovereignActionsMenu({
                       type="button"
                       onClick={() => onDeleteConversation(c.id)}
                       aria-label="Delete session"
-                      className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-slate-300 opacity-0 transition hover:bg-red-50 hover:text-red-500 group-hover:opacity-100"
+                      className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-terminal-muted opacity-0 transition hover:bg-terminal-red/10 hover:text-terminal-red group-hover:opacity-100"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
                     </button>

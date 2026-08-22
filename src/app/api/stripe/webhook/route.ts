@@ -37,6 +37,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature.' }, { status: 400 });
   }
 
+  // Idempotency: claim this event id before processing. Stripe redelivers
+  // events, and duplicates would otherwise re-run role/subscription mutations.
+  // A concurrent or repeat delivery collides on the primary key and is skipped.
+  try {
+    await prisma.processedWebhookEvent.create({
+      data: { id: event.id, provider: 'stripe', eventType: event.type },
+    });
+  } catch (err) {
+    if ((err as { code?: string }).code === 'P2002') {
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+    console.error('[stripe/webhook] Idempotency ledger error:', err);
+    return NextResponse.json({ error: 'Webhook ledger error.' }, { status: 500 });
+  }
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
@@ -134,6 +149,11 @@ export async function POST(request: NextRequest) {
         break;
     }
   } catch (err) {
+    // Processing failed — release the idempotency claim so Stripe's retry can
+    // reprocess this event instead of it being skipped as a duplicate.
+    await prisma.processedWebhookEvent
+      .delete({ where: { id: event.id } })
+      .catch(() => {});
     console.error(`[stripe/webhook] Error processing ${event.type}:`, err);
     return NextResponse.json({ error: 'Webhook handler failed.' }, { status: 500 });
   }

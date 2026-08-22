@@ -47,6 +47,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {isAuthenticated && <Sidebar collapsed={collapsed} onToggle={toggle} />}
       <ErrorBoundary>
         <main
+          id="main-content"
+          tabIndex={-1}
           className={`relative z-10 transition-[padding] duration-300 ${offset}`}
         >
           {children}

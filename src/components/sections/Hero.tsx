@@ -7,20 +7,6 @@ import { ArrowRight, BookOpen } from "lucide-react";
 export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center section">
-      {/* Decorative terminal brackets — subtle corner framing that ties into the CLI theme */}
-      <span
-        aria-hidden="true"
-        className="absolute top-24 left-6 md:left-10 font-mono text-4xl md:text-5xl text-terminal-border/60 select-none pointer-events-none"
-      >
-        [
-      </span>
-      <span
-        aria-hidden="true"
-        className="absolute bottom-24 right-6 md:right-10 font-mono text-4xl md:text-5xl text-terminal-green/20 select-none pointer-events-none"
-      >
-        ]
-      </span>
-
       <div className="max-w-4xl mx-auto w-full">
         <div className="text-center">
           {/* Terminal-style prefix */}

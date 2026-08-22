@@ -64,8 +64,8 @@ export async function computeMaturity(userId: string): Promise<MaturityResult> {
   if (inv.reviewOverdue > 0) nudges.push(`${inv.reviewOverdue} system(s) are overdue for review.`);
   if (comp.averageCoverage < 50) nudges.push('Control coverage is below 50% — work through your compliance checklist.');
   if (rem.overdue > 0) nudges.push(`${rem.overdue} remediation task(s) are past due.`);
-  if ((inv.byRisk?.high ?? 0) + (inv.byRisk?.prohibited ?? 0) > 0)
-    nudges.push('You have high-risk systems — ensure each has a DPIA and human oversight documented.');
+  if ((inv.byRisk?.high ?? 0) > 0)
+    nudges.push('You have high-impact systems — ensure each has a risk assessment and human oversight documented.');
 
   return { score, dimensions, nudges };
 }

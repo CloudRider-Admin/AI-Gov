@@ -131,6 +131,18 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now())
 }
 
+/// Idempotency ledger for external webhook deliveries (e.g. Stripe).
+/// The provider's event id is the primary key so a redelivered event is a
+/// no-op instead of being processed twice.
+model ProcessedWebhookEvent {
+  id          String   @id // provider event id (e.g. Stripe evt_...)
+  provider    String
+  eventType   String
+  processedAt DateTime @default(now())
+
+  @@index([provider, processedAt])
+}
+
 model KnowledgeEntry {
   id         String                      @id @default(cuid())
   title      String
@@ -286,31 +298,97 @@ model AnalyticsEvent {
 
 // ─── AAA governance foundation (Tiers 1–3) ──────────────────────────────────
 
-/// Tier 1a — AI System Inventory / Register. One row per AI use case an org runs.
+/// Tier 1a — AI System Inventory / Register. One row per registered entity: a
+/// use case, an agent, or a model. All three flow through the same three gates.
 model AiSystem {
   id             String    @id @default(cuid())
   userId         String    // creator / owner in personal scope
   organizationId String?   // when set, shared across the org (Tier 2)
   name           String
+  entityKind     String    @default("use-case")  // use-case | agent | model
   description    String?   @db.Text
   purpose        String?   @db.Text
   businessOwner  String?
   vendor         String?
   model          String?
+  entityType     String    @default("system")   // system | model | agent | use-case
   lifecycleStage String    @default("idea")     // idea | piloting | production | retired
-  riskCategory   String    @default("limited")  // prohibited | high | limited | minimal (EU AI Act)
+  riskCategory   String    @default("moderate")  // high | moderate | low (NIST/US impact tiers)
   status         String    @default("active")   // active | archived
   dataTypes      String[]  @default([])
+  // ── Gate 3 — Approval & Registry ──
+  // Only high/moderate risk requires an approval decision; NULL means approval
+  // is not required. Both the /gates board and the inventory drawer read this
+  // column, so the null-means-not-required convention is shared.
+  approvalStatus String?   // pending | approved | rejected
+  approvedBy     String?   // approver name, recorded by the inventory drawer
+  approvedById   String?   // approver user id, recorded by the /gates board
+  approvedByName String?   // denormalized so the register stays readable if the user is removed
+  approvedAt     DateTime?
+  approvalNote   String?   @db.Text
+  approvalExpiresAt DateTime?  // re-approval cadence for high-risk entities
+  /// True when the decision was recorded by the entity's own owner. Separation
+  /// of duties is enforced wherever a second member exists to approve; in a
+  /// single-operator workspace there is nobody else, so the fact is recorded on
+  /// the register rather than silently allowed. Assessors ask for exactly this.
+  approvalSelfRecorded Boolean @default(false)
   deployedAt     DateTime?
   lastReviewedAt DateTime?
   nextReviewAt   DateTime?
+
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
+
+  gateRecords    GateRecord[]
+  evaluationRuns EvaluationRun[]
 
   @@index([userId, status])
   @@index([organizationId])
   @@index([riskCategory])
+  @@index([approvalStatus])
   @@index([nextReviewAt])
+  @@index([userId, entityKind, status])
+}
+
+/// Gate 2 — Evaluation & Review. One row per evaluation result collected from
+/// data science / engineering / red-team (curated from the AI platform in use),
+/// mapped to a Core Evaluation Parameters review area.
+model EvaluationEvidence {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  reviewArea     String   // CORE_EVALUATION_PARAMETERS id, e.g. "factual-reliability"
+  source         String   @default("data-science") // data-science | engineering | red-team | platform
+  metric         String?  // e.g. "hallucination rate", "attack success rate"
+  result         String   @db.Text // observed evaluation result
+  meetsBaseline  Boolean? // reviewed against the governance baseline; null = not yet judged
+  notes          String?  @db.Text
+  evaluatedAt    DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([aiSystemId, reviewArea])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+/// Gate 2 — evidence report produced by reviewing the collected evaluation
+/// evidence against the Core Evaluation Parameters baselines.
+model EvidenceReport {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  aiSystemId     String
+  verdict        String   // pass | conditional-pass | fail
+  summary        String   @db.Text
+  areaFindings   Json     // per review area: { id, reviewArea, status, evidenceCount, baseline }
+  evidenceCount  Int      @default(0)
+  generatedBy    String?
+  createdAt      DateTime @default(now())
+
+  @@index([aiSystemId, createdAt])
+  @@index([userId])
 }
 
 /// Tier 1b — per-control implementation status for a compliance framework.
@@ -354,21 +432,29 @@ model RemediationTask {
   @@index([dueDate])
 }
 
-/// Tier 1d — immutable governance audit trail.
+/// Tier 1d — append-only governance audit trail.
 model AuditLogEntry {
   id             String   @id @default(cuid())
   organizationId String?
-  actorId        String   // user who performed the action
-  action         String   // "ai_system.created" | "control.updated" | "task.completed" | "artifact.approved"
-  entityType     String   // "ai_system" | "control" | "task" | "artifact"
+  actorId        String   // user who performed the action, or "unauthenticated"
+  action         String   // "ai_system.created" | "control.updated" | "task.completed" | "auth.signed_in"
+  entityType     String   // "ai_system" | "control" | "task" | "artifact" | "session"
   entityId       String?
   summary        String
   metadata       String?  @db.Text
+  /// NIST 800-53 AU-3 wants the source of the event and its outcome alongside
+  /// the what/when/who. Nullable because in-app mutations reached through a
+  /// server action do not always carry request headers.
+  actorIp        String?
+  actorUserAgent String?
+  outcome        String   @default("success") // success | failure | denied
   createdAt      DateTime @default(now())
 
   @@index([organizationId, createdAt])
   @@index([actorId, createdAt])
   @@index([entityType, entityId])
+  @@index([organizationId, action, createdAt])
+  @@index([outcome, createdAt])
 }
 
 /// Tier 2 — pending team invitation.
@@ -447,4 +533,134 @@ model RegulatoryUpdate {
 
   @@index([isActive, publishedAt])
   @@index([jurisdiction])
+}
+
+// ─── Governance gates (Gate 1 Intake · Gate 2 Evaluation · Gate 3 Approval) ──
+
+/// One row per (entity, gate). The register's state machine: an entity may not
+/// enter gate N+1 until gate N is "passed". Kept as rows rather than columns on
+/// AiSystem so each gate carries its own decision, decider, and timestamps.
+model GateRecord {
+  id             String    @id @default(cuid())
+  aiSystemId     String
+  userId         String
+  organizationId String?
+  gate           Int       // 1 = intake & risk tiering | 2 = evaluation & review | 3 = approval & registry
+  status         String    @default("not-started") // not-started | in-progress | passed | failed | waived
+  summary        String?   @db.Text  // why it passed / what is blocking
+  blockers       String[]  @default([])
+  decidedById    String?
+  decidedByName  String?
+  decidedAt      DateTime?
+  /// When a waiver lapses. A waiver suppresses recomputation of a gate, so an
+  /// open-ended one permanently silences the gate it covers — every waiver gets
+  /// an expiry, after which the gate is recomputed from the facts again.
+  waiverExpiresAt DateTime?
+  /// True when the waiver was granted by the entity's own owner. Same reasoning
+  /// as AiSystem.approvalSelfRecorded.
+  waiverSelfGranted Boolean @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  aiSystem       AiSystem  @relation(fields: [aiSystemId], references: [id], onDelete: Cascade)
+
+  @@unique([aiSystemId, gate])
+  @@index([userId, status])
+  @@index([organizationId, gate])
+  @@index([status, waiverExpiresAt])
+}
+
+/// Gate 2 — a single evaluation campaign whose results were curated out of the
+/// AI platform in use (data science, engineering, or red team) into GovSecure.
+model EvaluationRun {
+  id             String    @id @default(cuid())
+  aiSystemId     String
+  userId         String
+  organizationId String?
+  runLabel       String    // e.g. "redteam-2026-07-30" or "pre-prod eval v3"
+  source         String    @default("manual")  // upload | manual | api
+  sourceRef      String?   // original filename or the harness's own run id
+  evaluatorTeam  String?   // data-science | engineering | red-team | vendor | other
+  evaluatorName  String?
+  platform       String?   // AI platform the evaluation was run on
+  evaluatedAt    DateTime?
+  status         String    @default("draft")   // draft | ingested | reviewed
+  overallVerdict String?   // pass | conditional-pass | fail
+  reviewSummary  String?   @db.Text
+  reportMarkdown String?   @db.Text  // the evidence report Govi produces
+  reviewedAt     DateTime?
+  reviewedBy     String    @default("govi")    // govi | human
+  coverageRatio  Float?    // share of the 12 core review areas with evidence
+  rawPayload     String?   @db.Text  // original ingested payload, for audit
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  aiSystem       AiSystem           @relation(fields: [aiSystemId], references: [id], onDelete: Cascade)
+  results        EvaluationResult[]
+
+  @@index([aiSystemId, createdAt])
+  @@index([userId, status])
+  @@index([organizationId, createdAt])
+  @@unique([aiSystemId, runLabel])
+}
+
+/// One measured parameter within an evaluation run, mapped onto a core review
+/// area. Multiple rows per area are expected (e.g. Safety has several metrics).
+model EvaluationResult {
+  id           String   @id @default(cuid())
+  runId        String
+  area         String   // one of CORE_EVALUATION_AREAS (business-effectiveness, safety, …)
+  parameter    String   // the specific parameter examined, e.g. "hallucination rate"
+  metricValue  Float?   // numeric result when one exists
+  unit         String?  // percent | score-5 | count | ms | ratio
+  textValue    String?  // non-numeric result, e.g. "no severe violations observed"
+  method       String?  // how it was measured
+  sampleSize   Int?
+  evidenceUrl  String?
+  verdict      String   @default("not-assessed") // pass | fail | partial | not-assessed
+  baselineNote String?  @db.Text  // the baseline this was judged against
+  gap          String?  @db.Text  // what falls short, when it does
+  severity     String   @default("none") // none | low | medium | high | critical
+  createdAt    DateTime @default(now())
+
+  run          EvaluationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, area])
+  @@index([verdict])
+}
+
+/// Bearer token that lets an evaluation harness or CI pipeline POST results
+/// into Gate 2 unattended. Only the hash is stored; the plaintext is shown once
+/// at creation and never again.
+model IngestToken {
+  id             String    @id @default(cuid())
+  userId         String
+  organizationId String?
+  name           String    // e.g. "nightly red-team pipeline"
+  tokenHash      String    @unique
+  prefix         String    // first 8 chars, so a token can be identified in the UI
+  lastUsedAt     DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime  @default(now())
+
+  @@index([userId, revokedAt])
+}
+
+/// Per-org override of a default governance baseline for a core review area.
+/// Absent a row, the code-defined default in coreEvaluationParameters.ts applies.
+model EvaluationBaseline {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String?
+  area           String   // one of CORE_EVALUATION_AREAS
+  comparator     String   @default("gte") // gte | lte | eq | qualitative
+  threshold      Float?
+  unit           String?
+  expectation    String   @db.Text  // human-readable baseline shown in the report
+  appliesToRisk  String[] @default([]) // empty = all risk categories
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, area])
+  @@index([organizationId, area])
 }

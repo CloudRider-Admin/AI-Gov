@@ -26,7 +26,20 @@ interface AdvisorProps {
   initialConversationId?: string;
 }
 
+type GoviSession = ReturnType<typeof useGoviSession>;
+
+/** Public wrapper: owns its own session. Used standalone (e.g. the homepage). */
 export function Advisor({ showHeader = true, initialQuery, initialConversationId }: AdvisorProps) {
+  const session = useGoviSession({ initialQuery, initialConversationId });
+  return <AdvisorView session={session} showHeader={showHeader} />;
+}
+
+/**
+ * Controlled view: renders a session supplied by the parent, so the parent can
+ * swap between skins (terminal / sovereign) without remounting — preserving the
+ * live conversation thread and context.
+ */
+export function AdvisorView({ session: s, showHeader = true }: { session: GoviSession; showHeader?: boolean }) {
   const {
     session,
     isAuthenticated,
@@ -64,7 +77,7 @@ export function Advisor({ showHeader = true, initialQuery, initialConversationId
     handleNewConversation,
     handleSelectConversation,
     handleDeleteConversation,
-  } = useGoviSession({ initialQuery, initialConversationId });
+  } = s;
 
   const guestGate = (
     <div className="text-center py-10">

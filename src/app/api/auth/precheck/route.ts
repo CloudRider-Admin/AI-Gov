@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Credentials are valid and email verified — clear failure counter
-    clearLoginAttempts(email);
+    await clearLoginAttempts(email);
     return NextResponse.json({ ok: true, code: 'OK' });
   } catch (err) {
     console.error('[auth/precheck]', err);

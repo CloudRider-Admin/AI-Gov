@@ -404,24 +404,56 @@ a {
     transform: none !important;
   }
 }
-/* ── Sovereign Audit Console: markdown narrative styling ── */
+/* ── Sovereign Console dark scope ──
+   The Govi console always renders in the terminal (dark) palette — the AAA
+   console design — regardless of the app theme. Re-pins every theme variable
+   to its dark value so terminal-* tokens resolve dark inside the console. */
+.sovereign-scope {
+  --color-bg-primary: #0a0a0a;
+  --color-bg-secondary: #121212;
+  --color-bg-tertiary: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-text-primary: #e0e0e0;
+  --color-text-muted: #888888;
+  --color-accent: #00ff88;
+  --color-accent-dim: #00cc6a;
+  --color-cyan: #00d4ff;
+  --color-amber: #ffb800;
+  --color-red: #ff3366;
+  --color-bg-primary-rgb: 10 10 10;
+  --color-bg-secondary-rgb: 18 18 18;
+  --color-bg-tertiary-rgb: 26 26 26;
+  --color-border-rgb: 42 42 42;
+  --color-text-primary-rgb: 224 224 224;
+  --color-text-muted-rgb: 136 136 136;
+  --color-accent-rgb: 0 255 136;
+  --color-accent-dim-rgb: 0 204 106;
+  --color-cyan-rgb: 0 212 255;
+  --color-amber-rgb: 255 184 0;
+  --color-red-rgb: 255 51 102;
+  color-scheme: dark;
+}
+
+/* ── Sovereign Audit Console: markdown narrative styling ──
+   Theme-aware: colors resolve through the terminal token variables so the
+   console reads correctly on both the dark and light skins. */
 .sovereign-prose p { margin-bottom: 0.75rem; }
 .sovereign-prose p:last-child { margin-bottom: 0; }
-.sovereign-prose strong { font-weight: 600; color: #0f172a; }
+.sovereign-prose strong { font-weight: 600; color: rgb(var(--color-text-primary-rgb)); }
 .sovereign-prose ul { list-style: disc; padding-left: 1.25rem; margin-bottom: 0.75rem; }
 .sovereign-prose ol { list-style: decimal; padding-left: 1.25rem; margin-bottom: 0.75rem; }
 .sovereign-prose li { margin-bottom: 0.25rem; }
 .sovereign-prose code {
   font-family: var(--font-space-mono), monospace;
   font-size: 0.85em;
-  background: #f1f5f9;
-  color: #0f766e;
+  background: rgb(var(--color-bg-tertiary-rgb) / 0.6);
+  color: rgb(var(--color-accent-rgb));
   padding: 0.1rem 0.35rem;
   border-radius: 0.3rem;
 }
 .sovereign-prose h1, .sovereign-prose h2, .sovereign-prose h3 {
   font-weight: 600;
-  color: #0f172a;
+  color: rgb(var(--color-text-primary-rgb));
   margin: 0.5rem 0;
 }
-.sovereign-prose a { color: #059669; text-decoration: underline; }
+.sovereign-prose a { color: rgb(var(--color-accent-rgb)); text-decoration: underline; }

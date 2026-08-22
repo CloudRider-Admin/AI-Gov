@@ -2,7 +2,7 @@ import type { AdvisorResponse, RiskLevel } from '@/types/advisor';
 
 export interface RiskVisual {
   label: string;
-  /** Tailwind text colour class for the light console. */
+  /** Tailwind text colour class (theme-aware terminal token). */
   text: string;
   /** Tailwind background colour class for gauge fills / dots. */
   fill: string;
@@ -13,10 +13,10 @@ export interface RiskVisual {
 }
 
 export const RISK_VISUALS: Record<RiskLevel, RiskVisual> = {
-  low: { label: 'Low', text: 'text-emerald-600', fill: 'bg-emerald-500', tint: 'bg-emerald-50 text-emerald-700', exposure: 20 },
-  medium: { label: 'Moderate', text: 'text-amber-600', fill: 'bg-amber-500', tint: 'bg-amber-50 text-amber-700', exposure: 52 },
-  high: { label: 'Elevated', text: 'text-orange-600', fill: 'bg-orange-500', tint: 'bg-orange-50 text-orange-700', exposure: 78 },
-  critical: { label: 'Critical', text: 'text-red-600', fill: 'bg-red-500', tint: 'bg-red-50 text-red-700', exposure: 94 },
+  low: { label: 'Low', text: 'text-terminal-green', fill: 'bg-terminal-green', tint: 'bg-terminal-green/10 text-terminal-green', exposure: 20 },
+  medium: { label: 'Moderate', text: 'text-terminal-amber', fill: 'bg-terminal-amber', tint: 'bg-terminal-amber/10 text-terminal-amber', exposure: 52 },
+  high: { label: 'Elevated', text: 'text-terminal-red', fill: 'bg-terminal-red', tint: 'bg-terminal-red/10 text-terminal-red', exposure: 78 },
+  critical: { label: 'Critical', text: 'text-terminal-red', fill: 'bg-terminal-red', tint: 'bg-terminal-red/15 text-terminal-red', exposure: 94 },
 };
 
 /**

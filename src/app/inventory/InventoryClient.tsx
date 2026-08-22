@@ -1,8 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, ShieldAlert, Server, Clock, X, Pencil, Archive } from "lucide-react";
-import { RISK_CATEGORIES, LIFECYCLE_STAGES } from "@/lib/governanceEnums";
+import { Plus, Server, X, Pencil, Archive, ShieldCheck } from "lucide-react";
+import {
+  RISK_CATEGORIES,
+  LIFECYCLE_STAGES,
+  ENTITY_TYPES,
+  ENTITY_TYPE_LABELS,
+  type EntityType,
+} from "@/lib/governanceEnums";
+import {
+  AppPage,
+  PageHeader,
+  KpiCard,
+  RiskPill,
+  StagePill,
+  ApprovalPill,
+  formatReview,
+} from "@/components/app";
+import { GatesDrawer } from "./GatesDrawer";
 
 export interface AiSystemView {
   id: string;
@@ -12,10 +28,15 @@ export interface AiSystemView {
   businessOwner: string | null;
   vendor: string | null;
   model: string | null;
+  entityType: string;
   lifecycleStage: string;
   riskCategory: string;
   status: string;
   dataTypes: string[];
+  approvalStatus: string | null;
+  approvedBy: string | null;
+  approvedAt: string | null;
+  approvalNote: string | null;
   deployedAt: string | null;
   lastReviewedAt: string | null;
   nextReviewAt: string | null;
@@ -28,14 +49,8 @@ interface Summary {
   byRisk: Record<string, number>;
   reviewOverdue: number;
   neverReviewed: number;
+  pendingApproval: number;
 }
-
-const RISK_STYLES: Record<string, string> = {
-  prohibited: "bg-terminal-red/15 text-terminal-red border-terminal-red/40",
-  high: "bg-terminal-amber/15 text-terminal-amber border-terminal-amber/40",
-  limited: "bg-terminal-green/15 text-terminal-green border-terminal-green/40",
-  minimal: "bg-terminal-muted/15 text-terminal-muted border-terminal-border",
-};
 
 const STAGE_LABELS: Record<string, string> = {
   idea: "Idea",
@@ -58,23 +73,33 @@ export function InventoryClient({
   const [editing, setEditing] = useState<FormState | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [gatesId, setGatesId] = useState<string | null>(null);
+
+  const gatesSystem = gatesId ? systems.find((s) => s.id === gatesId) ?? null : null;
 
   const recomputeSummary = (next: AiSystemView[]): Summary => {
-    const byRisk: Record<string, number> = { prohibited: 0, high: 0, limited: 0, minimal: 0 };
+    const byRisk: Record<string, number> = { high: 0, moderate: 0, low: 0 };
     let reviewOverdue = 0;
     let neverReviewed = 0;
+    let pendingApproval = 0;
     const now = Date.now();
     for (const s of next) {
       byRisk[s.riskCategory] = (byRisk[s.riskCategory] ?? 0) + 1;
       if (!s.lastReviewedAt) neverReviewed += 1;
       if (s.nextReviewAt && new Date(s.nextReviewAt).getTime() < now) reviewOverdue += 1;
+      if (s.approvalStatus === "pending") pendingApproval += 1;
     }
-    return { total: next.length, byRisk, reviewOverdue, neverReviewed };
+    return { total: next.length, byRisk, reviewOverdue, neverReviewed, pendingApproval };
   };
 
   const openCreate = () => {
     setError(null);
-    setEditing({ riskCategory: "limited", lifecycleStage: "idea", dataTypesText: "" });
+    setEditing({
+      entityType: "system",
+      riskCategory: "moderate",
+      lifecycleStage: "idea",
+      dataTypesText: "",
+    });
   };
 
   const openEdit = (s: AiSystemView) => {
@@ -96,6 +121,7 @@ export function InventoryClient({
       businessOwner: editing.businessOwner ?? null,
       vendor: editing.vendor ?? null,
       model: editing.model ?? null,
+      entityType: editing.entityType,
       lifecycleStage: editing.lifecycleStage,
       riskCategory: editing.riskCategory,
       dataTypes: (editing.dataTypesText ?? "")
@@ -143,50 +169,41 @@ export function InventoryClient({
   };
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <header className="mb-8 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-              Governance / Inventory
-            </span>
-            <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-              AI System Register
-            </h1>
-            <p className="text-terminal-muted font-sans max-w-2xl">
-              Every AI system your organization runs, risk-tiered against the EU AI Act with a
-              review cadence auditors can trust.
-            </p>
-          </div>
-          <button onClick={openCreate} className="btn-primary text-sm py-2">
-            <Plus className="w-4 h-4" /> Register system
-          </button>
-        </header>
+    <>
+      <AppPage>
+        <PageHeader
+          eyebrow="Governance / Inventory"
+          title="AI System Register"
+          description="Every AI system, model, agent, and use-case your organization runs — risk-tiered by impact, moved through the three governance gates (Intake, Evaluation & Review, Approval & Registry)."
+          actions={
+            <button onClick={openCreate} className="btn-primary text-sm py-2">
+              <Plus className="w-4 h-4" /> Register entry
+            </button>
+          }
+        />
 
         {/* Summary cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          <SummaryCard icon={<Server className="w-4 h-4" />} label="Systems" value={summary.total} />
-          <SummaryCard
-            icon={<ShieldAlert className="w-4 h-4 text-terminal-red" />}
-            label="High / prohibited"
-            value={(summary.byRisk.high ?? 0) + (summary.byRisk.prohibited ?? 0)}
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
+          <KpiCard tone="green" label="Entries" value={summary.total} />
+          <KpiCard tone="red" label="High impact" value={summary.byRisk.high ?? 0} />
+          <KpiCard
+            tone="amber"
+            label="Pending approval"
+            value={summary.pendingApproval}
+            delta={summary.pendingApproval > 0 ? "gate 3" : undefined}
           />
-          <SummaryCard
-            icon={<Clock className="w-4 h-4 text-terminal-amber" />}
+          <KpiCard
+            tone="amber"
             label="Review overdue"
             value={summary.reviewOverdue}
+            delta={summary.reviewOverdue > 0 ? "due" : undefined}
           />
-          <SummaryCard
-            icon={<Clock className="w-4 h-4 text-terminal-muted" />}
-            label="Never reviewed"
-            value={summary.neverReviewed}
-          />
+          <KpiCard tone="muted" label="Never reviewed" value={summary.neverReviewed} />
         </div>
 
         {/* Table */}
         {systems.length === 0 ? (
-          <div className="glass-card rounded-xl p-12 text-center">
+          <div className="glass rounded-xl p-12 text-center">
             <Server className="w-10 h-10 text-terminal-muted mx-auto mb-4" />
             <p className="font-mono text-terminal-text mb-2">No AI systems registered yet</p>
             <p className="text-terminal-muted text-sm mb-6">
@@ -197,53 +214,66 @@ export function InventoryClient({
             </button>
           </div>
         ) : (
-          <div className="glass-card rounded-xl overflow-hidden">
-            <table className="w-full text-left">
+          <div className="glass rounded-xl overflow-hidden">
+            <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-terminal-border font-mono text-[11px] uppercase tracking-wider text-terminal-muted">
-                  <th className="px-4 py-3">System</th>
-                  <th className="px-4 py-3 hidden md:table-cell">Owner</th>
-                  <th className="px-4 py-3">Risk</th>
-                  <th className="px-4 py-3 hidden sm:table-cell">Stage</th>
-                  <th className="px-4 py-3 hidden lg:table-cell">Next review</th>
-                  <th className="px-4 py-3 text-right">Actions</th>
+                <tr className="border-b border-terminal-border bg-terminal-gray/30 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                  <th className="px-4 py-2.5 font-semibold">Entry</th>
+                  <th className="px-4 py-2.5 font-semibold hidden sm:table-cell">Type</th>
+                  <th className="px-4 py-2.5 font-semibold hidden md:table-cell">Vendor</th>
+                  <th className="px-4 py-2.5 font-semibold">Risk</th>
+                  <th className="px-4 py-2.5 font-semibold">Approval</th>
+                  <th className="px-4 py-2.5 font-semibold hidden sm:table-cell">Lifecycle</th>
+                  <th className="px-4 py-2.5 font-semibold hidden lg:table-cell">Next review</th>
+                  <th className="px-4 py-2.5 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {systems.map((s) => {
-                  const overdue = s.nextReviewAt && new Date(s.nextReviewAt).getTime() < Date.now();
+                  const review = formatReview(s.nextReviewAt);
                   return (
-                    <tr key={s.id} className="border-b border-terminal-border/50 hover:bg-terminal-gray/30">
+                    <tr
+                      key={s.id}
+                      className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
+                    >
                       <td className="px-4 py-3">
-                        <div className="font-mono text-sm text-terminal-text">{s.name}</div>
-                        {s.vendor && <div className="text-xs text-terminal-muted">{s.vendor}</div>}
-                      </td>
-                      <td className="px-4 py-3 hidden md:table-cell text-sm text-terminal-muted">
-                        {s.businessOwner || "—"}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-md border font-mono text-[11px] uppercase ${
-                            RISK_STYLES[s.riskCategory] ?? RISK_STYLES.minimal
-                          }`}
-                        >
-                          {s.riskCategory}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 hidden sm:table-cell text-sm text-terminal-muted">
-                        {STAGE_LABELS[s.lifecycleStage] ?? s.lifecycleStage}
-                      </td>
-                      <td className="px-4 py-3 hidden lg:table-cell text-sm">
-                        {s.nextReviewAt ? (
-                          <span className={overdue ? "text-terminal-amber" : "text-terminal-muted"}>
-                            {new Date(s.nextReviewAt).toLocaleDateString()}
-                          </span>
-                        ) : (
-                          <span className="text-terminal-muted">—</span>
+                        <div className="font-medium text-terminal-text">{s.name}</div>
+                        {s.model && (
+                          <div className="font-mono text-xs text-terminal-muted">{s.model}</div>
                         )}
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell font-mono text-xs text-terminal-muted">
+                        {ENTITY_TYPE_LABELS[s.entityType as EntityType] ?? s.entityType}
+                      </td>
+                      <td className="px-4 py-3 hidden md:table-cell font-mono text-xs text-terminal-muted">
+                        {s.vendor || "—"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <RiskPill risk={s.riskCategory} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <ApprovalPill status={s.approvalStatus} />
+                      </td>
+                      <td className="px-4 py-3 hidden sm:table-cell">
+                        <StagePill stage={s.lifecycleStage} />
+                      </td>
+                      <td
+                        className={`px-4 py-3 hidden lg:table-cell font-mono text-xs tabular-nums ${
+                          review.overdue ? "text-terminal-amber" : "text-terminal-muted"
+                        }`}
+                      >
+                        {review.text}
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => setGatesId(s.id)}
+                            aria-label={`Governance gates for ${s.name}`}
+                            title="Governance gates"
+                            className="p-1.5 rounded-md text-terminal-muted hover:text-terminal-green hover:bg-terminal-gray"
+                          >
+                            <ShieldCheck className="w-4 h-4" />
+                          </button>
                           <button
                             onClick={() => openEdit(s)}
                             aria-label={`Edit ${s.name}`}
@@ -267,7 +297,7 @@ export function InventoryClient({
             </table>
           </div>
         )}
-      </div>
+      </AppPage>
 
       {/* Create / edit drawer */}
       {editing && (
@@ -278,7 +308,7 @@ export function InventoryClient({
           >
             <div className="flex items-center justify-between p-4 border-b border-terminal-border">
               <h2 className="font-mono text-terminal-text">
-                {editing.id ? "Edit system" : "Register AI system"}
+                {editing.id ? "Edit entry" : "Register AI system / model / agent / use-case"}
               </h2>
               <button
                 onClick={() => setEditing(null)}
@@ -328,11 +358,24 @@ export function InventoryClient({
                   />
                 </Field>
               </div>
+              <Field label="Entity type">
+                <select
+                  className="input-field"
+                  value={editing.entityType ?? "system"}
+                  onChange={(e) => setEditing({ ...editing, entityType: e.target.value })}
+                >
+                  {ENTITY_TYPES.map((t) => (
+                    <option key={t} value={t}>
+                      {ENTITY_TYPE_LABELS[t]}
+                    </option>
+                  ))}
+                </select>
+              </Field>
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Risk category">
                   <select
                     className="input-field"
-                    value={editing.riskCategory ?? "limited"}
+                    value={editing.riskCategory ?? "moderate"}
                     onChange={(e) => setEditing({ ...editing, riskCategory: e.target.value })}
                   >
                     {RISK_CATEGORIES.map((r) => (
@@ -375,7 +418,7 @@ export function InventoryClient({
 
               <div className="flex gap-2 pt-2">
                 <button onClick={save} disabled={saving} className="btn-primary text-sm py-2 flex-1">
-                  {saving ? "Saving…" : editing.id ? "Save changes" : "Register system"}
+                  {saving ? "Saving…" : editing.id ? "Save changes" : "Register entry"}
                 </button>
                 <button
                   onClick={() => setEditing(null)}
@@ -388,19 +431,20 @@ export function InventoryClient({
           </div>
         </div>
       )}
-    </div>
-  );
-}
 
-function SummaryCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
-  return (
-    <div className="glass-card rounded-xl px-4 py-3">
-      <div className="flex items-center gap-2 text-terminal-muted mb-1">
-        {icon}
-        <span className="font-mono text-[11px] uppercase tracking-wider">{label}</span>
-      </div>
-      <div className="font-mono text-2xl font-bold text-terminal-text">{value}</div>
-    </div>
+      {/* Governance gates drawer (Gate 1–3) */}
+      {gatesSystem && (
+        <GatesDrawer
+          system={gatesSystem}
+          onClose={() => setGatesId(null)}
+          onSystemChange={(updated) => {
+            const next = systems.map((s) => (s.id === updated.id ? { ...s, ...updated } : s));
+            setSystems(next);
+            setSummary(recomputeSummary(next));
+          }}
+        />
+      )}
+    </>
   );
 }
 

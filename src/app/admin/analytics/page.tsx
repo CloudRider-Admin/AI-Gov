@@ -2,19 +2,12 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
-import Link from 'next/link';
 import {
   RefreshCw,
   AlertTriangle,
-  Database,
-  Archive,
-  Users,
-  Zap,
-  CheckCircle2,
   TrendingUp,
   TrendingDown,
   Minus,
-  ArrowUpRight,
   X,
 } from 'lucide-react';
 import {
@@ -29,6 +22,15 @@ import {
   Pie,
   Cell,
 } from 'recharts';
+import {
+  AppPage,
+  PageHeader,
+  Panel,
+  KpiCard,
+  formatCompact,
+  formatDelta,
+  deltaTone,
+} from '@/components/app';
 
 interface EndpointStat {
   endpoint: string;
@@ -69,25 +71,10 @@ interface DashboardStats {
 }
 
 const POLL_MS = 60_000;
-const DONUT_COLORS = ['#00cc66', '#22c55e', '#f97316', '#06b6d4', '#a855f7', '#eab308'];
 
-function formatNumber(n: number): string {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 10_000) return `${(n / 1_000).toFixed(0)}K`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return n.toLocaleString();
-}
-
-function formatPct(n: number): string {
-  if (n === 0) return 'Stable';
-  const sign = n > 0 ? '+' : '';
-  return `${sign}${n.toFixed(1)}%`;
-}
-
-function pctTone(n: number): string {
-  if (n === 0) return 'text-terminal-muted';
-  return n > 0 ? 'text-terminal-green' : 'text-terminal-amber';
-}
+// Categorical series colors. Kept as hex because Recharts fills are painted
+// outside Tailwind's class pipeline; these track the terminal-* tokens.
+const SERIES_COLORS = ['#00cc66', '#f59e0b', '#06b6d4', '#a855f7', '#eab308', '#22c55e'];
 
 type StatKey = 'queries' | 'artifacts' | 'users' | 'active';
 
@@ -173,18 +160,18 @@ export default function AdminAnalyticsPage() {
 
   if (loading && !stats) {
     return (
-      <div className="p-8 flex items-center justify-center min-h-[60vh]">
-        <div className="flex items-center gap-2 font-mono text-sm text-terminal-muted">
-          <RefreshCw className="h-5 w-5 animate-spin" /> Loading system intelligence…
+      <AppPage>
+        <div className="flex min-h-[50vh] items-center justify-center gap-2 font-mono text-sm text-terminal-muted">
+          <RefreshCw className="h-5 w-5 animate-spin" /> Loading telemetry…
         </div>
-      </div>
+      </AppPage>
     );
   }
 
   if (error && !stats) {
     return (
-      <div className="p-8">
-        <div className="rounded-xl border border-terminal-red/40 bg-terminal-red/10 p-4 font-mono text-sm text-terminal-red">
+      <AppPage>
+        <div className="rounded-xl border border-terminal-red/40 bg-terminal-red/10 p-4 text-sm text-terminal-red">
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-4 w-4" /> {error}
           </div>
@@ -192,149 +179,137 @@ export default function AdminAnalyticsPage() {
             Retry
           </button>
         </div>
-      </div>
+      </AppPage>
     );
   }
 
   if (!stats) return null;
 
   return (
-    <div className="p-6 md:p-10 lg:p-12 max-w-7xl mx-auto font-mono space-y-6">
-      {/* ── Header ────────────────────────────────────────────────── */}
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-bold text-terminal-text tracking-tight mb-2">
-            System Intelligence
-          </h1>
-          <p className="text-sm text-terminal-muted max-w-xl">
-            Real-time governance telemetry and operational metrics.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="inline-flex items-center px-3 py-2 text-[11px] uppercase tracking-[0.18em] rounded-xl border border-terminal-border text-terminal-muted">
-            Last 24 Hours
-          </span>
-          <button
-            onClick={() => fetchStats()}
-            disabled={refreshing}
-            className="inline-flex items-center gap-2 rounded-xl bg-terminal-green text-terminal-black px-4 py-2 text-xs font-semibold uppercase tracking-wider hover:bg-terminal-green/90 transition-colors disabled:opacity-60"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh View
-          </button>
-        </div>
-      </div>
+    <AppPage>
+      <PageHeader
+        eyebrow="Platform / Admin"
+        title="Analytics"
+        description="Platform telemetry — query volume, artifact output, token consumption, and endpoint health."
+        actions={
+          <>
+            <span className="inline-flex items-center rounded-full border border-terminal-border px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+              Last 24 hours
+            </span>
+            <button
+              onClick={() => fetchStats()}
+              disabled={refreshing}
+              className="btn-secondary py-2 text-sm disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+          </>
+        }
+      />
 
       {error && (
-        <div className="flex items-center gap-2 rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-3 py-2 text-xs text-terminal-red">
-          <AlertTriangle className="h-3.5 w-3.5" /> {error}
+        <div className="flex items-center gap-2 rounded-xl border border-terminal-red/40 bg-terminal-red/10 px-4 py-3 text-sm text-terminal-red">
+          <AlertTriangle className="h-4 w-4" /> {error}
         </div>
       )}
 
-      {/* ── Stat row ──────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <AccentStat
-          label="Total Queries"
-          value={formatNumber(stats.totalQueries)}
-          delta={stats.deltas.totalQueriesPct}
-          accent="green"
-          icon={Database}
+      {/* ── KPI row ──────────────────────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <KpiCard
+          tone="green"
+          label="Total queries"
+          value={formatCompact(stats.totalQueries)}
+          delta={formatDelta(stats.deltas.totalQueriesPct)}
+          deltaTone={deltaTone(stats.deltas.totalQueriesPct)}
           onClick={() => setOpenStat('queries')}
         />
-        <AccentStat
+        <KpiCard
+          tone="amber"
           label="Artifacts"
-          value={formatNumber(stats.totalArtifacts)}
-          delta={stats.deltas.totalArtifactsPct}
-          accent="amber"
-          icon={Archive}
+          value={formatCompact(stats.totalArtifacts)}
+          delta={formatDelta(stats.deltas.totalArtifactsPct)}
+          deltaTone={deltaTone(stats.deltas.totalArtifactsPct)}
           onClick={() => setOpenStat('artifacts')}
         />
-        <AccentStat
-          label="Total Users"
-          value={formatNumber(stats.totalUsers)}
-          delta={stats.deltas.totalUsersPct}
-          accent="neutral"
-          icon={Users}
+        <KpiCard
+          tone="cyan"
+          label="Total users"
+          value={formatCompact(stats.totalUsers)}
+          delta={formatDelta(stats.deltas.totalUsersPct)}
+          deltaTone={deltaTone(stats.deltas.totalUsersPct)}
           onClick={() => setOpenStat('users')}
         />
-        <AccentStat
-          label="Active Today"
-          value={formatNumber(stats.activeUsersToday)}
-          delta={stats.deltas.activeTodayPct}
-          accent="green"
-          icon={Zap}
+        <KpiCard
+          tone="green"
+          label="Active today"
+          value={formatCompact(stats.activeUsersToday)}
+          delta={formatDelta(stats.deltas.activeTodayPct)}
+          deltaTone={deltaTone(stats.deltas.activeTodayPct)}
           onClick={() => setOpenStat('active')}
         />
       </div>
 
-      {/* ── Token usage + donut ───────────────────────────────────── */}
-      <div className="grid lg:grid-cols-3 gap-4">
-        <Card className="lg:col-span-2 p-6">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h3 className="text-lg font-bold text-terminal-text">Token Usage</h3>
-              <p className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mt-0.5">
-                Resource consumption over 24H
-              </p>
-            </div>
-            <div className="flex items-center gap-3 text-xs text-terminal-muted">
+      {/* ── Token usage + artifact mix ───────────────────────────── */}
+      <div className="grid items-start gap-4 lg:grid-cols-3">
+        <Panel
+          className="lg:col-span-2"
+          title="Token usage · 24h"
+          action={
+            <span className="flex items-center gap-3 text-terminal-muted">
               <LegendDot color="bg-terminal-green" label="Input" />
               <LegendDot color="bg-terminal-amber" label="Output" />
-            </div>
-          </div>
-          <div className="w-full h-60 min-w-0">
+            </span>
+          }
+          padded
+        >
+          <div className="h-60 w-full min-w-0">
             {tokenChartData.every((b) => b.input === 0 && b.output === 0) ? (
-              <div className="h-full flex items-center justify-center text-xs text-terminal-muted">
+              <div className="flex h-full items-center justify-center text-sm text-terminal-muted">
                 No token activity in the last 24 hours.
               </div>
             ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-              <BarChart data={tokenChartData} barCategoryGap="20%">
-                <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
-                <XAxis
-                  dataKey="label"
-                  tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
-                  interval={Math.floor(tokenChartData.length / 6) || 0}
-                  stroke="currentColor"
-                  className="text-terminal-muted"
-                />
-                <YAxis
-                  tick={{ fontSize: 10, fontFamily: 'var(--font-space-mono)' }}
-                  tickFormatter={(v: number) => formatNumber(v)}
-                  stroke="currentColor"
-                  className="text-terminal-muted"
-                />
-                <Tooltip
-                  cursor={{ fill: 'rgba(0,0,0,0.04)' }}
-                  contentStyle={{
-                    fontFamily: 'var(--font-space-mono)',
-                    fontSize: 11,
-                    borderRadius: 8,
-                  }}
-                  formatter={(v: number) => formatNumber(Number(v))}
-                />
-                <Bar dataKey="input" stackId="a" fill="#00cc66" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="output" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+              <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+                <BarChart data={tokenChartData} barCategoryGap="20%">
+                  <CartesianGrid strokeDasharray="3 3" className="opacity-20" />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 12, fontFamily: 'var(--font-space-mono)' }}
+                    interval={Math.floor(tokenChartData.length / 6) || 0}
+                    stroke="currentColor"
+                    className="text-terminal-muted"
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12, fontFamily: 'var(--font-space-mono)' }}
+                    tickFormatter={(v: number) => formatCompact(v)}
+                    stroke="currentColor"
+                    className="text-terminal-muted"
+                  />
+                  <Tooltip
+                    cursor={{ fill: 'rgba(0,0,0,0.04)' }}
+                    contentStyle={{
+                      fontFamily: 'var(--font-space-mono)',
+                      fontSize: 12,
+                      borderRadius: 8,
+                    }}
+                    formatter={(v: number) => formatCompact(Number(v))}
+                  />
+                  <Bar dataKey="input" stackId="a" fill="#00cc66" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="output" stackId="a" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             )}
           </div>
-        </Card>
+        </Panel>
 
-        <Card className="p-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-bold text-terminal-text">Artifacts by Type</h3>
-            <p className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mt-0.5">
-              Classification Profile
-            </p>
-          </div>
+        <Panel title="Artifacts by type" padded>
           {donutData.length === 0 ? (
-            <div className="h-56 flex items-center justify-center text-sm text-terminal-muted">
+            <div className="flex h-56 items-center justify-center text-sm text-terminal-muted">
               No artifacts yet
             </div>
           ) : (
             <>
-              <div className="relative w-full h-48 min-w-0">
+              <div className="relative h-48 w-full min-w-0">
                 <ResponsiveContainer width="100%" height="100%" minWidth={0}>
                   <PieChart>
                     <Pie
@@ -348,64 +323,64 @@ export default function AdminAnalyticsPage() {
                       paddingAngle={3}
                     >
                       {donutData.map((_, i) => (
-                        <Cell key={i} fill={DONUT_COLORS[i % DONUT_COLORS.length]} stroke="none" />
+                        <Cell key={i} fill={SERIES_COLORS[i % SERIES_COLORS.length]} stroke="none" />
                       ))}
                     </Pie>
                     <Tooltip
-                      contentStyle={{ fontFamily: 'var(--font-space-mono)', fontSize: 11, borderRadius: 8 }}
+                      contentStyle={{ fontFamily: 'var(--font-space-mono)', fontSize: 12, borderRadius: 8 }}
                     />
                   </PieChart>
                 </ResponsiveContainer>
-                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                  <span className="text-3xl font-bold text-terminal-text">
-                    {formatNumber(stats.artifactTotal)}
+                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="font-mono text-3xl font-bold tabular-nums text-terminal-text">
+                    {formatCompact(stats.artifactTotal)}
                   </span>
-                  <span className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted">Total</span>
+                  <span className="font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                    Total
+                  </span>
                 </div>
               </div>
-              <div className="space-y-1.5 mt-4">
+              <div className="mt-4 space-y-1.5">
                 {donutData.map((d, i) => {
                   const pct = stats.artifactTotal > 0 ? Math.round((d.value / stats.artifactTotal) * 100) : 0;
                   return (
                     <div key={d.name} className="flex items-center gap-2 text-xs">
                       <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{ backgroundColor: DONUT_COLORS[i % DONUT_COLORS.length] }}
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: SERIES_COLORS[i % SERIES_COLORS.length] }}
+                        aria-hidden="true"
                       />
                       <span className="capitalize text-terminal-text">{d.name.replace(/_/g, ' ')}</span>
-                      <span className="ml-auto text-terminal-muted">{pct}%</span>
+                      <span className="ml-auto font-mono tabular-nums text-terminal-muted">{pct}%</span>
                     </div>
                   );
                 })}
               </div>
             </>
           )}
-        </Card>
+        </Panel>
       </div>
 
-      {/* ── Weekly bar + system health ────────────────────────────── */}
-      <div className="grid lg:grid-cols-5 gap-4">
-        <Card className="lg:col-span-3 p-6">
-          <h3 className="text-lg font-bold text-terminal-text mb-6">Queries (Last 7 Days)</h3>
-          <div className="h-56 flex items-end justify-around px-2">
+      {/* ── Weekly queries + service health ──────────────────────── */}
+      <div className="grid items-start gap-4 lg:grid-cols-5">
+        <Panel className="lg:col-span-3" title="Queries · last 7 days" padded>
+          <div className="flex h-56 items-end justify-around px-2">
             {weeklyData.map((d, i) => {
               const max = Math.max(1, ...weeklyData.map((x) => x.queries));
               const h = Math.max(6, Math.round((d.queries / max) * 160));
               const isPeak = i === peakQueriesIdx;
               return (
-                <div key={d.day} className="flex flex-col items-center gap-2 flex-1">
+                <div key={d.day} className="flex flex-1 flex-col items-center gap-2">
                   <span
-                    className={`text-[10px] uppercase tracking-[0.18em] ${
-                      isPeak ? 'text-terminal-green font-bold' : 'text-terminal-muted'
+                    className={`font-mono text-xs uppercase tracking-wider ${
+                      isPeak ? 'font-bold text-terminal-green' : 'text-terminal-muted'
                     }`}
                   >
                     {d.day}
                   </span>
                   <div
-                    className={`w-10 md:w-12 rounded-t-md transition-all ${
-                      isPeak
-                        ? 'bg-terminal-green'
-                        : 'bg-terminal-gray border border-terminal-border'
+                    className={`w-10 rounded-t-md transition-all md:w-12 ${
+                      isPeak ? 'bg-terminal-green' : 'border border-terminal-border bg-terminal-gray'
                     }`}
                     style={{ height: `${h}px` }}
                     title={`${d.queries} queries`}
@@ -414,87 +389,81 @@ export default function AdminAnalyticsPage() {
               );
             })}
           </div>
-        </Card>
+        </Panel>
 
-        {/* Dark System Health card */}
-        <div className="lg:col-span-2 rounded-xl p-6 space-y-5" style={{ backgroundColor: '#0f1012' }}>
-          <h3 className="text-base font-bold text-terminal-green tracking-wide">SYSTEM HEALTH</h3>
-
-          <HealthRow
-            label="Cluster Uptime"
-            value={`${stats.systemHealth.clusterUptimePct.toFixed(4)}%`}
-            right={<CheckCircle2 className="w-5 h-5 text-terminal-green" />}
-          />
-
-          <HealthRow
-            label="Latency (P99)"
-            value={`${stats.systemHealth.latencyP99Ms}ms`}
-            right={
-              <span
-                className={`text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md border ${
-                  stats.systemHealth.verdict === 'Optimal'
-                    ? 'border-terminal-green/50 text-terminal-green'
-                    : stats.systemHealth.verdict === 'Degraded'
-                    ? 'border-terminal-amber/50 text-terminal-amber'
-                    : 'border-terminal-red/50 text-terminal-red'
-                }`}
-              >
-                {stats.systemHealth.verdict}
-              </span>
-            }
-          />
-
-          <HealthRow
-            label="Error Rate"
-            value={`${stats.systemHealth.errorRate.toFixed(3)}%`}
-            right={<EqualizerBars />}
-            tone="green"
-          />
-        </div>
+        <Panel className="lg:col-span-2" title="Service health" padded>
+          <dl className="space-y-5">
+            <HealthRow
+              label="Request success rate"
+              value={`${(100 - stats.systemHealth.errorRate).toFixed(2)}%`}
+              note={`${stats.systemHealth.errorRate.toFixed(2)}% errored · 24h`}
+              tone={stats.systemHealth.errorRate > 1 ? 'amber' : 'green'}
+            />
+            <HealthRow
+              label="Database round-trip"
+              value={`${stats.systemHealth.latencyP99Ms}ms`}
+              note={stats.systemHealth.verdict}
+              tone={
+                stats.systemHealth.verdict === 'Optimal'
+                  ? 'green'
+                  : stats.systemHealth.verdict === 'Degraded'
+                  ? 'amber'
+                  : 'red'
+              }
+            />
+            <HealthRow
+              label="Avg response time"
+              value={`${stats.avgResponseTimeMs}ms`}
+              note="sampled this request"
+              tone="muted"
+            />
+          </dl>
+        </Panel>
       </div>
 
-      {/* ── Top API endpoints ─────────────────────────────────────── */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-lg font-bold text-terminal-text">Top API Endpoints</h3>
-          <Link
-            href="/admin/knowledge"
-            className="inline-flex items-center gap-1 text-xs text-terminal-green hover:underline"
-          >
-            Full API Logs <ArrowUpRight className="w-3 h-3" />
-          </Link>
-        </div>
-
+      {/* ── Top API endpoints ────────────────────────────────────── */}
+      <Panel title="Top API endpoints · 24h">
         {stats.topEndpoints.length === 0 ? (
-          <p className="text-sm text-terminal-muted">No endpoint activity in the last 24 hours.</p>
+          <p className="px-4 py-8 text-center text-sm text-terminal-muted">
+            No endpoint activity in the last 24 hours.
+          </p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-left text-sm">
               <thead>
-                <tr className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted border-b border-terminal-border">
-                  <th className="text-left font-normal py-3 pr-4">Endpoint</th>
-                  <th className="text-left font-normal py-3 pr-4">Calls (24h)</th>
-                  <th className="text-left font-normal py-3 pr-4">Success Rate</th>
-                  <th className="text-left font-normal py-3 pr-4">Avg Payload</th>
-                  <th className="text-right font-normal py-3">Trend</th>
+                <tr className="border-b border-terminal-border bg-terminal-gray/30 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                  <th className="px-4 py-2.5 font-semibold">Endpoint</th>
+                  <th className="px-4 py-2.5 font-semibold">Calls</th>
+                  <th className="px-4 py-2.5 font-semibold">Success rate</th>
+                  <th className="hidden px-4 py-2.5 font-semibold sm:table-cell">Avg payload</th>
+                  <th className="px-4 py-2.5 text-right font-semibold">Trend</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-terminal-border">
+              <tbody>
                 {stats.topEndpoints.map((ep) => (
-                  <tr key={ep.endpoint} className="hover:bg-terminal-gray/30 transition-colors">
-                    <td className="py-4 pr-4 text-terminal-green">/{ep.endpoint.replace(/^\/+/, '')}</td>
-                    <td className="py-4 pr-4 text-terminal-text">{ep.count.toLocaleString()}</td>
-                    <td className="py-4 pr-4">
+                  <tr
+                    key={ep.endpoint}
+                    className="border-b border-terminal-border/50 transition-colors duration-300 last:border-b-0 hover:bg-terminal-gray/30"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs text-terminal-green">
+                      /{ep.endpoint.replace(/^\/+/, '')}
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs tabular-nums text-terminal-text">
+                      {ep.count.toLocaleString()}
+                    </td>
+                    <td className="px-4 py-3">
                       <SuccessBar pct={ep.successRate} />
                     </td>
-                    <td className="py-4 pr-4 text-terminal-text">{ep.avgPayloadKb.toFixed(1)} KB</td>
-                    <td className="py-4 text-right">
+                    <td className="hidden px-4 py-3 font-mono text-xs tabular-nums text-terminal-muted sm:table-cell">
+                      {ep.avgPayloadKb.toFixed(1)} KB
+                    </td>
+                    <td className="px-4 py-3 text-right">
                       {ep.trend === 'up' ? (
-                        <TrendingUp className="inline w-4 h-4 text-terminal-green" />
+                        <TrendingUp className="inline h-4 w-4 text-terminal-green" aria-label="trending up" />
                       ) : ep.trend === 'down' ? (
-                        <TrendingDown className="inline w-4 h-4 text-terminal-amber" />
+                        <TrendingDown className="inline h-4 w-4 text-terminal-amber" aria-label="trending down" />
                       ) : (
-                        <Minus className="inline w-4 h-4 text-terminal-muted" />
+                        <Minus className="inline h-4 w-4 text-terminal-muted" aria-label="flat" />
                       )}
                     </td>
                   </tr>
@@ -503,7 +472,7 @@ export default function AdminAnalyticsPage() {
             </table>
           </div>
         )}
-      </Card>
+      </Panel>
 
       <StatDetailDrawer
         openStat={openStat}
@@ -512,106 +481,47 @@ export default function AdminAnalyticsPage() {
         donutData={donutData}
         onClose={() => setOpenStat(null)}
       />
-    </div>
+    </AppPage>
   );
 }
 
 // ── Sub-components ──────────────────────────────────────────────────
 
-function Card({ className = '', children }: { className?: string; children: React.ReactNode }) {
-  return (
-    <div className={`rounded-xl border border-terminal-border bg-terminal-black ${className}`}>{children}</div>
-  );
-}
-
 function LegendDot({ color, label }: { color: string; label: string }) {
   return (
     <span className="inline-flex items-center gap-1.5">
-      <span className={`inline-block w-2 h-2 rounded-full ${color}`} />
+      <span className={`inline-block h-2 w-2 rounded-full ${color}`} aria-hidden="true" />
       {label}
     </span>
-  );
-}
-
-function AccentStat({
-  label,
-  value,
-  delta,
-  accent,
-  icon: Icon,
-  onClick,
-}: {
-  label: string;
-  value: string;
-  delta: number;
-  accent: 'green' | 'amber' | 'neutral';
-  icon: typeof Database;
-  onClick?: () => void;
-}) {
-  const barColor =
-    accent === 'green' ? 'bg-terminal-green' : accent === 'amber' ? 'bg-terminal-amber' : 'bg-terminal-muted';
-  const deltaLabel = formatPct(delta);
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`View ${label} breakdown`}
-      className="group relative rounded-xl border border-terminal-border bg-terminal-black p-4 overflow-hidden text-left transition-colors hover:border-terminal-green/60 focus:outline-none focus:ring-2 focus:ring-terminal-green/50 focus:ring-offset-0"
-    >
-      <div className={`absolute left-0 top-0 bottom-0 w-1 ${barColor}`} />
-      <div className="flex items-center justify-between mb-3 gap-2">
-        <span className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted truncate">
-          {label}
-        </span>
-        <span className="inline-flex items-center gap-1.5 shrink-0">
-          <ArrowUpRight className="w-3.5 h-3.5 text-terminal-muted opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity" />
-          <Icon className="w-4 h-4 text-terminal-muted group-hover:text-terminal-green transition-colors" />
-        </span>
-      </div>
-      <div className="flex items-baseline gap-2 flex-wrap">
-        <span className="text-2xl md:text-3xl font-bold text-terminal-text">{value}</span>
-        <span className={`text-[11px] ${deltaLabel === 'Stable' ? 'text-terminal-muted' : pctTone(delta)}`}>
-          {deltaLabel}
-        </span>
-      </div>
-      <div className={`mt-3 h-1 rounded-full ${barColor} opacity-60 group-hover:opacity-100 transition-opacity`} />
-    </button>
   );
 }
 
 function HealthRow({
   label,
   value,
-  right,
-  tone = 'default',
+  note,
+  tone,
 }: {
   label: string;
   value: string;
-  right: React.ReactNode;
-  tone?: 'default' | 'green';
+  note: string;
+  tone: 'green' | 'amber' | 'red' | 'muted';
 }) {
+  const toneClass =
+    tone === 'green'
+      ? 'text-terminal-green'
+      : tone === 'amber'
+      ? 'text-terminal-amber'
+      : tone === 'red'
+      ? 'text-terminal-red'
+      : 'text-terminal-muted';
   return (
     <div>
-      <div className="text-[10px] uppercase tracking-[0.18em] text-white/60 mb-1.5">{label}</div>
-      <div className="flex items-center justify-between">
-        <span
-          className={`text-2xl font-bold ${tone === 'green' ? 'text-terminal-green' : 'text-white'}`}
-        >
-          {value}
-        </span>
-        {right}
-      </div>
-    </div>
-  );
-}
-
-function EqualizerBars() {
-  // Static equalizer-style accent, matches the mock's abstract waveform glyph.
-  return (
-    <div className="flex items-end gap-0.5 h-4">
-      {[6, 10, 14, 8, 12, 16].map((h, i) => (
-        <span key={i} className="w-0.5 bg-terminal-green rounded-sm" style={{ height: `${h}px` }} />
-      ))}
+      <dt className="font-mono text-xs uppercase tracking-wider text-terminal-muted">{label}</dt>
+      <dd className="mt-1 flex items-baseline justify-between gap-2">
+        <span className="font-mono text-2xl font-bold tabular-nums text-terminal-text">{value}</span>
+        <span className={`font-mono text-xs ${toneClass}`}>{note}</span>
+      </dd>
     </div>
   );
 }
@@ -634,11 +544,11 @@ function StatDetailDrawer({
 
   const open = openStat !== null;
   const title =
-    openStat === 'queries' ? 'Total Queries'
+    openStat === 'queries' ? 'Total queries'
       : openStat === 'artifacts' ? 'Artifacts'
-      : openStat === 'users' ? 'Total Users'
-      : openStat === 'active' ? 'Active Today'
-      : '';
+        : openStat === 'users' ? 'Total users'
+          : openStat === 'active' ? 'Active today'
+            : '';
 
   if (!mounted) return null;
 
@@ -646,7 +556,7 @@ function StatDetailDrawer({
     <>
       <div
         className={`fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm transition-opacity ${
-          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={onClose}
         aria-hidden="true"
@@ -655,26 +565,26 @@ function StatDetailDrawer({
         role="dialog"
         aria-modal="true"
         aria-label={`${title} breakdown`}
-        className={`fixed inset-y-0 right-0 z-[70] flex flex-col w-full sm:w-[420px] md:w-[460px] lg:w-[500px] max-w-full bg-terminal-black border-l border-terminal-border shadow-2xl transition-transform duration-200 ease-out ${
+        className={`fixed inset-y-0 right-0 z-[70] flex w-full max-w-full flex-col border-l border-terminal-border bg-terminal-dark shadow-2xl transition-transform duration-200 ease-out sm:w-[420px] md:w-[460px] lg:w-[500px] ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between gap-3 px-5 md:px-6 py-4 border-b border-terminal-border shrink-0">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-terminal-border px-5 py-4 md:px-6">
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted">Breakdown</p>
-            <h2 className="text-lg font-bold text-terminal-text truncate">{title}</h2>
+            <p className="font-mono text-xs uppercase tracking-wider text-terminal-muted">Breakdown</p>
+            <h2 className="truncate font-mono text-lg font-bold text-terminal-text">{title}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="shrink-0 p-2 rounded-md text-terminal-muted hover:text-terminal-text hover:bg-terminal-gray/40 transition-colors focus:outline-none focus:ring-2 focus:ring-terminal-green/50"
+            className="shrink-0 rounded-md p-2 text-terminal-muted transition-colors hover:bg-terminal-gray/40 hover:text-terminal-text focus:outline-none focus-visible:ring-2 focus-visible:ring-terminal-green/50"
             aria-label="Close breakdown"
           >
-            <X className="w-4 h-4" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-5 md:p-6 pb-24 md:pb-6 space-y-6">
+        <div className="min-h-0 flex-1 space-y-6 overflow-y-auto overscroll-contain p-5 pb-24 md:p-6 md:pb-6">
           {openStat === 'queries' && <QueriesBreakdown stats={stats} weeklyData={weeklyData} />}
           {openStat === 'artifacts' && <ArtifactsBreakdown stats={stats} donutData={donutData} />}
           {openStat === 'users' && <UsersBreakdown stats={stats} />}
@@ -687,21 +597,19 @@ function StatDetailDrawer({
   return createPortal(content, document.body);
 }
 
-function DrawerMetric({
-  label,
-  value,
-  sub,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-}) {
+function DrawerMetric({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
-    <div className="rounded-xl border border-terminal-border bg-terminal-gray/20 p-4">
-      <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mb-1.5">{label}</div>
-      <div className="text-2xl font-bold text-terminal-text">{value}</div>
-      {sub && <div className="text-[11px] text-terminal-muted mt-1">{sub}</div>}
+    <div className="rounded-xl border border-terminal-border bg-terminal-gray/30 p-4">
+      <div className="mb-1.5 font-mono text-xs uppercase tracking-wider text-terminal-muted">{label}</div>
+      <div className="font-mono text-2xl font-bold tabular-nums text-terminal-text">{value}</div>
+      {sub && <div className="mt-1 font-sans text-xs text-terminal-muted">{sub}</div>}
     </div>
+  );
+}
+
+function DrawerSectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-3 font-mono text-xs uppercase tracking-wider text-terminal-muted">{children}</div>
   );
 }
 
@@ -722,39 +630,33 @@ function QueriesBreakdown({
     <>
       <div className="grid grid-cols-2 gap-3">
         <DrawerMetric
-          label="All Time"
-          value={formatNumber(stats.totalQueries)}
-          sub={`${formatPct(stats.deltas.totalQueriesPct)} vs prior 24h`}
+          label="All time"
+          value={formatCompact(stats.totalQueries)}
+          sub={`${formatDelta(stats.deltas.totalQueriesPct)} vs prior 24h`}
         />
+        <DrawerMetric label="Last 7 days" value={formatCompact(last7)} sub={`${formatDelta(wow)} WoW`} />
+        <DrawerMetric label="Avg / day (7d)" value={formatCompact(avgPerDay)} />
         <DrawerMetric
-          label="Last 7 Days"
-          value={formatNumber(last7)}
-          sub={`${formatPct(wow)} WoW`}
-        />
-        <DrawerMetric label="Avg / Day (7d)" value={formatNumber(avgPerDay)} />
-        <DrawerMetric
-          label="Error Rate"
+          label="Error rate"
           value={`${stats.errorRate.toFixed(2)}%`}
           sub={`Avg response ${stats.avgResponseTimeMs}ms`}
         />
       </div>
 
       <div>
-        <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mb-3">
-          Daily distribution (last 7 days)
-        </div>
+        <DrawerSectionLabel>Daily distribution · last 7 days</DrawerSectionLabel>
         <div className="space-y-2">
           {weeklyData.map((d) => (
             <div key={d.day} className="flex items-center gap-3 text-xs">
-              <span className="w-10 text-terminal-muted">{d.day}</span>
-              <div className="flex-1 h-2 rounded-full bg-terminal-gray/40 overflow-hidden">
+              <span className="w-10 font-mono text-terminal-muted">{d.day}</span>
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-terminal-gray/40">
                 <div
                   className="h-full bg-terminal-green"
                   style={{ width: `${Math.max(2, (d.queries / max) * 100)}%` }}
                 />
               </div>
-              <span className="w-12 text-right text-terminal-text tabular-nums">
-                {formatNumber(d.queries)}
+              <span className="w-12 text-right font-mono tabular-nums text-terminal-text">
+                {formatCompact(d.queries)}
               </span>
             </div>
           ))}
@@ -778,45 +680,40 @@ function ArtifactsBreakdown({
     <>
       <div className="grid grid-cols-2 gap-3">
         <DrawerMetric
-          label="All Time"
-          value={formatNumber(stats.totalArtifacts)}
-          sub={`${formatPct(stats.deltas.totalArtifactsPct)} vs prior 24h`}
+          label="All time"
+          value={formatCompact(stats.totalArtifacts)}
+          sub={`${formatDelta(stats.deltas.totalArtifactsPct)} vs prior 24h`}
         />
-        <DrawerMetric
-          label="Types"
-          value={String(sorted.length)}
-          sub="distinct categories"
-        />
+        <DrawerMetric label="Types" value={String(sorted.length)} sub="distinct categories" />
       </div>
 
       <div>
-        <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted mb-3">
-          Distribution by type
-        </div>
+        <DrawerSectionLabel>Distribution by type</DrawerSectionLabel>
         {sorted.length === 0 ? (
           <p className="text-sm text-terminal-muted">No artifacts generated yet.</p>
         ) : (
           <div className="space-y-2">
             {sorted.map((d, i) => {
               const pct = stats.artifactTotal > 0 ? (d.value / stats.artifactTotal) * 100 : 0;
-              const color = DONUT_COLORS[i % DONUT_COLORS.length];
+              const color = SERIES_COLORS[i % SERIES_COLORS.length];
               return (
                 <div key={d.name} className="flex items-center gap-3 text-xs">
                   <span
-                    className="w-2 h-2 rounded-full shrink-0"
+                    className="h-2 w-2 shrink-0 rounded-full"
                     style={{ backgroundColor: color }}
+                    aria-hidden="true"
                   />
-                  <span className="w-28 capitalize text-terminal-text truncate">
+                  <span className="w-28 truncate capitalize text-terminal-text">
                     {d.name.replace(/_/g, ' ')}
                   </span>
-                  <div className="flex-1 h-2 rounded-full bg-terminal-gray/40 overflow-hidden">
+                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-terminal-gray/40">
                     <div
                       className="h-full"
                       style={{ width: `${Math.max(2, (d.value / max) * 100)}%`, backgroundColor: color }}
                     />
                   </div>
-                  <span className="w-16 text-right text-terminal-text tabular-nums">
-                    {formatNumber(d.value)} ({pct.toFixed(0)}%)
+                  <span className="w-16 text-right font-mono tabular-nums text-terminal-text">
+                    {formatCompact(d.value)} ({pct.toFixed(0)}%)
                   </span>
                 </div>
               );
@@ -834,38 +731,36 @@ function UsersBreakdown({ stats }: { stats: DashboardStats }) {
     <>
       <div className="grid grid-cols-2 gap-3">
         <DrawerMetric
-          label="All Time"
-          value={formatNumber(stats.totalUsers)}
-          sub={`${formatPct(stats.deltas.totalUsersPct)} new last 24h`}
+          label="All time"
+          value={formatCompact(stats.totalUsers)}
+          sub={`${formatDelta(stats.deltas.totalUsersPct)} new last 24h`}
         />
         <DrawerMetric
-          label="Active Today"
-          value={formatNumber(stats.activeUsersToday)}
+          label="Active today"
+          value={formatCompact(stats.activeUsersToday)}
           sub={`${activeRate.toFixed(1)}% of total`}
         />
       </div>
 
-      <div className="rounded-xl border border-terminal-border p-4 space-y-3">
-        <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted">
-          Engagement
-        </div>
+      <div className="space-y-3 rounded-xl border border-terminal-border p-4">
+        <DrawerSectionLabel>Engagement</DrawerSectionLabel>
         <div className="flex items-center gap-3 text-xs">
-          <span className="w-28 text-terminal-muted">Active / Total</span>
-          <div className="flex-1 h-2 rounded-full bg-terminal-gray/40 overflow-hidden">
+          <span className="w-28 text-terminal-muted">Active / total</span>
+          <div className="h-2 flex-1 overflow-hidden rounded-full bg-terminal-gray/40">
             <div
               className="h-full bg-terminal-green"
               style={{ width: `${Math.max(2, Math.min(100, activeRate))}%` }}
             />
           </div>
-          <span className="w-14 text-right text-terminal-text tabular-nums">
+          <span className="w-14 text-right font-mono tabular-nums text-terminal-text">
             {activeRate.toFixed(1)}%
           </span>
         </div>
       </div>
 
-      <p className="text-xs text-terminal-muted leading-relaxed">
-        New-user growth is measured on a rolling 24-hour window. For cohort retention and
-        lifecycle breakdowns, see the full user analytics page.
+      <p className="font-sans text-xs leading-relaxed text-terminal-muted">
+        New-user growth is measured on a rolling 24-hour window. For cohort retention and lifecycle
+        breakdowns, see the full user analytics page.
       </p>
     </>
   );
@@ -878,34 +773,34 @@ function ActiveBreakdown({ stats }: { stats: DashboardStats }) {
     <>
       <div className="grid grid-cols-2 gap-3">
         <DrawerMetric
-          label="Active Today"
-          value={formatNumber(stats.activeUsersToday)}
-          sub={`${formatPct(delta)} vs yesterday`}
+          label="Active today"
+          value={formatCompact(stats.activeUsersToday)}
+          sub={`${formatDelta(delta)} vs yesterday`}
         />
         <DrawerMetric
-          label="% of Userbase"
+          label="% of userbase"
           value={`${activeRate.toFixed(1)}%`}
-          sub={`of ${formatNumber(stats.totalUsers)} total users`}
+          sub={`of ${formatCompact(stats.totalUsers)} total users`}
         />
       </div>
 
-      <div className="rounded-xl border border-terminal-border p-4 space-y-2">
-        <div className="text-[10px] uppercase tracking-[0.18em] text-terminal-muted">
-          Day-over-day change
-        </div>
+      <div className="space-y-2 rounded-xl border border-terminal-border p-4">
+        <DrawerSectionLabel>Day-over-day change</DrawerSectionLabel>
         <div className="flex items-baseline gap-2">
           <span
-            className={`text-2xl font-bold ${delta > 0 ? 'text-terminal-green' : delta < 0 ? 'text-terminal-amber' : 'text-terminal-muted'}`}
+            className={`font-mono text-2xl font-bold tabular-nums ${
+              delta > 0 ? 'text-terminal-green' : delta < 0 ? 'text-terminal-amber' : 'text-terminal-muted'
+            }`}
           >
-            {formatPct(delta)}
+            {formatDelta(delta)}
           </span>
           <span className="text-xs text-terminal-muted">vs previous day</span>
         </div>
       </div>
 
-      <p className="text-xs text-terminal-muted leading-relaxed">
-        &ldquo;Active&rdquo; is any authenticated user who generated an analytics event since
-        00:00 UTC. Guest traffic is not counted.
+      <p className="font-sans text-xs leading-relaxed text-terminal-muted">
+        &ldquo;Active&rdquo; is any authenticated user who generated an analytics event since 00:00 UTC.
+        Guest traffic is not counted.
       </p>
     </>
   );
@@ -913,13 +808,13 @@ function ActiveBreakdown({ stats }: { stats: DashboardStats }) {
 
 function SuccessBar({ pct }: { pct: number }) {
   const tone = pct >= 99 ? 'bg-terminal-green' : pct >= 95 ? 'bg-terminal-green/80' : 'bg-terminal-amber';
-  const toneText = pct >= 99 ? 'text-terminal-green' : pct >= 95 ? 'text-terminal-green' : 'text-terminal-amber';
+  const toneText = pct >= 95 ? 'text-terminal-green' : 'text-terminal-amber';
   return (
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-1.5 rounded-full bg-terminal-gray overflow-hidden max-w-[120px]">
+      <div className="h-1.5 max-w-[120px] flex-1 overflow-hidden rounded-full bg-terminal-gray">
         <div className={`h-full ${tone}`} style={{ width: `${Math.max(2, pct)}%` }} />
       </div>
-      <span className={`text-xs ${toneText}`}>{pct.toFixed(1)}%</span>
+      <span className={`font-mono text-xs tabular-nums ${toneText}`}>{pct.toFixed(1)}%</span>
     </div>
   );
 }

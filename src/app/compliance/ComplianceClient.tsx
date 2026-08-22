@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronDown, ShieldCheck } from "lucide-react";
 import type { FrameworkPosture, ControlWithStatus } from "@/lib/compliance";
 import { ASSESSMENT_STATUSES, type AssessmentStatus } from "@/lib/governanceEnums";
+import { AppPage, PageHeader, Panel } from "@/components/app";
 
 const STATUS_LABELS: Record<AssessmentStatus, string> = {
   "not-started": "Not started",
@@ -59,80 +60,83 @@ export function ComplianceClient({ initialFrameworks }: { initialFrameworks: Fra
   };
 
   return (
-    <div className="section min-h-screen">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-8">
-          <span className="font-mono text-terminal-green text-sm uppercase tracking-wider mb-3 block">
-            Governance / Compliance
-          </span>
-          <h1 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-3">
-            Compliance Posture
-          </h1>
-          <p className="text-terminal-muted font-sans max-w-2xl">
-            Live control coverage across the frameworks that matter. Set each control&apos;s status to
-            build an audit-ready picture of where you stand.
-          </p>
-        </header>
+    <AppPage>
+      <PageHeader
+        eyebrow="Governance / Compliance"
+        title="Compliance Posture"
+        description={
+          <>
+            How your AI governance measures up against the control frameworks that matter for U.S.
+            organizations — the <strong className="text-terminal-text">NIST AI RMF</strong> and{" "}
+            <strong className="text-terminal-text">ISO/IEC 42001</strong> first, with the EU AI Act
+            available when you operate in the EU. Set each control&apos;s status to build an
+            audit-ready record of where you stand and what to fix next.
+          </>
+        }
+      />
 
-        {/* Framework coverage cards / tabs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-8">
-          {frameworks.map((fw) => (
-            <button
-              key={fw.id}
-              onClick={() => setActiveId(fw.id)}
-              className={`glass-card rounded-xl p-4 text-left transition-colors ${
-                fw.id === activeId ? "border-terminal-green/50" : "hover:border-terminal-border"
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <ShieldCheck className="w-4 h-4 text-terminal-green" />
-                <span className={`font-mono text-2xl font-bold ${coverageColor(fw.coverage)}`}>
-                  {fw.coverage}%
-                </span>
-              </div>
-              <div className="font-mono text-sm text-terminal-text">{fw.name}</div>
-              <div className="text-xs text-terminal-muted mt-0.5">{fw.authority}</div>
-              <div className="mt-3 h-1.5 rounded-full bg-terminal-gray overflow-hidden">
-                <div
-                  className="h-full bg-terminal-green transition-all"
-                  style={{ width: `${fw.coverage}%` }}
-                />
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Control list for the active framework */}
-        {active && (
-          <div className="glass-card rounded-xl overflow-hidden">
-            <div className="px-4 py-3 border-b border-terminal-border flex items-center justify-between">
-              <h2 className="font-mono text-sm text-terminal-text">{active.name} — controls</h2>
-              <span className="font-mono text-xs text-terminal-muted">
-                {active.counts.implemented} implemented · {active.counts["in-progress"]} in progress ·{" "}
-                {active.counts["not-started"]} not started
+      {/* Framework coverage cards / tabs */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {frameworks.map((fw) => (
+          <button
+            key={fw.id}
+            onClick={() => setActiveId(fw.id)}
+            aria-pressed={fw.id === activeId}
+            className={`glass rounded-xl p-4 text-left transition-all duration-300 hover:-translate-y-px ${
+              fw.id === activeId ? "border-terminal-green/50" : "hover:border-terminal-border"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <ShieldCheck className="w-4 h-4 text-terminal-green" />
+              <span
+                className={`font-mono text-2xl font-bold tabular-nums ${coverageColor(fw.coverage)}`}
+              >
+                {fw.coverage}%
               </span>
             </div>
-            <ul className="divide-y divide-terminal-border/50">
-              {active.controls.map((c) => (
-                <li key={c.id} className="px-4 py-3 flex items-start justify-between gap-4">
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs text-terminal-green">{c.id}</span>
-                      <span className="font-mono text-sm text-terminal-text">{c.title}</span>
-                      <span className="text-[10px] uppercase tracking-wider text-terminal-muted border border-terminal-border rounded px-1.5 py-0.5">
-                        {c.category}
-                      </span>
-                    </div>
-                    <p className="text-xs text-terminal-muted mt-1 max-w-2xl">{c.description}</p>
-                  </div>
-                  <StatusSelect value={c.status} onChange={(s) => setStatus(c, s)} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+            <div className="font-mono text-sm text-terminal-text">{fw.name}</div>
+            <div className="text-xs text-terminal-muted mt-0.5">{fw.authority}</div>
+            <div className="mt-4 h-1.5 rounded-full bg-terminal-gray/30 overflow-hidden">
+              <div
+                className="h-full rounded-full bg-terminal-green transition-all"
+                style={{ width: `${fw.coverage}%` }}
+              />
+            </div>
+          </button>
+        ))}
       </div>
-    </div>
+
+      {/* Control list for the active framework */}
+      {active && (
+        <Panel
+          title={`${active.name} — controls`}
+          action={
+            <span className="font-normal text-terminal-muted">
+              {active.counts.implemented} implemented · {active.counts["in-progress"]} in progress ·{" "}
+              {active.counts["not-started"]} not started
+            </span>
+          }
+        >
+          <ul className="divide-y divide-terminal-border/50">
+            {active.controls.map((c) => (
+              <li key={c.id} className="px-4 py-3 flex items-start justify-between gap-4">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-xs text-terminal-green">{c.id}</span>
+                    <span className="text-sm font-medium text-terminal-text">{c.title}</span>
+                    <span className="rounded-md border border-terminal-border px-1.5 py-0.5 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                      {c.category}
+                    </span>
+                  </div>
+                  <p className="text-xs text-terminal-muted mt-1 max-w-2xl">{c.description}</p>
+                </div>
+                <StatusSelect value={c.status} onChange={(s) => setStatus(c, s)} />
+              </li>
+            ))}
+          </ul>
+        </Panel>
+      )}
+    </AppPage>
   );
 }
 
@@ -148,7 +152,7 @@ function StatusSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as AssessmentStatus)}
-        className={`appearance-none cursor-pointer pl-2.5 pr-7 py-1 rounded-md border font-mono text-[11px] uppercase ${STATUS_STYLES[value]}`}
+        className={`appearance-none cursor-pointer pl-2.5 pr-7 py-1 rounded-md border font-mono text-xs uppercase ${STATUS_STYLES[value]}`}
         aria-label="Control status"
       >
         {ASSESSMENT_STATUSES.map((s) => (
