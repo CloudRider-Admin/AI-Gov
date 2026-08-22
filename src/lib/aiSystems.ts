@@ -156,47 +156,12 @@ export async function updateAiSystem(userId: string, id: string, input: Partial<
   return system;
 }
 
-/**
- * Gate 3 — record an approval decision (Approved / Pending / Rejected) for a
- * medium/high risk agent, model, or use-case after remediation is complete.
- * `approverName` is the display identity of the session user making the call.
- */
-export async function setApprovalStatus(
-  userId: string,
-  id: string,
-  status: ApprovalStatus,
-  approverName: string,
-  note?: string | null,
-) {
-  const existing = await getAiSystem(userId, id);
-  if (!existing) return null;
-  if (!requiresApproval(existing.riskCategory)) {
-    return { error: 'Approval only applies to medium and high risk entries' } as const;
-  }
-
-  const decided = status === 'approved' || status === 'rejected';
-  const system = await prisma.aiSystem.update({
-    where: { id },
-    data: {
-      approvalStatus: status,
-      approvedBy: decided ? approverName : null,
-      approvedAt: decided ? new Date() : null,
-      approvalNote: note ?? null,
-    },
-  });
-
-  writeAuditLog({
-    actorId: userId,
-    action: `ai_system.approval.${status}`,
-    entityType: 'ai_system',
-    entityId: id,
-    summary: decided
-      ? `${status === 'approved' ? 'Approved' : 'Rejected'} AI ${existing.entityType} "${existing.name}" (${existing.riskCategory} risk) by ${approverName}`
-      : `Reset approval of AI ${existing.entityType} "${existing.name}" to pending`,
-  });
-
-  return { system } as const;
-}
+// Gate 3 approvals are recorded exclusively by `recordApprovalDecision` in
+// gates/approvals.ts, which enforces the exit criteria (Gate 2 cleared,
+// remediation closed) before a decision is written. A second, unguarded setter
+// used to live here and let the inventory drawer stamp an approval over a failed
+// Gate 2 — do not reintroduce one. Withdrawals go through
+// `withdrawApprovalDecision` in the same module.
 
 /** Soft-delete (archive) so the audit trail and linked records survive. */
 export async function archiveAiSystem(userId: string, id: string) {

@@ -327,6 +327,11 @@ model AiSystem {
   approvedAt     DateTime?
   approvalNote   String?   @db.Text
   approvalExpiresAt DateTime?  // re-approval cadence for high-risk entities
+  /// True when the decision was recorded by the entity's own owner. Separation
+  /// of duties is enforced wherever a second member exists to approve; in a
+  /// single-operator workspace there is nobody else, so the fact is recorded on
+  /// the register rather than silently allowed. Assessors ask for exactly this.
+  approvalSelfRecorded Boolean @default(false)
   deployedAt     DateTime?
   lastReviewedAt DateTime?
   nextReviewAt   DateTime?
@@ -547,6 +552,13 @@ model GateRecord {
   decidedById    String?
   decidedByName  String?
   decidedAt      DateTime?
+  /// When a waiver lapses. A waiver suppresses recomputation of a gate, so an
+  /// open-ended one permanently silences the gate it covers — every waiver gets
+  /// an expiry, after which the gate is recomputed from the facts again.
+  waiverExpiresAt DateTime?
+  /// True when the waiver was granted by the entity's own owner. Same reasoning
+  /// as AiSystem.approvalSelfRecorded.
+  waiverSelfGranted Boolean @default(false)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 
@@ -555,6 +567,7 @@ model GateRecord {
   @@unique([aiSystemId, gate])
   @@index([userId, status])
   @@index([organizationId, gate])
+  @@index([status, waiverExpiresAt])
 }
 
 /// Gate 2 — a single evaluation campaign whose results were curated out of the

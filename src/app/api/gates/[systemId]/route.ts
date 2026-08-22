@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getOptionalSession } from '@/lib/auth-guard';
 import { getGateRecords, refreshGates, waiveGate } from '@/lib/gates/gates';
 import { assertOwnedSystem } from '@/lib/gates/evaluations';
-import { getApprovalEligibility } from '@/lib/gates/approvals';
+import { getApprovalEligibility, getApprovalAuthority } from '@/lib/gates/approvals';
 import { GATES, type GateNumber } from '@/lib/gates/gateEnums';
 
 /** Current gate posture for one registered entity. */
@@ -51,6 +51,19 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       );
     }
 
+    // Waiving a gate is materially the same act as approving without evidence,
+    // so it answers to the same separation of duties.
+    const authority = await getApprovalAuthority(system.userId, session.user.id);
+    if (!authority.permitted) {
+      return NextResponse.json(
+        {
+          error: 'Separation of duties: a different approver is required to waive a gate',
+          reasons: [authority.reason],
+        },
+        { status: 403 },
+      );
+    }
+
     await waiveGate({
       aiSystemId: systemId,
       gate: gate as GateNumber,
@@ -58,6 +71,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       actorName: session.user.name ?? session.user.email ?? null,
       organizationId: system.organizationId,
       justification,
+      selfGranted: authority.selfRecorded,
     });
 
     return NextResponse.json({ gates: await getGateRecords(systemId) });

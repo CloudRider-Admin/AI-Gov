@@ -96,7 +96,38 @@ interface RunSummary {
   coverageRatio: number | null;
 }
 
-export function evaluateGate2(system: SystemRow, runs: RunSummary[], gate1Passed: boolean): GateEvaluation {
+/**
+ * Legacy Path A evidence: hand-judged `EvaluationEvidence` rows reviewed into an
+ * `EvidenceReport` by the inventory drawer, rather than the scored
+ * `EvaluationRun` pipeline the /gates board uses.
+ *
+ * It is folded into this gate because leaving it out made the drawer a silent
+ * side channel: a user could record evidence, generate a report, and see the
+ * board still claim the evaluation gate had never started. Retire this parameter
+ * once Path A rows are migrated onto EvaluationRun.
+ */
+export interface LegacyEvidenceSummary {
+  reports: { id: string; verdict: string; createdAt: Date }[];
+  /** `EvaluationEvidence` rows on record for the entity, judged or not. */
+  evidenceCount: number;
+}
+
+const NO_LEGACY_EVIDENCE: LegacyEvidenceSummary = { reports: [], evidenceCount: 0 };
+
+/** A reviewed Gate 2 judgement, normalized across both evidence paths. */
+interface Gate2Judgement {
+  /** How the evidence identifies itself to the user: a run label or a report date. */
+  label: string;
+  verdict: string;
+  reviewedAt: number;
+}
+
+export function evaluateGate2(
+  system: SystemRow,
+  runs: RunSummary[],
+  gate1Passed: boolean,
+  legacy: LegacyEvidenceSummary = NO_LEGACY_EVIDENCE,
+): GateEvaluation {
   if (!gate1Passed) {
     return {
       gate: 2,
@@ -106,7 +137,8 @@ export function evaluateGate2(system: SystemRow, runs: RunSummary[], gate1Passed
     };
   }
 
-  if (runs.length === 0) {
+  const evidenceOnRecord = runs.length + legacy.evidenceCount + legacy.reports.length;
+  if (evidenceOnRecord === 0) {
     return {
       gate: 2,
       status: 'not-started',
@@ -115,35 +147,48 @@ export function evaluateGate2(system: SystemRow, runs: RunSummary[], gate1Passed
     };
   }
 
-  const reviewed = runs.filter((r) => r.status === 'reviewed' && r.overallVerdict);
-  if (reviewed.length === 0) {
+  const judgements: Gate2Judgement[] = [
+    ...runs
+      .filter((r) => r.status === 'reviewed' && r.overallVerdict)
+      .map((r) => ({
+        label: r.runLabel,
+        verdict: r.overallVerdict as string,
+        reviewedAt: r.reviewedAt?.getTime() ?? 0,
+      })),
+    ...legacy.reports.map((r) => ({
+      label: `evidence report of ${r.createdAt.toISOString().slice(0, 10)}`,
+      verdict: r.verdict,
+      reviewedAt: r.createdAt.getTime(),
+    })),
+  ];
+
+  if (judgements.length === 0) {
     return {
       gate: 2,
       status: 'in-progress',
-      summary: `${runs.length} evaluation run(s) ingested, awaiting review against the core evaluation parameters.`,
+      summary: `${evidenceOnRecord} piece(s) of evaluation evidence on record, awaiting review against the core evaluation parameters.`,
       blockers: ['No evidence report has been produced yet.'],
     };
   }
 
-  // The most recently reviewed run is the one that counts — evidence goes stale.
-  const latest = reviewed.reduce((a, b) =>
-    (a.reviewedAt?.getTime() ?? 0) >= (b.reviewedAt?.getTime() ?? 0) ? a : b,
-  );
+  // The most recent judgement is the one that counts — evidence goes stale, and
+  // a later failure must not be outranked by an earlier pass.
+  const latest = judgements.reduce((a, b) => (a.reviewedAt >= b.reviewedAt ? a : b));
 
-  if (latest.overallVerdict === 'fail') {
+  if (latest.verdict === 'fail') {
     return {
       gate: 2,
       status: 'failed',
-      summary: `Evidence report for "${latest.runLabel}" returned a fail against the core evaluation parameters.`,
+      summary: `Evidence report for "${latest.label}" returned a fail against the core evaluation parameters.`,
       blockers: ['Latest evidence report failed. Remediate and re-evaluate.'],
     };
   }
 
-  if (latest.overallVerdict === 'conditional-pass') {
+  if (latest.verdict === 'conditional-pass') {
     return {
       gate: 2,
       status: 'passed',
-      summary: `Conditional pass on "${latest.runLabel}". Proceeding to approval with remediation outstanding.`,
+      summary: `Conditional pass on "${latest.label}". Proceeding to approval with remediation outstanding.`,
       blockers: [],
     };
   }
@@ -151,7 +196,7 @@ export function evaluateGate2(system: SystemRow, runs: RunSummary[], gate1Passed
   return {
     gate: 2,
     status: 'passed',
-    summary: `Evidence report for "${latest.runLabel}" met the core evaluation baselines.`,
+    summary: `Evidence report for "${latest.label}" met the core evaluation baselines.`,
     blockers: [],
   };
 }
@@ -180,12 +225,46 @@ export function evaluateGate3(
     );
   }
 
+  // A rejection stands on its own. An approver must be able to say no even while
+  // remediation is outstanding, so this is judged before the exit criteria.
   if (system.approvalStatus === 'rejected') {
     return {
       gate: 3,
       status: 'failed',
       summary: `Rejected${system.approvedByName ? ` by ${system.approvedByName}` : ''}.`,
       blockers: ['Approval was rejected. Address the decision note and resubmit.'],
+    };
+  }
+
+  // The exit criteria are checked BEFORE an approval is honoured, never after.
+  // An approval only passes the gate while the facts it rested on still hold —
+  // otherwise a decision recorded earlier keeps the gate open on evidence that
+  // no longer supports it, which is exactly the posture an auditor looks for.
+  if (blockers.length > 0) {
+    // Approved, yet the criteria have regressed since: a failed re-evaluation,
+    // or remediation raised after the decision. The approval is stale, and
+    // saying so loudly is the whole point of the gate.
+    if (system.approvalStatus === 'approved') {
+      const decided = [
+        system.approvedByName ? ` by ${system.approvedByName}` : '',
+        system.approvedAt ? ` on ${system.approvedAt.toISOString().slice(0, 10)}` : '',
+      ].join('');
+      return {
+        gate: 3,
+        status: 'failed',
+        summary: `The approval recorded${decided} no longer holds: ${blockers.length} exit criterion(s) have regressed since the decision was made.`,
+        blockers: [
+          ...blockers,
+          'The approval on record is stale. Clear the blockers above and record a fresh decision.',
+        ],
+      };
+    }
+
+    return {
+      gate: 3,
+      status: 'not-started',
+      summary: 'Not yet eligible for an approval decision.',
+      blockers,
     };
   }
 
@@ -197,15 +276,6 @@ export function evaluateGate3(
         system.approvedAt ? ` on ${system.approvedAt.toISOString().slice(0, 10)}` : ''
       }.`,
       blockers: [],
-    };
-  }
-
-  if (blockers.length > 0) {
-    return {
-      gate: 3,
-      status: 'not-started',
-      summary: 'Not yet eligible for an approval decision.',
-      blockers,
     };
   }
 
@@ -230,7 +300,7 @@ export async function refreshGates(aiSystemId: string, actorId?: string): Promis
   });
   if (!system) return [];
 
-  const [runs, openRemediationCount, existing] = await Promise.all([
+  const [runs, openRemediationCount, existing, legacyReports, legacyEvidenceCount] = await Promise.all([
     prisma.evaluationRun.findMany({
       where: { aiSystemId },
       select: { id: true, runLabel: true, status: true, overallVerdict: true, reviewedAt: true, coverageRatio: true },
@@ -238,20 +308,67 @@ export async function refreshGates(aiSystemId: string, actorId?: string): Promis
     }),
     prisma.remediationTask.count({ where: { aiSystemId, status: { not: 'done' } } }),
     prisma.gateRecord.findMany({ where: { aiSystemId } }),
+    // Path A — the inventory drawer's hand-judged evidence. Read so the drawer
+    // moves the gate rather than accumulating evidence the board cannot see.
+    prisma.evidenceReport.findMany({
+      where: { aiSystemId },
+      select: { id: true, verdict: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+    }),
+    prisma.evaluationEvidence.count({ where: { aiSystemId } }),
   ]);
 
-  const g1 = evaluateGate1(system);
-  const g2 = evaluateGate2(system, runs, g1.status === 'passed');
-  const g3 = evaluateGate3(system, g2.status === 'passed', openRemediationCount);
-  const evaluations = [g1, g2, g3];
-
   const byGate = new Map(existing.map((r) => [r.gate, r]));
+
+  /**
+   * A standing waiver clears its gate for the purpose of the gates downstream —
+   * letting the entity proceed is the entire point of granting one. A lapsed
+   * waiver clears nothing.
+   */
+  const waiverStands = (gate: GateNumber): boolean => {
+    const prior = byGate.get(gate);
+    return prior?.status === 'waived' && !waiverHasLapsed(prior);
+  };
+
+  const g1 = evaluateGate1(system);
+  const g2 = evaluateGate2(system, runs, g1.status === 'passed' || waiverStands(1), {
+    reports: legacyReports,
+    evidenceCount: legacyEvidenceCount,
+  });
+  const g3 = evaluateGate3(
+    system,
+    g2.status === 'passed' || waiverStands(2),
+    openRemediationCount,
+  );
+  const evaluations = [g1, g2, g3];
 
   for (const evaluation of evaluations) {
     const prior = byGate.get(evaluation.gate);
 
-    // A waiver is a deliberate human override; recomputation must not undo it.
-    if (prior?.status === 'waived') continue;
+    // A waiver is a deliberate human override; recomputation must not undo it
+    // while it stands. Once it lapses the gate is recomputed from the facts
+    // again, so an accepted risk cannot silence a gate indefinitely.
+    if (prior?.status === 'waived' && !waiverHasLapsed(prior)) continue;
+
+    if (prior && waiverHasLapsed(prior)) {
+      writeAuditLog({
+        actorId: actorId ?? system.userId,
+        organizationId: system.organizationId,
+        action: 'gate.waiver_lapsed',
+        entityType: 'gate',
+        entityId: aiSystemId,
+        summary: `The waiver on Gate ${evaluation.gate} (${
+          GATE_SPECS[evaluation.gate].name
+        }) for "${system.name}" expired on ${prior.waiverExpiresAt
+          ?.toISOString()
+          .slice(0, 10)}; the gate has been recomputed as ${evaluation.status}.`,
+        metadata: {
+          gate: evaluation.gate,
+          expiredAt: prior.waiverExpiresAt?.toISOString() ?? null,
+          recomputedTo: evaluation.status,
+        },
+      });
+    }
 
     if (
       prior &&
@@ -279,6 +396,11 @@ export async function refreshGates(aiSystemId: string, actorId?: string): Promis
         summary: evaluation.summary,
         blockers: evaluation.blockers,
         decidedAt: evaluation.status === 'passed' ? (prior?.decidedAt ?? new Date()) : null,
+        // Reaching the upsert with a waived prior means the waiver has lapsed:
+        // clear its metadata so nothing downstream reads a spent waiver as live.
+        ...(prior?.status === 'waived'
+          ? { waiverExpiresAt: null, waiverSelfGranted: false, decidedById: null, decidedByName: null }
+          : {}),
       },
     });
 
@@ -309,8 +431,30 @@ export async function getGateRecords(aiSystemId: string) {
 }
 
 /**
+ * How long a waiver stands before the gate it covers is recomputed from the
+ * facts again. A waiver is an accepted risk, not a resolved one, so it gets a
+ * review date on the same principle an approval does.
+ */
+export const WAIVER_VALIDITY_DAYS = 90;
+
+/** True when a waiver has lapsed and should no longer suppress its gate. */
+export function waiverHasLapsed(
+  record: { status: string; waiverExpiresAt: Date | null },
+  now: Date = new Date(),
+): boolean {
+  if (record.status !== 'waived') return false;
+  // A waiver with no expiry predates the expiry rule; treat it as still standing
+  // rather than reopening every historical waiver on deploy. The migration
+  // backfills these, so this is a belt-and-braces guard.
+  if (!record.waiverExpiresAt) return false;
+  return record.waiverExpiresAt.getTime() < now.getTime();
+}
+
+/**
  * Explicit human override for a gate that cannot pass on its evidence but that
- * an accountable owner has decided to accept. Always audited.
+ * an accountable owner has decided to accept. Always audited, always expires,
+ * and subject to the same separation of duties as an approval: waiving Gate 2 is
+ * materially the same act as approving without evidence.
  */
 export async function waiveGate(params: {
   aiSystemId: string;
@@ -319,7 +463,27 @@ export async function waiveGate(params: {
   actorName?: string | null;
   organizationId?: string | null;
   justification: string;
+  /** Defaults to WAIVER_VALIDITY_DAYS from now. */
+  validityDays?: number;
+  /** True when the actor is the entity's owner — recorded, not blocked. */
+  selfGranted?: boolean;
 }) {
+  const now = new Date();
+  const validityDays = params.validityDays ?? WAIVER_VALIDITY_DAYS;
+  const expiresAt = new Date(now.getTime() + validityDays * 24 * 60 * 60 * 1000);
+  const selfGranted = params.selfGranted ?? false;
+
+  const decision = {
+    status: 'waived',
+    summary: params.justification,
+    blockers: [],
+    decidedById: params.actorId,
+    decidedByName: params.actorName ?? null,
+    decidedAt: now,
+    waiverExpiresAt: expiresAt,
+    waiverSelfGranted: selfGranted,
+  };
+
   const record = await prisma.gateRecord.upsert({
     where: { aiSystemId_gate: { aiSystemId: params.aiSystemId, gate: params.gate } },
     create: {
@@ -327,21 +491,9 @@ export async function waiveGate(params: {
       userId: params.actorId,
       organizationId: params.organizationId ?? null,
       gate: params.gate,
-      status: 'waived',
-      summary: params.justification,
-      blockers: [],
-      decidedById: params.actorId,
-      decidedByName: params.actorName ?? null,
-      decidedAt: new Date(),
+      ...decision,
     },
-    update: {
-      status: 'waived',
-      summary: params.justification,
-      blockers: [],
-      decidedById: params.actorId,
-      decidedByName: params.actorName ?? null,
-      decidedAt: new Date(),
-    },
+    update: decision,
   });
 
   writeAuditLog({
@@ -350,8 +502,17 @@ export async function waiveGate(params: {
     action: 'gate.waived',
     entityType: 'gate',
     entityId: params.aiSystemId,
-    summary: `Gate ${params.gate} (${GATE_SPECS[params.gate].name}) waived: ${params.justification}`,
-    metadata: { gate: params.gate },
+    summary: `Gate ${params.gate} (${GATE_SPECS[params.gate].name}) waived until ${expiresAt
+      .toISOString()
+      .slice(0, 10)}: ${params.justification}${
+      selfGranted ? ' — self-granted by the owner; no separate approver exists in this workspace' : ''
+    }`,
+    metadata: {
+      gate: params.gate,
+      expiresAt: expiresAt.toISOString(),
+      validityDays,
+      selfGranted,
+    },
   });
 
   return record;
@@ -370,7 +531,14 @@ export interface GateBoardEntry {
   approvedAt: string | null;
   /** The gate the entity is currently sitting at (1–3), or 4 once all have passed. */
   currentGate: number;
-  gates: { gate: number; status: string; summary: string | null; blockers: string[] }[];
+  gates: {
+    gate: number;
+    status: string;
+    summary: string | null;
+    blockers: string[];
+    waiverExpiresAt: string | null;
+    waiverSelfGranted: boolean;
+  }[];
   openRemediation: number;
   latestRunVerdict: string | null;
 }
@@ -392,7 +560,17 @@ export async function getGateBoard(userId: string): Promise<GateBoardEntry[]> {
       approvalStatus: true,
       approvedByName: true,
       approvedAt: true,
-      gateRecords: { select: { gate: true, status: true, summary: true, blockers: true }, orderBy: { gate: 'asc' } },
+      gateRecords: {
+        select: {
+          gate: true,
+          status: true,
+          summary: true,
+          blockers: true,
+          waiverExpiresAt: true,
+          waiverSelfGranted: true,
+        },
+        orderBy: { gate: 'asc' },
+      },
     },
   });
   if (systems.length === 0) return [];
@@ -420,9 +598,15 @@ export async function getGateBoard(userId: string): Promise<GateBoardEntry[]> {
   return systems.map((s) => {
     const gates = s.gateRecords.map((g) => ({
       gate: g.gate,
-      status: g.status,
-      summary: g.summary,
-      blockers: g.blockers,
+      // The board is read without recomputing, so a waiver that lapsed since the
+      // last refresh is surfaced as expired here rather than still clearing.
+      status: waiverHasLapsed(g) ? 'waiver-expired' : g.status,
+      summary: waiverHasLapsed(g)
+        ? `The waiver on this gate expired on ${g.waiverExpiresAt?.toISOString().slice(0, 10)}. Open the entity to recompute the gate.`
+        : g.summary,
+      blockers: waiverHasLapsed(g) ? ['The waiver covering this gate has expired.'] : g.blockers,
+      waiverExpiresAt: g.waiverExpiresAt?.toISOString() ?? null,
+      waiverSelfGranted: g.waiverSelfGranted,
     }));
     const passed = (gate: number) => {
       const record = gates.find((g) => g.gate === gate);
