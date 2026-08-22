@@ -92,6 +92,18 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${spaceMono.variable} ${inter.variable} dark`} suppressHydrationWarning>
       <body className="min-h-screen bg-terminal-black transition-colors duration-300" suppressHydrationWarning>
+        {/*
+          Bypass block (WCAG 2.4.1 / Section 508). Every page puts the sidebar
+          and header nav ahead of the content, so a keyboard or screen-reader
+          user otherwise tabs through the whole navigation on every route.
+          Visually hidden until focused.
+        */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-terminal-green focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:font-bold focus:text-terminal-black"
+        >
+          Skip to main content
+        </a>
         <Providers>
           <ScrollReveal />
           <ThemeProvider>
