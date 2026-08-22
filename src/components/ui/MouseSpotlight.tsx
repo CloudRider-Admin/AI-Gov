@@ -1,13 +1,20 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Interactive dot-mesh background with wave ripple on hover.
  * Base layer: dim CSS dot pattern. Around the cursor a radial mask cuts
  * it out and a canvas draws bright accent dots with a time-animated sine-
  * wave displacement — dots ripple outward from the cursor.
+ *
+ * The dashboards opt out: their dense KPI/table surfaces read better on a
+ * plain background, so nothing is rendered on those routes.
  */
+
+// Route prefixes that get a plain background instead of the dot mesh.
+const BLANK_BACKGROUND_ROUTES = ["/dashboard", "/admin"];
 
 const GRID = 14;           // matches tailwind bg-dots size
 const RADIUS = 280;        // hover/ripple area radius in px
@@ -23,8 +30,13 @@ export function MouseSpotlight() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const baseRef = useRef<HTMLDivElement>(null);
   const posRef = useRef<{ x: number; y: number } | null>(null);
+  const pathname = usePathname();
+  const blank = BLANK_BACKGROUND_ROUTES.some(
+    (route) => pathname === route || pathname?.startsWith(`${route}/`)
+  );
 
   useEffect(() => {
+    if (blank) return;
     // Respect reduced-motion — dim base layer only, no ripple.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -132,7 +144,9 @@ export function MouseSpotlight() {
       window.removeEventListener("mouseout", onOut);
       if (rafId != null) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [blank]);
+
+  if (blank) return null;
 
   return (
     <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
