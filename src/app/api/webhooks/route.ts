@@ -3,12 +3,31 @@ import { getOptionalSession } from '@/lib/auth-guard';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import crypto from 'crypto';
+import { checkWebhookUrl } from '@/lib/webhookTargets';
 
-const VALID_EVENTS = ['artifact.created', 'artifact.versioned', 'query.completed'] as const;
+// Must stay in step with WebhookEvent in lib/webhooks.ts. 'artifact.approved'
+// was declared there but missing here, so the one event a compliance team wants
+// to be notified about could not be subscribed to.
+const VALID_EVENTS = [
+  'artifact.created',
+  'artifact.versioned',
+  'artifact.approved',
+  'query.completed',
+] as const;
 
 const createSchema = z.object({
   name: z.string().min(1).max(100),
-  url: z.string().url().startsWith('https'),
+  // `startsWith('https')` alone accepted the cloud metadata endpoint, localhost,
+  // and the internal network. checkWebhookUrl judges the destination too.
+  url: z
+    .string()
+    .url()
+    .superRefine((value, ctx) => {
+      const check = checkWebhookUrl(value);
+      if (!check.allowed) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: check.reason });
+      }
+    }),
   events: z.array(z.enum(VALID_EVENTS)).min(1),
 });
 
