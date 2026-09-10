@@ -177,8 +177,8 @@ export function TeamClient({ canCreateOrg }: { canCreateOrg: boolean }) {
             ) : (
               <p className="text-sm text-terminal-muted">
                 Shared workspaces are available on the Team and Enterprise plans.{" "}
-                <a href="/pricing" className="text-terminal-green hover:underline">
-                  View plans →
+                <a href="/contact" className="text-terminal-green hover:underline">
+                  Talk to us →
                 </a>
               </p>
             )}

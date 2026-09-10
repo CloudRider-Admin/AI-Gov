@@ -6,7 +6,6 @@ import {
   HelpCircle,
   Mail,
   Home,
-  Tag,
   Server,
   ShieldCheck,
   ListChecks,
@@ -30,7 +29,6 @@ export type NavItem = {
 export const publicNav: NavItem[] = [
   { name: "Home", href: "/", icon: Home },
   { name: "Govi Advisor", href: "/govi", icon: Bot },
-  { name: "Pricing", href: "/pricing", icon: Tag },
   { name: "FAQ", href: "/faq", icon: HelpCircle },
   { name: "Contact", href: "/contact", icon: Mail },
 ];

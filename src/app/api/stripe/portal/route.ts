@@ -22,7 +22,7 @@ export async function POST() {
   const baseUrl = process.env.NEXTAUTH_URL ?? 'http://localhost:3000';
   const portalSession = await getStripe().billingPortal.sessions.create({
     customer: user.stripeCustomerId,
-    return_url: `${baseUrl}/pricing`,
+    return_url: `${baseUrl}/settings`,
   });
 
   return NextResponse.json({ url: portalSession.url });

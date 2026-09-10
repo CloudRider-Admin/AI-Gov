@@ -167,8 +167,8 @@ export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: Audi
               Get unlimited assessments, document generation, and priority
               support on a paid plan.
             </p>
-            <a href="/pricing" className="btn-primary mt-4 w-full text-sm py-2">
-              View plans
+            <a href="/contact" className="btn-primary mt-4 w-full text-sm py-2">
+              Talk to us
               <ArrowRight className="h-3.5 w-3.5" />
             </a>
           </div>

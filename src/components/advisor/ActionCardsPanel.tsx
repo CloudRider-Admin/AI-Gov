@@ -149,8 +149,8 @@ export function ActionCardsPanel({
         <div className="flex items-center gap-2 text-xs text-terminal-muted">
           <Lock className="w-3 h-3" />
           <span className="font-sans">Document generation requires a Pro subscription.</span>
-          <Link href="/pricing" className="font-mono text-terminal-green hover:underline">
-            Upgrade →
+          <Link href="/contact" className="font-mono text-terminal-green hover:underline">
+            Contact us →
           </Link>
         </div>
       )}

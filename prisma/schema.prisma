@@ -20,6 +20,11 @@ model User {
   aiTools                  String[]             @default([])
   primaryConcern           String?
   occupationalRole         String?
+  // ── Organizational profile — captured in onboarding step 1 ──
+  orgName                  String?
+  orgIndustry              String?              // e.g. "healthcare", "financial-services"
+  orgSize                  String?              // headcount band, e.g. "11-50"
+  orgJurisdiction          String?              // primary regulatory region, e.g. "EU"
   goviInterface            String               @default("terminal") // terminal | sovereign — chosen Govi UI skin
   stripeCustomerId         String?              @unique
   stripeSubscriptionId     String?              @unique

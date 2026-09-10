@@ -414,7 +414,7 @@ export function HowItWorks() {
               </span>
             </span>
             <h2 className="text-3xl md:text-4xl font-mono font-bold text-terminal-text mb-4">
-              From use case to compliant artifact in three steps
+              From use case to governance-ready artifact in three steps
             </h2>
             <p className="text-base md:text-lg text-terminal-muted font-sans max-w-2xl mx-auto leading-relaxed">
               Govi is an AI governance co-pilot for small and mid-sized teams.

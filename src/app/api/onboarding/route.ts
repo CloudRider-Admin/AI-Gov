@@ -8,6 +8,11 @@ const onboardingSchema = z.object({
   primaryConcern: z.string().max(120).optional(),
   /** Stored value, e.g. "security" | "privacy-legal" | "engineering" | … */
   occupationalRole: z.string().max(60).optional(),
+  // ── Organizational profile (onboarding step 1) ──
+  orgName: z.string().max(200).optional(),
+  orgIndustry: z.string().max(80).optional(),
+  orgSize: z.string().max(40).optional(),
+  orgJurisdiction: z.string().max(80).optional(),
 });
 
 /**
@@ -36,7 +41,15 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { aiTools, primaryConcern, occupationalRole } = parsed.data;
+  const {
+    aiTools,
+    primaryConcern,
+    occupationalRole,
+    orgName,
+    orgIndustry,
+    orgSize,
+    orgJurisdiction,
+  } = parsed.data;
 
   await prisma.user.update({
     where: { id: session.user.id },
@@ -45,6 +58,10 @@ export async function POST(request: NextRequest) {
       ...(aiTools !== undefined ? { aiTools } : {}),
       ...(primaryConcern !== undefined ? { primaryConcern } : {}),
       ...(occupationalRole !== undefined ? { occupationalRole } : {}),
+      ...(orgName !== undefined ? { orgName } : {}),
+      ...(orgIndustry !== undefined ? { orgIndustry } : {}),
+      ...(orgSize !== undefined ? { orgSize } : {}),
+      ...(orgJurisdiction !== undefined ? { orgJurisdiction } : {}),
     },
   });
 

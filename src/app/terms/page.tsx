@@ -90,7 +90,7 @@ const SECTIONS: LegalSection[] = [
   {
     title: "10. Subscriptions, plans, and billing",
     paragraphs: [
-      "The Service is offered under different plans (such as Free, Pro, Team, and Enterprise) with different features and usage allowances, including monthly token or usage limits. Details and current pricing are shown on our pricing page.",
+      "The Service is offered under different plans (such as Free, Pro, Team, and Enterprise) with different features and usage allowances, including monthly token or usage limits. Details and current pricing are available from our team.",
       "Paid plans are billed in advance through our payment processor (Stripe) on a recurring (monthly or annual) basis and renew automatically until cancelled. By subscribing, you authorise us and our processor to charge your payment method for the applicable fees and taxes. You are responsible for providing valid payment details.",
       "You may cancel at any time; cancellation takes effect at the end of the current billing period, and you retain paid access until then. Except where required by law, fees are non-refundable and we do not provide refunds or credits for partial periods or unused allowances. We may change plans, features, allowances, and pricing on a prospective basis with notice; changes apply from your next renewal. We may suspend or limit the Service if fees are overdue.",
     ],

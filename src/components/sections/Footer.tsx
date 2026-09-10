@@ -116,10 +116,10 @@ export function Footer() {
                   <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5" />
                 </Link>
                 <Link
-                  href="/pricing"
+                  href="/contact"
                   className="inline-flex items-center gap-2 rounded-full border border-terminal-border px-6 py-3 font-mono text-sm font-semibold text-terminal-text transition-all duration-300 hover:border-terminal-green/60 hover:text-terminal-green"
                 >
-                  View pricing
+                  Talk to us
                 </Link>
               </div>
             </div>
