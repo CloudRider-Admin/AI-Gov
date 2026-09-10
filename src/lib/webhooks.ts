@@ -7,6 +7,7 @@
 
 import { prisma } from './prisma';
 import crypto from 'crypto';
+import { checkWebhookTarget } from './webhookTargets';
 
 export type WebhookEvent =
   | 'artifact.created'
@@ -78,6 +79,17 @@ async function dispatchAsync(
       const isSlack = endpoint.url.includes('hooks.slack.com');
       const finalBody = isSlack ? JSON.stringify(formatSlackPayload(payload)) : body;
 
+      // Re-validate at dispatch, not only at registration: a hostname that
+      // resolved publicly when the endpoint was saved can be repointed at an
+      // internal address afterwards.
+      const target = await checkWebhookTarget(endpoint.url);
+      if (!target.allowed) {
+        console.warn(
+          `[webhooks] Refusing to dispatch to ${endpoint.name}: ${target.reason}`,
+        );
+        return;
+      }
+
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 10_000);
 
@@ -87,6 +99,9 @@ async function dispatchAsync(
           headers,
           body: finalBody,
           signal: controller.signal,
+          // A 3xx to an internal address would otherwise walk straight past the
+          // check above. Treat a redirect as a misconfigured endpoint.
+          redirect: 'error',
         });
 
         if (!response.ok) {

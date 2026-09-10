@@ -68,6 +68,67 @@ interface GovernanceSnapshot {
   auditEventsToday: number;
 }
 
+interface GateBlocker {
+  id: string;
+  name: string;
+  gate: number;
+  riskCategory: string;
+  blockers: string[];
+}
+
+interface GatePipeline {
+  total: number;
+  atGate1: number;
+  atGate2: number;
+  atGate3: number;
+  cleared: number;
+  blocked: number;
+  awaitingApproval: number;
+  blockedEntities: GateBlocker[];
+}
+
+interface TaskItem {
+  id: string;
+  title: string;
+  status: string;
+  priority: string;
+  dueDate: string | null;
+  framework: string | null;
+  aiSystemId: string | null;
+}
+
+interface RemediationQueue {
+  open: number;
+  overdue: number;
+  dueSoon: number;
+  byPriority: { critical: number; high: number; medium: number; low: number };
+  items: TaskItem[];
+}
+
+interface RegulatoryItem {
+  id: string;
+  title: string;
+  summary: string;
+  jurisdiction: string;
+  framework: string | null;
+  severity: string;
+  url: string | null;
+  publishedAt: string;
+}
+
+interface EvaluationCoverage {
+  highRiskTotal: number;
+  highRiskCovered: number;
+  percent: number;
+}
+
+interface TokenBudgetSnapshot {
+  used: number;
+  limit: number | null;
+  remaining: number | null;
+  percent: number;
+}
+
 interface DashboardData {
   stats: {
     conversations: number;
@@ -82,7 +143,35 @@ interface DashboardData {
   systemStatus: "nominal" | "degraded" | "offline";
   recentEvents: AuditEvent[];
   governance: GovernanceSnapshot;
+  gates: GatePipeline;
+  remediation: RemediationQueue;
+  regulatory: RegulatoryItem[];
+  maturityTrend: number[];
+  evaluationCoverage: EvaluationCoverage;
+  tokenBudget: TokenBudgetSnapshot;
 }
+
+/** Gate labels — the register's three stages, in order. */
+const GATE_META: Array<{ gate: number; label: string; hint: string; tone: "green" | "cyan" | "amber" }> = [
+  { gate: 1, label: "Intake", hint: "risk tiering", tone: "green" },
+  { gate: 2, label: "Evaluation", hint: "evidence & review", tone: "cyan" },
+  { gate: 3, label: "Approval", hint: "sign-off", tone: "amber" },
+];
+
+const PRIORITY_STYLE: Record<string, string> = {
+  critical: "text-terminal-red",
+  high: "text-terminal-red",
+  medium: "text-terminal-amber",
+  low: "text-terminal-muted",
+};
+
+const JURISDICTION_STYLE: Record<string, string> = {
+  EU: "text-terminal-cyan",
+  "US-Federal": "text-terminal-green",
+  "US-CA": "text-terminal-green",
+  UK: "text-terminal-amber",
+  Global: "text-terminal-muted",
+};
 
 const POLL_MS = 30_000;
 
@@ -142,6 +231,8 @@ export function DashboardContent() {
 
   const firstName = session?.user?.name?.split(" ")[0] ?? "there";
   const gov = data?.governance;
+  const gates = data?.gates;
+  const remediation = data?.remediation;
   const nistCoverage = gov?.frameworks.find((f) => f.id === "NIST-AI-RMF")?.coverage ?? null;
   const pending = loading && !data;
 
@@ -244,6 +335,231 @@ export function DashboardContent() {
           delta={gov && gov.inventory.overdue > 0 ? "due" : undefined}
           trend={gov?.overdueTrend}
         />
+      </div>
+
+      {/* ── Secondary KPI row ──────────────────────────────────── */}
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <KpiCard
+          tone="cyan"
+          label="Maturity score"
+          value={pending ? "—" : gov?.maturityScore ?? 0}
+          hint="composite across inventory, controls, cadence, remediation"
+          trend={data?.maturityTrend?.length ? data.maturityTrend : undefined}
+        />
+        <KpiCard
+          tone={
+            !data?.evaluationCoverage.highRiskTotal
+              ? "muted"
+              : data.evaluationCoverage.percent >= 80
+                ? "green"
+                : data.evaluationCoverage.percent >= 50
+                  ? "amber"
+                  : "red"
+          }
+          label="Evaluation coverage"
+          value={
+            pending ? (
+              "—"
+            ) : (
+              <>
+                {data?.evaluationCoverage.percent ?? 0}
+                <span className="text-base text-terminal-muted">%</span>
+              </>
+            )
+          }
+          hint={
+            data
+              ? `${data.evaluationCoverage.highRiskCovered}/${data.evaluationCoverage.highRiskTotal} high-impact systems with a passing run`
+              : undefined
+          }
+          barPercent={data?.evaluationCoverage.percent ?? 0}
+        />
+        <KpiCard
+          tone={remediation && remediation.overdue > 0 ? "red" : "green"}
+          label="Open remediation"
+          value={pending ? "—" : remediation?.open ?? 0}
+          delta={remediation && remediation.overdue > 0 ? `${remediation.overdue} overdue` : undefined}
+          deltaTone="red"
+          hint="tasks you own or are assigned"
+        />
+        <KpiCard
+          tone="green"
+          label="Token budget"
+          value={
+            pending ? (
+              "—"
+            ) : data?.tokenBudget.limit == null ? (
+              "Unlimited"
+            ) : (
+              <>
+                {data.tokenBudget.percent}
+                <span className="text-base text-terminal-muted">%</span>
+              </>
+            )
+          }
+          hint={
+            !data
+              ? undefined
+              : data.tokenBudget.limit == null
+                ? `${data.tokenBudget.used.toLocaleString()} tokens this month`
+                : `${data.tokenBudget.used.toLocaleString()} / ${data.tokenBudget.limit.toLocaleString()} this month`
+          }
+          barPercent={data && data.tokenBudget.limit != null ? data.tokenBudget.percent : undefined}
+        />
+      </div>
+
+      {/* ── Gate pipeline + remediation queue ──────────────────── */}
+      <div className="grid items-start gap-4 lg:grid-cols-[1.4fr_1fr]">
+        <Panel
+          title="Governance gate pipeline"
+          action={<PanelLink href="/gates">Open board</PanelLink>}
+          padded
+        >
+          {pending ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-5 w-5 animate-spin text-terminal-muted" />
+            </div>
+          ) : !gates || gates.total === 0 ? (
+            <p className="py-8 text-center text-xs text-terminal-muted">
+              No entities in the register yet.{" "}
+              <Link href="/intake" className="text-terminal-green underline">
+                Run intake
+              </Link>{" "}
+              to open Gate 1.
+            </p>
+          ) : (
+            <>
+              {/* Funnel — how many entities sit at each gate */}
+              <div className="grid grid-cols-4 gap-2">
+                {GATE_META.map((g) => {
+                  const count =
+                    g.gate === 1 ? gates.atGate1 : g.gate === 2 ? gates.atGate2 : gates.atGate3;
+                  const pct = gates.total ? Math.round((count / gates.total) * 100) : 0;
+                  return (
+                    <div key={g.gate} className="rounded-md border border-terminal-border bg-terminal-gray/20 p-3">
+                      <div className="font-mono text-xs uppercase tracking-wider text-terminal-muted">
+                        Gate {g.gate}
+                      </div>
+                      <div className="mt-1 font-mono text-2xl tabular-nums text-terminal-text">{count}</div>
+                      <div className="font-sans text-xs text-terminal-muted">
+                        {g.label} · {g.hint}
+                      </div>
+                      <div className="mt-2 h-1 overflow-hidden rounded-full bg-terminal-gray/40">
+                        <div
+                          className={`h-full ${g.tone === "green" ? "bg-terminal-green" : g.tone === "cyan" ? "bg-terminal-cyan" : "bg-terminal-amber"}`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="rounded-md border border-terminal-green/40 bg-terminal-green/5 p-3">
+                  <div className="font-mono text-xs uppercase tracking-wider text-terminal-muted">Cleared</div>
+                  <div className="mt-1 font-mono text-2xl tabular-nums text-terminal-green">{gates.cleared}</div>
+                  <div className="font-sans text-xs text-terminal-muted">all gates passed</div>
+                </div>
+              </div>
+
+              {/* Counters that need action */}
+              <div className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-terminal-border pt-3 font-mono text-xs">
+                <span className="text-terminal-muted">
+                  Blocked <span className="tabular-nums text-terminal-red">{gates.blocked}</span>
+                </span>
+                <span className="text-terminal-muted">
+                  Awaiting approval{" "}
+                  <span className="tabular-nums text-terminal-amber">{gates.awaitingApproval}</span>
+                </span>
+                <span className="text-terminal-muted">
+                  In register <span className="tabular-nums text-terminal-text">{gates.total}</span>
+                </span>
+              </div>
+
+              {/* The actionable part: what is actually blocking each stuck entity */}
+              {gates.blockedEntities.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  {gates.blockedEntities.map((e) => (
+                    <Link
+                      key={e.id}
+                      href={`/gates/${e.id}`}
+                      className="block rounded-md border border-terminal-red/30 bg-terminal-red/5 p-3 transition-colors hover:border-terminal-red/60"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="truncate font-mono text-xs text-terminal-text">{e.name}</span>
+                        <span className="flex-none font-mono text-xs text-terminal-red">
+                          Gate {e.gate} failed
+                        </span>
+                      </div>
+                      {e.blockers.length > 0 && (
+                        <ul className="mt-1.5 space-y-0.5">
+                          {e.blockers.slice(0, 3).map((b, i) => (
+                            <li key={i} className="font-sans text-xs text-terminal-muted">
+                              — {b}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </Panel>
+
+        <Panel
+          title="Remediation queue"
+          action={<PanelLink href="/tasks">All tasks</PanelLink>}
+          padded
+        >
+          {pending ? (
+            <div className="flex items-center justify-center py-10">
+              <Loader2 className="h-5 w-5 animate-spin text-terminal-muted" />
+            </div>
+          ) : !remediation || remediation.open === 0 ? (
+            <p className="py-8 text-center text-xs text-terminal-muted">Nothing open. Queue is clear.</p>
+          ) : (
+            <>
+              <div className="flex items-baseline gap-4 font-mono">
+                <div>
+                  <div className="text-2xl tabular-nums text-terminal-text">{remediation.open}</div>
+                  <div className="text-xs text-terminal-muted">open</div>
+                </div>
+                <div>
+                  <div className="text-2xl tabular-nums text-terminal-red">{remediation.overdue}</div>
+                  <div className="text-xs text-terminal-muted">overdue</div>
+                </div>
+                <div>
+                  <div className="text-2xl tabular-nums text-terminal-amber">{remediation.dueSoon}</div>
+                  <div className="text-xs text-terminal-muted">due ≤7d</div>
+                </div>
+              </div>
+
+              <ul className="mt-3 divide-y divide-terminal-border/50 border-t border-terminal-border">
+                {remediation.items.map((t) => {
+                  const due = formatReview(t.dueDate);
+                  return (
+                    <li key={t.id} className="flex items-start justify-between gap-3 py-2">
+                      <div className="min-w-0">
+                        <div className="truncate font-sans text-xs text-terminal-text">{t.title}</div>
+                        <div className="font-mono text-xs text-terminal-muted">
+                          <span className={PRIORITY_STYLE[t.priority] ?? "text-terminal-muted"}>
+                            {t.priority}
+                          </span>
+                          {t.framework && ` · ${t.framework}`}
+                        </div>
+                      </div>
+                      <span
+                        className={`flex-none font-mono text-xs ${due.overdue ? "text-terminal-red" : "text-terminal-muted"}`}
+                      >
+                        {t.dueDate ? due.text : "no date"}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </>
+          )}
+        </Panel>
       </div>
 
       {/* ── Inventory preview + compliance / priorities ────────── */}
@@ -368,6 +684,60 @@ export function DashboardContent() {
           />
         </div>
       </div>
+
+      {/* ── Regulatory horizon ─────────────────────────────────── */}
+      <Panel
+        title="Regulatory horizon"
+        action={<span className="font-mono text-xs text-terminal-muted">{data?.regulatory.length ?? 0} tracked</span>}
+      >
+        {pending ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="h-5 w-5 animate-spin text-terminal-muted" />
+          </div>
+        ) : !data || data.regulatory.length === 0 ? (
+          <p className="px-6 py-8 text-center text-xs text-terminal-muted">No regulatory updates tracked.</p>
+        ) : (
+          <ul className="divide-y divide-terminal-border/50">
+            {data.regulatory.map((r) => {
+              const row = (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`flex-none font-mono text-xs ${JURISDICTION_STYLE[r.jurisdiction] ?? "text-terminal-muted"}`}
+                    >
+                      {r.jurisdiction}
+                    </span>
+                    <SeverityPill level={r.severity === "notable" ? "medium" : r.severity === "info" ? "low" : r.severity} />
+                    {r.framework && (
+                      <span className="font-mono text-xs text-terminal-muted">{r.framework}</span>
+                    )}
+                    <span className="ml-auto flex-none font-mono text-xs text-terminal-muted">
+                      {new Date(r.publishedAt).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </span>
+                  </div>
+                  <div className="mt-1 font-sans text-xs text-terminal-text">{r.title}</div>
+                  <p className="mt-0.5 line-clamp-2 font-sans text-xs text-terminal-muted">{r.summary}</p>
+                </>
+              );
+              return (
+                <li key={r.id} className="px-6 py-3 transition-colors hover:bg-terminal-gray/20">
+                  {r.url ? (
+                    <a href={r.url} target="_blank" rel="noopener noreferrer" className="block">
+                      {row}
+                    </a>
+                  ) : (
+                    row
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </Panel>
 
       {/* ── Recent Govi sessions + live audit trail ────────────── */}
       <div className="grid items-start gap-4 lg:grid-cols-[1.9fr_1fr]">

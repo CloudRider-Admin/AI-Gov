@@ -14,6 +14,7 @@ import {
   getEvaluationParameter,
 } from "@/data/coreEvaluationParameters";
 import { ApprovalPill, RiskPill } from "@/components/app";
+import { useDialog } from "@/lib/hooks/useDialog";
 import type { AiSystemView } from "./InventoryClient";
 
 interface EvidenceView {
@@ -106,6 +107,10 @@ export function GatesDrawer({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [approvalNote, setApprovalNote] = useState("");
+  /** Why /approval refused the decision — surfaced verbatim, they are written as sentences. */
+  const [blockedReasons, setBlockedReasons] = useState<string[]>([]);
+  // Escape to close, Tab trapped inside, focus returned to the row that opened it.
+  const dialogRef = useDialog<HTMLDivElement>(onClose);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -176,18 +181,27 @@ export function GatesDrawer({
     }
   };
 
+  /**
+   * Gate 3 decisions go through /approval, the one path that enforces the exit
+   * criteria (Gate 2 cleared, remediation closed). When it refuses, it returns
+   * the specific reasons, which are far more useful to the user than "Failed".
+   */
   const setApproval = async (status: (typeof APPROVAL_STATUSES)[number]) => {
     setBusy(true);
     setError(null);
+    setBlockedReasons([]);
     try {
-      const res = await fetch(`/api/ai-systems/${system.id}/registry-approval`, {
+      const res = await fetch(`/api/ai-systems/${system.id}/approval`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status, note: approvalNote.trim() || null }),
+        body: JSON.stringify({ decision: status, note: approvalNote.trim() || null }),
       });
-      if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error ?? "Failed");
-      const { system: updated } = await res.json();
-      onSystemChange(updated);
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setBlockedReasons(Array.isArray(payload.reasons) ? payload.reasons : []);
+        throw new Error(payload.error ?? "Failed to record the decision");
+      }
+      onSystemChange(payload.system);
       setApprovalNote("");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to update approval");
@@ -210,12 +224,19 @@ export function GatesDrawer({
   return (
     <div className="fixed inset-0 z-50 flex justify-end bg-black/50" onClick={onClose}>
       <div
-        className="w-full max-w-2xl h-full bg-terminal-dark border-l border-terminal-border overflow-y-auto"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gates-drawer-title"
+        tabIndex={-1}
+        className="w-full max-w-2xl h-full bg-terminal-dark border-l border-terminal-border overflow-y-auto focus:outline-none"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-terminal-border bg-terminal-dark p-4">
           <div className="min-w-0">
-            <h2 className="font-mono text-terminal-text truncate">Governance gates — {system.name}</h2>
+            <h2 id="gates-drawer-title" className="font-mono text-terminal-text truncate">
+              Governance gates — {system.name}
+            </h2>
             <div className="mt-1 flex items-center gap-2">
               <RiskPill risk={system.riskCategory} />
               <ApprovalPill status={system.approvalStatus} />
@@ -231,11 +252,17 @@ export function GatesDrawer({
         </div>
 
         <div className="p-4 space-y-6">
-          {error && (
-            <p className="text-sm text-terminal-red font-mono border border-terminal-red/40 rounded-md px-3 py-2">
-              {error}
-            </p>
-          )}
+          {/*
+            The only feedback channel in the drawer. Announced live, because a
+            screen-reader user gets no other signal that a save was refused.
+          */}
+          <div role="alert" aria-live="assertive" className={error ? undefined : "sr-only"}>
+            {error && (
+              <p className="text-sm text-terminal-red font-mono border border-terminal-red/40 rounded-md px-3 py-2">
+                {error}
+              </p>
+            )}
+          </div>
 
           {/* ── Gate 1 ── */}
           <section className="glass rounded-xl p-4">
@@ -491,9 +518,29 @@ export function GatesDrawer({
                     {system.approvalNote ? ` — “${system.approvalNote}”` : ""}
                   </p>
                 )}
+                {blockedReasons.length > 0 && (
+                  <div
+                    className="rounded-md border border-terminal-amber/40 bg-terminal-amber/5 px-3 py-2"
+                    role="alert"
+                  >
+                    <p className="font-mono text-xs text-terminal-amber mb-1.5">
+                      This entry cannot be approved yet:
+                    </p>
+                    <ul className="space-y-1">
+                      {blockedReasons.map((reason) => (
+                        <li key={reason} className="text-xs text-terminal-text">
+                          — {reason}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <label className="block">
                   <span className="font-mono text-xs text-terminal-muted mb-1.5 block">
-                    Decision note (optional)
+                    Decision note{" "}
+                    <span className="text-terminal-muted/70">
+                      (required to reject or withdraw — at least 10 characters)
+                    </span>
                   </span>
                   <input
                     className="input-field"
@@ -522,9 +569,13 @@ export function GatesDrawer({
                     disabled={busy || system.approvalStatus === "pending"}
                     className="btn-secondary text-xs py-1.5 disabled:opacity-50"
                   >
-                    Reset to pending
+                    Withdraw decision
                   </button>
                 </div>
+                <p className="text-xs text-terminal-muted">
+                  Approval is recorded only once Gate 2 has cleared and remediation is closed. A
+                  rejection can always be recorded.
+                </p>
               </div>
             ) : (
               <p className="mt-3 text-xs text-terminal-muted">

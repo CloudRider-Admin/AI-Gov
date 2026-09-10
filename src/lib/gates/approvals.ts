@@ -26,6 +26,62 @@ export interface ApprovalEligibility {
 }
 
 /**
+ * Whether this actor may record a decision on this entity at all — separate from
+ * whether the entity has earned one.
+ *
+ * `selfRecorded` is not a failure. Separation of duties is enforced wherever a
+ * second person exists to enforce it against; a single-operator workspace has
+ * nobody else, and refusing outright would make the gate unusable for the
+ * majority of accounts. So the decision proceeds and is stamped as
+ * self-recorded, which is the honest answer to give an assessor.
+ */
+export type ApprovalAuthority =
+  | { permitted: true; selfRecorded: boolean }
+  | { permitted: false; reason: string };
+
+/**
+ * A second member who could act as the approver. Membership is read through the
+ * owner's organizations rather than the entity's, because `AiSystem.organizationId`
+ * is not yet populated — see the org-scoping work. When it is, this should read
+ * the entity's organization directly.
+ */
+async function hasSeparateApprover(ownerId: string, actorId: string): Promise<string | null> {
+  const memberships = await prisma.orgMember.findMany({
+    where: { userId: ownerId },
+    select: { organizationId: true, organization: { select: { name: true } } },
+  });
+  if (memberships.length === 0) return null;
+
+  const orgIds = memberships.map((m) => m.organizationId);
+  const others = await prisma.orgMember.findFirst({
+    where: { organizationId: { in: orgIds }, userId: { notIn: [ownerId, actorId] } },
+    select: { organizationId: true },
+  });
+  if (!others) return null;
+
+  const org = memberships.find((m) => m.organizationId === others.organizationId);
+  return org?.organization.name ?? 'this workspace';
+}
+
+export async function getApprovalAuthority(
+  ownerId: string,
+  actorId: string,
+): Promise<ApprovalAuthority> {
+  // A different person is recording the decision — separation of duties holds.
+  if (actorId !== ownerId) return { permitted: true, selfRecorded: false };
+
+  const orgName = await hasSeparateApprover(ownerId, actorId);
+  if (orgName) {
+    return {
+      permitted: false,
+      reason: `You registered this entity, so you cannot also approve it. Ask another member of ${orgName} to record the decision.`,
+    };
+  }
+
+  return { permitted: true, selfRecorded: true };
+}
+
+/**
  * Whether an approval decision can be recorded right now, and if not, why not.
  * Callers surface `reasons` directly to the user, so they are written as
  * complete sentences.
@@ -90,7 +146,7 @@ export type ApprovalResult =
  *
  * A rejection is always allowed once approval is required — an approver must be
  * able to say no even while remediation is outstanding. Only "approved" has to
- * clear the eligibility rules.
+ * clear the eligibility rules. Both are subject to separation of duties.
  */
 export async function recordApprovalDecision(input: ApprovalDecisionInput): Promise<ApprovalResult> {
   const system = await prisma.aiSystem.findUnique({
@@ -107,6 +163,17 @@ export async function recordApprovalDecision(input: ApprovalDecisionInput): Prom
       ok: false,
       error: 'Approval is not required for this risk tier',
       reasons: eligibility.reasons,
+    };
+  }
+
+  // Separation of duties is checked before eligibility so the owner of an
+  // otherwise-eligible entity gets told who has to sign, not that it is ready.
+  const authority = await getApprovalAuthority(system.userId, input.actorId);
+  if (!authority.permitted) {
+    return {
+      ok: false,
+      error: 'Separation of duties: a different approver is required',
+      reasons: [authority.reason],
     };
   }
 
@@ -134,6 +201,7 @@ export async function recordApprovalDecision(input: ApprovalDecisionInput): Prom
       approvedAt: now,
       approvalNote: input.note ?? null,
       approvalExpiresAt: expiresAt,
+      approvalSelfRecorded: authority.selfRecorded,
       ...(input.decision === 'approved' ? { lastReviewedAt: now } : {}),
     },
   });
@@ -146,12 +214,90 @@ export async function recordApprovalDecision(input: ApprovalDecisionInput): Prom
     entityId: system.id,
     summary: `${input.decision === 'approved' ? 'Approved' : 'Rejected'} ${system.entityKind} "${system.name}" (${system.riskCategory} risk)${
       input.actorName ? ` by ${input.actorName}` : ''
-    }`,
+    }${authority.selfRecorded ? ' — self-recorded by the owner; no separate approver exists in this workspace' : ''}`,
     metadata: {
       decision: input.decision,
       riskCategory: system.riskCategory,
       note: input.note ?? null,
       expiresAt: expiresAt?.toISOString() ?? null,
+      selfRecorded: authority.selfRecorded,
+    },
+  });
+
+  await refreshGates(input.aiSystemId, input.actorId);
+
+  return { ok: true, system: updated };
+}
+
+/**
+ * Withdraw a recorded approval or rejection, returning the entity to the
+ * approval queue.
+ *
+ * This is a reversal of a governance decision, not a decision in itself, so it
+ * is deliberately separate from `recordApprovalDecision` — and it demands a
+ * written reason for the same reason a waiver does: an unexplained reversal in
+ * the audit trail is worse than no reversal at all.
+ */
+export async function withdrawApprovalDecision(input: {
+  aiSystemId: string;
+  actorId: string;
+  actorName?: string | null;
+  reason: string;
+}): Promise<ApprovalResult> {
+  const system = await prisma.aiSystem.findUnique({
+    where: { id: input.aiSystemId },
+    select: {
+      id: true,
+      organizationId: true,
+      name: true,
+      entityKind: true,
+      riskCategory: true,
+      approvalStatus: true,
+      approvedByName: true,
+    },
+  });
+  if (!system) return { ok: false, error: 'Not found', reasons: [] };
+
+  if (system.approvalStatus !== 'approved' && system.approvalStatus !== 'rejected') {
+    return {
+      ok: false,
+      error: 'There is no recorded decision to withdraw',
+      reasons: [
+        system.approvalStatus === 'pending'
+          ? 'This entity is already awaiting a decision.'
+          : 'Approval is not required for this entity, so no decision was recorded.',
+      ],
+    };
+  }
+
+  const previous = system.approvalStatus;
+  const updated = await prisma.aiSystem.update({
+    where: { id: input.aiSystemId },
+    data: {
+      approvalStatus: 'pending',
+      approvedById: null,
+      approvedBy: null,
+      approvedByName: null,
+      approvedAt: null,
+      approvalExpiresAt: null,
+      approvalNote: input.reason,
+    },
+  });
+
+  await writeAuditLog({
+    actorId: input.actorId,
+    organizationId: system.organizationId,
+    action: 'ai_system.approval_withdrawn',
+    entityType: 'ai_system',
+    entityId: system.id,
+    summary: `Withdrew the ${previous} decision on ${system.entityKind} "${system.name}"${
+      input.actorName ? ` — withdrawn by ${input.actorName}` : ''
+    }: ${input.reason}`,
+    metadata: {
+      previousStatus: previous,
+      previousDecidedBy: system.approvedByName,
+      reason: input.reason,
+      riskCategory: system.riskCategory,
     },
   });
 

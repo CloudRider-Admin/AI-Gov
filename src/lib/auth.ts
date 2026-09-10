@@ -7,6 +7,7 @@ import GitHubProvider from 'next-auth/providers/github';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
 import { checkLoginRateLimit, recordFailedLogin, clearLoginAttempts } from '@/lib/rate-limit';
+import { authRequestContext, recordAuthEvent } from '@/lib/authAudit';
 
 /** True only when both halves of an OAuth app credential are present. */
 export const googleAuthEnabled = Boolean(
@@ -23,40 +24,81 @@ const providers: Provider[] = [
       email: { label: 'Email', type: 'email' },
       password: { label: 'Password', type: 'password' },
     },
-    async authorize(credentials) {
+    async authorize(credentials, req) {
       if (!credentials?.email || !credentials?.password) {
         return null;
       }
 
+      const context = authRequestContext(req?.headers);
+      const email = credentials.email;
+
       // Check if this email is locked out before touching the DB for the user
-      const rateCheck = await checkLoginRateLimit(credentials.email);
+      const rateCheck = await checkLoginRateLimit(email);
       if (!rateCheck.allowed) {
         const minutes = Math.ceil((rateCheck.retryAfter ?? 900) / 60);
+        await recordAuthEvent({
+          action: 'auth.login_blocked',
+          email,
+          summary: `Sign-in blocked for ${email}: too many failed attempts, locked out for ${minutes} more minute(s).`,
+          context,
+          metadata: { retryAfterSeconds: rateCheck.retryAfter ?? null },
+        });
         throw new Error(`RateLimited:${minutes}`);
       }
 
       const user = await prisma.user.findUnique({
-        where: { email: credentials.email },
+        where: { email },
       });
 
       if (!user || !user.hashedPassword) {
         // Record failure even for unknown emails (prevents user enumeration via timing)
-        await recordFailedLogin(credentials.email);
+        await recordFailedLogin(email);
+        await recordAuthEvent({
+          action: 'auth.login_failed',
+          email,
+          summary: `Failed sign-in for ${email}: no account with a password credential.`,
+          context,
+          metadata: { reason: 'unknown-account' },
+        });
         return null;
       }
 
       const isValid = await bcrypt.compare(credentials.password, user.hashedPassword);
       if (!isValid) {
-        await recordFailedLogin(credentials.email);
+        await recordFailedLogin(email);
+        await recordAuthEvent({
+          action: 'auth.login_failed',
+          userId: user.id,
+          email,
+          summary: `Failed sign-in for ${email}: incorrect password.`,
+          context,
+          metadata: { reason: 'bad-password' },
+        });
         return null;
       }
 
       if (!user.emailVerified) {
+        await recordAuthEvent({
+          action: 'auth.email_unverified',
+          userId: user.id,
+          email,
+          summary: `Sign-in refused for ${email}: the email address has not been verified.`,
+          context,
+        });
         throw new Error('EmailNotVerified');
       }
 
       // Successful login — clear the failure counter
-      await clearLoginAttempts(credentials.email);
+      await clearLoginAttempts(email);
+
+      await recordAuthEvent({
+        action: 'auth.signed_in',
+        userId: user.id,
+        email,
+        summary: `${email} signed in with a password credential.`,
+        context,
+        metadata: { provider: 'credentials' },
+      });
 
       return {
         id: user.id,
@@ -91,10 +133,23 @@ if (githubAuthEnabled) {
   );
 }
 
+// Session lifetime. NextAuth's default is 30 days with no idle timeout, which
+// is well outside what a governance workload should carry: NIST 800-53 AC-11
+// wants an inactivity lock and AC-12 an absolute termination. `maxAge` is the
+// absolute cap; `updateAge` is how often an active session is re-issued, which
+// is also how often the role is re-read from the database.
+const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;   // 8 hours — one working day
+const SESSION_UPDATE_AGE_SECONDS = 15 * 60;    // re-issue at most every 15 minutes
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: 'jwt',
+    maxAge: SESSION_MAX_AGE_SECONDS,
+    updateAge: SESSION_UPDATE_AGE_SECONDS,
+  },
+  jwt: {
+    maxAge: SESSION_MAX_AGE_SECONDS,
   },
   pages: {
     signIn: '/signin',
@@ -132,6 +187,17 @@ export const authOptions: NextAuthOptions = {
             select: { role: true },
           });
           if (dbUser) {
+            // A role change is a privilege change, so it belongs on the trail
+            // whether an admin made it or a Stripe webhook did.
+            if (dbUser.role !== token.role) {
+              await recordAuthEvent({
+                action: 'auth.role_changed',
+                userId: token.id as string,
+                email: typeof token.email === 'string' ? token.email : null,
+                summary: `Role changed ${token.role ?? 'unknown'} → ${dbUser.role} and took effect on an active session.`,
+                metadata: { from: token.role ?? null, to: dbUser.role },
+              });
+            }
             token.role = dbUser.role;
           }
           token.roleCheckedAt = Date.now();
@@ -148,6 +214,35 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
       }
       return session;
+    },
+  },
+  events: {
+    /**
+     * Fires for every provider. The credentials path already writes its own
+     * entry inside `authorize` (where the failure cases live), so this records
+     * the OAuth providers and avoids double-logging password sign-ins.
+     */
+    async signIn({ user, account, isNewUser }) {
+      if (account?.provider === 'credentials') return;
+      await recordAuthEvent({
+        action: 'auth.signed_in',
+        userId: user.id,
+        email: user.email ?? null,
+        summary: `${user.email ?? user.id} signed in with ${account?.provider ?? 'an external provider'}${
+          isNewUser ? ' for the first time' : ''
+        }.`,
+        metadata: { provider: account?.provider ?? null, isNewUser: Boolean(isNewUser) },
+      });
+    },
+
+    async signOut({ token }) {
+      if (!token?.id) return;
+      await recordAuthEvent({
+        action: 'auth.signed_out',
+        userId: token.id as string,
+        email: typeof token.email === 'string' ? token.email : null,
+        summary: `${token.email ?? token.id} signed out.`,
+      });
     },
   },
 };

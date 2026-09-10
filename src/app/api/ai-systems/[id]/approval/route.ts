@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOptionalSession } from '@/lib/auth-guard';
-import { getApprovalEligibility, recordApprovalDecision } from '@/lib/gates/approvals';
+import {
+  getApprovalEligibility,
+  recordApprovalDecision,
+  withdrawApprovalDecision,
+} from '@/lib/gates/approvals';
 import { assertOwnedSystem } from '@/lib/gates/evaluations';
 import { isApprovalDecision } from '@/lib/gates/gateEnums';
 
@@ -28,14 +32,41 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const body = await request.json().catch(() => null);
   const decision = typeof body?.decision === 'string' ? body.decision : '';
+  const note = typeof body?.note === 'string' ? body.note.trim() : '';
+
+  // "pending" is a withdrawal of a decision already on record, not a decision.
+  // It runs through its own path so the reversal is audited as a reversal.
+  if (decision === 'pending') {
+    if (note.length < 10) {
+      return NextResponse.json(
+        {
+          error:
+            'Withdrawing a recorded decision requires a note of at least 10 characters explaining why.',
+        },
+        { status: 400 },
+      );
+    }
+
+    const withdrawn = await withdrawApprovalDecision({
+      aiSystemId: id,
+      actorId: session.user.id,
+      actorName: session.user.name ?? session.user.email ?? null,
+      reason: note,
+    });
+
+    if (!withdrawn.ok) {
+      return NextResponse.json({ error: withdrawn.error, reasons: withdrawn.reasons }, { status: 409 });
+    }
+    return NextResponse.json({ system: withdrawn.system });
+  }
+
   if (!isApprovalDecision(decision)) {
     return NextResponse.json(
-      { error: 'decision must be either "approved" or "rejected"' },
+      { error: 'decision must be one of: approved, rejected, pending' },
       { status: 400 },
     );
   }
 
-  const note = typeof body?.note === 'string' ? body.note.trim() : '';
   // A rejection without a reason gives the owner nothing to act on.
   if (decision === 'rejected' && note.length < 10) {
     return NextResponse.json(
