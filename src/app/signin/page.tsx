@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { Mail, Lock, AlertTriangle, CheckCircle2, ArrowRight, RefreshCw } from "lucide-react";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
@@ -17,7 +17,6 @@ const OAUTH_ERROR_MESSAGES: Record<string, string> = {
 };
 
 function SignInForm() {
-  const router = useRouter();
   const params = useSearchParams();
   const justVerified = params.get("verified") === "1";
   const oauthError = params.get("error");
@@ -85,7 +84,12 @@ function SignInForm() {
       if (result?.error) {
         setErrors({ password: "Invalid email or password" });
       } else {
-        router.push(callbackUrl);
+        // Full page load, not router.push: while signed out, the client router
+        // prefetched links like /govi and cached middleware's redirect to
+        // /signin. A soft navigation would replay those stale redirects and
+        // ask the user to sign in again. Only same-site paths are allowed.
+        const safe = callbackUrl.startsWith("/") && !callbackUrl.startsWith("//") ? callbackUrl : "/dashboard";
+        window.location.assign(safe);
       }
     } catch {
       setErrors({ form: "Network error. Please try again." });
