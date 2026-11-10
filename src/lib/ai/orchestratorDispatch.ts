@@ -146,6 +146,7 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
   // since we'd be omitting a key signal that the intent is the same.
   const orgCtx = ctx.conversationId ? await getOrgContext(ctx.conversationId).catch(() => undefined) : undefined;
   const cacheKey = buildArtifactKey({
+    userId: ctx.userId,
     intentType: finalIntent.type,
     documentType: finalIntent.documentType,
     framework: finalIntent.framework,
@@ -153,7 +154,13 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
     orgContextHash: hashOrgContext(orgCtx),
     role: ctx.role,
   });
-  const cachedArtifact = artifactCache.get(cacheKey) as AdvisorResponse['generatedArtifact'] | undefined;
+  // Intake is scored from this conversation's intake profile, so it is never
+  // served from cache: a hit would also skip the completeness check below and
+  // hand back a stale report ("Unnamed Use Case") for a generic request.
+  const cacheable = finalIntent.type !== 'intake';
+  const cachedArtifact = cacheable
+    ? (artifactCache.get(cacheKey) as AdvisorResponse['generatedArtifact'] | undefined)
+    : undefined;
   if (cachedArtifact) {
     auditLog({ event: 'artifact.cache_hit', data: { cacheKey, intentType: finalIntent.type } });
     return { artifact: cachedArtifact, intentUsed: finalIntent, contested };
@@ -261,7 +268,7 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
     }
 
     // ── Cache the freshly generated artifact (Phase 7.3) ──
-    if (artifact) {
+    if (artifact && cacheable) {
       artifactCache.set(cacheKey, artifact);
     }
 

@@ -64,6 +64,10 @@ export async function buildGatePostureContext(userId: string): Promise<string> {
     'When the user asks about approval, evaluation evidence, or what is blocking something, ' +
       'answer from this posture. Approval is required only at medium risk and above, and is ' +
       'recorded only after remediation completes.',
+    'Do NOT bring this posture up unprompted (e.g. in reply to a greeting or small talk). ' +
+      'Never assume a request is about one of these entities unless the user names it: if they ' +
+      'ask for a risk assessment or document without saying which system, use clarification ' +
+      'mode and ask which one, offering the registered names above plus "A new AI use case" as options.',
   );
 
   return lines.join('\n');

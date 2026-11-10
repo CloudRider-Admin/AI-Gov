@@ -126,6 +126,7 @@ describe('ResponseCache.buildKey', () => {
 
 describe('buildArtifactKey (Phase 7.3)', () => {
   const base = {
+    userId: 'user-1',
     intentType: 'document',
     documentType: 'dpia',
     framework: undefined,
@@ -154,6 +155,10 @@ describe('buildArtifactKey (Phase 7.3)', () => {
 
   it('differs when role changes', () => {
     expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, role: 'TEAM' }));
+  });
+
+  it('never shares a key across users', () => {
+    expect(buildArtifactKey(base)).not.toBe(buildArtifactKey({ ...base, userId: 'someone-else' }));
   });
 
   it('differs when org context hash changes', () => {
