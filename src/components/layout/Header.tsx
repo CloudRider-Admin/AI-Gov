@@ -7,6 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, ChevronDown, LogOut, User, Shield } from "lucide-react";
 import { SearchTrigger } from "@/components/search";
 import { ThemeToggle } from "@/components/ui";
+import { Logo } from "@/components/brand/Logo";
 import { publicNav, authedNav, isNavActive } from "./nav";
 
 export function Header() {
@@ -52,13 +53,8 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-1">
-            <div className="w-10 h-8 border-2 border-terminal-green rounded-md flex items-center justify-center">
-              <span className="font-mono text-terminal-green font-bold text-sm">Gov</span>
-            </div>
-            <span className="font-mono text-lg font-bold text-terminal-text">
-              Secure
-            </span>
+          <Link href="/" aria-label="GovSecure home">
+            <Logo />
           </Link>
 
           {/* Desktop navigation — authenticated users navigate via the sidebar */}
