@@ -139,7 +139,7 @@ export const regulationMatchSchema = z.object({
 });
 
 export const advisorResponseSchema = z.object({
-  mode: z.enum(['assessment', 'clarification']).default('assessment'),
+  mode: z.enum(['assessment', 'clarification', 'conversation']).default('assessment'),
   riskProfile: z.object({
     level: riskLevelEnum,
     description: z.string(),

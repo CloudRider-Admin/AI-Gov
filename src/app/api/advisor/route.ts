@@ -137,8 +137,8 @@ export async function POST(request: NextRequest) {
 
     // ── Build the user message once (reused across providers) ──
     const userMessage = hasConversationHistory
-      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
-      : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
+      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. If the new message adds information or asks for analysis, provide a full assessment (mode: "assessment") incorporating all context. If it is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), use mode "conversation". Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
+      : `${contextualQuery}\n\nFirst determine whether this message is conversational (mode "conversation"), needs clarifying questions, or has enough context for a full assessment. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
 
     // ── OpenAI call (with circuit breaker), Claude fallback on quota/circuit-open ──
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -271,7 +271,14 @@ export async function POST(request: NextRequest) {
 
     // ── Persist messages ──
     if (!isGuest) {
-      await persistMessages(dbConversationId!, query, JSON.stringify(validated.data), validated.data.riskProfile.level, validated.data.riskProfile.confidence);
+      const scored = validated.data.mode === 'assessment';
+      await persistMessages(
+        dbConversationId!,
+        query,
+        JSON.stringify(validated.data),
+        scored ? validated.data.riskProfile.level : undefined,
+        scored ? validated.data.riskProfile.confidence : undefined,
+      );
     }
 
     auditLog({
@@ -284,7 +291,8 @@ export async function POST(request: NextRequest) {
     // calls OpenAI directly, so it will hit the same quota/circuit failure.
     let generatedArtifact = undefined;
     let dispatch: Awaited<ReturnType<typeof dispatchOrchestrator>> | undefined;
-    if (process.env.OPENAI_API_KEY && !isGuest && usedProvider === 'openai') {
+    // Small talk never triggers intake/document generation.
+    if (process.env.OPENAI_API_KEY && !isGuest && usedProvider === 'openai' && validated.data.mode !== 'conversation') {
       dispatch = await dispatchOrchestrator({
         userId: session.user.id,
         conversationId: dbConversationId,

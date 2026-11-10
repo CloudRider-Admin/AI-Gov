@@ -133,8 +133,13 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
 
     // Build a full conversation summary so the LLM never loses established facts
     const threadSummary = currentThread.map((entry, idx) => {
-      const mode = entry.response.mode === 'clarification' ? '[CLARIFICATION]' : '[ASSESSMENT]';
-      const risk = entry.response.mode !== 'clarification'
+      const mode =
+        entry.response.mode === 'clarification'
+          ? '[CLARIFICATION]'
+          : entry.response.mode === 'conversation'
+          ? '[CONVERSATION]'
+          : '[ASSESSMENT]';
+      const risk = entry.response.mode === 'assessment' || !entry.response.mode
         ? ` | Risk: ${entry.response.riskProfile.level} (${Math.round((entry.response.riskProfile.confidence ?? 0) * 100)}%)`
         : '';
       return `Exchange ${idx + 1} ${mode}: User asked: "${entry.query.slice(0, 200)}"${risk}\nGovi responded: ${entry.response.riskProfile.description.slice(0, 300)}`;
@@ -144,7 +149,7 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
     if (lastEntry.response.mode === 'clarification') {
       instruction = `IMPORTANT: The user is answering your follow-up questions. They are providing additional details you asked for. Use their answers along with ALL previously established context to provide a FULL assessment (mode: "assessment"). Do NOT ask for clarification again unless the answer is truly insufficient.`;
     } else {
-      instruction = `IMPORTANT: The user is continuing an existing conversation. They have already established context (see thread history below). Treat their new message as ADDITIONAL information building on what was already discussed. Do NOT ask for clarification on details already provided. Provide a full assessment (mode: "assessment") incorporating both the new information and the established context.`;
+      instruction = `IMPORTANT: The user is continuing an existing conversation. They have already established context (see thread history below). If their new message adds information or asks for analysis, treat it as ADDITIONAL information building on what was already discussed, do NOT ask for clarification on details already provided, and provide a full assessment (mode: "assessment") incorporating both. If the new message is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), reply in mode "conversation": briefly, then steer back to their governance work.`;
     }
 
     return `${instruction}\n\n═══ CONVERSATION HISTORY ═══\n${threadSummary}\n═══ END HISTORY ═══`;

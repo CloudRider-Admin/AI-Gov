@@ -271,8 +271,20 @@ function normalizeGptResponse(raw: Record<string, unknown>): Record<string, unkn
   if (typeof data.mode === 'string') {
     data.mode = data.mode.toLowerCase();
   }
-  if (!data.mode || !['assessment', 'clarification'].includes(data.mode as string)) {
+  if (!data.mode || !['assessment', 'clarification', 'conversation'].includes(data.mode as string)) {
     data.mode = 'assessment';
+  }
+
+  // ── Conversation mode: a plain reply, no risk analysis, questions or generation ──
+  if (data.mode === 'conversation') {
+    data.suggestedPolicies = [];
+    data.regulationCheck = [];
+    data.followUpQuestions = [];
+    delete data.followUpChoices;
+    data.intent = { type: 'advisor' };
+    if (data.riskProfile && typeof data.riskProfile === 'object') {
+      data.riskProfile = { ...(data.riskProfile as Record<string, unknown>), level: 'low', reasoning: [] };
+    }
   }
 
   // ── In clarification mode, force intent to advisor and clear policies/regulations ──
@@ -322,14 +334,15 @@ export function buildValidatedResponse(
     regulationCheck: normalized.regulationCheck || [],
     followUpQuestions: normalized.followUpQuestions || [],
     ...(Array.isArray(normalized.followUpChoices) ? { followUpChoices: normalized.followUpChoices } : {}),
-    sources: [
-      ...((normalized.sources as string[]) || ['AI Governance Analysis']),
-      ...ragResult.sources,
-    ],
+    // Small talk doesn't cite anything, even though retrieval ran.
+    sources:
+      normalized.mode === 'conversation'
+        ? []
+        : [...((normalized.sources as string[]) || ['AI Governance Analysis']), ...ragResult.sources],
     // Mirror RAG-supplied structured provenance through to the response.
     // LLM-supplied sources only land in the flat list; they don't carry a
     // typed bucket so they're intentionally excluded here.
-    sourcesStructured: ragResult.sourcesStructured,
+    ...(normalized.mode === 'conversation' ? {} : { sourcesStructured: ragResult.sourcesStructured }),
     conversationId,
     timestamp: new Date().toISOString(),
     ...(normalized.intent && typeof normalized.intent === 'object' ? { intent: normalized.intent } : {}),

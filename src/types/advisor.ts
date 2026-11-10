@@ -37,7 +37,12 @@ export interface FollowUpChoice {
 }
 
 export interface AdvisorResponse {
-  mode?: 'assessment' | 'clarification';
+  /**
+   * assessment = full analysis; clarification = needs more context;
+   * conversation = small talk / questions about Govi: a short reply that
+   * steers back to governance, with no risk profile.
+   */
+  mode?: 'assessment' | 'clarification' | 'conversation';
   riskProfile: {
     level: RiskLevel;
     description: string;

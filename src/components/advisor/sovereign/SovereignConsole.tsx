@@ -61,7 +61,8 @@ function exportThreadLog(entries: { query: string; response: AdvisorResponse }[]
   const lines = [`# Govi — AI Governance Session — ${code}`, ''];
   for (const [i, e] of entries.entries()) {
     lines.push(`## Exchange ${i + 1}`, '', `**You:** ${e.query}`, '');
-    lines.push(`**Govi (${e.response.riskProfile.level} risk):**`, e.response.riskProfile.description, '');
+    const label = e.response.mode === 'assessment' || !e.response.mode ? ` (${e.response.riskProfile.level} risk)` : '';
+    lines.push(`**Govi${label}:**`, e.response.riskProfile.description, '');
   }
   const blob = new Blob([lines.join('\n')], { type: 'text/markdown' });
   const url = URL.createObjectURL(blob);
