@@ -261,3 +261,46 @@ describe('follow-up choices', () => {
     expect(data.followUpChoices).toEqual([{ options: ['x', 'y'], multiSelect: false }]);
   });
 });
+
+describe('conversation mode', () => {
+  const rag = { context: '', sources: ['NIST AI RMF playbook entries'], sourcesStructured: [{ label: 'NIST AI RMF playbook entries', type: 'nist' }] } as unknown as Parameters<typeof buildValidatedResponse>[2];
+
+  it('keeps conversation mode and strips analysis, questions, generation and sources', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({
+        mode: 'Conversation',
+        riskProfile: { level: 'high', description: 'Hi! I help with AI governance. Want to assess a use case?', confidence: 1, reasoning: ['x'] },
+        suggestedPolicies: [{ title: 'P', description: 'd', priority: 'high', category: 'governance' }],
+        regulationCheck: [{ regulation: 'GDPR', article: '22', relevance: 'high', description: 'd' }],
+        followUpQuestions: [{ question: 'Q?', options: ['a', 'b'] }],
+        sources: ['something'],
+        intent: { type: 'document', documentType: 'dpia' },
+      }),
+    );
+    const result = buildValidatedResponse(parsed, 'conv-1', rag);
+    expect(result.success).toBe(true);
+    const data = result.success ? result.data : result.fallback;
+    expect(data.mode).toBe('conversation');
+    expect(data.riskProfile.description).toContain('AI governance');
+    expect(data.riskProfile.level).toBe('low');
+    expect(data.riskProfile.reasoning).toEqual([]);
+    expect(data.suggestedPolicies).toEqual([]);
+    expect(data.regulationCheck).toEqual([]);
+    expect(data.followUpQuestions).toEqual([]);
+    expect(data.followUpChoices).toBeUndefined();
+    expect(data.sources).toEqual([]);
+    expect(data.sourcesStructured).toBeUndefined();
+    expect(data.intent).toEqual({ type: 'advisor' });
+  });
+
+  it('still coerces unknown modes to assessment', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({ mode: 'chatty', riskProfile: { level: 'low', description: 'd', confidence: 0.5, reasoning: [] } }),
+    );
+    const data = (() => {
+      const r = buildValidatedResponse(parsed, 'conv-1', rag);
+      return r.success ? r.data : r.fallback;
+    })();
+    expect(data.mode).toBe('assessment');
+  });
+});

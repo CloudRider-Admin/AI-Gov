@@ -65,7 +65,7 @@ const DocIcon = ({ kind }: { kind: 'pdf' | 'doc' | 'source' }) => {
  * the console's right-hand panel (see DocumentPanel).
  */
 export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: AuditIntelligencePanelProps) {
-  const hasAssessment = !!response && response.mode !== 'clarification';
+  const hasAssessment = !!response && (response.mode === 'assessment' || !response.mode);
   const risk = hasAssessment ? RISK_VISUALS[response!.riskProfile.level] : null;
   const readiness = readinessScore(response);
   const entities = detectedEntities(response);

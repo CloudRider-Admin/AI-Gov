@@ -184,8 +184,8 @@ export async function POST(request: NextRequest) {
     });
 
     const userMessage = hasConversationHistory
-      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. Provide a full assessment (mode: "assessment") incorporating all context. Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
-      : `${contextualQuery}\n\nFirst determine if this query provides enough context for a full assessment or if you need to ask clarifying questions. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
+      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. If the new message adds information or asks for analysis, provide a full assessment (mode: "assessment") incorporating all context. If it is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), use mode "conversation". Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
+      : `${contextualQuery}\n\nFirst determine whether this message is conversational (mode "conversation"), needs clarifying questions, or has enough context for a full assessment. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
 
     // ── OpenAI streaming call (with circuit breaker), Claude fallback on quota/circuit-open ──
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -317,7 +317,7 @@ export async function POST(request: NextRequest) {
             const validated = buildValidatedResponse(parsed, dbConversationId, ragResult);
             // Orchestrator pipeline still calls OpenAI directly — skip when we
             // fell back to Claude so we don't trip the same quota/circuit error.
-            if (validated.success && validated.data.mode !== 'clarification' && provider === 'openai') {
+            if (validated.success && validated.data.mode === 'assessment' && provider === 'openai') {
               const dispatch = await dispatchOrchestrator({
                 userId: session.user.id,
                 conversationId: dbConversationId,

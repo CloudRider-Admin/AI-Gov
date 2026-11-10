@@ -25,7 +25,7 @@ export const RISK_VISUALS: Record<RiskLevel, RiskVisual> = {
  * meaningful headline gauge without inventing data the model didn't return.
  */
 export function readinessScore(response: AdvisorResponse | null): number {
-  if (!response || response.mode === 'clarification') return 0;
+  if (!response || response.mode === 'clarification' || response.mode === 'conversation') return 0;
   const risk = RISK_VISUALS[response.riskProfile.level];
   const confidence = Math.max(0, Math.min(1, response.riskProfile.confidence ?? 0.5));
   const contained = 100 - risk.exposure;

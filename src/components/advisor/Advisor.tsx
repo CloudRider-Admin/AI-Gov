@@ -279,7 +279,7 @@ export function AdvisorView({ session: s, showHeader = true }: { session: GoviSe
                         onAnswersSubmit={isLast ? handleAnswersSubmit : undefined}
                         onActionCard={handleActionCard}
                         showFollowUps={isLast}
-                        showActionCards={!entry.response.generatedArtifact && entry.response.mode !== 'clarification'}
+                        showActionCards={!entry.response.generatedArtifact && entry.response.mode !== 'clarification' && entry.response.mode !== 'conversation'}
                         isPaidUser={session?.user?.role === 'PRO' || session?.user?.role === 'TEAM' || session?.user?.role === 'ENTERPRISE' || session?.user?.role === 'ADMIN'}
                         isActionLoading={actionLoading}
                         exchangeNumber={idx + 1}

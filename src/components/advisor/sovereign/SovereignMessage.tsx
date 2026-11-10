@@ -67,6 +67,9 @@ export function SovereignMessage({
   onAction,
 }: SovereignMessageProps) {
   const isClarification = response.mode === 'clarification';
+  // Small talk: just the reply, with no risk pill, analysis or action cards.
+  const isConversation = response.mode === 'conversation';
+  const isAssessment = !isClarification && !isConversation;
   const risk = RISK_VISUALS[response.riskProfile.level];
   const policies = (response.suggestedPolicies ?? []).slice(0, 4);
   const followUps = response.followUpQuestions ?? [];
@@ -91,7 +94,7 @@ export function SovereignMessage({
           G
         </span>
         <span className="text-sm font-medium text-terminal-text">Govi</span>
-        {!isClarification && (
+        {isAssessment && (
           <span className={`rounded-full bg-terminal-gray px-2 py-0.5 text-xs font-medium ${risk.text}`}>
             {risk.label} risk
           </span>
@@ -119,7 +122,7 @@ export function SovereignMessage({
         </div>
 
         {/* Reasoning bullets */}
-        {response.riskProfile.reasoning?.length > 0 && (
+        {isAssessment && response.riskProfile.reasoning?.length > 0 && (
           <ul className="mt-3 space-y-1.5">
             {response.riskProfile.reasoning.slice(0, 4).map((r, i) => (
               <li key={i} className="flex gap-2 text-sm leading-relaxed text-terminal-muted">
@@ -161,7 +164,7 @@ export function SovereignMessage({
         )}
 
         {/* Action toolbar */}
-        {!isClarification && !artifact && cards.length > 0 && (
+        {isAssessment && !artifact && cards.length > 0 && (
           <div className="mt-6 border-t border-terminal-border pt-4">
             <div className="mb-2.5 flex items-center gap-2">
               <GitCompare className="h-3.5 w-3.5 text-terminal-muted" />
