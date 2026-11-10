@@ -173,7 +173,7 @@ export function SovereignInput({
         <p className="mb-2 px-1 text-xs text-terminal-red">{validationError}</p>
       )}
       <div
-        className={`surface rounded-2xl transition-colors duration-200 focus-within:border-terminal-text/25 ${
+        className={`surface rounded-2xl transition-colors duration-200 focus-within:border-terminal-text/35 ${
           variant === 'hero' ? 'shadow-app' : ''
         }`}
       >

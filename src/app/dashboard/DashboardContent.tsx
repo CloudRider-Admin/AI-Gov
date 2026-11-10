@@ -617,7 +617,7 @@ function AskGovi() {
           e.preventDefault();
           go(q);
         }}
-        className="surface shadow-app flex items-center gap-3 rounded-2xl py-2 pl-3 pr-2 focus-within:border-terminal-text/25"
+        className="surface shadow-app flex items-center gap-3 rounded-2xl py-2 pl-3 pr-2 focus-within:border-terminal-text/35"
       >
         <span className="grid h-8 w-8 flex-none place-items-center rounded-lg bg-terminal-green text-sm font-semibold text-[var(--color-bg-secondary)]">
           G
