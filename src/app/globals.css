@@ -374,8 +374,11 @@ a {
   @apply transition-all duration-300;
 }
 
-/* Unified keyboard focus ring — accessibility (WCAG 2.4.7) */
-*:focus-visible {
+/* Unified keyboard focus ring — accessibility (WCAG 2.4.7).
+   Elements that opt out with outline-none supply their own focus style (a
+   border or ring on themselves or their container, e.g. the Govi composer),
+   so they don't get a second, detached outline drawn inside them. */
+*:focus-visible:not(.outline-none):not(.focus\:outline-none):not(.focus-visible\:outline-none) {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 4px;

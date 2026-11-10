@@ -86,7 +86,7 @@ export function GoviChatList({
       </div>
 
       <div className="flex-none px-3 pb-2">
-        <label className="flex h-9 items-center gap-2 rounded-lg border border-terminal-border bg-terminal-dark px-2.5 text-sm text-terminal-muted focus-within:border-terminal-green/50">
+        <label className="flex h-9 items-center gap-2 rounded-lg border border-terminal-border bg-terminal-dark px-2.5 text-sm text-terminal-muted focus-within:border-terminal-text/30">
           <Search className="h-4 w-4 flex-none" aria-hidden="true" />
           <input
             value={filter}

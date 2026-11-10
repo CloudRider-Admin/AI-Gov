@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { parseAdvisorResponse, buildValidatedResponse } from '@/lib/ai/responseParser';
+import { splitFollowUpChoices } from '@/lib/ai/followUps';
 import { matchSectors, type SectorGuidance } from '@/data/sectorGuidance';
 import { matchRegulations, EMERGING_REGULATIONS, type EmergingRegulation } from '@/data/emergingRegulations';
 import type { ActionCardAction } from './ActionCardsPanel';
@@ -558,7 +559,9 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
           const assistantMsg = messages[i + 1];
           if (assistantMsg?.role === 'assistant') {
             try {
-              const parsed: AdvisorResponse = JSON.parse(assistantMsg.content);
+              // Stored rows can be the model's raw JSON (streaming path), where
+              // follow-up questions may be objects — normalize before rendering.
+              const parsed = splitFollowUpChoices(JSON.parse(assistantMsg.content)) as AdvisorResponse;
               reconstructed.push({
                 query: userMsg.content,
                 response: parsed,
