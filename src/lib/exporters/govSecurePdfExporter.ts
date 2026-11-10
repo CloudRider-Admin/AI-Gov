@@ -113,12 +113,18 @@ export async function exportToPdf(
   // Paint chrome on the first body page, then on every page break.
   drawChrome();
 
-  const ensureSpace = (needed: number): void => {
+  /**
+   * Reserve vertical space; page-break if it won't fit. Returns the current
+   * y cursor so callers (especially `drawTable`, which runs inside a helper
+   * that does not see this closure's `y`) can observe page resets.
+   */
+  const ensureSpace = (needed: number): number => {
     if (y + needed > pageHeight - MARGIN.bottom) {
       pdf.addPage();
       y = MARGIN.top;
       drawChrome();
     }
+    return y;
   };
 
   // ── Sections ────────────────────────────────────────────────────────────
@@ -135,6 +141,11 @@ export async function exportToPdf(
         pdf.text(wrapped, MARGIN.left, y);
         y += wrapped.length * 5 + 3.5;
       }
+    }
+
+    if (section.tables && section.tables.length > 0) {
+      y = drawTable(pdf, section.tables, MARGIN.left, y, contentWidth, ensureSpace);
+      y += 3;
     }
 
     if (section.checklistItems && section.checklistItems.length > 0) {
@@ -491,4 +502,72 @@ function documentTypeLabel(doc: GovernanceDocumentOutput): string {
       .join(' ');
   }
   return 'Governance Document';
+}
+
+/**
+ * Render a 2-D string matrix as a branded table inside the current jsPDF
+ * document. The first row is treated as a header (bold text, light accent
+ * fill). Wraps long cells. Calls `ensureSpace` before each row so a long
+ * table flows cleanly across page breaks. Returns the new y cursor.
+ */
+function drawTable(
+  pdf: jsPDF,
+  rows: string[][],
+  x: number,
+  yStart: number,
+  width: number,
+  ensureSpace: (needed: number) => number,
+): number {
+  if (!rows.length) return yStart;
+  const colCount = Math.max(...rows.map((r) => r.length));
+  if (colCount === 0) return yStart;
+
+  const padded = rows.map((row) =>
+    Array.from({ length: colCount }, (_, i) => (row[i] ?? '').trim()),
+  );
+  const colWidth = width / colCount;
+  const cellPad = 1.5;
+  const lineHeight = 4.5;
+
+  // Pre-wrap every cell so we know each row's height before drawing.
+  const wrappedRows = padded.map((row) =>
+    row.map((cell) => pdf.splitTextToSize(cell || ' ', colWidth - 2 * cellPad) as string[]),
+  );
+  const rowHeights = wrappedRows.map((row) => {
+    const lines = Math.max(...row.map((cell) => cell.length));
+    return lines * lineHeight + cellPad * 2;
+  });
+
+  let y = yStart;
+  for (let r = 0; r < wrappedRows.length; r++) {
+    const rowHeight = rowHeights[r];
+    // ensureSpace may page-break and reset the outer y; we adopt the returned
+    // value so the next row draws inside the new page.
+    y = ensureSpace(rowHeight);
+
+    const isHeader = r === 0;
+
+    if (isHeader) {
+      setFill(pdf, hexToRgb('EAF7EE')); // matches DOCX header fill
+      pdf.rect(x, y, width, rowHeight, 'F');
+    }
+
+    pdf.setDrawColor(COLORS.divider.r, COLORS.divider.g, COLORS.divider.b);
+    pdf.setLineWidth(0.2);
+    setFont(pdf, 'helvetica', isHeader ? 'bold' : 'normal', 9.5, COLORS.text);
+
+    for (let c = 0; c < colCount; c++) {
+      const cellX = x + c * colWidth;
+      pdf.rect(cellX, y, colWidth, rowHeight); // border
+      const lines = wrappedRows[r][c];
+      pdf.text(lines, cellX + cellPad, y + cellPad + lineHeight - 1);
+    }
+
+    y += rowHeight;
+  }
+
+  // Reset font for whatever the caller draws next.
+  setFont(pdf, 'helvetica', 'normal', 10.5, COLORS.text);
+
+  return y;
 }

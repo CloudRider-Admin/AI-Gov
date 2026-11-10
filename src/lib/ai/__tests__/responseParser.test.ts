@@ -189,3 +189,75 @@ describe('applyGating', () => {
     expect(result.gated).toBe(true);
   });
 });
+describe('follow-up choices', () => {
+  const base = {
+    mode: 'clarification',
+    riskProfile: { level: 'medium', description: 'Need context', confidence: 0.4, reasoning: [] },
+    suggestedPolicies: [],
+    regulationCheck: [],
+    sources: [],
+  };
+
+  it('flattens question objects and keeps index-aligned options', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({
+        ...base,
+        followUpQuestions: [
+          { question: 'What kind of AI system is it?', options: ['Generative AI', 'Predictive model', 'Vendor feature'] },
+          'What is the system called?',
+          { question: 'Which data does it use?', options: ['Personal data', 'Health data', 'Personal data'], multiSelect: true },
+        ],
+      }),
+    );
+    expect(parsed.followUpQuestions).toEqual([
+      'What kind of AI system is it?',
+      'What is the system called?',
+      'Which data does it use?',
+    ]);
+    expect(parsed.followUpChoices).toEqual([
+      { options: ['Generative AI', 'Predictive model', 'Vendor feature'], multiSelect: false },
+      null,
+      { options: ['Personal data', 'Health data'], multiSelect: true },
+    ]);
+  });
+
+  it('leaves legacy string questions without choices', () => {
+    const parsed = parseAdvisorResponse(JSON.stringify({ ...base, followUpQuestions: ['Q1?', 'Q2?'] }));
+    expect(parsed.followUpQuestions).toEqual(['Q1?', 'Q2?']);
+    expect(parsed.followUpChoices).toBeUndefined();
+  });
+
+  it('removes catch-all options the UI already provides', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({ ...base, followUpQuestions: [{ question: 'A?', options: ['Chatbot', 'Other departments', 'Other', 'Other (please specify)', 'Something else…'] }] }),
+    );
+    expect(parsed.followUpChoices).toEqual([{ options: ['Chatbot', 'Other departments'], multiSelect: false }]);
+  });
+
+  it('drops single-option lists and caps options at five', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({
+        ...base,
+        followUpQuestions: [
+          { question: 'A?', options: ['only one'] },
+          { question: 'B?', options: ['1', '2', '3', '4', '5', '6'] },
+        ],
+      }),
+    );
+    expect(parsed.followUpChoices).toEqual([null, { options: ['1', '2', '3', '4', '5'], multiSelect: false }]);
+  });
+
+  it('carries choices through validation', () => {
+    const parsed = parseAdvisorResponse(
+      JSON.stringify({ ...base, followUpQuestions: [{ question: 'A?', options: ['x', 'y'] }] }),
+    );
+    const result = buildValidatedResponse(parsed, 'conv-1', {
+      context: '',
+      sources: [],
+      sourcesStructured: [],
+    } as unknown as Parameters<typeof buildValidatedResponse>[2]);
+    const data = result.success ? result.data : result.fallback;
+    expect(data.followUpQuestions).toEqual(['A?']);
+    expect(data.followUpChoices).toEqual([{ options: ['x', 'y'], multiSelect: false }]);
+  });
+});

@@ -167,3 +167,14 @@ Rules:
 1. Does it fit an existing surface, radius, color, typography rule? Use those.
 2. If not, ask: is this a real new pattern or a drift? Discuss before adding to this doc.
 3. Every new component goes in `src/components/ui/` with a consistent TS interface.
+## App UI (signed-in)
+
+Signed-in pages use a calmer product skin, modelled on chat-first tools (borrowing patterns only, never their branding):
+
+- **Switch:** `AppShell` adds `app-ui` to `<html>` when signed in. A preload script in `app/layout.tsx` applies it before first paint for returning users (the `govsecure:authed` hint), so the public header doesn't flash. Under `html.app-ui` every `terminal-*` token is remapped to the app palette (see the bottom of `globals.css`), so existing components restyle without changes.
+- **Shell:** no desktop top header (`--header-h` is `0` at `md+`). There is one full-height sidebar (`w-64`, or a `60px` rail when collapsed) with grouped nav: Workspace / Governance / Evidence / Learn / Organization. On `/govi` the sidebar defaults to the rail.
+- **Type:** Inter for UI; `font-serif` (Source Serif 4) only for page titles and greetings. No mono uppercase labels in app screens.
+- **Surfaces:** `.surface` (card background + hairline border), `rounded-2xl` panels, `.shadow-app` for floating elements such as composers, menus and question cards.
+- **Govi:** chat list column → centered thread (`max-w-3xl`) → document pane. Opening or generating a document narrows the chat to `clamp(340px,34%,560px)`, and the document takes the rest. `?doc=<id>` deep-links it.
+- **Clarifying questions:** `ClarificationCard` shows one question at a time with a stepper, 2–4 numbered options, a "Something else…" row and Skip. The model returns `followUpQuestions` as `{ question, options, multiSelect }`. The parser flattens them into `followUpQuestions: string[]` plus the index-aligned `followUpChoices`.
+- **Time-of-day text** (greetings, "today") is computed on the client only, because the server renders in UTC.

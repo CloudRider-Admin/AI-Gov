@@ -34,6 +34,7 @@ const config: Config = {
       fontFamily: {
         mono: ["var(--font-space-mono)", "Courier New", "monospace"],
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
       },
       animation: {
         blink: "blink 1s step-end infinite",

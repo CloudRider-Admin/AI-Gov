@@ -6,6 +6,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const RATE_LIMIT_RETENTION_MS = 2 * DAY_MS;    // limiter windows are ≤ 24h
 const TOKEN_USAGE_RETENTION_MS = 90 * DAY_MS;  // keep ~a quarter of usage history
 const ANALYTICS_RETENTION_MS = 180 * DAY_MS;   // keep ~6 months of analytics
+const INTENT_FEEDBACK_RETENTION_MS = 365 * DAY_MS; // keep a year of classifier feedback
 
 export interface CleanupResult {
   verificationTokens: number;
@@ -13,6 +14,7 @@ export interface CleanupResult {
   rateLimits: number;
   tokenUsage: number;
   analyticsEvents: number;
+  intentFeedback: number;
 }
 
 /**
@@ -22,7 +24,7 @@ export interface CleanupResult {
 export async function runCleanup(now: Date = new Date()): Promise<CleanupResult> {
   const nowMs = now.getTime();
 
-  const [verificationTokens, passwordResetTokens, rateLimits, tokenUsage, analyticsEvents] =
+  const [verificationTokens, passwordResetTokens, rateLimits, tokenUsage, analyticsEvents, intentFeedback] =
     await Promise.all([
       prisma.verificationToken.deleteMany({ where: { expires: { lt: now } } }),
       prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lt: now } } }),
@@ -35,6 +37,9 @@ export async function runCleanup(now: Date = new Date()): Promise<CleanupResult>
       prisma.analyticsEvent.deleteMany({
         where: { createdAt: { lt: new Date(nowMs - ANALYTICS_RETENTION_MS) } },
       }),
+      prisma.intentFeedback.deleteMany({
+        where: { createdAt: { lt: new Date(nowMs - INTENT_FEEDBACK_RETENTION_MS) } },
+      }),
     ]);
 
   return {
@@ -43,5 +48,6 @@ export async function runCleanup(now: Date = new Date()): Promise<CleanupResult>
     rateLimits: rateLimits.count,
     tokenUsage: tokenUsage.count,
     analyticsEvents: analyticsEvents.count,
+    intentFeedback: intentFeedback.count,
   };
 }

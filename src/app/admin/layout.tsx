@@ -57,11 +57,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const badge = status === 'unknown' ? { label: '…', className: 'text-terminal-muted' } : STATUS_BADGE[status];
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-terminal-dark text-terminal-text">
-      <div className="flex min-h-[calc(100vh-4rem)]">
+    <div className="min-h-[calc(100vh-var(--header-h))] bg-terminal-dark text-terminal-text">
+      <div className="flex min-h-[calc(100vh-var(--header-h))]">
         {/* ── Sidebar ───────────────────────────────────────────────── */}
         <aside className="w-64 shrink-0 border-r border-terminal-border bg-terminal-dark hidden md:flex flex-col">
-          <div className="sticky top-16 flex flex-col h-[calc(100vh-4rem)]">
+          <div className="sticky top-[var(--header-h)] flex flex-col h-[calc(100vh-var(--header-h))]">
             <nav className="flex-1 overflow-y-auto p-5 space-y-8">
               {/* Core Management group */}
               <div>

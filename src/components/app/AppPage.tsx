@@ -24,8 +24,8 @@ export function AppPage({
   outerClassName?: string;
 }) {
   return (
-    <div className={`min-h-screen px-4 py-8 sm:px-6 md:px-8 md:py-10 ${outerClassName}`}>
-      <div className={`mx-auto flex ${width} flex-col gap-6 ${className}`}>{children}</div>
+    <div className={`min-h-screen px-4 py-8 sm:px-6 md:px-10 md:py-10 ${outerClassName}`}>
+      <div className={`mx-auto flex ${width} flex-col gap-5 ${className}`}>{children}</div>
     </div>
   );
 }

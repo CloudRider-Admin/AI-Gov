@@ -71,17 +71,17 @@ export function SovereignActionsMenu({
         aria-label="More actions"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className={`grid h-10 w-10 place-items-center rounded-md transition-colors duration-300 ${
+        className={`grid h-8 w-8 place-items-center rounded-lg transition-colors ${
           open
-            ? 'bg-terminal-green/10 text-terminal-green'
-            : 'text-terminal-muted hover:bg-terminal-gray/40 hover:text-terminal-text'
+            ? 'bg-terminal-gray text-terminal-text'
+            : 'text-terminal-muted hover:bg-terminal-gray hover:text-terminal-text'
         }`}
       >
-        <Plus className={`h-5 w-5 transition-transform ${open ? 'rotate-45' : ''}`} />
+        <Plus className={`h-4 w-4 transition-transform ${open ? 'rotate-45' : ''}`} />
       </button>
 
       {open && (
-        <div className="absolute bottom-full left-0 z-30 mb-3 w-72 overflow-hidden rounded-xl border border-terminal-border bg-terminal-dark shadow-[0_12px_40px_rgba(0,0,0,0.45)]">
+        <div className="absolute bottom-full left-0 z-30 mb-3 w-72 overflow-hidden rounded-xl border border-terminal-border bg-terminal-dark shadow-app">
           {/* Primary actions */}
           <div className="p-1.5">
             <button

@@ -203,6 +203,8 @@ export const visualGuides: VisualGuide[] = [
     description:
       'Assess where your organization stands and plan the path to mature, scalable AI governance.',
     type: 'Framework',
+    image:
+      'https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=2400&q=80',
   },
 ];
 
@@ -251,44 +253,52 @@ export const templates: Template[] = [
 
 export const playbooks: Playbook[] = [
   {
-    id: 'starter-pack',
-    slug: 'starter-pack',
-    title: 'AI Governance Starter Pack',
+    id: 'ai-chef-toolkit',
+    slug: 'ai-chef-toolkit',
+    title: 'GovSecure AI Chef™ Toolkit',
     description:
-      'Everything you need to launch an AI governance program in 30 days — inventory, risk assessment, and your first policy.',
-    level: 'beginner',
-  },
-  {
-    id: 'spreadsheets-policies',
-    slug: 'spreadsheets-policies',
-    title: 'From Spreadsheets to Policies',
-    description:
-      'Turn your ad-hoc AI tracking into formal governance documentation with templates and step-by-step guidance.',
-    level: 'beginner',
-  },
-  {
-    id: 'aup-design',
-    slug: 'aup-design',
-    title: 'Designing Your AI Acceptable Use Policy',
-    description:
-      'Craft a clear, enforceable Acceptable Use Policy that balances innovation with responsible AI practices.',
-    level: 'beginner',
-  },
-  {
-    id: 'shadow-ai',
-    slug: 'shadow-ai',
-    title: 'Taming Shadow AI',
-    description:
-      'Discover and govern unauthorized AI tools across your organization before they create compliance and security risks.',
+      'The flagship enterprise AI governance operating model — 6 stations and 24 core recipes covering intake, risk tiering, policy, vendor, monitoring, and incident response.',
     level: 'intermediate',
   },
   {
-    id: 'executive-guide',
-    slug: 'executive-guide',
-    title: 'Executive Guide to AI Governance',
+    id: '90-day-blueprint',
+    slug: '90-day-blueprint',
+    title: '90-Day AI Governance Implementation Blueprint',
     description:
-      'A leadership-level overview of AI governance strategy, board reporting, and organizational alignment.',
+      'A phased week-by-week rollout — Foundation, Implementation, and Operationalize — to stand up a working AI governance program in one quarter, mapped to NIST AI RMF and ISO 42001.',
+    level: 'beginner',
+  },
+  {
+    id: 'ai-chef-executive',
+    slug: 'ai-chef-executive',
+    title: 'AI Chef Executive Toolkit',
+    description:
+      'Board- and executive-level summary of the AI Chef operating model — governance posture, risk exposure, and quarterly review materials in a deck-ready format.',
     level: 'leadership',
+  },
+  {
+    id: 'ai-chef-operational',
+    slug: 'ai-chef-operational',
+    title: 'AI Chef Operational Templates',
+    description:
+      'The companion workbook of ready-to-fill operational templates — intake forms, RACI matrices, risk tiering worksheets, evidence registers, and policy-to-control crosswalks.',
+    level: 'intermediate',
+  },
+  {
+    id: 'third-party-privacy',
+    slug: 'third-party-privacy',
+    title: 'Third-Party AI Privacy Risk Assessment',
+    description:
+      'A nine-section vendor questionnaire and scoring workbook for assessing third-party AI providers across privacy, data handling, security, and subprocessor risk.',
+    level: 'intermediate',
+  },
+  {
+    id: 'ai-chef-infographic',
+    slug: 'ai-chef-infographic',
+    title: 'AI Chef Visual Overview',
+    description:
+      'An at-a-glance infographic of the AI Chef operating model — the fastest way to align stakeholders on stations, recipes, and governance flow.',
+    level: 'beginner',
   },
 ];
 

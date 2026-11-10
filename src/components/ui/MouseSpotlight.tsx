@@ -135,7 +135,7 @@ export function MouseSpotlight() {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0" aria-hidden="true">
+    <div className="mouse-spotlight fixed inset-0 pointer-events-none z-0" aria-hidden="true">
       <div ref={baseRef} className="absolute inset-0 dot-bg opacity-70" />
       <canvas ref={canvasRef} className="absolute inset-0" />
     </div>

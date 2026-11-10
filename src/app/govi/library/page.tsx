@@ -44,7 +44,7 @@ export default function GovSecureLibraryPage() {
 
   return (
     <div className="min-h-screen pt-16 pb-12">
-      <div className="border-b border-terminal-border bg-terminal-black/80 backdrop-blur-sm sticky top-16 z-10 px-6 py-3">
+      <div className="border-b border-terminal-border bg-terminal-black/80 backdrop-blur-sm sticky top-[var(--header-h)] z-10 px-6 py-3">
         <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-terminal-green" />

@@ -267,6 +267,10 @@ function pushSections(children: (Paragraph | Table)[], doc: GovernanceDocumentOu
       }
     }
 
+    if (section.tables && section.tables.length > 0) {
+      children.push(buildTable(section.tables));
+    }
+
     if (section.checklistItems && section.checklistItems.length > 0) {
       for (const item of section.checklistItems) {
         children.push(
@@ -292,6 +296,60 @@ function pushSections(children: (Paragraph | Table)[], doc: GovernanceDocumentOu
         );
       }
     }
+  });
+}
+
+/**
+ * Render a 2-D string matrix as a branded `docx` Table. The first row is
+ * styled as a header (bold text, light accent shading). Defensive against
+ * ragged rows: pads short rows to the widest row's column count.
+ */
+function buildTable(rows: string[][]): Table {
+  const colCount = Math.max(...rows.map((r) => r.length));
+  const padded = rows.map((row) =>
+    Array.from({ length: colCount }, (_, i) => (row[i] ?? '').trim()),
+  );
+  const cellBorder = { style: BorderStyle.SINGLE, size: 4, color: BRAND_COLORS.divider };
+  const cellBorders = {
+    top: cellBorder,
+    bottom: cellBorder,
+    left: cellBorder,
+    right: cellBorder,
+  };
+
+  const tableRows = padded.map((row, rowIdx) => {
+    const isHeader = rowIdx === 0;
+    return new TableRow({
+      tableHeader: isHeader,
+      children: row.map(
+        (cell) =>
+          new TableCell({
+            borders: cellBorders,
+            shading: isHeader
+              ? { type: ShadingType.CLEAR, color: 'auto', fill: 'EAF7EE' }
+              : undefined,
+            children: [
+              new Paragraph({
+                spacing: { before: 40, after: 40 },
+                children: [
+                  new TextRun({
+                    text: cell,
+                    bold: isHeader,
+                    font: BRAND_FONTS.body,
+                    size: FONT_SIZES_HALF_PT.body,
+                    color: BRAND_COLORS.textPrimary,
+                  }),
+                ],
+              }),
+            ],
+          }),
+      ),
+    });
+  });
+
+  return new Table({
+    width: FULL_WIDTH,
+    rows: tableRows,
   });
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Mono, Inter } from "next/font/google";
+import { Space_Mono, Inter, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Header, AppShell } from "@/components/layout";
 import { Providers } from "@/components/layout/Providers";
@@ -17,6 +17,14 @@ const spaceMono = Space_Mono({
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+// Display serif for app greetings and headings (signed-in UI).
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-serif",
   display: "swap",
 });
 
@@ -84,13 +92,21 @@ export const metadata: Metadata = {
   // verification: { google: "ADD_REAL_CODE_HERE" },
 };
 
+// Runs before first paint: applies the saved theme and, for returning signed-in
+// users, the app shell class — so neither the theme nor the layout flashes
+// while the client session loads. AppShell keeps the hint in sync.
+const preloadScript = `try{var d=document.documentElement;var t=localStorage.getItem('theme');if(t==='light'||t==='dark'){d.classList.remove('dark','light');d.classList.add(t);}if(localStorage.getItem('govsecure:authed')==='1'){d.classList.add('app-ui');}}catch(e){}`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${spaceMono.variable} ${inter.variable} dark`} suppressHydrationWarning>
+    <html lang="en" className={`${spaceMono.variable} ${inter.variable} ${sourceSerif.variable} dark`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: preloadScript }} />
+      </head>
       <body className="min-h-screen bg-terminal-black transition-colors duration-300" suppressHydrationWarning>
         <Providers>
           <ScrollReveal />

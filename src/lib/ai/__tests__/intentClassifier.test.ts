@@ -106,14 +106,94 @@ describe('classifyIntent', () => {
       expect(result.type).toBe('advisor');
     });
 
-    it('should handle verbose real-world queries', () => {
+    it('routes verbose real-world use-case + governance question to intake', () => {
       const result = classifyIntent(EDGE_CASE_QUERIES.verbose);
-      // This is a description, not a generation request — should be advisor
-      expect(result.type).toBe('advisor');
+      // The verbose fixture describes a concrete deployed AI ("We are a
+      // financial services company...using an AI-powered credit scoring
+      // model...what governance requirements apply"). Post-Bug-C fix this
+      // routes to intake so the orchestrator's HARD CONSTRAINTS run and
+      // the response chains DPIA / TPRM / Blueprint next actions.
+      expect(result.type).toBe('intake');
     });
 
     it('should handle empty string', () => {
       const result = classifyIntent('');
+      expect(result.type).toBe('advisor');
+    });
+  });
+
+  describe('use-case + governance question routing', () => {
+    // Soft signal: real use case + governance question, but NO explicit
+    // assessment cue ("score", "tier", "DPIA needed", "high risk?"). The
+    // classifier used to auto-route these to intake, which dropped the user
+    // into a questionnaire mid-conversation. Now it stays in advisor mode
+    // and surfaces a `suggestedAction` so the UI offers a one-tap CTA.
+    it('soft-suggests intake for "Our X uses AI to Y. What governance do we need?"', () => {
+      const result = classifyIntent(
+        'Our startup uses AI to generate marketing content. What governance do we need?',
+      );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
+    });
+
+    it('soft-suggests intake for "We use ChatGPT in customer support. What risks should we address?"', () => {
+      const result = classifyIntent(
+        'We use ChatGPT in our customer support team. What risks should we address?',
+      );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
+    });
+
+    it('soft-suggests intake for "We are building an AI tool to screen CVs. What regulations apply?"', () => {
+      const result = classifyIntent(
+        "We're building an AI tool to screen CVs for hiring. What regulations apply?",
+      );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('suggest');
+      expect(result.suggestedAction?.type).toBe('intake');
+    });
+
+    // Explicit assessment cue should commit to intake (no soft-suggest).
+    it('commits to intake when an explicit assessment cue is present', () => {
+      const result = classifyIntent(
+        'Our team uses ChatGPT for hiring. Score the risk and tell me the tier.',
+      );
+      expect(result.type).toBe('intake');
+      expect(result.mode).toBe('auto');
+    });
+
+    it('commits to intake when the user asks "is this high risk?"', () => {
+      const result = classifyIntent(
+        "We're deploying an AI credit-scoring model. Is this high risk?",
+      );
+      expect(result.type).toBe('intake');
+      expect(result.mode).toBe('auto');
+    });
+
+    // Discuss cue forces advisor mode even when soft intake heuristics
+    // would match. Powers the "Skip questions — give me a quick overview"
+    // escape hatch in the clarification UI.
+    it('forces advisor when the user asks for a "quick overview"', () => {
+      const result = classifyIntent(
+        'Just chat — give me a quick overview of: Our HR team uses AI to screen CVs. What risks apply?',
+      );
+      expect(result.type).toBe('advisor');
+      expect(result.mode).toBe('auto');
+      expect(result.suggestedAction).toBeUndefined();
+    });
+
+    it('forces advisor when the user says "no form, plain english"', () => {
+      const result = classifyIntent(
+        "In plain english — what should we know about deploying ChatGPT for customer support?",
+      );
+      expect(result.type).toBe('advisor');
+    });
+
+    // Negative case — abstract governance question without a use case stays advisor.
+    it('keeps "What governance framework should we adopt?" as advisor', () => {
+      const result = classifyIntent('What governance framework should we adopt?');
       expect(result.type).toBe('advisor');
     });
   });

@@ -10,8 +10,16 @@ export const metadata: Metadata = {
 export default async function GoviPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; c?: string }>;
+  searchParams: Promise<{ q?: string; c?: string; new?: string }>;
 }) {
   const params = await searchParams;
-  return <GoviExperience initialQuery={params.q} initialConversationId={params.c} />;
+  // "New Govi chat" in the sidebar links to /govi?new=<ts>; keying on it
+  // remounts the experience so it always opens on a fresh conversation.
+  return (
+    <GoviExperience
+      key={params.new ?? params.c ?? "govi"}
+      initialQuery={params.q}
+      initialConversationId={params.c}
+    />
+  );
 }
