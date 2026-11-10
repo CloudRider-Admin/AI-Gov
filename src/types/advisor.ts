@@ -74,6 +74,18 @@ export interface AdvisorResponse {
     intentType: string;
     retryable: boolean;
   };
+  /**
+   * Soft routing hint from the intent classifier. When present, the
+   * advisor stayed in conversational mode but detected a use case the
+   * user might want to upgrade to a structured flow. The UI renders an
+   * inline CTA above the answer (see `IntentSuggestionBanner`).
+   */
+  intentSuggestion?: {
+    type: 'intake' | 'document' | 'playbook';
+    reason: string;
+    documentType?: string;
+    framework?: string;
+  };
 }
 
 export interface ConversationSummary {

@@ -30,6 +30,11 @@ const nextConfig = {
         hostname: "cdn.sanity.io",
         pathname: "/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+        pathname: "/**",
+      },
     ],
   },
   async headers() {
@@ -42,17 +47,19 @@ const nextConfig = {
     // stricter policy.
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://cdn.sanity.io",
-      "font-src 'self' data:",
-      "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.api.sanity.io",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://cdn.sanity.io",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https://cdn.sanity.io https://images.unsplash.com https://*.stripe.com",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' https://*.sanity.io wss://*.sanity.io https://*.api.sanity.io https://api.openai.com https://api.anthropic.com https://api.stripe.com https://*.ingest.sentry.io",
       "worker-src 'self' blob:",
       "child-src 'self' blob:",
+      "frame-src 'self' https://js.stripe.com https://hooks.stripe.com",
       "frame-ancestors 'self'",
       "base-uri 'self'",
       "form-action 'self'",
       "object-src 'none'",
+      "upgrade-insecure-requests",
     ].join("; ");
 
     return [

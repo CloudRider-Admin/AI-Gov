@@ -23,6 +23,7 @@ import {
 } from './documentTemplates';
 import { getExemplarsForGeneration, renderExemplarBlock } from './exemplarRetrieval';
 import { getOrgContext, renderOrgContextBlock } from './orgContext';
+import { getIntakeProfile, renderIntakeProfileBlock } from './intakeProfile';
 
 export interface Agent {
   id: string;
@@ -620,11 +621,26 @@ export class IntakeOrchestrator {
     const orgContext = req.conversationId ? await getOrgContext(req.conversationId) : {};
     const orgBlock = renderOrgContextBlock(orgContext);
 
+    // Captured GovSecure intake profile — verbatim user input. Quoting this
+    // back into the prompt blocks the LLM from inventing controls /
+    // oversight / vendor terms that the user never supplied.
+    const intakeProfile = req.conversationId ? await getIntakeProfile(req.conversationId) : {};
+    const intakeBlock = renderIntakeProfileBlock(intakeProfile);
+
     const systemPrompt = `You are an AI Governance Risk Assessment specialist. Your task is to complete a formal AI Intake Risk Assessment.
 
 ${orgBlock ? orgBlock + '\n' : ''}
+${intakeBlock ? intakeBlock + '\n' : ''}
 
 You will score 10 risk drivers (0–3 each, max 30), check 6 auto-high triggers, determine the risk tier, list required artifacts, make a launch decision, and classify the use case under the EU AI Act.
+
+## Anti-hallucination rules (HARD CONSTRAINTS — violation invalidates the assessment)
+1. The driver \`notes\` field MUST cite only information present in the INTAKE PROFILE block, the ORGANIZATION CONTEXT block, or the user's Use Case Description below. Do NOT invent vendor terms, DPA status, subprocessor reviews, human-in-the-loop oversight, output review processes, kill switches, training, monitoring, or any other control unless it appears verbatim in the input.
+2. If a driver cannot be scored from the supplied input, the \`notes\` field MUST begin with the literal string "Insufficient information —" and the \`score\` MUST be 3 (worst case). This applies especially to: Vendor / Supply Chain (no vendor stated → score 3), Reputational Risk (no review process stated → score 3 if customer/public-facing), Reliability Risk (no fallback stated → score 3), Bias / Discrimination (no testing stated → score 3 if people-impacting).
+3. Auto-high trigger \`fired\` MUST be consistent with the input: a use case described as customer- or public-facing MUST fire trigger #3 (Public-facing or customer-facing generative output). A use case handling regulated/financial/PHI data MUST fire trigger #2.
+4. \`deployment\` MUST match what the user stated. If the INTAKE PROFILE specifies "Public-facing", do NOT output "Internal".
+5. \`jurisdictions\` MUST mirror the user's stated jurisdictions. If none were given, output an empty array — do NOT assume EU/GDPR applicability.
+6. Driver scores and the \`autoHighTriggers\` section MUST agree with each other. If trigger #1 (decisions about people) fires, Decision Impact MUST be ≥ 2. If trigger #3 fires, Reputational Risk MUST be ≥ 2.
 
 ## Risk Drivers (score each 0–3)
 ${driversContext}
@@ -756,6 +772,14 @@ Return a JSON object with this exact structure:
     // Echo the requesting user's occupational role into the header block.
     if (req.occupationalRole) data.requestorRole = req.occupationalRole;
 
+    // Compute suggested next-action handoffs (chain into Document /
+    // Playbook / Workflow orchestrators). Populated server-side rather
+    // than asked from the LLM so the action ids stay stable for the UI.
+    data.suggestedNextActions = buildSuggestedNextActions(
+      data as IntakeAssessmentOutput,
+      intakeProfile,
+    );
+
     // Generate markdown export
     const assessment = data as IntakeAssessmentOutput;
     data.markdownExport = buildIntakeMarkdown(assessment);
@@ -767,6 +791,90 @@ Return a JSON object with this exact structure:
     }
     return result.data;
   }
+}
+
+/**
+ * Decide which follow-on artifacts to offer when the intake completes.
+ * Triggered by tier, data sensitivity, customer-facing flag, and whether
+ * a vendor was named (third-party data path).
+ */
+function buildSuggestedNextActions(
+  a: IntakeAssessmentOutput,
+  profile: import('./intakeProfile').IntakeProfile,
+): import('./schemas').SuggestedNextAction[] {
+  const actions: import('./schemas').SuggestedNextAction[] = [];
+  const isHigh = a.riskTier === 'High' || a.riskTier === 'Critical';
+  const conditional = a.launchDecision === 'Conditional Go' || a.launchDecision === 'No-Go';
+  const handlesSensitive = Boolean(
+    profile.dataCategories?.personalOrSensitive ||
+      profile.dataCategories?.financialOrRegulated,
+  );
+  const customerFacing =
+    profile.deploymentScope === 'Customer-facing' ||
+    profile.deploymentScope === 'Public-facing' ||
+    a.deployment === 'Customer-facing' ||
+    a.deployment === 'Public-facing';
+  const hasVendor = Boolean(profile.vendor && profile.vendor.toLowerCase() !== 'in-house');
+
+  // DPIA — always for sensitive data; required for High tier
+  if (handlesSensitive || isHigh) {
+    actions.push({
+      id: 'dpia-draft',
+      label: 'Generate DPIA draft',
+      rationale: 'High-risk handling of personal or regulated data triggers a Data Protection Impact Assessment.',
+      intent: 'document',
+      payload: { documentType: 'dpia' },
+      priority: 10,
+    });
+  }
+
+  // TPRM workflow — when a third-party vendor is in scope
+  if (hasVendor) {
+    actions.push({
+      id: 'tprm-workflow',
+      label: 'Launch TPRM vendor review',
+      rationale: `Third-party AI Privacy Risk Assessment for ${profile.vendor}, using the GovSecure questionnaire and scoring workbook.`,
+      intent: 'workflow',
+      payload: { workflowKey: 'tprm' },
+      priority: 20,
+    });
+  }
+
+  // Threat Model — High tier or customer-facing
+  if (isHigh || customerFacing) {
+    actions.push({
+      id: 'threat-model',
+      label: 'Generate AI Threat Model',
+      rationale: 'High-tier or public-facing systems require a documented threat model covering prompt injection, data leakage, and abuse paths.',
+      intent: 'document',
+      payload: { documentType: 'threat-model' },
+      priority: 30,
+    });
+  }
+
+  // 90-Day Blueprint — when no framework is in place (Conditional Go or High tier)
+  if (conditional || isHigh) {
+    actions.push({
+      id: 'blueprint-90day',
+      label: 'Generate 90-Day Governance Blueprint',
+      rationale: 'GovSecure AI Chef™ phased rollout to stand up the controls this assessment requires.',
+      intent: 'playbook',
+      payload: { framework: 'Combined' },
+      priority: 40,
+    });
+  }
+
+  // Use Case Registry entry — always
+  actions.push({
+    id: 'registry-entry',
+    label: 'Add to AI Use Case Registry',
+    rationale: 'Log this use case in the registry so leadership has a single source of truth for active AI activity.',
+    intent: 'document',
+    payload: { documentType: 'govsecure-checklist-inventory' },
+    priority: 50,
+  });
+
+  return actions.sort((x, y) => x.priority - y.priority);
 }
 
 /** Maps a risk tier to the cumulative artifact tier number used by the source
@@ -986,8 +1094,13 @@ export class DocumentOrchestrator {
       const provenance = s.sourceDocCode
         ? ` [source: ${s.sourceDocCode}${s.sourceSection ? ` §${s.sourceSection}` : ''}]`
         : '';
-      return `Section ${i + 1}: ${s.heading}${provenance}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}`;
+      const tableHint = s.hasTables
+        ? ' (source has structured tables — emit a `tables` array mirroring them)'
+        : '';
+      return `Section ${i + 1}: ${s.heading}${provenance}\nGuidance: ${s.guidance}\nRequired: ${s.required}${s.isChecklist ? ' (checklist format)' : ''}${tableHint}`;
     }).join('\n\n');
+
+    const anySectionHasTables = sectionTemplates.some((s) => s.hasTables);
 
     const docTitle = `${DOCUMENT_TITLES[req.documentType] ?? req.documentType} — ${req.useCaseName ?? 'AI Use Case'}`;
 
@@ -1022,7 +1135,10 @@ ${sectionsContext}
 Write substantive, specific content for each section grounded in the use case description provided. Do not use placeholder text. Each section content should be 100–300 words of professional, actionable prose (or structured checklist items for checklist sections).
 
 Include 3–6 framework citations across NIST AI RMF, EU AI Act, ISO/IEC 42001, and GDPR where relevant.
-
+${anySectionHasTables ? `
+## Tables (structural fidelity)
+Sections marked "source has structured tables" in the list above MUST include a \`tables\` array on the section object. Mirror the source's shape (typically a 2-column key/value matrix for Purpose / Scope / Owner / Audience metadata, or a multi-column RACI / control-mapping grid). Each table is an array of rows, each row is an array of string cells. The first row is treated as the header. Keep cell text concise (≤120 chars). Tables are in addition to \`content\`, not a replacement for it.
+` : ''}
 Respond ONLY with a valid JSON object.`;
 
     const userPrompt = `Generate a complete ${DOCUMENT_TITLES[req.documentType]} for this AI use case.
@@ -1043,6 +1159,7 @@ Return a JSON object with this exact structure:
       "heading": string,
       "content": string,
       "checklistItems": [{ "text": string, "complete": false }] | undefined,
+      "tables": [["Header A", "Header B"], ["Row 1 A", "Row 1 B"]] | undefined,
       "required": boolean
     }
   ],
@@ -1137,6 +1254,10 @@ function buildDocumentMarkdown(doc: GovernanceDocumentOutput): string {
   for (const section of doc.sections) {
     lines.push(`## ${section.heading}`);
     if (section.content) lines.push(section.content);
+    if (section.tables?.length) {
+      lines.push('');
+      lines.push(renderMarkdownTable(section.tables));
+    }
     if (section.checklistItems?.length) {
       for (const item of section.checklistItems) {
         lines.push(`- [${item.complete ? 'x' : ' '}] ${item.text}`);
@@ -1153,6 +1274,27 @@ function buildDocumentMarkdown(doc: GovernanceDocumentOutput): string {
   }
 
   return lines.join('\n');
+}
+
+/**
+ * Render an LLM-emitted table (rows × cells) as a GitHub-flavored Markdown
+ * table. The first row is treated as the header. Defensive against ragged
+ * rows: pads short rows to the widest row's column count.
+ */
+function renderMarkdownTable(rows: string[][]): string {
+  if (!rows.length) return '';
+  const colCount = Math.max(...rows.map((r) => r.length));
+  if (colCount === 0) return '';
+  const sanitize = (cell: string) => cell.replace(/\|/g, '\\|').replace(/\s+/g, ' ').trim();
+  const pad = (row: string[]) =>
+    Array.from({ length: colCount }, (_, i) => sanitize(row[i] ?? ''));
+  const out: string[] = [];
+  out.push(`| ${pad(rows[0]).join(' | ')} |`);
+  out.push(`| ${Array.from({ length: colCount }, () => '---').join(' | ')} |`);
+  for (let i = 1; i < rows.length; i++) {
+    out.push(`| ${pad(rows[i]).join(' | ')} |`);
+  }
+  return out.join('\n');
 }
 
 export const documentOrchestrator = new DocumentOrchestrator();

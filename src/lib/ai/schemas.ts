@@ -197,6 +197,18 @@ export const advisorResponseSchema = z.object({
     intentType: z.string(),
     retryable: z.boolean(),
   }).optional(),
+  /**
+   * Soft routing hint from the classifier. Set when we detected a use
+   * case worth upgrading to a structured assessment / document / playbook
+   * but kept the response conversational. The UI renders a dismissible
+   * inline CTA so the user can opt in with one click.
+   */
+  intentSuggestion: z.object({
+    type: z.enum(['intake', 'document', 'playbook']),
+    reason: z.string(),
+    documentType: z.string().optional(),
+    framework: z.string().optional(),
+  }).optional(),
 });
 
 export type AdvisorRequest = z.infer<typeof advisorRequestSchema>;
@@ -245,6 +257,28 @@ const requiredArtifactSchema = z.object({
   status: artifactStatusEnum.default('pending'),
 });
 
+/**
+ * Suggested next-action handoff (Phase: orchestration chaining).
+ * Populated by IntakeOrchestrator when the assessment outcome warrants
+ * follow-on work (e.g. High tier → DPIA + TPRM + 90-Day Blueprint).
+ * The UI renders these as quick-action buttons.
+ */
+const suggestedNextActionSchema = z.object({
+  /** Stable id so the UI can deduplicate. */
+  id: z.string(),
+  /** Short imperative label, e.g. "Generate DPIA draft". */
+  label: z.string(),
+  /** One-sentence rationale shown under the button. */
+  rationale: z.string(),
+  /** Intent the action would dispatch — drives the follow-up turn. */
+  intent: z.enum(['document', 'playbook', 'workflow']),
+  /** documentType / framework / workflowKey depending on intent. */
+  payload: z.record(z.string()),
+  /** Sort order (lower = higher priority). */
+  priority: z.number().int().min(1).max(99).default(50),
+});
+export type SuggestedNextAction = z.infer<typeof suggestedNextActionSchema>;
+
 export const intakeAssessmentSchema = z.object({
   useCaseName: z.string(),
   owner: z.string().default(''),
@@ -271,6 +305,8 @@ export const intakeAssessmentSchema = z.object({
   euAIActClassification: euAIActClassificationEnum,
   euAIActRationale: z.string(),
   nistKeySubcategories: z.array(z.string()).default([]),
+  /** Auto-populated handoffs — DPIA / TPRM / Blueprint / Registry. */
+  suggestedNextActions: z.array(suggestedNextActionSchema).default([]),
   markdownExport: z.string().default(''),
 });
 
@@ -308,6 +344,11 @@ const documentSectionSchema = z.object({
   // on a type technicality (was the dominant DocumentOrchestrator error).
   content: z.string().nullish().transform((v) => v ?? ''),
   checklistItems: z.array(checklistItemSchema).nullish().transform((v) => v ?? undefined),
+  // Optional structured tables — used when the source GovSecure template
+  // carried key/value or matrix tables (Purpose/Scope/Owner metadata,
+  // role/responsibility matrices, etc). Shape mirrors the extractor:
+  // outer = rows, inner = cells. Same nullish coercion as above.
+  tables: z.array(z.array(z.string())).nullish().transform((v) => v ?? undefined),
   required: z.boolean().default(true),
 });
 
