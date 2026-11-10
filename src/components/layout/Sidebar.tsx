@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { SearchTrigger } from "@/components/search";
 import { useTheme } from "@/context/ThemeContext";
+import { Logo } from "@/components/brand/Logo";
 import { authedNavGroups, isNavActive } from "./nav";
 
 /**
@@ -60,25 +61,39 @@ export function Sidebar({
     >
       {/* Brand + collapse toggle */}
       <div className={`flex h-14 flex-none items-center ${collapsed ? "justify-center" : "justify-between pl-4 pr-2"}`}>
-        {!collapsed && (
-          <Link href="/" className="flex items-center gap-2" aria-label="GovSecure home">
-            <BrandMark />
-            <span className="text-[15px] font-semibold tracking-tight text-terminal-text">GovSecure</span>
-          </Link>
+        {collapsed ? (
+          // Rail: the "Gov" mark; hovering swaps it for the expand icon.
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-label="Expand sidebar"
+            aria-expanded={false}
+            className="group relative grid h-9 w-11 place-items-center rounded-lg transition-colors hover:bg-terminal-text/[0.06]"
+          >
+            <span className="transition-opacity group-hover:opacity-0">
+              <Logo markOnly />
+            </span>
+            <PanelLeftOpen
+              className="absolute h-4 w-4 text-terminal-text opacity-0 transition-opacity group-hover:opacity-100"
+              aria-hidden="true"
+            />
+          </button>
+        ) : (
+          <>
+            <Link href="/" aria-label="GovSecure home">
+              <Logo />
+            </Link>
+            <button
+              type="button"
+              onClick={onToggle}
+              aria-label="Collapse sidebar"
+              aria-expanded
+              className="grid h-8 w-8 place-items-center rounded-lg text-terminal-muted transition-colors hover:bg-terminal-text/[0.06] hover:text-terminal-text"
+            >
+              <PanelLeftClose className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </>
         )}
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          aria-expanded={!collapsed}
-          className="grid h-8 w-8 place-items-center rounded-lg text-terminal-muted transition-colors hover:bg-terminal-text/[0.06] hover:text-terminal-text"
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="h-4 w-4" aria-hidden="true" />
-          ) : (
-            <PanelLeftClose className="h-4 w-4" aria-hidden="true" />
-          )}
-        </button>
       </div>
 
       {/* Primary actions */}
@@ -165,18 +180,6 @@ export function Sidebar({
 }
 
 /** The GovSecure mark — a rounded green tile with the "G" monogram. */
-export function BrandMark({ size = 26 }: { size?: number }) {
-  return (
-    <span
-      className="grid flex-none place-items-center rounded-lg bg-terminal-green font-semibold text-[var(--color-bg-secondary)]"
-      style={{ width: size, height: size, fontSize: size * 0.5 }}
-      aria-hidden="true"
-    >
-      G
-    </span>
-  );
-}
-
 function AccountMenu({ collapsed }: { collapsed: boolean }) {
   const { data: session } = useSession();
   const { theme, toggleTheme, mounted } = useTheme();
