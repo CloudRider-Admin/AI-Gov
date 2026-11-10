@@ -184,7 +184,7 @@ export async function POST(request: NextRequest) {
     });
 
     const userMessage = hasConversationHistory
-      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. If the new message adds information or asks for analysis, provide a full assessment (mode: "assessment") incorporating all context. If it is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), use mode "conversation". Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
+      ? `${contextualQuery}\n\nThe user is continuing an existing conversation with established context. If the new message adds information or asks for analysis of a system already identified in this conversation, provide a full assessment (mode: "assessment") incorporating all context. If it asks for an assessment or document of a system that has not been identified yet, use mode "clarification". If it is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), use mode "conversation". Respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`
       : `${contextualQuery}\n\nFirst determine whether this message is conversational (mode "conversation"), needs clarifying questions, or has enough context for a full assessment. Then respond with a JSON object containing: mode, riskProfile, suggestedPolicies, regulationCheck, followUpQuestions, sources, and intent.`;
 
     // ── OpenAI streaming call (with circuit breaker), Claude fallback on quota/circuit-open ──
@@ -293,6 +293,9 @@ export async function POST(request: NextRequest) {
 
           // Stage 3b: parse response and dispatch orchestrator for artifact generation
           let artifactData: Record<string, unknown> | undefined;
+          // Intake deferred because the use-case details are incomplete: the
+          // client switches the reply to these questions (mirrors /api/advisor).
+          let intakeQuestions: string[] | undefined;
           try {
             const parsed = parseAdvisorResponse(accumulatedContent);
             // Diagnostic: when the parser falls back to clarification because
@@ -336,6 +339,9 @@ export async function POST(request: NextRequest) {
               if (dispatch.orchestratorError) {
                 auditLog({ event: 'orchestrator.error', data: { ...dispatch.orchestratorError, stream: true } });
               }
+              if (dispatch.intakeNeedsMoreInfo?.questions.length) {
+                intakeQuestions = dispatch.intakeNeedsMoreInfo.questions;
+              }
             }
           } catch (orchErr) {
             console.error('[stream] orchestrator dispatch failed:', orchErr);
@@ -352,6 +358,7 @@ export async function POST(request: NextRequest) {
             ragDocsUsed: ragResult.sources.length,
             sources: ragResult.sources,
             ...(artifactData ? { artifact: artifactData } : {}),
+            ...(intakeQuestions ? { intakeQuestions } : {}),
           })}\n\n`));
 
           auditLog({

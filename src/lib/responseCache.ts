@@ -168,6 +168,12 @@ export const advisorCache = new ResponseCache({ maxSize: 200, ttlMs: 24 * 60 * 6
 export const artifactCache = new ResponseCache({ maxSize: 100, ttlMs: 24 * 60 * 60 * 1000 });
 
 export interface ArtifactKeyInput {
+  /**
+   * Owner of the artifact. Required: without it, two users with the same role
+   * and the same generic wording would be served each other's generated
+   * documents from this process-wide cache.
+   */
+  userId: string;
   intentType: string;
   documentType?: string;
   framework?: string;
@@ -183,6 +189,7 @@ export interface ArtifactKeyInput {
  */
 export function buildArtifactKey(input: ArtifactKeyInput): string {
   const parts = [
+    `uid=${input.userId}`,
     `i=${input.intentType}`,
     input.documentType ? `d=${input.documentType}` : '',
     input.framework ? `f=${input.framework}` : '',

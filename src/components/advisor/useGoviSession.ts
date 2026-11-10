@@ -149,7 +149,7 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
     if (lastEntry.response.mode === 'clarification') {
       instruction = `IMPORTANT: The user is answering your follow-up questions. They are providing additional details you asked for. Use their answers along with ALL previously established context to provide a FULL assessment (mode: "assessment"). Do NOT ask for clarification again unless the answer is truly insufficient.`;
     } else {
-      instruction = `IMPORTANT: The user is continuing an existing conversation. They have already established context (see thread history below). If their new message adds information or asks for analysis, treat it as ADDITIONAL information building on what was already discussed, do NOT ask for clarification on details already provided, and provide a full assessment (mode: "assessment") incorporating both. If the new message is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), reply in mode "conversation": briefly, then steer back to their governance work.`;
+      instruction = `IMPORTANT: The user is continuing an existing conversation. They have already established context (see thread history below). If their new message asks for an assessment or document of a system that has NOT been identified in this conversation yet, use mode "clarification" and ask which system. Otherwise, if it adds information or asks for analysis, treat it as ADDITIONAL information building on what was already discussed, do NOT ask for clarification on details already provided, and provide a full assessment (mode: "assessment") incorporating both. If the new message is purely conversational (thanks, a greeting, small talk, a question about you, or off-topic), reply in mode "conversation": briefly, then steer back to their governance work.`;
     }
 
     return `${instruction}\n\n═══ CONVERSATION HISTORY ═══\n${threadSummary}\n═══ END HISTORY ═══`;
@@ -262,6 +262,7 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       let streamSources: string[] = [];
       let currentStreamId: string | undefined;
       let streamArtifact: { type: string; id: string; data: unknown } | undefined;
+      let streamIntakeQuestions: string[] | undefined;
 
       const processStream = async (activeReader: ReadableStreamDefaultReader<Uint8Array>) => {
         while (true) {
@@ -295,6 +296,9 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
                 streamConversationId = payload.conversationId ?? streamConversationId;
                 if (payload.artifact) {
                   streamArtifact = payload.artifact;
+                }
+                if (Array.isArray(payload.intakeQuestions) && payload.intakeQuestions.length > 0) {
+                  streamIntakeQuestions = payload.intakeQuestions;
                 }
               } else if (payload.type === 'error') {
                 // Try to resume if we have a streamId
@@ -358,6 +362,16 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       // Attach artifact from orchestrator dispatch (if generated server-side during stream)
       if (streamArtifact && !response.generatedArtifact) {
         response.generatedArtifact = streamArtifact;
+      }
+
+      // The intake needs more details before it can be scored: ask for them
+      // instead of showing a generic assessment.
+      if (streamIntakeQuestions && !response.generatedArtifact) {
+        response.mode = 'clarification';
+        response.followUpQuestions = streamIntakeQuestions;
+        delete response.followUpChoices;
+        response.suggestedPolicies = [];
+        response.regulationCheck = [];
       }
 
       const detectedSectors = matchSectors(queryText);

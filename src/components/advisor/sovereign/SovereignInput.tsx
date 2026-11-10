@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Paperclip, ArrowUp, Loader2, ShieldCheck, X, FileText, Check } from 'lucide-react';
 
-const MIN_LENGTH = 10;
 const MAX_LENGTH = 2000;
 
 // Mirror the server limits in /api/documents/upload.
@@ -77,10 +76,8 @@ export function SovereignInput({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim().length < MIN_LENGTH) {
-      setValidationError(`Please provide at least ${MIN_LENGTH} characters to analyze.`);
-      return;
-    }
+    // Any non-empty message is valid: Govi handles short ones like "hi" too.
+    if (!query.trim()) return;
     setValidationError(null);
     onSubmit(e);
   };

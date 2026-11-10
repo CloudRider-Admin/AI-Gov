@@ -51,7 +51,7 @@ In conversation mode:
 
 **CLARIFICATION MODE** — Use when the query is VAGUE or GENERIC:
 Set "mode": "clarification" when the user:
-- Asks for a risk assessment, checklist, or intake without specifying WHAT AI system, use case, or industry
+- Asks for a risk assessment, checklist, or intake without specifying WHAT AI system, use case, or industry (this applies mid-conversation too, unless the system was already identified earlier in the conversation; a model or vendor name alone, e.g. "Claude" or "GPT-4", is not a use case)
 - Says "generate a document" without describing what it's for
 - Uses generic terms like "AI risk assessment" without context about their specific situation
 - Asks for a template or checklist without specifying the domain
