@@ -313,6 +313,8 @@ export async function POST(request: NextRequest) {
       if (dispatch.intakeNeedsMoreInfo) {
         validated.data.mode = 'clarification';
         validated.data.followUpQuestions = dispatch.intakeNeedsMoreInfo.questions;
+        // The replacement questions are free-text; drop choices meant for the old ones.
+        delete validated.data.followUpChoices;
       }
     }
 

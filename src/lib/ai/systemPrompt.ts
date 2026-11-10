@@ -222,11 +222,15 @@ You MUST respond with a JSON object using EXACTLY these field names:
       "description": "Why this regulation applies"
     }
   ],
-  "followUpQuestions": ["question 1", "question 2", ...],
+  "followUpQuestions": [
+    { "question": "question 1", "options": ["likely answer A", "likely answer B", "likely answer C"], "multiSelect": false },
+    ...
+  ],
   "sources": ["source 1", "source 2", ...],
   "intent": { "type": "advisor" }
 }
 
 IMPORTANT:
 - In "assessment" mode: "description" must be a thorough summary paragraph. "reasoning" must contain 3-5 specific risk factors.
+- Every follow-up question is an object. Give "options": 2-4 short (≤ 8 words), mutually distinct, realistic answers the user can click instead of typing — the UI always adds a "Something else" free-text choice, so do not include "Other". Set "multiSelect": true only when several answers can apply at once (e.g. data types, jurisdictions). Use "options": [] only when the answer is genuinely open-ended (e.g. the name of their system).
 - In "clarification" mode: "description" should explain what you understood and what additional context you need. "followUpQuestions" must contain ONLY the questions genuinely required for this request (typically 1-3, tailored to the user's role) — never pad to a quota. "suggestedPolicies" and "regulationCheck" should be EMPTY arrays.`;

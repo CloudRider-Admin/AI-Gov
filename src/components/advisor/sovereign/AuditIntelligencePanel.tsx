@@ -29,10 +29,10 @@ function Gauge({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
-        <span className="font-mono text-xs font-semibold uppercase tracking-wider text-terminal-muted">
+        <span className="text-xs font-medium text-terminal-muted">
           {label}
         </span>
-        <span className="font-mono text-xs font-bold tabular-nums text-terminal-text">{valueLabel}</span>
+        <span className="text-xs font-semibold tabular-nums text-terminal-text">{valueLabel}</span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-terminal-gray/30">
         <div
@@ -92,7 +92,7 @@ export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: Audi
       {/* Detected entities */}
       {(entities.length > 0 || analyzing) && (
         <div>
-          <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-terminal-muted">
+          <p className="mb-3 text-xs font-medium text-terminal-muted">
             Detected entities
           </p>
           {entities.length > 0 ? (
@@ -116,7 +116,7 @@ export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: Audi
       {/* Reference documents */}
       {docs.length > 0 && (
         <div>
-          <p className="mb-3 font-mono text-xs font-semibold uppercase tracking-wider text-terminal-muted">
+          <p className="mb-3 text-xs font-medium text-terminal-muted">
             Reference documents
           </p>
           <div className="space-y-2.5">
@@ -158,7 +158,7 @@ export function AuditIntelligencePanel({ response, isPaidUser, analyzing }: Audi
           <div className="relative">
             <div className="mb-1 flex items-center gap-1.5">
               <Sparkles className="h-3.5 w-3.5 text-terminal-green" />
-              <span className="font-mono text-xs font-semibold uppercase tracking-wider text-terminal-green">
+              <span className="text-xs font-medium text-terminal-green">
                 Upgrade
               </span>
             </div>

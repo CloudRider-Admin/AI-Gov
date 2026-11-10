@@ -7,7 +7,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Menu, X, ChevronDown, LogOut, User, Shield } from "lucide-react";
 import { SearchTrigger } from "@/components/search";
 import { ThemeToggle } from "@/components/ui";
-import { publicNav, authedNav } from "./nav";
+import { publicNav, authedNav, isNavActive } from "./nav";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -39,13 +39,16 @@ export function Header() {
     };
   }, [userMenuOpen]);
 
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    return pathname.startsWith(href);
-  };
+  const isActive = (href: string) => isNavActive(pathname, href);
 
   return (
-    <header className="sticky top-0 z-50 bg-terminal-black/90 backdrop-blur-sm border-b border-terminal-border">
+    // Signed-in desktop users navigate from the full-height sidebar (search,
+    // theme and account live there), so the top header is mobile-only for them.
+    <header
+      className={`app-header sticky top-0 z-50 bg-terminal-black/90 backdrop-blur-sm border-b border-terminal-border ${
+        isAuthenticated ? "md:hidden" : ""
+      }`}
+    >
       <nav className="max-w-7xl mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -113,7 +116,6 @@ export function Header() {
 
           {/* Auth area */}
           <div className="hidden md:flex items-center gap-3">
-            {isAuthenticated && <SearchTrigger />}
             <ThemeToggle />
             {isAuthenticated ? (
               <div className="relative" ref={userMenuRef}>
@@ -186,7 +188,7 @@ export function Header() {
 
           {/* Mobile menu toggle */}
           <div className="md:hidden flex items-center gap-1">
-            {isAuthenticated && <SearchTrigger showShortcut={false} />}
+            {isAuthenticated && <SearchTrigger showShortcut={false} listenShortcut={false} />}
             <ThemeToggle />
             <button
               className="p-2 text-terminal-muted hover:text-terminal-text"

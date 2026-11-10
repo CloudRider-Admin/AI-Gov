@@ -58,22 +58,22 @@ export function KpiCard({
 }) {
   const body = (
     <>
-      <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-wider text-terminal-muted">
+      <div className="flex items-center gap-2 text-sm text-terminal-muted">
         <span className={`h-1.5 w-1.5 flex-none rounded-full ${DOT[tone]}`} aria-hidden="true" />
         {label}
       </div>
       <div className="mt-2 flex items-end justify-between gap-2">
-        <span className="font-mono text-3xl font-bold leading-none tracking-tight tabular-nums text-terminal-text">
+        <span className="text-[30px] font-semibold leading-none tracking-tight tabular-nums text-terminal-text">
           {value}
         </span>
         {delta != null && (
-          <span className={`rounded-full px-2 py-0.5 font-mono text-xs font-bold ${CHIP[deltaTone]}`}>
+          <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${CHIP[deltaTone]}`}>
             {delta}
           </span>
         )}
       </div>
-      {hint != null && <p className="mt-1.5 font-sans text-xs text-terminal-muted">{hint}</p>}
-      {trend != null && <Sparkline data={trend} className={`mt-2 ${TEXT[tone]}`} />}
+      {hint != null && <p className="mt-1.5 text-xs text-terminal-muted">{hint}</p>}
+      {trend != null && <Sparkline data={trend} className={`mt-3 ${TEXT[tone]}`} />}
       {barPercent != null && (
         <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-terminal-gray/30">
           <div
@@ -85,7 +85,7 @@ export function KpiCard({
     </>
   );
 
-  const surface = "glass rounded-xl p-4 transition-all duration-300 hover:-translate-y-px hover:border-terminal-border";
+  const surface = "surface rounded-2xl p-5 transition-colors duration-200";
 
   if (onClick) {
     return (

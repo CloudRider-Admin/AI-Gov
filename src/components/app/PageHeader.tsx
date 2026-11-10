@@ -23,15 +23,13 @@ export function PageHeader({
     <header className="flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
         {eyebrow != null && (
-          <div className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-terminal-green">
-            {eyebrow}
-          </div>
+          <div className="mb-1.5 text-sm text-terminal-muted">{eyebrow}</div>
         )}
-        <h1 className="font-mono text-2xl font-bold tracking-tight text-terminal-text">
+        <h1 className="font-serif text-[28px] font-medium leading-tight tracking-tight text-terminal-text">
           {title}
         </h1>
         {description != null && (
-          <p className="mt-1.5 max-w-2xl font-sans text-sm leading-relaxed text-terminal-muted">
+          <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-terminal-muted">
             {description}
           </p>
         )}

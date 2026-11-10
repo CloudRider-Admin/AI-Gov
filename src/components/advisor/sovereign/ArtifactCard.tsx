@@ -47,26 +47,22 @@ export function ArtifactCard({
       type="button"
       onClick={() => onOpen(artifact)}
       aria-pressed={isOpen}
-      className={`group flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-colors duration-300 ${
-        isOpen
-          ? 'border-terminal-green/50 bg-terminal-green/10'
-          : 'border-terminal-green/30 bg-terminal-green/5 hover:border-terminal-green/50 hover:bg-terminal-green/10'
+      className={`surface group flex w-full max-w-md items-center gap-3 rounded-xl p-3 text-left transition-colors duration-200 ${
+        isOpen ? 'ring-2 ring-terminal-green/40' : 'hover:bg-terminal-gray/60'
       }`}
     >
-      <span className="grid h-10 w-10 flex-none place-items-center rounded-md bg-terminal-green/15 text-terminal-green">
+      <span className="grid h-10 w-10 flex-none place-items-center rounded-lg bg-terminal-gray text-terminal-muted">
         {TYPE_ICONS[artifact.type] ?? TYPE_ICONS.document}
       </span>
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-medium text-terminal-text">
           {artifactTitle(artifact)}
         </span>
-        <span className="block truncate font-mono text-xs text-terminal-muted">
-          {metaBits.join(' · ')}
-        </span>
+        <span className="block truncate text-xs text-terminal-muted">{metaBits.join(' · ')}</span>
       </span>
-      <span className="flex flex-none items-center gap-1 font-mono text-xs text-terminal-green">
+      <span className="flex flex-none items-center gap-1 text-xs font-medium text-terminal-muted group-hover:text-terminal-text">
         {isOpen ? 'Viewing' : 'Open'}
-        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
       </span>
     </button>
   );

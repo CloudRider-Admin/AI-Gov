@@ -209,6 +209,9 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
     setStreamingText('');
     setStreamingStage('analyzing');
     setStreamingQuery(queryText);
+    // Clear the composer as soon as the message is sent (it shows in the
+    // thread as the pending user bubble); Retry resends it on failure.
+    setQuery('');
 
     try {
       const context = buildConversationContext(thread);

@@ -457,3 +457,164 @@ a {
   margin: 0.5rem 0;
 }
 .sovereign-prose a { color: rgb(var(--color-accent-rgb)); text-decoration: underline; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Signed-in app UI ("app-ui")
+   ────────────────────────────────────────────────────────────────────────
+   AppShell adds `app-ui` to <html> for authenticated users. It re-points the
+   same terminal-* tokens at a calmer, product-grade palette (warm neutrals,
+   hairline borders, a deeper emerald accent) so every app page restyles
+   together, while the public marketing site keeps its neon terminal look.
+   See DESIGN_SYSTEM.md → "App UI".
+   ════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Height of the sticky top header. Signed-in desktop has no header. */
+  --header-h: 4rem;
+}
+
+@media (min-width: 768px) {
+  html.app-ui { --header-h: 0px; }
+}
+
+html.app-ui {
+  --color-bg-primary: #131312;
+  --color-bg-secondary: #1b1b1a;
+  --color-bg-tertiary: #242422;
+  --color-border: #31302d;
+  --color-text-primary: #ecebe8;
+  --color-text-muted: #a3a19b;
+  --color-accent: #3ecf8e;
+  --color-accent-dim: #2fb377;
+  --color-cyan: #5ab8e6;
+  --color-amber: #eeb244;
+  --color-red: #f0636a;
+  --color-bg-primary-rgb: 19 19 18;
+  --color-bg-secondary-rgb: 27 27 26;
+  --color-bg-tertiary-rgb: 36 36 34;
+  --color-border-rgb: 49 48 45;
+  --color-text-primary-rgb: 236 235 232;
+  --color-text-muted-rgb: 163 161 155;
+  --color-accent-rgb: 62 207 142;
+  --color-accent-dim-rgb: 47 179 119;
+  --color-cyan-rgb: 90 184 230;
+  --color-amber-rgb: 238 178 68;
+  --color-red-rgb: 240 99 106;
+  --app-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+  --app-shadow-md: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+  --app-sidebar: #171716;
+  color-scheme: dark;
+}
+
+html.app-ui.light {
+  --color-bg-primary: #fafaf9;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f1f0ee;
+  --color-border: #e6e4e0;
+  --color-text-primary: #1c1b19;
+  --color-text-muted: #66635d;
+  --color-accent: #0e8a5a;
+  --color-accent-dim: #0b6f49;
+  --color-cyan: #0b6f94;
+  --color-amber: #a35a06;
+  --color-red: #c0353b;
+  --color-bg-primary-rgb: 250 250 249;
+  --color-bg-secondary-rgb: 255 255 255;
+  --color-bg-tertiary-rgb: 241 240 238;
+  --color-border-rgb: 230 228 224;
+  --color-text-primary-rgb: 28 27 25;
+  --color-text-muted-rgb: 102 99 93;
+  --color-accent-rgb: 14 138 90;
+  --color-accent-dim-rgb: 11 111 73;
+  --color-cyan-rgb: 11 111 148;
+  --color-amber-rgb: 163 90 6;
+  --color-red-rgb: 192 53 59;
+  --app-shadow-sm: 0 1px 2px rgb(28 27 25 / 0.05);
+  --app-shadow-md: 0 1px 2px rgb(28 27 25 / 0.04), 0 6px 20px -6px rgb(28 27 25 / 0.08);
+  --app-sidebar: #f4f3f1;
+  color-scheme: light;
+}
+
+html.app-ui body {
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Raised surface for app cards and panels — solid, hairline, soft shadow. */
+.surface {
+  background-color: rgb(var(--color-bg-secondary-rgb));
+  border: 1px solid rgb(var(--color-border-rgb));
+  box-shadow: var(--app-shadow-sm, none);
+}
+
+.shadow-app {
+  box-shadow: var(--app-shadow-md, 0 8px 24px -8px rgb(0 0 0 / 0.4));
+}
+
+/* Inside the app, glass becomes the same solid surface (no blur / translucency). */
+html.app-ui .glass {
+  background-color: rgb(var(--color-bg-secondary-rgb));
+  border-color: rgb(var(--color-border-rgb));
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: var(--app-shadow-sm);
+}
+
+/* App buttons: compact, rounded-lg, no neon glow or bounce. */
+html.app-ui .btn-primary {
+  @apply rounded-lg px-4 py-2 font-sans text-sm font-medium;
+  color: rgb(var(--color-bg-secondary-rgb));
+  box-shadow: var(--app-shadow-sm);
+}
+html.app-ui .btn-primary:hover {
+  transform: none;
+  background-color: rgb(var(--color-accent-dim-rgb));
+  box-shadow: var(--app-shadow-sm);
+}
+html.app-ui .btn-secondary {
+  @apply rounded-lg px-4 py-2 font-sans text-sm font-medium;
+  color: rgb(var(--color-text-primary-rgb));
+  border-color: rgb(var(--color-border-rgb));
+  background-color: rgb(var(--color-bg-secondary-rgb));
+  box-shadow: var(--app-shadow-sm);
+}
+html.app-ui .btn-secondary:hover {
+  background-color: rgb(var(--color-bg-tertiary-rgb));
+  border-color: rgb(var(--color-border-rgb));
+}
+html.app-ui .input-field {
+  @apply rounded-lg font-sans;
+  background-color: rgb(var(--color-bg-secondary-rgb));
+}
+
+/* Long-form document reading (Govi document pane). */
+.doc-prose { font-size: 15px; line-height: 1.7; color: rgb(var(--color-text-primary-rgb)); }
+.doc-prose p { margin-bottom: 0.9rem; }
+.doc-prose p:last-child { margin-bottom: 0; }
+.doc-prose strong { font-weight: 600; }
+.doc-prose ul { list-style: disc; padding-left: 1.4rem; margin-bottom: 0.9rem; }
+.doc-prose ol { list-style: decimal; padding-left: 1.4rem; margin-bottom: 0.9rem; }
+.doc-prose li { margin-bottom: 0.3rem; }
+.doc-prose h1, .doc-prose h2, .doc-prose h3 { font-weight: 600; margin: 1.25rem 0 0.5rem; }
+.doc-prose h1 { font-size: 1.35rem; }
+.doc-prose h2 { font-size: 1.15rem; }
+.doc-prose h3 { font-size: 1rem; }
+.doc-prose a { color: rgb(var(--color-accent-rgb)); text-decoration: underline; text-underline-offset: 2px; }
+.doc-prose code {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85em;
+  background: rgb(var(--color-bg-tertiary-rgb));
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.3rem;
+}
+.doc-prose table { width: 100%; border-collapse: collapse; margin: 0.75rem 0 1rem; font-size: 14px; }
+.doc-prose th, .doc-prose td { border: 1px solid rgb(var(--color-border-rgb)); padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+.doc-prose th { background: rgb(var(--color-bg-tertiary-rgb)); font-weight: 600; }
+
+/* The marketing dot-grid / cursor spotlight stays off inside the app. */
+html.app-ui .mouse-spotlight { display: none; }
+
+/* Signed-in desktop has no top header (navigation lives in the sidebar). This
+   CSS twin of Header's md:hidden applies before hydration via the preload hint. */
+@media (min-width: 768px) {
+  html.app-ui .app-header { display: none; }
+}

@@ -149,6 +149,16 @@ export const advisorResponseSchema = z.object({
   suggestedPolicies: z.array(policyRecommendationSchema).default([]),
   regulationCheck: z.array(regulationMatchSchema).default([]),
   followUpQuestions: z.array(z.string()).default([]),
+  followUpChoices: z
+    .array(
+      z
+        .object({
+          options: z.array(z.string()),
+          multiSelect: z.boolean().optional(),
+        })
+        .nullable(),
+    )
+    .optional(),
   sources: z.array(z.string()).default([]),
   /**
    * Structured provenance — typed counterpart to `sources`. Optional because

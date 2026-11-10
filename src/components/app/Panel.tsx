@@ -20,14 +20,14 @@ export function Panel({
   className?: string;
 }) {
   return (
-    <section className={`glass overflow-hidden rounded-xl ${className}`}>
+    <section className={`surface overflow-hidden rounded-2xl ${className}`}>
       {title != null && (
-        <header className="flex items-center justify-between gap-4 border-b border-terminal-border px-4 py-3">
-          <h2 className="font-mono text-xs font-bold tracking-wide text-terminal-text">{title}</h2>
-          {action != null && <div className="flex-none font-mono text-xs">{action}</div>}
+        <header className="flex items-center justify-between gap-4 border-b border-terminal-border px-5 py-3.5">
+          <h2 className="text-sm font-semibold text-terminal-text">{title}</h2>
+          {action != null && <div className="flex-none text-sm">{action}</div>}
         </header>
       )}
-      <div className={padded ? "p-4" : ""}>{children}</div>
+      <div className={padded ? "p-5" : ""}>{children}</div>
     </section>
   );
 }
@@ -35,7 +35,10 @@ export function Panel({
 /** Green mono "View all →" style link for a Panel header's action slot. */
 export function PanelLink({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className="text-terminal-green hover:underline">
+    <Link
+      href={href}
+      className="text-sm text-terminal-muted transition-colors hover:text-terminal-text"
+    >
       {children} →
     </Link>
   );

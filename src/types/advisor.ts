@@ -31,6 +31,11 @@ export interface RegulationMatch {
   description: string;
 }
 
+export interface FollowUpChoice {
+  options: string[];
+  multiSelect?: boolean;
+}
+
 export interface AdvisorResponse {
   mode?: 'assessment' | 'clarification';
   riskProfile: {
@@ -42,6 +47,12 @@ export interface AdvisorResponse {
   suggestedPolicies: PolicyRecommendation[];
   regulationCheck: RegulationMatch[];
   followUpQuestions: string[];
+  /**
+   * Suggested answers for each follow-up question, aligned by index with
+   * `followUpQuestions` (null = free-text only). Rendered as a Claude-style
+   * multiple-choice card. Absent on legacy responses.
+   */
+  followUpChoices?: (FollowUpChoice | null)[];
   sources: string[];
   /**
    * Structured provenance for `sources`. Each entry's `label` matches the
