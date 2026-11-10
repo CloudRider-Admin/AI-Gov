@@ -262,8 +262,8 @@ export function SovereignMessage({
             {!isPaidUser && (
               <p className="mt-2.5 text-xs text-terminal-muted">
                 Document generation requires a Pro plan.{' '}
-                <a href="/pricing" className="font-medium text-terminal-green hover:underline">
-                  Upgrade →
+                <a href="/contact" className="font-medium text-terminal-green hover:underline">
+                  Contact us →
                 </a>
               </p>
             )}

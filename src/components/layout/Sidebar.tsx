@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
@@ -27,6 +28,21 @@ export function Sidebar({
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+
+  // Label tooltip shown when the rail is collapsed. Rendered as a single
+  // fixed-position node (not per-item) because the scrolling <nav> clips
+  // anything that overflows its right edge.
+  const [hoveredLabel, setHoveredLabel] = useState<{
+    name: string;
+    top: number;
+  } | null>(null);
+
+  const showLabel = (name: string) => (e: { currentTarget: HTMLElement }) => {
+    if (!collapsed) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setHoveredLabel({ name, top: rect.top + rect.height / 2 });
+  };
+  const hideLabel = () => setHoveredLabel(null);
 
   return (
     <aside
@@ -97,7 +113,11 @@ export function Sidebar({
               key={item.name}
               href={item.href}
               aria-current={active ? "page" : undefined}
-              title={collapsed ? item.name : undefined}
+              aria-label={collapsed ? item.name : undefined}
+              onMouseEnter={showLabel(item.name)}
+              onMouseLeave={hideLabel}
+              onFocus={showLabel(item.name)}
+              onBlur={hideLabel}
               className={`flex items-center gap-3 rounded-md py-2.5 font-mono text-sm transition-colors ${
                 collapsed ? "justify-center px-0" : "px-3"
               } ${
@@ -118,6 +138,16 @@ export function Sidebar({
           );
         })}
       </nav>
+
+      {collapsed && hoveredLabel && (
+        <span
+          role="tooltip"
+          style={{ top: hoveredLabel.top }}
+          className="pointer-events-none fixed left-16 z-50 ml-2 -translate-y-1/2 whitespace-nowrap rounded-md border border-terminal-border bg-terminal-gray px-2 py-1 font-mono text-xs text-terminal-text shadow-lg"
+        >
+          {hoveredLabel.name}
+        </span>
+      )}
     </aside>
   );
 }

@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
   if (['PRO', 'TEAM'].includes(user.role) && user.stripeSubscriptionId) {
     const portal = await getStripe().billingPortal.sessions.create({
       customer: user.stripeCustomerId!,
-      return_url: `${process.env.NEXTAUTH_URL}/pricing`,
+      return_url: `${process.env.NEXTAUTH_URL}/settings`,
     });
     return NextResponse.json({ url: portal.url });
   }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     payment_method_types: ['card'],
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${baseUrl}/pricing/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${baseUrl}/pricing`,
+    cancel_url: `${baseUrl}/settings`,
     subscription_data: {
       metadata: { userId: session.user.id },
     },

@@ -111,7 +111,7 @@ const FAQ_CATEGORIES: FaqCategory[] = [
       },
       {
         q: "How do I cancel my subscription?",
-        a: "Open the billing portal from your account or the pricing page. You can cancel at any time — you'll retain paid access until the end of your current billing period.",
+        a: "Open the billing portal from your account settings. You can cancel at any time — you'll retain paid access until the end of your current billing period.",
       },
       {
         q: "Do you offer refunds?",

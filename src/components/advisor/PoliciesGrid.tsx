@@ -103,10 +103,10 @@ export function PoliciesGrid({ policies, gated, isPaidUser, onPolicyClick }: Pol
               </div>
             </div>
             <Link
-              href="/pricing"
+              href="/contact"
               className="shrink-0 text-xs font-mono px-3 py-1.5 border border-terminal-green text-terminal-green rounded-md hover:bg-terminal-green/10 transition-colors"
             >
-              Upgrade →
+              Contact us →
             </Link>
           </div>
         )}
