@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Loader2, Send } from 'lucide-react';
 import { advisorContent } from '@/data/content';
 
-const MIN_LENGTH = 10;
 const MAX_LENGTH = 2000;
 
 interface AdvisorInputProps {
@@ -53,10 +52,7 @@ export function AdvisorInput({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmed = query.trim();
-    if (trimmed.length < MIN_LENGTH) {
-      setValidationError(`Please provide at least ${MIN_LENGTH} characters to analyze.`);
-      return;
-    }
+    if (!trimmed) return;
     setValidationError(null);
     onSubmit(e);
   };
