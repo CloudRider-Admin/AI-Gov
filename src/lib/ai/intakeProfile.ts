@@ -163,7 +163,7 @@ const STAGE_PATTERNS: { re: RegExp; value: ImplementationStage }[] = [
 ];
 
 const MODEL_TYPE_PATTERNS: { re: RegExp; value: ModelType }[] = [
-  { re: /\b(chatbot|copilot|assistant|generative|llm|gpt|claude|gemini|gen[-\s]?ai)\b/i, value: 'GenAI' },
+  { re: /\b(chatbot|copilot|assistant|generative|llm|gpt|chat ?gpt|claude|gemini|gen[-\s]?ai)\b/i, value: 'GenAI' },
   { re: /\b(predictive (?:model|ml)|classification model|regression model|forecasting model|scoring model)\b/i, value: 'Predictive ML' },
   { re: /\b(rules?[-\s]?based|hybrid (?:rules|ml))\b/i, value: 'Rules + ML' },
   { re: /\b(vendor (?:feature|capability)|embedded ai|baked[-\s]?in ai)\b/i, value: 'Vendor Feature' },
@@ -197,13 +197,163 @@ const DATA_CATEGORY_PATTERNS: { re: RegExp; key: keyof DataCategoryFlags }[] = [
   { re: /\b(public (?:data|information)|publicly available)\b/i, key: 'publicData' },
 ];
 
+// ─── Answers to Govi's intake questions ────────────────────────────────────
+//
+// When the user answers the clarification card, the client sends:
+//
+//   <original request>
+//
+//   Here are the details you asked for:
+//   Q: <question copy>
+//   A: <answer>
+//
+// The question copy itself names options ("Internal-only, Customer-facing, or
+// Public-facing", "e.g. OpenAI", "source code/credentials", a quoted example
+// use-case name). Running the free-text regexes over it captured those
+// examples as if the user had said them, and answers like "Cloudrider LLC" or
+// "Always" never matched the free-text patterns at all, so the same questions
+// were asked forever. Answers to our own intake questions are therefore mapped
+// to their field directly, and question lines never reach the regexes.
+
+export const INTAKE_ANSWERS_HEADER = 'Here are the details you asked for:';
+
+const QA_HEADER_RE = /^\s*Here are the details you asked for:\s*$/i;
+const Q_LINE_RE = /^\s*Q:\s*(.*)$/;
+const A_LINE_RE = /^\s*A:\s*/;
+
+/** Which intake field a question asks for, when it is one of our own prompts. */
+export function intakeFieldForQuestion(question: string): IntakeFieldId | undefined {
+  const q = question.trim().toLowerCase();
+  for (const [field, prompt] of Object.entries(INTAKE_FIELD_PROMPTS) as [IntakeFieldId, string][]) {
+    const p = prompt.toLowerCase();
+    if (q === p || q.startsWith(p.slice(0, 40))) return field;
+  }
+  return undefined;
+}
+
+function matchVendor(text: string): string | undefined {
+  return VENDOR_PATTERNS.find(({ re }) => re.test(text))?.value;
+}
+
+function parseDeploymentAnswer(answer: string): DeploymentScope | undefined {
+  // Most-exposed wins when several are named ("internal and customer-facing").
+  if (/\bpublic\b/i.test(answer)) return 'Public-facing';
+  if (/\b(customers?|clients?|external|consumers?)\b/i.test(answer)) return 'Customer-facing';
+  if (/\b(internal|employees?|staff|in[-\s]?house)\b/i.test(answer)) return 'Internal';
+  return undefined;
+}
+
+function parseHumanReviewAnswer(answer: string): IntakeProfile['humanReviewMode'] {
+  if (/\bnot always\b|\bsometimes\b|\bspot[-\s]?check|\bsampl|\boccasional|\bdepends\b/i.test(answer)) return 'Sometimes';
+  if (/\balways\b|\bevery\b|\ball outputs?\b|\b100\s?%/i.test(answer)) return 'Always';
+  if (/\bnever\b|^\s*no\b|\bfully automated\b|\bno human\b/i.test(answer)) return 'Never';
+  // "Yes" is ambiguous between Always and Sometimes; leave it unanswered.
+  return undefined;
+}
+
+function parseDataCategoriesAnswer(answer: string): DataCategoryFlags | undefined {
+  const flags: DataCategoryFlags = {};
+  if (/\bpublic\b/i.test(answer)) flags.publicData = true;
+  if (/\binternal\b|\bconfidential\b/i.test(answer)) flags.internalConfidential = true;
+  if (/\bcustomers?\b|\bconsumers?\b|\bclients?\b/i.test(answer)) flags.customerData = true;
+  if (/\bemployees?\b|\bhr\b|\bstaff\b|\bpersonnel\b|\bpayroll\b/i.test(answer)) flags.employeeData = true;
+  if (/\bfinancial\b|\bregulated\b|\bpayments?\b|\bbank(?:ing)?\b|\bcredit card/i.test(answer)) flags.financialOrRegulated = true;
+  if (/\bphi\b|\bhealth\b|\bmedical\b|\bpatients?\b|\bhipaa\b/i.test(answer)) {
+    flags.financialOrRegulated = true;
+    flags.personalOrSensitive = true;
+  }
+  if (/\bsource code\b|\bcredentials?\b|\bsecrets?\b|\bapi keys?\b/i.test(answer)) flags.sourceCodeOrCredentials = true;
+  if (/\bpersonal\b|\bsensitive\b|\bpii\b/i.test(answer)) flags.personalOrSensitive = true;
+  return Object.keys(flags).length ? flags : undefined;
+}
+
+/** Normalise one answer for one intake field. Empty when it can't be used. */
+export function intakeUpdateFromAnswer(field: IntakeFieldId, rawAnswer: string): Partial<IntakeProfile> {
+  const answer = rawAnswer.trim().slice(0, 200);
+  if (!answer || /^(skip(ped)?|n\/?a|-+)$/i.test(answer)) return {};
+  switch (field) {
+    case 'useCaseName':
+    case 'businessOwner':
+    case 'department':
+    case 'goLiveTarget':
+      return { [field]: answer };
+    case 'aiToolName': {
+      const update: Partial<IntakeProfile> = { aiToolName: answer };
+      const modelType = MODEL_TYPE_PATTERNS.find(({ re }) => re.test(answer))?.value;
+      if (modelType) update.modelType = modelType;
+      return update;
+    }
+    case 'vendor':
+    case 'modelProvider':
+      return { [field]: matchVendor(answer) ?? answer };
+    case 'deploymentScope': {
+      const scope = parseDeploymentAnswer(answer);
+      return scope ? { deploymentScope: scope, customerFacing: scope !== 'Internal' } : {};
+    }
+    case 'humanReviewMode': {
+      const mode = parseHumanReviewAnswer(answer);
+      return mode ? { humanReviewMode: mode } : {};
+    }
+    case 'dataCategories': {
+      const flags = parseDataCategoriesAnswer(answer);
+      return flags ? { dataCategories: flags } : {};
+    }
+  }
+}
+
 /**
- * Best-effort extraction of intake profile fields from a free-text user
- * message. Pure; returns only fields it could find with reasonable
- * confidence. Combine with `mergeIntakeProfile` to accumulate over turns.
+ * Split a message into (a) updates from answers to our own intake questions
+ * and (b) the remaining free text — the original request plus answers to
+ * questions we can't map — with every question line removed.
  */
-export function extractIntakeProfileFromText(text: string): Partial<IntakeProfile> {
-  if (!text) return {};
+export function splitIntakeAnswers(text: string): { structured: Partial<IntakeProfile>; freeText: string } {
+  const lines = text.split(/\r?\n/);
+  const kept: string[] = [];
+  let structured: IntakeProfile = {};
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (QA_HEADER_RE.test(line)) {
+      i++;
+      continue;
+    }
+    const q = line.match(Q_LINE_RE);
+    if (!q) {
+      kept.push(line);
+      i++;
+      continue;
+    }
+    const field = intakeFieldForQuestion(q[1]);
+    const answerLines: string[] = [];
+    i++;
+    if (i < lines.length && A_LINE_RE.test(lines[i])) {
+      answerLines.push(lines[i].replace(A_LINE_RE, ''));
+      i++;
+      while (i < lines.length && lines[i].trim() && !Q_LINE_RE.test(lines[i]) && !QA_HEADER_RE.test(lines[i])) {
+        answerLines.push(lines[i]);
+        i++;
+      }
+    }
+    const answer = answerLines.join('\n').trim();
+    if (field) {
+      structured = mergeIntakeProfile(structured, intakeUpdateFromAnswer(field, answer));
+    } else if (answer) {
+      kept.push(answer);
+    }
+  }
+  return { structured, freeText: kept.join('\n') };
+}
+
+/**
+ * Best-effort extraction of intake profile fields from a user message.
+ * Answers to Govi's own intake questions are mapped field-by-field; the rest
+ * is scanned with free-text patterns. Pure; returns only fields it could find
+ * with reasonable confidence. Combine with `mergeIntakeProfile` to accumulate
+ * over turns.
+ */
+export function extractIntakeProfileFromText(input: string): Partial<IntakeProfile> {
+  if (!input) return {};
+  const { structured, freeText: text } = splitIntakeAnswers(input);
   const update: Partial<IntakeProfile> = {};
 
   for (const { re, value } of DEPLOYMENT_PATTERNS) {
@@ -272,7 +422,8 @@ export function extractIntakeProfileFromText(text: string): Partial<IntakeProfil
   const quarterMatch = text.match(/\b(Q[1-4]\s+\d{4}|H[12]\s+\d{4})\b/);
   if (!update.goLiveTarget && quarterMatch) update.goLiveTarget = quarterMatch[1];
 
-  return update;
+  // Direct answers to our own questions win over anything inferred above.
+  return mergeIntakeProfile(update, structured);
 }
 
 // ─── Completeness ──────────────────────────────────────────────────────────
@@ -308,6 +459,79 @@ export function assessIntakeProfileCompleteness(
   const completeness =
     (REQUIRED_INTAKE_FIELDS.length - missing.length) / REQUIRED_INTAKE_FIELDS.length;
   return { ok: missing.length === 0, missing, questions, completeness };
+}
+
+const INTAKE_FIELD_LABELS: Record<IntakeFieldId, string> = {
+  useCaseName: 'Use case',
+  businessOwner: 'Owner',
+  department: 'Department',
+  aiToolName: 'AI tool',
+  vendor: 'Vendor',
+  deploymentScope: 'Deployment',
+  goLiveTarget: 'Go-live',
+  modelProvider: 'Model provider',
+  dataCategories: 'Data',
+  humanReviewMode: 'Human review',
+};
+
+const DATA_CATEGORY_LABELS: Record<keyof DataCategoryFlags, string> = {
+  publicData: 'public',
+  internalConfidential: 'internal-confidential',
+  customerData: 'customer/consumer',
+  employeeData: 'employee/HR',
+  financialOrRegulated: 'financial/regulated',
+  sourceCodeOrCredentials: 'source code/credentials',
+  personalOrSensitive: 'personal/sensitive',
+};
+
+function formatIntakeValue(profile: IntakeProfile, field: IntakeFieldId): string {
+  if (field === 'dataCategories') {
+    return (Object.keys(profile.dataCategories ?? {}) as (keyof DataCategoryFlags)[])
+      .filter((k) => profile.dataCategories?.[k])
+      .map((k) => DATA_CATEGORY_LABELS[k])
+      .join(', ');
+  }
+  return String(profile[field as keyof IntakeProfile] ?? '');
+}
+
+/**
+ * The message Govi shows while the intake is incomplete: what it has recorded
+ * so far and how many details are still needed. Replaces the model's own
+ * narrative, which would otherwise read as a finished (invented) assessment.
+ */
+export function describeIntakeProgress(profile: IntakeProfile, missing: IntakeFieldId[]): string {
+  const captured = REQUIRED_INTAKE_FIELDS.filter((f) => !missing.includes(f))
+    .map((f) => `${INTAKE_FIELD_LABELS[f]}: ${formatIntakeValue(profile, f)}`)
+    .filter((line) => !line.endsWith(': '));
+  const need = missing.length === 1 ? '1 more detail' : `${missing.length} more details`;
+  const head = `To score this risk assessment I need ${need} for the intake form.`;
+  return captured.length ? `${head} Recorded so far — ${captured.join('; ')}.` : head;
+}
+
+/** Clickable answers for intake questions with a fixed set of options. */
+const INTAKE_FIELD_CHOICES: Partial<Record<IntakeFieldId, { options: string[]; multiSelect?: boolean }>> = {
+  vendor: { options: ['OpenAI', 'Anthropic', 'Google', 'Microsoft', 'In-house', 'Unknown'] },
+  deploymentScope: { options: ['Internal-only', 'Customer-facing', 'Public-facing'] },
+  dataCategories: {
+    options: [
+      'Public',
+      'Internal-confidential',
+      'Customer/consumer',
+      'Employee/HR',
+      'Financial/regulated',
+      'Source code/credentials',
+      'Personal/sensitive',
+    ],
+    multiSelect: true,
+  },
+  humanReviewMode: { options: ['Always', 'Sometimes', 'Never'] },
+};
+
+/** Index-aligned with `missing` (and so with the completeness questions). */
+export function intakeChoicesFor(
+  missing: IntakeFieldId[],
+): ({ options: string[]; multiSelect?: boolean } | null)[] {
+  return missing.map((f) => INTAKE_FIELD_CHOICES[f] ?? null);
 }
 
 // ─── Persistence ────────────────────────────────────────────────────────────
