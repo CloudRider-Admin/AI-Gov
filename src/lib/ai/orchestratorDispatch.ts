@@ -13,6 +13,8 @@ import {
   captureIntakeProfile,
   getIntakeProfile,
   assessIntakeProfileCompleteness,
+  describeIntakeProgress,
+  intakeChoicesFor,
   intakeProfileToOrchestratorInput,
   type IntakeProfile,
 } from './intakeProfile';
@@ -60,6 +62,10 @@ export interface DispatchResult {
   intakeNeedsMoreInfo?: {
     missingFields: string[];
     questions: string[];
+    /** Index-aligned clickable answers for questions with fixed options. */
+    choices: ({ options: string[]; multiSelect?: boolean } | null)[];
+    /** What Govi says instead of the model's narrative (recorded + still needed). */
+    message: string;
     completeness: number;
     capturedProfile: IntakeProfile;
   };
@@ -193,6 +199,8 @@ export async function dispatchOrchestrator(ctx: DispatchContext): Promise<Dispat
           intakeNeedsMoreInfo: {
             missingFields: completeness.missing,
             questions: completeness.questions,
+            choices: intakeChoicesFor(completeness.missing),
+            message: describeIntakeProgress(profile, completeness.missing),
             completeness: completeness.completeness,
             capturedProfile: profile,
           },

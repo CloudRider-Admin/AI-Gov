@@ -21,6 +21,7 @@ import { GOVERNANCE_SYSTEM_PROMPT } from '@/lib/ai/systemPrompt';
 import { unverifiedCitations, validateCitations } from '@/lib/ai/citationValidator';
 import { claudeStream, isOpenAIQuotaError, isClaudeFallbackAvailable } from '@/lib/ai/claudeFallback';
 import { buildGatePostureContext } from '@/lib/gates/goviContext';
+import { captureIntakeProfile } from '@/lib/ai/intakeProfile';
 
 const SSE_HEADERS = {
   'Content-Type': 'text/event-stream',
@@ -156,6 +157,9 @@ export async function POST(request: NextRequest) {
 
     // ── Conversation persistence ──
     const dbConversationId = await ensureConversation(session.user.id, query, conversationId);
+    // Save intake answers on every turn — the dispatcher only runs for
+    // assessment-mode OpenAI replies, and the client sends each answer once.
+    await captureIntakeProfile(dbConversationId, query).catch(() => undefined);
 
     // ── Stream buffer for recovery ──
     const streamId = generateStreamId();
@@ -296,6 +300,8 @@ export async function POST(request: NextRequest) {
           // Intake deferred because the use-case details are incomplete: the
           // client switches the reply to these questions (mirrors /api/advisor).
           let intakeQuestions: string[] | undefined;
+          let intakeChoices: ({ options: string[]; multiSelect?: boolean } | null)[] | undefined;
+          let intakeMessage: string | undefined;
           try {
             const parsed = parseAdvisorResponse(accumulatedContent);
             // Diagnostic: when the parser falls back to clarification because
@@ -341,6 +347,8 @@ export async function POST(request: NextRequest) {
               }
               if (dispatch.intakeNeedsMoreInfo?.questions.length) {
                 intakeQuestions = dispatch.intakeNeedsMoreInfo.questions;
+                intakeChoices = dispatch.intakeNeedsMoreInfo.choices;
+                intakeMessage = dispatch.intakeNeedsMoreInfo.message;
               }
             }
           } catch (orchErr) {
@@ -358,7 +366,7 @@ export async function POST(request: NextRequest) {
             ragDocsUsed: ragResult.sources.length,
             sources: ragResult.sources,
             ...(artifactData ? { artifact: artifactData } : {}),
-            ...(intakeQuestions ? { intakeQuestions } : {}),
+            ...(intakeQuestions ? { intakeQuestions, intakeChoices, intakeMessage } : {}),
           })}\n\n`));
 
           auditLog({

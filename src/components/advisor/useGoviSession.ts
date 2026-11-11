@@ -18,6 +18,8 @@ class StreamRecoverableError extends Error {
 }
 
 const GUEST_STORAGE_KEY = 'govi_guest_prompts';
+/** Must match INTAKE_ANSWERS_HEADER in src/lib/ai/intakeProfile.ts (server-only module). */
+const ANSWERS_HEADER = 'Here are the details you asked for:';
 
 /**
  * Pick regulations to show in the "Relevant emerging regulations" panel.
@@ -142,7 +144,10 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       const risk = entry.response.mode === 'assessment' || !entry.response.mode
         ? ` | Risk: ${entry.response.riskProfile.level} (${Math.round((entry.response.riskProfile.confidence ?? 0) * 100)}%)`
         : '';
-      return `Exchange ${idx + 1} ${mode}: User asked: "${entry.query.slice(0, 200)}"${risk}\nGovi responded: ${entry.response.riskProfile.description.slice(0, 300)}`;
+      // Keep answers to intake questions in full (they're the facts the
+      // assessment rests on); the old 200-char cut dropped them entirely.
+      const queryLimit = entry.query.includes(ANSWERS_HEADER) ? 1500 : 300;
+      return `Exchange ${idx + 1} ${mode}: User asked: "${entry.query.slice(0, queryLimit)}"${risk}\nGovi responded: ${entry.response.riskProfile.description.slice(0, 300)}`;
     }).join('\n\n');
 
     let instruction: string;
@@ -263,6 +268,8 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       let currentStreamId: string | undefined;
       let streamArtifact: { type: string; id: string; data: unknown } | undefined;
       let streamIntakeQuestions: string[] | undefined;
+      let streamIntakeChoices: AdvisorResponse['followUpChoices'];
+      let streamIntakeMessage: string | undefined;
 
       const processStream = async (activeReader: ReadableStreamDefaultReader<Uint8Array>) => {
         while (true) {
@@ -299,6 +306,8 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
                 }
                 if (Array.isArray(payload.intakeQuestions) && payload.intakeQuestions.length > 0) {
                   streamIntakeQuestions = payload.intakeQuestions;
+                  if (Array.isArray(payload.intakeChoices)) streamIntakeChoices = payload.intakeChoices;
+                  if (typeof payload.intakeMessage === 'string') streamIntakeMessage = payload.intakeMessage;
                 }
               } else if (payload.type === 'error') {
                 // Try to resume if we have a streamId
@@ -369,7 +378,13 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       if (streamIntakeQuestions && !response.generatedArtifact) {
         response.mode = 'clarification';
         response.followUpQuestions = streamIntakeQuestions;
-        delete response.followUpChoices;
+        if (streamIntakeChoices) response.followUpChoices = streamIntakeChoices;
+        else delete response.followUpChoices;
+        // The model's narrative reads as a finished assessment ("classified
+        // as high-risk…") while we're still collecting details.
+        if (streamIntakeMessage) {
+          response.riskProfile = { ...response.riskProfile, description: streamIntakeMessage };
+        }
         response.suggestedPolicies = [];
         response.regulationCheck = [];
       }
@@ -421,7 +436,10 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
     const lastClarification = [...thread].reverse().find(
       (entry) => entry.response.mode === 'clarification'
     );
-    const originalQuery = lastClarification?.query ?? '';
+    // That entry's query may itself be "request + earlier answers"; keep only
+    // the request so answers don't pile up and repeat on every round. Earlier
+    // answers are already saved to the conversation's intake profile.
+    const originalQuery = (lastClarification?.query ?? '').split(ANSWERS_HEADER)[0].trim();
 
     // Combine: repeat the original request + user's answers so the intent
     // classifier sees the generation verb ("risk assessment", "generate DPIA", etc.)
@@ -430,7 +448,7 @@ export function useGoviSession({ initialQuery, initialConversationId }: UseGoviS
       .join('\n\n');
 
     const combined = originalQuery
-      ? `${originalQuery}\n\nHere are the details you asked for:\n${answersBlock}`
+      ? `${originalQuery}\n\n${ANSWERS_HEADER}\n${answersBlock}`
       : answersBlock;
 
     setFollowUpPrompt(null);

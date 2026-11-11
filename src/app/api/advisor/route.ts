@@ -10,6 +10,7 @@ import { dispatchOrchestrator } from '@/lib/ai/orchestratorDispatch';
 import { classifyIntent } from '@/lib/ai/intentClassifier';
 import { getOrgContext, extractFromText as extractOrgContextFromText, type OrgContext } from '@/lib/ai/orgContext';
 import {
+  captureIntakeProfile,
   getIntakeProfile,
   extractIntakeProfileFromText,
   mergeIntakeProfile,
@@ -241,6 +242,8 @@ export async function POST(request: NextRequest) {
     let dbConversationId = isGuest ? 'guest' : conversationId;
     if (!isGuest) {
       dbConversationId = await ensureConversation(session.user.id, query, conversationId);
+      // Save intake answers on every turn, not only when the dispatcher runs.
+      await captureIntakeProfile(dbConversationId, query).catch(() => undefined);
     }
 
     const validated = buildValidatedResponse(parsed, dbConversationId!, ragResult);
@@ -321,8 +324,13 @@ export async function POST(request: NextRequest) {
       if (dispatch.intakeNeedsMoreInfo) {
         validated.data.mode = 'clarification';
         validated.data.followUpQuestions = dispatch.intakeNeedsMoreInfo.questions;
-        // The replacement questions are free-text; drop choices meant for the old ones.
-        delete validated.data.followUpChoices;
+        // Replace the model's choices (meant for its own questions) with ours.
+        validated.data.followUpChoices = dispatch.intakeNeedsMoreInfo.choices;
+        // The model's narrative reads as a finished assessment; say what's
+        // recorded and what's still needed instead.
+        validated.data.riskProfile.description = dispatch.intakeNeedsMoreInfo.message;
+        validated.data.suggestedPolicies = [];
+        validated.data.regulationCheck = [];
       }
     }
 
